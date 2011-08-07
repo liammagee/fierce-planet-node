@@ -64,8 +64,8 @@ app.get('/levels/list', function(req, res){
 });
 
 
-
-app.listen(3000);
+var port = process.env.PORT || 3000;
+app.listen(port);
 
 var io = require('socket.io').listen(app);
 io.sockets.on('connection', function (socket) {
