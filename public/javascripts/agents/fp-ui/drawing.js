@@ -491,22 +491,54 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
 //            ctx.clip();
             // Draw resource-specific representation here
             if (resource.kind.image) {
-                var imgOffsetX = originXp - tileOffset.x;
-                var imgOffsetY = originYp + tileOffset.y;
-                console.log(imgOffsetX);
-                console.log(imgOffsetY);
-                ctx.save();
-                ctx.translate(imgOffsetX, imgOffsetY);
-                ctx.rotate(Isometric.PERSPECTIVE_ANGLE);
+                var imgOffsetX = originXp + 4;
+                var imgOffsetY = originYp + tileOffset.y * 2 + 4;
                 var resImage = new Image();
                 resImage.src = resource.kind.image;
-                var slices = 20;
-                for (var i = 0; i < slices; i++) {
-                    var sliceOffsetX = imgOffsetX + Math.round(i / tileOffset.x);
-                    var sliceOffsetY = imgOffsetY + Math.round(i / tileOffset.y);
-                    ctx.drawImage(resImage, sliceOffsetX, sliceOffsetY, FiercePlanet.cellWidth - 8, FiercePlanet.cellHeight - 8);
-                }
-//                ctx.drawImage(resImage, imgOffsetX, imgOffsetY, FiercePlanet.cellWidth - 8, FiercePlanet.cellHeight - 8);
+                ctx.drawImage(resImage, originXp - tileOffset.x / 2, originYp + tileOffset.y / 2, tileOffset.x, tileOffset.y);
+//                ctx.save();
+//                ctx.translate(imgOffsetX, imgOffsetY);
+//                ctx.rotate(Isometric.PERSPECTIVE_ANGLE);
+//                var slices = 27;
+//                for (var i = 0; i < slices; i++) {
+//                    var proportion = i / slices;
+//                    var sliceOffsetX = imgOffsetX + (proportion * tileOffset.x);
+//                    var sliceOffsetY = imgOffsetY + (proportion * tileOffset.y);
+//                    ctx.save();
+//                    ctx.translate(sliceOffsetX, sliceOffsetY);
+//                    ctx.rotate(Math.PI / 2 - Isometric.PERSPECTIVE_ANGLE);
+//                    var extent = (i + 1) / slices;
+//                    var slicePortion = (1) / slices;
+//                    var imgWidth = FiercePlanet.cellWidth - 8;
+//                    var imgHeight = FiercePlanet.cellHeight - 8;
+//                    console.log('-----------------------------')
+//                    console.log(tileOffset.x)
+//                    console.log(proportion * tileOffset.x)
+//                    console.log(proportion * tileOffset.y)
+//                    console.log(proportion)
+//                    console.log(extent)
+//                    console.log(slicePortion)
+//                    console.log(extent * imgWidth)
+//                    console.log(imgHeight)
+//                    console.log(slicePortion * imgWidth)
+//                    console.log(i)
+////                    ctx.drawImage(resImage,
+////                            proportion * imgWidth, 0,
+////                            extent * imgWidth, imgHeight);
+////                    ctx.drawImage(resImage,
+////                            i, 0,
+////                            i+1, 16,
+////                            0, 0,
+////                            imgWidth, imgHeight);
+//                    ctx.drawImage(resImage,
+//                            i, 0,
+//                            i+1, 27,
+//                            proportion * imgWidth, 0,
+//                            extent * imgWidth, imgHeight);
+//                    if (i == 11)
+//                        break;
+//                    ctx.restore();
+//                }
                 ctx.restore();
             }
 //            canvas.width = canvas.width; // This is the trick... we need to reset the canvas to reset the clip region...
