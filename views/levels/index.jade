@@ -1,0 +1,7 @@
+h1= title
+#articles
+    - each level in levels
+      div.level
+        div.title
+            a(href="/blog/"+level.id)!= level.name
+        div.body= level.tiles

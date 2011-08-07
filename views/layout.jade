@@ -1,0 +1,101 @@
+!!!
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/styles.css')
+    link(rel='stylesheet', href='/stylesheets/custom/jquery-ui-1.8.14.custom.css')
+    script(src='/javascripts/jquery.min.js')
+    script(src='/javascripts/jquery-jquery-ui-fe1b0dc/ui/jquery.ui.core.js')
+    script(src='/javascripts/jquery-jquery-ui-fe1b0dc/ui/jquery.ui.widget.js')
+    script(src='/javascripts/jquery-jquery-ui-fe1b0dc/ui/jquery.ui.mouse.js')
+    script(src='/javascripts/jquery-jquery-ui-fe1b0dc/ui/jquery.ui.accordion.js')
+    script(src='/javascripts/jquery-jquery-ui-fe1b0dc/ui/jquery.ui.autocomplete.js')
+    script(src='/javascripts/jquery-jquery-ui-fe1b0dc/ui/jquery.ui.button.js')
+    script(src='/javascripts/jquery-jquery-ui-fe1b0dc/ui/jquery.ui.datepicker.js')
+    script(src='/javascripts/jquery-jquery-ui-fe1b0dc/ui/jquery.ui.dialog.js')
+    script(src='/javascripts/jquery-jquery-ui-fe1b0dc/ui/jquery.ui.draggable.js')
+    script(src='/javascripts/jquery-jquery-ui-fe1b0dc/ui/jquery.ui.droppable.js')
+    script(src='/javascripts/jquery-jquery-ui-fe1b0dc/ui/jquery.ui.position.js')
+    script(src='/javascripts/jquery-jquery-ui-fe1b0dc/ui/jquery.ui.progressbar.js')
+    script(src='/javascripts/jquery-jquery-ui-fe1b0dc/ui/jquery.ui.resizable.js')
+    script(src='/javascripts/jquery-jquery-ui-fe1b0dc/ui/jquery.ui.selectable.js')
+    script(src='/javascripts/jquery-jquery-ui-fe1b0dc/ui/jquery.ui.slider.js')
+    script(src='/javascripts/jquery-jquery-ui-fe1b0dc/ui/jquery.ui.sortable.js')
+    script(src='/javascripts/jquery-jquery-ui-fe1b0dc/ui/jquery.ui.tabs.js')
+    script(src='/javascripts/jquery-jquery-ui-fe1b0dc/ui/jquery.effects.core.js')
+    script(src='/javascripts/jquery-jquery-ui-fe1b0dc/ui/jquery.effects.blind.js')
+    script(src='/javascripts/jquery-jquery-ui-fe1b0dc/ui/jquery.effects.bounce.js')
+    script(src='/javascripts/jquery-jquery-ui-fe1b0dc/ui/jquery.effects.clip.js')
+    script(src='/javascripts/jquery-jquery-ui-fe1b0dc/ui/jquery.effects.drop.js')
+    script(src='/javascripts/jquery-jquery-ui-fe1b0dc/ui/jquery.effects.explode.js')
+    script(src='/javascripts/jquery-jquery-ui-fe1b0dc/ui/jquery.effects.fold.js')
+    script(src='/javascripts/jquery-jquery-ui-fe1b0dc/ui/jquery.effects.highlight.js')
+    script(src='/javascripts/jquery-jquery-ui-fe1b0dc/ui/jquery.effects.pulsate.js')
+    script(src='/javascripts/jquery-jquery-ui-fe1b0dc/ui/jquery.effects.scale.js')
+    script(src='/javascripts/jquery-jquery-ui-fe1b0dc/ui/jquery.effects.shake.js')
+    script(src='/javascripts/jquery-jquery-ui-fe1b0dc/ui/jquery.effects.slide.js')
+    script(src='/javascripts/jquery-jquery-ui-fe1b0dc/ui/jquery.effects.transfer.js')
+    script(src='/javascripts/jquery.json-2.2.min.js')
+    script(src='/javascripts/jquery.mousewheel.3.0.2/jquery.mousewheel.min.js')
+    script(src='/javascripts/jquery.zoom.js')
+    script(src='/javascripts/sylvester/sylvester.js')
+    script(src='/javascripts/jstat-1.0.0/js/jquery.flot.min.js')
+    script(src='/javascripts/jstat-1.0.0/js/jstat-0.1.0.min.js')
+
+    script(src='/javascripts/socket.io/socket.io.min.js')
+
+    script(src='http://maps.googleapis.com/maps/api/js?sensor=true')
+
+    script(src='/javascripts/rails.js?1309682881')
+
+    script(src='/javascripts/agents/framework/world.js?1312283734')
+    script(src='/javascripts/agents/framework/agent.js?1312285592')
+    script(src='/javascripts/agents/framework/catastrophe.js?1312280463')
+    script(src='/javascripts/agents/framework/culture.js?1312103942')
+    script(src='/javascripts/agents/framework/level.js?1312295810')
+    script(src='/javascripts/agents/framework/resource.js?1312285115')
+    script(src='/javascripts/agents/framework/species.js?1312155450')
+    script(src='/javascripts/agents/framework/terrain.js?1312155440')
+    script(src='/javascripts/agents/framework/tile.js?1312120751')
+
+    script(src='/javascripts/agents/fp-models/profile.js?1312117027')
+    script(src='/javascripts/agents/fp-models/profile_class.js?1312113863')
+    script(src='/javascripts/agents/fp-models/notice.js')
+    script(src='/javascripts/agents/fp-models/event.js')
+
+    script(src='/javascripts/agents/fp-data/resource_types.js')
+    <!-- Change this to load other resource categories -->
+    script(src='/javascripts/agents/fp-data/resourceset/tbl.js')
+    script(src='/javascripts/agents/fp-data/resourceset/cos.js')
+    script(src='/javascripts/agents/fp-data/player_classes.js')
+    script(src='/javascripts/agents/fp-data/agent_types.js')
+
+    script(src='/javascripts/agents/fp-ui/dialogs.js')
+    script(src='/javascripts/agents/fp-ui/drawing.js')
+    script(src='/javascripts/agents/fp-ui/general-ui.js')
+    script(src='/javascripts/agents/fp-ui/profile-ui.js')
+    script(src='/javascripts/agents/fp-ui/resource-ui.js')
+
+    script(src='/javascripts/agents/editor.js')
+    script(src='/javascripts/agents/lifecycle.js')
+    script(src='/javascripts/agents/params.js')
+    script(src='/javascripts/agents/recording.js')
+    script(src='/javascripts/agents/utils.js')
+    script(src='/javascripts/agents/utils/log.js')
+    script(src='/javascripts/agents/utils/google-map.js')
+    script(src='/javascripts/agents/utils/isometric.js')
+    script(src='/javascripts/agents/game.js')
+
+    // Last to load - has strong dependencies on all other classes
+    script(src='/javascripts/agents/fp-data/levels.js?1312326456')
+    script(src='/javascripts/agents/dev.js?1312325102')
+
+    script(type='text/javascript')
+      $(document).ready(function() {
+          $('.thumbnail').click(FiercePlanet.GeneralUI.changePresetLevelDirectly);
+          FiercePlanet.GeneralUI.highlightGalleryItem(FiercePlanet.currentLevelNumber);
+          $('#difficulty-input-' + FiercePlanet.levelOfDifficulty).attr('checked', 'checked');
+          $(".difficultyInput").click(FiercePlanet.GeneralUI.changeDifficulty);
+      });
+
+  body!= body
