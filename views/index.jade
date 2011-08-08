@@ -28,13 +28,13 @@
         canvas#scrollingCanvas(z-index='7',width='480',height='400')
 
     #chat-area
-      h1 Sample chat client
       #chat
         form#chatForm(onsubmit="send(); return false;")
-          input#nickname(type='text', autocomplete='off')
-          input#messageText(type='text', autocomplete='off')
+          p Nickname:
+            input#nickname(type='text', autocomplete='off')
+          p Message:
+            input#messageText(type='text', autocomplete='off')
           input#sendMessage(type='submit', value='Send')
-        p Connecting...
 
     #world-graph
 
@@ -71,6 +71,8 @@
         a#settings(href='#') Settings
       div
         a#editor(href='levels',data-method='get',data-remote='true') Editor
+      div
+        a#3d(href='#') View 3D
       div.divide
 
       #admin-controls

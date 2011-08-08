@@ -47,6 +47,7 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
         $('#settings').click(FiercePlanet.Dialogs.showSettings);
         $('#credits').click(FiercePlanet.Dialogs.showCredits);
         $('#openLevelGallery').click(FiercePlanet.Dialogs.showLevelGallery);
+        $('#3d').click(FiercePlanet.Drawing.toggle3d);
 
         // Admin functions
         $('#debug').click(FiercePlanet.processAgents);

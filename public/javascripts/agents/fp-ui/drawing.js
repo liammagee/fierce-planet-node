@@ -163,8 +163,8 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
                         ctx.fill();
                     }
                     if (!World.settings.hidePathBorder) {
-                        ctx.lineWidth = 2;
-                        ctx.strokeStyle = pathColor;
+                        ctx.lineWidth = 1;
+                        ctx.strokeStyle = '#ccc'; //pathColor;
                         ctx.stroke();
                     }
                 }
@@ -182,9 +182,9 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
                         ctx.fillRect(x, y, FiercePlanet.cellWidth, FiercePlanet.cellHeight);
                     }
                     if (!World.settings.hidePathBorder) {
-                        ctx.border = "2px #eee solid";
-                        ctx.lineWidth = 2;
-                        ctx.strokeStyle = pathColor;
+//                        ctx.border = "2px #eee solid";
+                        ctx.lineWidth = 1;
+                        ctx.strokeStyle = '#ccc'; //pathColor;
                         ctx.strokeRect(x, y, FiercePlanet.cellWidth, FiercePlanet.cellHeight);
                     }
                 }
@@ -503,6 +503,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
             ctx.fill();
 
             var boxHeight = 0;
+            ctx.lineWidth = 1;
             // Use box style - computationally expensive
             if (World.settings.showResourcesAsBoxes) {
                 boxHeight = (s / 100) * 20;
@@ -623,8 +624,11 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         var ctx = canvas.getContext('2d');
         var w = canvas.width;
         var h = canvas.height;
-    
-        ctx.clearRect(0, 0, w, h);
+        ctx.clearRect(-w, -h, 3 * w, 3 * h);
+//        canvas.width = canvas.width;
+//        canvas.width = 1;
+//        canvas.width = w;
+
     };
     
     /**
@@ -1076,7 +1080,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
             var ctx = canvas.getContext('2d');
             switch (direction) {
                 case -1:
-                    if (FiercePlanet.zoomLevel > 1) {
+                    if (FiercePlanet.zoomLevel > 0.1) {
                         ctx.scale(1 / magnify, 1 / magnify);
                     }
                     break;
@@ -1092,7 +1096,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         }
         switch (direction) {
             case -1:
-                if (FiercePlanet.zoomLevel > 1) {
+                if (FiercePlanet.zoomLevel > 0.1) {
                     FiercePlanet.zoomLevel *= 1 / magnify;
                 }
                 break;
@@ -1135,7 +1139,24 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         canvases.css({'width': 0, 'height' : 0});
         canvases.animate({'width': ww, 'height': wh}, 1000);
     };
-    
+
+    /**
+     * Toggle 3d
+     */
+    this.toggle3d = function () {
+        if (World.settings.skewTiles) {
+            World.settings.skewTiles = false;
+            $('#3d')[0].innerHTML = 'View 3D';
+        }
+        else {
+            World.settings.skewTiles = true;
+            $('#3d')[0].innerHTML = 'View 2D';
+        }
+//        World.settings.skewTiles = !World.settings.skewTiles;
+        FiercePlanet.Drawing.drawCanvases();
+//        FiercePlanet.Drawing.drawGame();
+    };
+
     /**
      * Resets the flot graph
      */
