@@ -68,6 +68,10 @@ var port = process.env.PORT || 3000;
 app.listen(port);
 
 var io = require('socket.io').listen(app);
+io.configure(function() {
+    io.set("transports", ["xhr-polling", "flashsocket", "json-polling"]);
+});
+
 io.sockets.on('connection', function (socket) {
   socket.emit('message', ['server', 'Welcome to Fierce Planet']);
   socket.on('message', function (data) {
