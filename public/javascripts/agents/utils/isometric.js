@@ -20,7 +20,7 @@ var Isometric = Isometric || {};
 
 // "0.46365 (radians) - it's a “classic” 1:2 isometric angle which lays up perfectly into pixel grid of the computer screen. "
 Isometric.PERSPECTIVE_ANGLE = 0.46365;
-//Isometric.PERSPECTIVE_ANGLE = 0.30;
+//Isometric.PERSPECTIVE_ANGLE = 0.45;
 
 /**
  * Transforms x,y,z coordinates into Flash x coordinate

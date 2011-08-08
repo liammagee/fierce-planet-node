@@ -129,13 +129,15 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         var ctx = canvas.getContext('2d');
 //        this.clearCanvas('baseCanvas');
 //        ctx.clearRect(0, 0, FiercePlanet.WORLD_WIDTH, FiercePlanet.WORLD_HEIGHT );
-        var pathTiles = FiercePlanet.currentLevel.getPath();
+        var pathTiles = FiercePlanet.currentLevel.pathway;
+//        var pathTiles = FiercePlanet.currentLevel.generatePath();
 
         var midTileX = (FiercePlanet.worldWidth - 1) / 2;
         var midTileY = (FiercePlanet.worldHeight - 1) / 2;
 
         for (var i = 0; i < pathTiles.length; i += 1) {
             var pathTile = pathTiles[i];
+
             var xPos = pathTile[0];
             var yPos = pathTile[1];
             var x = xPos * FiercePlanet.cellWidth;
@@ -143,8 +145,8 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
 
 //            ctx.clearRect(x + 1, y + 1, FiercePlanet.cellWidth - 1, FiercePlanet.cellHeight - 1);
 
-            if (!World.settings.hidePath) {
-                ctx.fillStyle = "#eee";
+                var terrain = FiercePlanet.currentLevel.terrainMap[pathTile];
+                var pathColor = terrain ? terrain.color : "#fff";
 
                 if ((World.settings.skewTiles || FiercePlanet.currentLevel.isometric)) {
                     var newOrigin = Isometric.doIsometricOffset(xPos, yPos);
@@ -152,32 +154,41 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
                     var originYp = newOrigin.y + FiercePlanet.cellHeight;
                     Isometric.draw3DTile(ctx, [originXp, originYp], FiercePlanet.cellHeight);
 
-                    ctx.fillStyle = "#fff";
-                    ctx.fill();
+//                    var my_gradient = ctx.createLinearGradient(originXp, originYp, originXp, originYp + FiercePlanet.cellHeight / 4);
+//                    my_gradient.addColorStop(0, "#ccc");
+//                    my_gradient.addColorStop(1, pathColor);
+//                    ctx.fillStyle = my_gradient;
+                    if (!World.settings.hidePath) {
+                        ctx.fillStyle = pathColor;
+                        ctx.fill();
+                    }
                     if (!World.settings.hidePathBorder) {
-                        ctx.strokeStyle = "#ccc";
+                        ctx.lineWidth = 2;
+                        ctx.strokeStyle = pathColor;
                         ctx.stroke();
                     }
                 }
                 else {
-                    if (yPos == 0 || FiercePlanet.currentLevel.getTile(xPos, yPos - 1) != undefined) {
-                        var my_gradient = ctx.createLinearGradient(x, y, x, y + FiercePlanet.cellHeight / 4);
-                        my_gradient.addColorStop(0, "#ccc");
-                        my_gradient.addColorStop(1, "#eee");
-                        ctx.fillStyle = my_gradient;
+                    if (!World.settings.hidePath) {
+                        if (yPos == 0 || FiercePlanet.currentLevel.getTile(xPos, yPos - 1) != undefined) {
+                            var my_gradient = ctx.createLinearGradient(x, y, x, y + FiercePlanet.cellHeight / 4);
+                            my_gradient.addColorStop(0, "#ccc");
+                            my_gradient.addColorStop(1, pathColor);
+                            ctx.fillStyle = my_gradient;
+                        }
+                        else {
+                            ctx.fillStyle = pathColor;
+                        }
+                        ctx.fillRect(x, y, FiercePlanet.cellWidth, FiercePlanet.cellHeight);
                     }
-                    else {
-                        ctx.fillStyle = "#eee";
-                    }
-                    ctx.fillRect(x, y, FiercePlanet.cellWidth, FiercePlanet.cellHeight);
                     if (!World.settings.hidePathBorder) {
-                        ctx.border = "1px #eee solid";
-                        ctx.strokeStyle = "#ccc";
+                        ctx.border = "2px #eee solid";
+                        ctx.lineWidth = 2;
+                        ctx.strokeStyle = pathColor;
                         ctx.strokeRect(x, y, FiercePlanet.cellWidth, FiercePlanet.cellHeight);
                     }
                 }
-            }
-    
+
         }
     };
     
@@ -642,7 +653,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
                 if ((World.settings.skewTiles || FiercePlanet.currentLevel.isometric)) {
                     var newOrigin = Isometric.doIsometricOffset(xPos, yPos);
                     intX = newOrigin.x + wx + 1;// - FiercePlanet.cellWidth / 2;
-                    intY = newOrigin.y + wx + 1;// - FiercePlanet.cellHeight / 2;
+                    intY = newOrigin.y + wy + 1;// - FiercePlanet.cellHeight / 2;
                 }
                 ctx.clearRect(intX, intY, FiercePlanet.cellWidth + wx + 1, FiercePlanet.cellHeight + wy + 1);
                 if (World.settings.agentTracing) {
@@ -1130,17 +1141,32 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
      */
     this.drawGraph = function () {
         $("#world-graph").show();
+        this.refreshGraph();
+//        var options = {
+//            series: { shadowSize: 0 }, // drawing is faster without shadows
+//            yaxis: { min: 0, max: FiercePlanet.currentLevel.getTotalSaveableAgents() }
+//        };
+//        plot = $.plot($("#world-graph"),
+//                [ { data: [[0, 0]], lines: { show: true } }, {data: [[0, 0]], lines: { show: true }} ],
+//                options);
+        plotUpdateInterval = 100;
+        this.updateGraph();
+    };
+
+    /**
+     * Resets the flot graph
+     */
+    this.refreshGraph = function () {
+        var totalSaveable = FiercePlanet.currentLevel ? FiercePlanet.currentLevel.getTotalSaveableAgents() : 55;
         var options = {
             series: { shadowSize: 0 }, // drawing is faster without shadows
-            yaxis: { min: 0, max: 55 }
+            yaxis: { min: 0, max: totalSaveable }
         };
         plot = $.plot($("#world-graph"),
                 [ { data: [[0, 0]], lines: { show: true } }, {data: [[0, 0]], lines: { show: true }} ],
                 options);
-        plotUpdateInterval = 100;
-        this.updateGraph();
     };
-    
+
     /**
      * Closes the flot graph
      */

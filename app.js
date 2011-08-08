@@ -68,6 +68,8 @@ var port = process.env.PORT || 3000;
 app.listen(port);
 
 var io = require('socket.io').listen(app);
+
+// Hack for heroku... needs web sockets support
 io.configure(function() {
     io.set("transports", ["xhr-polling", "flashsocket", "json-polling"]);
 });

@@ -275,6 +275,7 @@ FiercePlanet._initialiseGame = function () {
 
 //    score = 0;
     FiercePlanet.currentProfile.resetCurrentStats();
+    FiercePlanet.Drawing.refreshGraph();
 
 
     FiercePlanet.resourceRecoveryCycle = Math.pow(World.settings.rateOfResourceRecovery, FiercePlanet.levelOfDifficulty - 1);

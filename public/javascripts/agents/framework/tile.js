@@ -18,6 +18,7 @@ function Tile(color, x, y) {
     this.color = color || DEFAULT_TILE_COLOR;
     this.x = x || 0;
     this.y = y || 0;
+    this.terrain = Terrain.DEFAULT_TERRAIN;
 }
 Tile.prototype.getPosition = function() { return [this.x, this.y]; };
 Tile.prototype.moveTo = function(x, y) { this.x = x; this.y = y; };

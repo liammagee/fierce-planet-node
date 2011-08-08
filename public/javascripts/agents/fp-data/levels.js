@@ -90,6 +90,7 @@ FiercePlanet.PresetLevels.level1.setup = function() {
     this.removeTiles(34, 9);
     this.removeTiles(23, 1);
     this.removeTiles(12, 10);
+    this.addTerrainToPath(new Terrain('#aaa'));
 
     // Add predators and rivals
     this.levelAgents = ([new Agent(AgentTypes.PREDATOR_AGENT_TYPE, 0, 9)]);
@@ -284,7 +285,31 @@ FiercePlanet.PresetLevels.level4.setup = function() {
     this.removeTiles(16, 11);
     this.removeTiles(14, 1);
     this.removeTiles(0, 1);
-    
+
+    // Experimental terrain support
+    this.addTerrainToPath(new Terrain('#CEA98F'));
+    var lowerHalfTerrain = new Terrain('#645C51');
+    this.terrainMap[[0, 4]] = lowerHalfTerrain;
+    this.terrainMap[[0, 5]] = lowerHalfTerrain;
+    this.terrainMap[[0, 6]] = lowerHalfTerrain;
+    this.terrainMap[[0, 7]] = lowerHalfTerrain;
+    this.terrainMap[[0, 8]] = lowerHalfTerrain;
+    this.terrainMap[[0, 9]] = lowerHalfTerrain;
+    this.terrainMap[[0, 10]] = lowerHalfTerrain;
+    this.terrainMap[[0, 11]] = lowerHalfTerrain;
+    this.terrainMap[[0, 12]] = lowerHalfTerrain;
+    this.terrainMap[[1, 12]] = lowerHalfTerrain;
+    this.terrainMap[[2, 12]] = lowerHalfTerrain;
+    this.terrainMap[[3, 12]] = lowerHalfTerrain;
+    this.terrainMap[[2, 4]] = lowerHalfTerrain;
+    this.terrainMap[[2, 5]] = lowerHalfTerrain;
+    this.terrainMap[[2, 6]] = lowerHalfTerrain;
+    this.terrainMap[[2, 7]] = lowerHalfTerrain;
+    this.terrainMap[[2, 8]] = lowerHalfTerrain;
+    this.terrainMap[[2, 9]] = lowerHalfTerrain;
+    this.terrainMap[[2, 10]] = lowerHalfTerrain;
+    this.terrainMap[[3, 10]] = lowerHalfTerrain;
+    this.terrainMap[[4, 9]] = lowerHalfTerrain;
 };
 
 
@@ -652,7 +677,9 @@ FiercePlanet.PresetLevels.level9.setup = function() {
     this.removeTiles(39, 1);
     this.removeTiles(20, 17);
     this.removeTiles(9, 1);
-    
+
+    this.addTerrainToPath(new Terrain('#ECDDCA'));
+
 };
 
 

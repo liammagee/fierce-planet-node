@@ -52,6 +52,8 @@ function Level(id) {
     /** Object for storing tiles, resources and other level entities for co-ordinate based look-up */
     this.cells = {};
 
+    this.pathway = this.generatePath();
+    this.terrainMap = {};
 
     // User interface elements
     this.tip = null;
@@ -109,6 +111,7 @@ Level.prototype.getTiles = function() { return this.tiles; };
  */
 Level.prototype.setTiles = function(tiles) {
     this.tiles = tiles;
+    this.generatePath();
     this.assignCells();
 };
 /**
@@ -122,8 +125,10 @@ Level.prototype.addTile = function(tile) {
     this.tiles[position] = tile;
     this.removeEntryPoint(tile.x, tile.y);
     this.removeExitPoint(tile.x, tile.y);
+    this.removeFromPath(tile.x, tile.y);
     this.addCell(tile.x, tile.y, tile);
 };
+
 /**
  *
  * @param x
@@ -143,6 +148,7 @@ Level.prototype.removeTile = function(x, y) {
     // This fails when trying to add back tile at this co-ordinate
 //    this.tiles.splice(tilePosition, 1);
     this.annulCell(x, y);
+    this.addToPath(x, y);
 };
 
 /**
@@ -157,6 +163,7 @@ Level.prototype.fillWithTiles = function() {
             this.addCell(tile.x, tile.y, tile);
         }
     }
+    this.generatePath();
 };
 
 /**
@@ -172,6 +179,7 @@ Level.prototype.removeAllTiles = function() {
             this.annulCell(i, j);
         }
     }
+    this.generatePath();
 };
 /**
  *
@@ -186,12 +194,13 @@ Level.prototype.removeTiles = function(start, number) {
             this.annulCell(tile.x, tile.y);
         }
     }
+    this.generatePath();
 };
 
 /**
- *
+ * Generates a computed path based on the absence of tiles
  */
-Level.prototype.getPath = function() {
+Level.prototype.generatePath = function() {
     var pathCells = [];
     for (var i = 0; i < this.worldHeight; i++) {
         for (var j = 0; j < this.worldWidth; j++) {
@@ -201,8 +210,33 @@ Level.prototype.getPath = function() {
         }
 
     }
+    this.pathway = pathCells;
     return pathCells;
 };
+
+/**
+ * Add cell to path
+ */
+Level.prototype.addToPath = function(x, y) {
+    this.pathway.push([y, x]);
+};
+/**
+ * Add cell to path
+ */
+Level.prototype.removeFromPath = function(x, y) {
+    delete this.pathway[[y, x]];
+};
+/**
+ * Adds a particular terrain to all parts of the path
+ */
+Level.prototype.addTerrainToPath = function(terrain) {
+    this.terrainMap = {};
+    for (var i in this.pathway) {
+        var path = this.pathway[i];
+        this.terrainMap[path] = terrain;
+    }
+};
+
 
 // Cell functions
 /**
