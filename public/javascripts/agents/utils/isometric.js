@@ -6,15 +6,21 @@
  */
 
 
+var FiercePlanet = FiercePlanet || {};
+
+
 /**
  * @namespace Contains isometric utility functions
  */
+FiercePlanet.Isometric = FiercePlanet.Isometric || {};
 var Isometric = Isometric || {};
+
 
 // Adapted from Danko Kozar, http://www.flashperfection.com/tutorials/Isometric-Transformations-15818.html
 
 // "0.46365 (radians) - it's a “classic” 1:2 isometric angle which lays up perfectly into pixel grid of the computer screen. "
 Isometric.PERSPECTIVE_ANGLE = 0.46365;
+//Isometric.PERSPECTIVE_ANGLE = 0.30;
 
 /**
  * Transforms x,y,z coordinates into Flash x coordinate
@@ -126,59 +132,22 @@ Isometric.doIsometricOffset = function (xPos, yPos) {
 
 /**
  * Normalises the isometric co-ordinate to a convention co-ordinate position
+ * TODO: Needs proper mathematical reversal of all angular transformations
  */
 Isometric.normaliseCoordinates = function (x, y) {
     var tileOffset = Isometric.offsets3DPoint([FiercePlanet.cellHeight, 0, 0]);
-    var midTileX = (FiercePlanet.worldWidth - 1) / 2;
-    var midTileY = (FiercePlanet.worldHeight - 1) / 2;
     var midTilePosX = FiercePlanet.WORLD_WIDTH / 2;
     var midTilePosY = FiercePlanet.WORLD_HEIGHT / 2;
-//    var midTilePosX = midTileX * FiercePlanet.cellWidth;
-//    var midTilePosY = midTileY * FiercePlanet.cellHeight;
 
-    var posX = (x / FiercePlanet.cellWidth);
-    var posY = (y / FiercePlanet.cellHeight);
-    var p = Isometric.doIsometricOffset(posX, posY);
-
-//    var diffX = posX - midTileX;
-//    var diffY = posY - midTileY;
-//    var diffX = Isometric.roundTo((x - midTilePosX) / FiercePlanet.cellWidth, 0.5);
-//    var diffY = Isometric.roundTo((y - midTilePosY) / FiercePlanet.cellHeight, 0.5);
-//    var newXPos = diffX - diffY;
-//    var newYPos = diffX + diffY;
-//    var a = midTilePosX + (FiercePlanet.cellWidth * (newXPos));
-//    var b = midTilePosY + (FiercePlanet.cellHeight * (newYPos));
     var isoCellRatio = FiercePlanet.cellWidth / (tileOffset.x * 2);
     var diffX = (x - midTilePosX) * isoCellRatio;
     var diffY = (y - midTilePosY);
     var newXPos = diffX - (diffY * midTilePosX / midTilePosY);
     var newYPos = (diffX * midTilePosY / midTilePosX + diffY);
-    var a = midTilePosX + ((newXPos));
-    var b = midTilePosY + ((newYPos));
-    /*
-    console.log("------------------------------");
-    console.log(isoCellRatio);
-    console.log(tileOffset.x);
-    console.log(tileOffset.y);
-    console.log(FiercePlanet.cellHeight);
-    console.log(FiercePlanet.cellWidth);
-    console.log("mid points");
-    console.log(midTilePosX);
-    console.log(midTilePosY);
-    console.log("old coords");
-    console.log(x);
-    console.log(y);
-    console.log("diffs");
-    console.log(diffX);
-    console.log(diffY);
-    console.log("differences");
-    console.log(newXPos);
-    console.log(newYPos);
-    console.log("new coords");
-    console.log(a);
-    console.log(b);
-    */
-    return {x: a, y: b};
+    var newX = midTilePosX + ((newXPos));
+    var newY = midTilePosY + ((newYPos));
+
+    return {x: newX, y: newY};
 };
 
 /**
@@ -198,6 +167,9 @@ Isometric.roundTo = function (value, number) {
 };
 
 
+// Adapted from Danko Kozar, http://www.flashperfection.com/tutorials/Isometric-Transformations-15818.html
+
+
 /**
  * Transforms x,y,z coordinates into Flash x coordinate
  *
@@ -205,10 +177,7 @@ Isometric.roundTo = function (value, number) {
  * @param y
  * @param z
  */
-Isometric.xFla = function (xOrigin, point3d) {
-    x = point3d[0];
-    y = point3d[1];
-    z = point3d[2];
+Isometric.xFla = function (xOrigin, x, y, z) {
     var xCart = (x-z)*Math.cos(Isometric.PERSPECTIVE_ANGLE);
     // flash coordinates
     var xI = xCart + xOrigin;
@@ -222,10 +191,7 @@ Isometric.xFla = function (xOrigin, point3d) {
  * @param y
  * @param z
  */
-Isometric.yFla = function (yOrigin, point3d) {
-    x = point3d[0];
-    y = point3d[1];
-    z = point3d[2];
+Isometric.yFla = function (yOrigin, x, y, z) {
     var yCart = y+(x+z)*Math.sin(Isometric.PERSPECTIVE_ANGLE);
     // flash coordinates
     var yI = -yCart + yOrigin;
@@ -233,6 +199,14 @@ Isometric.yFla = function (yOrigin, point3d) {
 };
 
 // --- drawing functions --------------------------------
+/**
+ *
+ * @param l
+ * @param r
+ * @param g
+ * @param b
+ * @param a
+ */
 Isometric.style = function (l, r, g, b, a) {
     // a: line width
     // b: line color
@@ -240,9 +214,84 @@ Isometric.style = function (l, r, g, b, a) {
     ctx.lineWidth = l;
     ctx.strokeStyle = rgb(r, g, b, a);
 };
-Isometric.plot = function (ctx, x, y, z) {
-    ctx.moveTo(xFla(x, y, z), yFla(x, y, z));
+/**
+ *
+ * @param ctx
+ * @param x
+ * @param y
+ * @param z
+ */
+Isometric.plot = function (ctx, xOrigin, yOrigin, x, y, z) {
+    ctx.moveTo(Isometric.xFla(xOrigin, x, y, z), Isometric.yFla(yOrigin, x, y, z));
 };
-Isometric.draw = function (ctx, x, y, z) {
-    ctx.lineTo(xFla(x, y, z), yFla(x, y, z));
+/**
+ *
+ * @param ctx
+ * @param x
+ * @param y
+ * @param z
+ */
+Isometric.draw = function (ctx, xOrigin, yOrigin, x, y, z) {
+    ctx.lineTo(Isometric.xFla(xOrigin, x, y, z), Isometric.yFla(yOrigin, x, y, z));
+};
+
+/**
+ *
+ * @param x
+ * @param y
+ * @param z
+ * @param a
+ * @param b
+ * @param c
+ * @param color
+ */
+Isometric.box = function (ctx, xOrigin, yOrigin, x, y, z, a, b, c) {
+    ctx.beginPath();
+    Isometric.plot(ctx, xOrigin, yOrigin, x, y, z);
+    Isometric.draw(ctx, xOrigin, yOrigin, x+a, y, z);
+    Isometric.draw(ctx, xOrigin, yOrigin, x+a, y+b, z);
+    Isometric.draw(ctx, xOrigin, yOrigin, x, y+b, z);
+    Isometric.draw(ctx, xOrigin, yOrigin, x, y, z);
+    Isometric.plot(ctx, xOrigin, yOrigin, x, y+b, z);
+    Isometric.draw(ctx, xOrigin, yOrigin, x+a, y+b, z);
+    Isometric.draw(ctx, xOrigin, yOrigin, x+a, y+b, z+c);
+    Isometric.draw(ctx, xOrigin, yOrigin, x, y+b, z+c);
+    Isometric.draw(ctx, xOrigin, yOrigin, x, y+b, z);
+    Isometric.plot(ctx, xOrigin, yOrigin, x, y, z);
+    Isometric.draw(ctx, xOrigin, yOrigin, x, y+b, z);
+    Isometric.draw(ctx, xOrigin, yOrigin, x, y+b, z+c);
+    Isometric.draw(ctx, xOrigin, yOrigin, x, y, z+c);
+    Isometric.draw(ctx, xOrigin, yOrigin, x, y, z);
+    ctx.closePath();
+};
+/**
+ *
+ * @param x
+ * @param y
+ * @param z
+ * @param a
+ * @param b
+ * @param c
+ * @param color
+ * @param fill
+ */
+Isometric.boxFilled = function (ctx, xOrigin, yOrigin, x, y, z, a, b, c) {
+//    style(1, color, 100);
+    ctx.beginPath();
+    Isometric.plot(ctx, xOrigin, yOrigin, x, y, z);
+    Isometric.draw(ctx, xOrigin, yOrigin, x+a, y, z);
+    Isometric.draw(ctx, xOrigin, yOrigin, x+a, y+b, z);
+    Isometric.draw(ctx, xOrigin, yOrigin, x, y+b, z);
+    Isometric.draw(ctx, xOrigin, yOrigin, x, y, z);
+    Isometric.plot(ctx, xOrigin, yOrigin, x, y+b, z);
+    Isometric.draw(ctx, xOrigin, yOrigin, x+a, y+b, z);
+    Isometric.draw(ctx, xOrigin, yOrigin, x+a, y+b, z+c);
+    Isometric.draw(ctx, xOrigin, yOrigin, x, y+b, z+c);
+    Isometric.draw(ctx, xOrigin, yOrigin, x, y+b, z);
+    Isometric.plot(ctx, xOrigin, yOrigin, x, y, z);
+    Isometric.draw(ctx, xOrigin, yOrigin, x, y+b, z);
+    Isometric.draw(ctx, xOrigin, yOrigin, x, y+b, z+c);
+    Isometric.draw(ctx, xOrigin, yOrigin, x, y, z+c);
+    Isometric.draw(ctx, xOrigin, yOrigin, x, y, z);
+    ctx.closePath();
 };

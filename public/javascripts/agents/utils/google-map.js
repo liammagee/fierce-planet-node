@@ -12,10 +12,6 @@
 var GoogleMapUtils = GoogleMapUtils || {};
 
 
-
-(function() {
-
-}).apply(FiercePlanet.ResourceUI);
 (function() {
 
     var mapTypes = {};

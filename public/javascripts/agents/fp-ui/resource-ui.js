@@ -22,7 +22,7 @@ FiercePlanet.ResourceUI = FiercePlanet.ResourceUI || {};
      * Handle various resource-related interactions
      */
     this.setupResourceInteraction = function () {
-        var agentCanvas = $('#agentCanvas');
+        var topMostCanvas = $('#scrollingCanvas');
             var links = $('.swatch-draggable'), el = null;
             for (var i = 0; i < links.length; i++) {
                 el = links[i];
@@ -42,7 +42,7 @@ FiercePlanet.ResourceUI = FiercePlanet.ResourceUI || {};
                     });
                 }
             }
-            agentCanvas.droppable({
+            topMostCanvas.droppable({
                 drop: function( event, ui ) {
                     var position = $(this).offset();
                     var x = event.pageX - position.left;

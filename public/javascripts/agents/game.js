@@ -181,11 +181,17 @@ FiercePlanet.processAgents = function() {
     }
     else {
         if (FiercePlanet.waveCounter % FiercePlanet.resourceRecoveryCycle == 0) {
-            FiercePlanet.currentLevel.recoverResources().forEach(function(resource) {
-                FiercePlanet.Drawing.drawResource(resource);
-            });
-//            FiercePlanet.recoverResources();
-//            FiercePlanet.drawResources();
+            // Since resources can overwrite eachother in 2.5d, force redraw of all resources here
+            if ((World.settings.skewTiles || FiercePlanet.currentLevel.isometric) && World.settings.showResourcesAsBoxes) {
+                FiercePlanet.currentLevel.recoverResources();
+                FiercePlanet.Drawing.drawResources();
+            }
+            else {
+                FiercePlanet.currentLevel.recoverResources().forEach(function(resource) {
+                    FiercePlanet.Drawing.drawResource(resource);
+                });
+            }
+
         }
         FiercePlanet.Drawing.drawAgents();
     }

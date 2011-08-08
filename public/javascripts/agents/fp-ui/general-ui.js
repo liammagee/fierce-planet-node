@@ -99,19 +99,19 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
      *  Does all the necessary binding for in-game mouse events
      */
     this.bindGameMouseEvents = function() {
-        var agentCanvas = $('#agentCanvas');
+        var topMostCanvas = $('#scrollingCanvas');
 
         if (typeof console != "undefined")
             console.log('Binding mouse events');
 
-        agentCanvas.click(FiercePlanet.handleNoticeEvents);
-        agentCanvas.click(FiercePlanet.ResourceUI.processResourceCanvasClick);
+        topMostCanvas.click(FiercePlanet.handleNoticeEvents);
+        topMostCanvas.click(FiercePlanet.ResourceUI.processResourceCanvasClick);
         if (World.settings.allowInlinePanning) {
-            agentCanvas.mousedown(FiercePlanet.GeneralUI.registerMouseDown);
-            agentCanvas.mousemove(FiercePlanet.GeneralUI.registerMouseMove);
-            agentCanvas.mouseup(FiercePlanet.GeneralUI.registerMouseUp);
+            topMostCanvas.mousedown(FiercePlanet.GeneralUI.registerMouseDown);
+            topMostCanvas.mousemove(FiercePlanet.GeneralUI.registerMouseMove);
+            topMostCanvas.mouseup(FiercePlanet.GeneralUI.registerMouseUp);
         }
-        agentCanvas.mousewheel(function(event, delta) {
+        topMostCanvas.mousewheel(function(event, delta) {
             FiercePlanet.Drawing.zoom(delta);
             event.preventDefault();
             return false; // prevent default
@@ -122,15 +122,15 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
      *  Does all the necessary binding for in-game mouse events
      */
     this.unbindGameMouseEvents = function() {
-        var agentCanvas = $('#agentCanvas');
+        var topMostCanvas = $('#scrollingCanvas');
 
-        agentCanvas.unbind('click');
+        topMostCanvas.unbind('click');
     //    agentCanvas.unbind('click', FiercePlanet.handleNoticeEvents);
     //    agentCanvas.unbind('click', FiercePlanet.processResourceCanvasClick);
-        agentCanvas.unbind('mousedown', FiercePlanet.GeneralUI.registerMouseDown);
-        agentCanvas.unbind('mousemove', FiercePlanet.GeneralUI.registerMouseMove);
-        agentCanvas.unbind('mouseup', FiercePlanet.GeneralUI.registerMouseUp);
-        agentCanvas.mousewheel(function(event, delta) {
+        topMostCanvas.unbind('mousedown', FiercePlanet.GeneralUI.registerMouseDown);
+        topMostCanvas.unbind('mousemove', FiercePlanet.GeneralUI.registerMouseMove);
+        topMostCanvas.unbind('mouseup', FiercePlanet.GeneralUI.registerMouseUp);
+        topMostCanvas.mousewheel(function(event, delta) {
             FiercePlanet.Drawing.zoom(delta);
             event.preventDefault();
             return false; // prevent default

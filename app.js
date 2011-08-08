@@ -71,7 +71,7 @@ var io = require('socket.io').listen(app);
 io.sockets.on('connection', function (socket) {
   socket.emit('message', ['server', 'Welcome to Fierce Planet']);
   socket.on('message', function (data) {
-    io.sockets.emit('message', data);
+    socket.broadcast.emit('message', data);
   });
 });
 

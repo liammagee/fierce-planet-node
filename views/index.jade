@@ -22,35 +22,12 @@
         canvas#imageCanvas(width='480',height='400')
         #map_canvas(width='480',height='400')
         canvas.scrollable-canvas#baseCanvas(width='480',height='400')
-        canvas.scrollable-canvas#resourceCanvas(width='480',height='400')
-        canvas#scrollingCanvas(width='480',height='400')
         canvas#noticeCanvas(width='480',height='400')
         canvas.scrollable-canvas#agentCanvas(width='480',height='400')
-        
+        canvas.scrollable-canvas#resourceCanvas(z-index='6',width='480',height='400')
+        canvas#scrollingCanvas(z-index='7',width='480',height='400')
+
     #chat-area
-      script
-        function message(obj){
-          var el = document.createElement('p');
-          el.innerHTML = '<b>' + esc(obj[0]) + ':</b> ' + esc(obj[1]);
-          document.getElementById('chat').appendChild(el);
-        }
-
-        function send(){
-          var nickname = document.getElementById('nickname').value;
-          var val = document.getElementById('messageText').value;
-          socket.emit('message', [nickname, val]);
-          document.getElementById('messageText').value = '';
-        }
-
-        function esc(msg){
-          return msg.replace(/</g, '&lt;').replace(/>/g, '&gt;');
-        };
-
-        var socket = io.connect();
-        socket.on('message', function (data) {
-          message(data);
-        });
-
       h1 Sample chat client
       #chat
         form#chatForm(onsubmit="send(); return false;")
@@ -58,16 +35,6 @@
           input#messageText(type='text', autocomplete='off')
           input#sendMessage(type='submit', value='Send')
         p Connecting...
-      style
-        #chat-area { color: #000; background: #fff; top: 600px; position: absolute; left: 0px; }
-        #chat { top: 600px; height: 300px; overflow: auto; width: 800px; border: 1px solid #eee; font: 13px Helvetica, Arial; }
-        #chat p { padding: 8px; margin: 0; }
-        #chat p:nth-child(odd) { background: #F6F6F6; }
-        #form { width: 782px; background: #333; padding: 5px 10px; display: none; }
-        #form input[type=text] { width: 700px; padding: 5px; background: #fff; border: 1px solid #fff; }
-        #form input[type=submit] { cursor: pointer; background: #999; border: none; padding: 6px 8px; -moz-border-radius: 8px; -webkit-border-radius: 8px; margin-left: 5px; text-shadow: 0 1px 0 #fff; }
-        #form input[type=submit]:hover { background: #A2A2A2; }
-        #form input[type=submit]:active { position: relative; top: 2px; }
 
     #world-graph
 
@@ -383,8 +350,11 @@
             label(for='tilesRemovable') Allow tiles to be removed
           div
             input#skewTiles(type='checkbox')
-            label(for='skewTiles') Skew level tiles
+            label(for='skewTiles') View in 2.5D
           div
-            input#backgroundIconsVisible(type='checkbox')
-            label(for='backgroundIconsVisible')  Show background icons
+            input#showResourcesAsBoxes(type='checkbox')
+            label(for='showResourcesAsBoxes') Show resources as boxes in 2.5D
+//          div
+//            input#backgroundIconsVisible(type='checkbox')
+//           label(for='backgroundIconsVisible')  Show background icons
 

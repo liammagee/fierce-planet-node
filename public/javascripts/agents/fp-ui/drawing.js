@@ -442,8 +442,19 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
      * Draw all of the resources
      */
     this.drawResources = function() {
-        for (var i = 0; i < FiercePlanet.currentLevel.resources.length; i += 1) {
-            this.drawResource(FiercePlanet.currentLevel.resources[i]);
+        var resources = FiercePlanet.currentLevel.resources;
+
+        if ((World.settings.skewTiles || FiercePlanet.currentLevel.isometric) && World.settings.showResourcesAsBoxes) {
+            this.clearCanvas("resourceCanvas");
+            resources.sort(function(a, b) {
+               return (a.y > b.y) ? 1 :
+                       ( (a.x < b.x) ? 1 :
+                       (a.y < b.y || a.x > b.x) ? -1 : 0);
+            });
+        }
+
+        for (var i = 0; i < resources.length; i += 1) {
+            this.drawResource(resources[i]);
         }
     };
     
@@ -466,7 +477,8 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         // Create a gradient to fill the cell from the bottom up
         var yOffset = (((FiercePlanet.cellHeight) * (1.0 - (s / 100))) / 1.2) | 0;
         var resourceGradient = ctx.createLinearGradient(x, y + yOffset, x, y + FiercePlanet.cellHeight);
-        resourceGradient.addColorStop(0, "#fff");
+//        resourceGradient.addColorStop(0, "#fff");
+        resourceGradient.addColorStop(0, "#" + c);
         resourceGradient.addColorStop(0.5, "#" + c);
         resourceGradient.addColorStop(1, "#" + c);
 
@@ -479,23 +491,35 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
             Isometric.draw3DTile(ctx, [originXp, originYp], FiercePlanet.cellHeight);
             ctx.fill();
 
-            resourceGradient = ctx.createLinearGradient(originXp, originYp - FiercePlanet.cellHeight + yOffset, originXp, originYp);
-            resourceGradient.addColorStop(0, "#fff");
-            resourceGradient.addColorStop(0.5, "#" + c);
-            resourceGradient.addColorStop(1, "#" + c);
-            ctx.fillStyle = resourceGradient;
-            Isometric.draw3DTile(ctx, [originXp, originYp], FiercePlanet.cellHeight);
-            ctx.fill();
+            var boxHeight = 0;
+            // Use box style - computationally expensive
+            if (World.settings.showResourcesAsBoxes) {
+                boxHeight = (s / 100) * 20;
+                ctx.fillStyle = "#" + c;
+                ctx.strokeStyle = "#eee";
+                Isometric.box(ctx, originXp, originYp, 0, 0, 0, FiercePlanet.cellHeight, boxHeight, FiercePlanet.cellHeight);
+                ctx.fill();
+                ctx.stroke();
+            }
+            else {
+                resourceGradient = ctx.createLinearGradient(originXp, originYp - FiercePlanet.cellHeight + yOffset, originXp, originYp);
+                resourceGradient.addColorStop(0, "#fff");
+                resourceGradient.addColorStop(0.5, "#" + c);
+                resourceGradient.addColorStop(1, "#" + c);
+                ctx.fillStyle = resourceGradient;
+                Isometric.draw3DTile(ctx, [originXp, originYp], FiercePlanet.cellHeight);
+                ctx.fill();
+            }
 
-            Isometric.draw3DTile(ctx, [originXp, originYp], FiercePlanet.cellHeight);
-//            ctx.clip();
             // Draw resource-specific representation here
             if (resource.kind.image) {
                 var imgOffsetX = originXp + 4;
                 var imgOffsetY = originYp + tileOffset.y * 2 + 4;
                 var resImage = new Image();
                 resImage.src = resource.kind.image;
-                ctx.drawImage(resImage, originXp - tileOffset.x / 2, originYp + tileOffset.y / 2, tileOffset.x, tileOffset.y);
+                ctx.drawImage(resImage, originXp - tileOffset.x / 2, originYp + tileOffset.y / 2 - boxHeight, tileOffset.x, tileOffset.y);
+                
+
 //                ctx.save();
 //                ctx.translate(imgOffsetX, imgOffsetY);
 //                ctx.rotate(Isometric.PERSPECTIVE_ANGLE);
@@ -855,8 +879,6 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
                     var increments = catastrophe.duration / FiercePlanet.WORLD_WIDTH;
                     var leadIncrement = (FiercePlanet.levelCounter - catastrophe.start) / increments * 2;
                     var trailIncrement = ((catastrophe.start + catastrophe.duration) - FiercePlanet.levelCounter) / increments * 2;
-    //                console.log(increments);
-    //                console.log(currentIncrement);
                     var x = FiercePlanet.WORLD_WIDTH - leadIncrement;
                     var y = 0;
                     var w = trailIncrement;
@@ -1133,7 +1155,6 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
      * Updates the flot graph
      */
     this.updateGraph = function() {
-        console.log('updating graph');
         if (FiercePlanet.inPlay && World.settings.showGraph) {
             var savedData = plot.getData()[0].data;
             var expiredData = plot.getData()[1].data;
