@@ -32,12 +32,12 @@ LevelProvider.prototype.getCollection= function(callback) {
     else callback(null, level_collection);
   });
 };
+
 LevelProvider.prototype.findAll = function(callback) {
     this.getCollection(function(error, level_collection) {
       if( error ) callback(error)
       else {
         level_collection.find().toArray(function(error, results) {
-            console.log(results);
           if( error ) callback(error)
           else callback(null, results)
         });
@@ -48,7 +48,7 @@ LevelProvider.prototype.findById = function(id, callback) {
     this.getCollection(function(error, level_collection) {
       if( error ) callback(error)
       else {
-        level_collection.findOne({id: level_collection.db.bson_serializer.ObjectID.createFromHexString(id)}, function(error, result) {
+        level_collection.findOne({_id: level_collection.db.bson_serializer.ObjectID.createFromHexString(id)}, function(error, result) {
           if( error ) callback(error)
           else callback(null, result)
         });
@@ -71,12 +71,25 @@ LevelProvider.prototype.save = function(levels, callback) {
 //          }
         }
 
-        level_collection.insert(levels, function() {
-          callback(null, levels);
+        level_collection.remove({}, function(err, r) {
+            level_collection.insert(levels, function() {
+              callback(null, levels);
+            });
         });
       }
     });
 };
+LevelProvider.prototype.deleteAll = function(callback) {
+    this.getCollection(function(error, level_collection) {
+      if( error ) callback(error)
+      else {
+        level_collection.remove()
+                .toArray(function(error, results) {
+          if( error ) callback(error)
+          else callback(null, results)
+        });
+      }
+    });};
 
 /* Lets bootstrap with dummy data */
 //new LevelProvider().save([

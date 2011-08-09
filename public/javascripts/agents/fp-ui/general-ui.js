@@ -47,6 +47,7 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
         $('#settings').click(FiercePlanet.Dialogs.showSettings);
         $('#credits').click(FiercePlanet.Dialogs.showCredits);
         $('#openLevelGallery').click(FiercePlanet.Dialogs.showLevelGallery);
+        $('#editor').click(FiercePlanet.Dialogs.showLevelGallery);
         $('#3d').click(FiercePlanet.Drawing.toggle3d);
 
         // Admin functions
@@ -494,6 +495,34 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
         FiercePlanet.currentLevelPreset = true;
         // Remember this level, along with other data
         FiercePlanet.ProfileUI.storeProfileData();
+    };
+
+    /**
+     * Changes the preset level
+     */
+    this.changeLevelDirectly =  function() {
+        var level = $(this).attr('id');
+        level = level.substring(11);
+
+        // Retrieve level object from server
+        $.get('/levels/' + level, function(tmpLevel) {
+            if (tmpLevel) {
+                Level.makeLevelFromJSONObject(tmpLevel, Level.prototype);
+                for (var i in tmpLevel.resources) {
+                    Level.makeLevelFromJSONObject(tmpLevel.resources[i], Resource.prototype);
+                }
+                tmpLevel.levelResources = tmpLevel.resources;
+
+                FiercePlanet.currentLevel = tmpLevel;
+                FiercePlanet.currentLevelNumber = tmpLevel.id;
+                FiercePlanet.currentLevelPreset = false;
+
+                // Remember this level, along with other data
+                FiercePlanet.ProfileUI.storeProfileData();
+                FiercePlanet.Dialogs.levelGalleryDialog.dialog('close');
+                FiercePlanet.newLevel();
+            }
+        });
     };
 
     /**

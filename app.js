@@ -31,25 +31,35 @@ app.configure('production', function(){
 
 var levelProvider = new LevelProvider('127.0.0.1', 27017);
 // Routes
-/*
-levelProvider.save([
-    new Level(1),
-    new Level(2),
-    new Level(3)
-], function(error, levels){
+var levels = [
+    new Level(21),
+    new Level(22),
+    new Level(23)
+];
+levels[0].name = 'test level 1';
+levels[1].name = 'test level 2';
+levels[2].name = 'test level 3';
+levelProvider.save(levels, function(error, levels){
     console.log(error);
 });
-*/
 
 app.get('/', function(req, res){
-
-//  res.render('index', {
-//    title: 'Express'
-//  });
     res.render('index', {
         title: 'Fierce Planet',
         locals: {}
     });
+});
+
+app.get('/levels/gallery', function(req, res){
+  levelProvider.findAll(function(error, levels){
+      res.render('levels/gallery.jade', { locals: {
+          title: 'Levels',
+          layout: false,
+          levels: levels
+          }
+      });
+//      res.send(levels);
+  });
 });
 
 app.get('/levels/list', function(req, res){
@@ -61,6 +71,16 @@ app.get('/levels/list', function(req, res){
       });
 //      res.send(levels);
   });
+});
+
+
+app.get('/levels/:id', function(req, res){
+    var id = req.params.id;
+    if (id) {
+        levelProvider.findById(id, function(error, level){
+            res.send(level);
+        });
+    }
 });
 
 

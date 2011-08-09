@@ -70,6 +70,8 @@ html
     script(src='/javascripts/agents/fp-data/player_classes.js')
     script(src='/javascripts/agents/fp-data/agent_types.js')
 
+    script(src='/javascripts/agents/fp-db/fp-db.js')
+
     script(src='/javascripts/agents/fp-ui/dialogs.js')
     script(src='/javascripts/agents/fp-ui/drawing.js')
     script(src='/javascripts/agents/fp-ui/general-ui.js')
@@ -93,10 +95,10 @@ html
 
     script(type='text/javascript')
       $(document).ready(function() {
-          $('.thumbnail').click(FiercePlanet.GeneralUI.changePresetLevelDirectly);
-          FiercePlanet.GeneralUI.highlightGalleryItem(FiercePlanet.currentLevelNumber);
-          $('#difficulty-input-' + FiercePlanet.levelOfDifficulty).attr('checked', 'checked');
-          $(".difficultyInput").click(FiercePlanet.GeneralUI.changeDifficulty);
+        $('.thumbnail, .customLevel').click(FiercePlanet.GeneralUI.changePresetLevelDirectly);
+        FiercePlanet.GeneralUI.highlightGalleryItem(FiercePlanet.currentLevelNumber);
+        $('#difficulty-input-' + FiercePlanet.levelOfDifficulty).attr('checked', 'checked');
+        $(".difficultyInput").click(FiercePlanet.GeneralUI.changeDifficulty);
       });
 
   body!= body

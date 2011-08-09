@@ -1,7 +1,7 @@
 h1= title
-#articles
+#levels
     - each level in levels
       div.level
         div.title
-            a(href="/blog/"+level.id)!= level.name
+            a.thumbnail(id='levelSelect' + level.id)!= level.name
         div.body= level.tiles
