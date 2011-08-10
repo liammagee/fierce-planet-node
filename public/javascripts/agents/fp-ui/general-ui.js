@@ -50,6 +50,11 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
         $('#editor').click(FiercePlanet.Dialogs.showLevelGallery);
         $('#3d').click(FiercePlanet.Drawing.toggle3d);
 
+        $('#tiltUp').click(FiercePlanet.Drawing.tiltUp);
+        $('#tiltDown').click(FiercePlanet.Drawing.tiltDown);
+        $('#rotateLeft').click(FiercePlanet.Drawing.rotateLeft);
+        $('#rotateRight').click(FiercePlanet.Drawing.rotateRight);
+
         // Admin functions
         $('#debug').click(FiercePlanet.processAgents);
         $('#replay').click(FiercePlanet.Recording.replayWorld);

@@ -20,7 +20,10 @@ var Isometric = Isometric || {};
 
 // "0.46365 (radians) - it's a “classic” 1:2 isometric angle which lays up perfectly into pixel grid of the computer screen. "
 Isometric.PERSPECTIVE_ANGLE = 0.46365;
-//Isometric.PERSPECTIVE_ANGLE = 0.45;
+//Isometric.PERSPECTIVE_ANGLE = 0.30;
+
+Isometric.ROTATION_ANGLE = 0;
+
 
 /**
  * Transforms x,y,z coordinates into Flash x coordinate
@@ -33,6 +36,7 @@ Isometric.offsets3DPoint = function (point3d) {
     var x = point3d[0];
     var y = point3d[1];
     var z = point3d[2];
+
     // Cartesian coordinates
     var xCart = (x-z)*Math.cos(Isometric.PERSPECTIVE_ANGLE);
     // flash coordinates
@@ -41,6 +45,8 @@ Isometric.offsets3DPoint = function (point3d) {
     var yCart = y+(x+z)*Math.sin(Isometric.PERSPECTIVE_ANGLE);
     // flash coordinates
     var yI = -yCart;
+
+
     return {x: xI, y: yI};
 };
 
