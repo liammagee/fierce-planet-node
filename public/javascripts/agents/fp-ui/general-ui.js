@@ -196,7 +196,7 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
 			var ct = Math.atan2(cy, cx);
 			var nt = Math.atan2(ny, nx);
 			var dt = (nt - ct) * ((Math.abs(nx) / midX) + (Math.abs(ny) / midY));
-			console.log(dt)
+//			console.log(dt)
 			
 			Isometric.ROTATION_ANGLE = Isometric.ROTATION_ANGLE + dt;
 			Isometric.PERSPECTIVE_ANGLE = Isometric.PERSPECTIVE_ANGLE + (offsetY / (FiercePlanet.WORLD_HEIGHT / 2));
