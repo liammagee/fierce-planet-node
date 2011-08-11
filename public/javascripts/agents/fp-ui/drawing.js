@@ -1279,15 +1279,21 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
      * Tilt up
      */
     this.tiltUp = function () {
-        Isometric.PERSPECTIVE_ANGLE = Isometric.PERSPECTIVE_ANGLE + 0.05;
-        FiercePlanet.Drawing.drawCanvases();
+        this.tilt(-0.05);
     };
 
     /**
      * Tilt down
      */
     this.tiltDown = function () {
-        Isometric.PERSPECTIVE_ANGLE = Isometric.PERSPECTIVE_ANGLE - 0.05;
+        this.tilt(0.05);
+    };
+
+    /**
+     * Tilt 
+     */
+    this.tilt = function (amount) {
+        Isometric.PERSPECTIVE_ANGLE = Isometric.PERSPECTIVE_ANGLE + amount;
         FiercePlanet.Drawing.drawCanvases();
     };
 
@@ -1295,17 +1301,24 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
      * Rotate left
      */
     this.rotateLeft = function () {
-        Isometric.ROTATION_ANGLE = Isometric.ROTATION_ANGLE - Math.PI / 8;
-        FiercePlanet.Drawing.drawCanvases();
+        this.rotate(-Math.PI / 8); 
     };
 
     /**
      * Rotate down
      */
     this.rotateRight = function () {
-        Isometric.ROTATION_ANGLE = Isometric.ROTATION_ANGLE + Math.PI / 8;
+        this.rotate(Math.PI / 8); 
+    };
+
+    /**
+     * Rotate 
+     */
+    this.rotate = function (amount) {
+        Isometric.ROTATION_ANGLE = Isometric.ROTATION_ANGLE + amount;
         FiercePlanet.Drawing.drawCanvases();
     };
+
 
     /**
      * Resets the flot graph

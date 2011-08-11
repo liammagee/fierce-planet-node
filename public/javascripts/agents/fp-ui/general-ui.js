@@ -187,7 +187,21 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
             var offsetX = ex - FiercePlanet.currentX;
             var offsetY = ey - FiercePlanet.currentY;
 
-            FiercePlanet.Drawing.panByDrag(offsetX, offsetY);
+			var midX = FiercePlanet.WORLD_WIDTH / 2;
+			var midY = FiercePlanet.WORLD_HEIGHT / 2;
+			var	cx = FiercePlanet.currentX - midX;
+			var	cy = FiercePlanet.currentY - midY;
+			var	nx = ex - midX;
+			var	ny = ey - midY;
+			var ct = Math.atan2(cy, cx);
+			var nt = Math.atan2(ny, nx);
+			var dt = (nt - ct) * ((Math.abs(nx) / midX) + (Math.abs(ny) / midY));
+			console.log(dt)
+			
+			Isometric.ROTATION_ANGLE = Isometric.ROTATION_ANGLE + dt;
+			Isometric.PERSPECTIVE_ANGLE = Isometric.PERSPECTIVE_ANGLE + (offsetY / (FiercePlanet.WORLD_HEIGHT / 2));
+            //FiercePlanet.Drawing.panByDrag(offsetX, offsetY);
+			FiercePlanet.Drawing.drawCanvases();
             FiercePlanet.currentX = ex;
             FiercePlanet.currentY = ey;
         }
