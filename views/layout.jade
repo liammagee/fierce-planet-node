@@ -99,6 +99,8 @@ html
         FiercePlanet.GeneralUI.highlightGalleryItem(FiercePlanet.currentLevelNumber);
         $('#difficulty-input-' + FiercePlanet.levelOfDifficulty).attr('checked', 'checked');
         $(".difficultyInput").click(FiercePlanet.GeneralUI.changeDifficulty);
+        document.onselectstart = function() {return false;} // ie
+        document.onmousedown = function() {return false;} // mozilla
       });
 
   body!= body
