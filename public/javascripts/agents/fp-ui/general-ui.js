@@ -50,6 +50,7 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
         $('#editor').click(FiercePlanet.Dialogs.showLevelGallery);
         $('#3d').click(FiercePlanet.Drawing.toggle3d);
 
+        $('#resetView').click(FiercePlanet.Drawing.resetView);
         $('#tiltUp').click(FiercePlanet.Drawing.tiltUp);
         $('#tiltDown').click(FiercePlanet.Drawing.tiltDown);
         $('#rotateLeft').click(FiercePlanet.Drawing.rotateLeft);
@@ -118,6 +119,9 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
             topMostCanvas.mousemove(FiercePlanet.GeneralUI.registerMouseMove);
             topMostCanvas.mouseup(FiercePlanet.GeneralUI.registerMouseUp);
         }
+        topMostCanvas.bind("contextmenu",function(e){
+            return false;
+        });
         topMostCanvas.mousewheel(function(event, delta) {
             FiercePlanet.Drawing.zoom(delta);
             event.preventDefault();
@@ -137,11 +141,8 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
         topMostCanvas.unbind('mousedown', FiercePlanet.GeneralUI.registerMouseDown);
         topMostCanvas.unbind('mousemove', FiercePlanet.GeneralUI.registerMouseMove);
         topMostCanvas.unbind('mouseup', FiercePlanet.GeneralUI.registerMouseUp);
-        topMostCanvas.mousewheel(function(event, delta) {
-            FiercePlanet.Drawing.zoom(delta);
-            event.preventDefault();
-            return false; // prevent default
-        });
+        topMostCanvas.unmousewheel();
+        topMostCanvas.unbind("contextmenu");
     };
 
     /**
@@ -197,10 +198,14 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
 			var nt = Math.atan2(ny, nx);
 			var dt = (nt - ct) * ((Math.abs(nx) / midX) + (Math.abs(ny) / midY));
 //			console.log(dt)
-			
-			Isometric.ROTATION_ANGLE = Isometric.ROTATION_ANGLE + dt;
-			Isometric.PERSPECTIVE_ANGLE = Isometric.PERSPECTIVE_ANGLE + (offsetY / (FiercePlanet.WORLD_HEIGHT / 2));
-            //FiercePlanet.Drawing.panByDrag(offsetX, offsetY);
+
+            if (e.which != 1) {
+                Isometric.ROTATION_ANGLE = Isometric.ROTATION_ANGLE + dt;
+                Isometric.PERSPECTIVE_ANGLE = Isometric.PERSPECTIVE_ANGLE + (offsetY / (FiercePlanet.WORLD_HEIGHT / 2));
+            }
+            else {
+                FiercePlanet.Drawing.panByDrag(offsetX, offsetY);
+            }
 			FiercePlanet.Drawing.drawCanvases();
             FiercePlanet.currentX = ex;
             FiercePlanet.currentY = ey;

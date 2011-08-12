@@ -84,6 +84,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         this.drawEntryPoints();
         this.drawExitPoints();
         this.drawResources();
+        this.drawAgents();
     };
     
     /**
@@ -152,7 +153,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
 //            ctx.clearRect(x + 1, y + 1, FiercePlanet.cellWidth - 1, FiercePlanet.cellHeight - 1);
 
             var terrain = FiercePlanet.currentLevel.terrainMap[pathTile];
-            var pathColor = terrain ? terrain.color : "#fff";
+            var pathColor = terrain ? this.insertAlpha(terrain.color, terrain.alpha) : "#fff";
 
             if ((World.settings.skewTiles || FiercePlanet.currentLevel.isometric)) {
                 var newOrigin = Isometric.doIsometricOffset(xPos, yPos);
@@ -474,11 +475,22 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
      */
     this.insertAlpha = function(color, alphaLevel) {
         var newColor = color;
+
+        if (color.length == 7 || color.length == 4)
+            color = color.substring(1);
+
         // Is the color a six digit hexadecimal?
         if (color.length == 6) {
             var r = color.substring(0, 2);
             var g = color.substring(2, 4);
             var b = color.substring(4, 6);
+            newColor = 'rgba(' + parseInt(r, 16) + ', ' + parseInt(g, 16) + ', ' + parseInt(b, 16) + ', ' + alphaLevel + ')';
+        }
+        // Is the color a six digit hexadecimal?
+        else if (color.length == 3) {
+            var r = color.substring(0, 1) + 'f';
+            var g = color.substring(1, 2) + 'f';
+            var b = color.substring(2, 3) + 'f';
             newColor = 'rgba(' + parseInt(r, 16) + ', ' + parseInt(g, 16) + ', ' + parseInt(b, 16) + ', ' + alphaLevel + ')';
         }
         // Otherwise assume it is rgba() format
@@ -1199,15 +1211,21 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
             switch (direction) {
                 case -1:
                     if (FiercePlanet.zoomLevel > 0.1) {
+                        ctx.translate(FiercePlanet.WORLD_WIDTH / 2, FiercePlanet.WORLD_HEIGHT / 2);
                         ctx.scale(1 / magnify, 1 / magnify);
+                        ctx.translate((- FiercePlanet.WORLD_WIDTH / 2) * (1 / 1), (- FiercePlanet.WORLD_HEIGHT / 2) * (1 / 1));
                     }
                     break;
                 case 0:
+                    ctx.translate(FiercePlanet.WORLD_WIDTH / 2, FiercePlanet.WORLD_HEIGHT / 2);
                     ctx.scale(1 / FiercePlanet.zoomLevel, 1 / FiercePlanet.zoomLevel);
+                    ctx.translate(- FiercePlanet.WORLD_WIDTH / 2, - FiercePlanet.WORLD_HEIGHT / 2);
                     break;
                 case 1:
                     if (FiercePlanet.zoomLevel < 10) {
+                        ctx.translate(FiercePlanet.WORLD_WIDTH / 2, FiercePlanet.WORLD_HEIGHT / 2);
                         ctx.scale(magnify, magnify);
+                        ctx.translate((- FiercePlanet.WORLD_WIDTH / 2) * (1 / 1), (- FiercePlanet.WORLD_HEIGHT / 2) * (1 / 1));
                     }
                     break;
             }
@@ -1276,17 +1294,28 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
     };
 
     /**
+     * Reset view
+     */
+    this.resetView = function () {
+        Isometric.PERSPECTIVE_ANGLE = Isometric.DEFAULT_PERSPECTIVE_ANGLE;
+        Isometric.ROTATION_ANGLE = Isometric.DEFAULT_ROTATION_ANGLE;
+        FiercePlanet.Drawing.zoom(0);
+        FiercePlanet.Drawing.panByDrag(- FiercePlanet.panLeftOffset / FiercePlanet.zoomLevel, - FiercePlanet.panTopOffset / FiercePlanet.zoomLevel);
+        FiercePlanet.Drawing.drawCanvases();
+    };
+
+    /**
      * Tilt up
      */
     this.tiltUp = function () {
-        this.tilt(-0.05);
+        FiercePlanet.Drawing.tilt(-0.05);
     };
 
     /**
      * Tilt down
      */
     this.tiltDown = function () {
-        this.tilt(0.05);
+        FiercePlanet.Drawing.tilt(0.05);
     };
 
     /**
@@ -1301,14 +1330,14 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
      * Rotate left
      */
     this.rotateLeft = function () {
-        this.rotate(-Math.PI / 8); 
+        FiercePlanet.Drawing.rotate(-Math.PI / 8);
     };
 
     /**
      * Rotate down
      */
     this.rotateRight = function () {
-        this.rotate(Math.PI / 8); 
+        FiercePlanet.Drawing.rotate(Math.PI / 8);
     };
 
     /**

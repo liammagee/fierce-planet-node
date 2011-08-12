@@ -84,13 +84,16 @@ FiercePlanet.Utils = FiercePlanet.Utils || {};
         World.settings.scrollingImageVisible = World.settings.scrollingImageVisible || true;
         World.settings.catastrophesVisible = World.settings.catastrophesVisible || true;
         World.settings.disableKeyboardShortcuts = World.settings.disableKeyboardShortcuts || true;
+        World.settings.allowInlinePanning = World.settings.allowInlinePanning || true;
+
         World.settings.soundsPlayable = World.settings.soundsPlayable || false;
         World.settings.useInlineResourceSwatch = World.settings.useInlineResourceSwatch || false;
-        World.settings.allowInlinePanning = World.settings.allowInlinePanning || false;
         World.settings.agentTracing = World.settings.agentTracing || false;
         World.settings.hidePath = World.settings.hidePath || false;
         World.settings.hidePathBorder = World.settings.hidePathBorder || false;
         World.settings.showGraph = World.settings.showGraph || false;
+
+        World.settings.showChat = World.settings.showChat || true;
 
         World.settings.rivalsVisible = World.settings.rivalsVisible || false;
         World.settings.predatorsVisible = World.settings.predatorsVisible || false;
@@ -99,6 +102,9 @@ FiercePlanet.Utils = FiercePlanet.Utils || {};
         World.settings.backgroundIconsVisible = World.settings.backgroundIconsVisible || false;
         World.settings.recording = World.settings.recording || false;
         World.settings.godMode = World.settings.godMode || false;
+
+        World.settings.skewTiles = World.settings.skewTiles || true;
+        World.settings.showResourcesAsBoxes = World.settings.showResourcesAsBoxes || true;
     }
 
     /**

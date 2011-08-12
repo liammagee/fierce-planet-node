@@ -74,6 +74,8 @@
       div
         a#3d(href='#') View 3D
       div
+        a#resetView(href='#') Reset View
+      div
         a#tiltUp(href='#') Tilt Up
       div
         a#tiltDown(href='#') Tilt Down
@@ -282,7 +284,7 @@
             input#useInlineResourceSwatch(type='checkbox')
             label(for='useInlineResourceSwatch') Show inline resource pop-up
           div
-            input#allowInlinePanning(type='checkbox')
+            input#allowInlinePanning(type='checkbox', checked='checked')
             label(for='allowInlinePanning') Allow inline panning
           div
             input#hidePath(type='checkbox')
@@ -293,6 +295,9 @@
           div
             input#showGraph(type='checkbox')
             label(for='showGraph') Show graph
+          div
+            input#showChat(type='checkbox', checked='checked')
+            label(for='showGraph') Show chat
           div
             input#makeSquare(type='checkbox')
             label(for='makeSquare') Make world square
@@ -359,11 +364,11 @@
             input#tilesRemovable(type='checkbox')
             label(for='tilesRemovable') Allow tiles to be removed
           div
-            input#skewTiles(type='checkbox')
-            label(for='skewTiles') View in 2.5D
+            input#skewTiles(type='checkbox', checked='checked')
+            label(for='skewTiles') View in 3D
           div
-            input#showResourcesAsBoxes(type='checkbox')
-            label(for='showResourcesAsBoxes') Show resources as boxes in 2.5D
+            input#showResourcesAsBoxes(type='checkbox', checked='checked')
+            label(for='showResourcesAsBoxes') Show resources as boxes in 3D
 //          div
 //            input#backgroundIconsVisible(type='checkbox')
 //           label(for='backgroundIconsVisible')  Show background icons

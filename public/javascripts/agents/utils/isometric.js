@@ -19,10 +19,12 @@ var Isometric = Isometric || {};
 // Adapted from Danko Kozar, http://www.flashperfection.com/tutorials/Isometric-Transformations-15818.html
 
 // "0.46365 (radians) - it's a “classic” 1:2 isometric angle which lays up perfectly into pixel grid of the computer screen. "
-Isometric.PERSPECTIVE_ANGLE = 0.46365;
+Isometric.DEFAULT_PERSPECTIVE_ANGLE = 0.46365;
 //Isometric.PERSPECTIVE_ANGLE = 0.30;
+Isometric.PERSPECTIVE_ANGLE = Isometric.DEFAULT_PERSPECTIVE_ANGLE;
 
-Isometric.ROTATION_ANGLE = 0;
+Isometric.DEFAULT_ROTATION_ANGLE = 0;
+Isometric.ROTATION_ANGLE = Isometric.DEFAULT_ROTATION_ANGLE;
 
 
 /**

@@ -9,12 +9,14 @@
  * Terrain constants
  */
 var DEFAULT_TERRAIN_COLOR = "0FFF1F";
+var DEFAULT_TERRAIN_ALPHA = 1.0;
 
 /**
  * Tile class definition
  * @constructor
  */
-function Terrain(color) {
+function Terrain(color, alpha) {
     this.color = color || DEFAULT_TERRAIN_COLOR;
+    this.alpha = alpha || DEFAULT_TERRAIN_ALPHA;
 }
 Terrain.DEFAULT_TERRAIN = new Terrain(DEFAULT_TERRAIN_COLOR);
