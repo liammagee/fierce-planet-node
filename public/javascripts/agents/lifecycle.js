@@ -79,7 +79,10 @@ FiercePlanet.newLevel = function() {
     FiercePlanet.currentNotice = FiercePlanet.currentLevel.tip;
     $("#notifications").toggle(World.settings.statusBarVisible);
     FiercePlanet.GeneralUI.notify("Starting level " + FiercePlanet.currentLevel.id + "...");
-    FiercePlanet.GeneralUI.levelInfo();
+    if (World.settings.sendEventsToServer) {
+        notifyEvent("level", FiercePlanet.currentLevel.id);
+    }
+//    FiercePlanet.GeneralUI.levelInfo();
 };
 
 
@@ -100,6 +103,10 @@ FiercePlanet.restartLevel = function() {
  * Called when a level is started
  */
 FiercePlanet.startLevel = function() {
+    if (World.settings.sendEventsToServer) {
+        notifyEvent("start", null);
+    }
+
     FiercePlanet._startAudio();
     FiercePlanet.Drawing.animateLevel();
     // Start a new level
@@ -186,6 +193,9 @@ FiercePlanet.playGame = function() {
         FiercePlanet.pauseGame();
     }
     else {
+        if (World.settings.sendEventsToServer) {
+            notifyEvent("play", null);
+        }
         FiercePlanet._startAudio();
         $('#playAgents').removeClass('pausing');
         $('#playAgents').addClass('playing');
@@ -203,6 +213,10 @@ FiercePlanet.playGame = function() {
 FiercePlanet.pauseGame = function() {
     if (!FiercePlanet.inPlay)
         return;
+    if (World.settings.sendEventsToServer) {
+        notifyEvent("pause", null);
+    }
+
     FiercePlanet._stopAudio();
     FiercePlanet._stopAgents();
 };
@@ -281,16 +295,16 @@ FiercePlanet._initialiseGame = function () {
     FiercePlanet.resourceRecoveryCycle = Math.pow(World.settings.rateOfResourceRecovery, FiercePlanet.levelOfDifficulty - 1);
 
     FiercePlanet.numAgents = FiercePlanet.currentLevel.initialAgentNumber;
-    FiercePlanet.worldWidth = FiercePlanet.currentLevel.worldWidth;
-    FiercePlanet.worldHeight = FiercePlanet.currentLevel.worldHeight;
-    FiercePlanet.cellWidth = Math.round(FiercePlanet.WORLD_WIDTH / FiercePlanet.worldWidth);
-    FiercePlanet.cellHeight = Math.round(FiercePlanet.WORLD_HEIGHT / FiercePlanet.worldHeight);
-    FiercePlanet.pieceWidth = Math.round(FiercePlanet.cellWidth * 0.5);
-    FiercePlanet.pieceHeight = Math.round(FiercePlanet.cellHeight * 0.5);
-//    FiercePlanet.cellWidth = FiercePlanet.WORLD_WIDTH / FiercePlanet.worldWidth;
-//    FiercePlanet.cellHeight = FiercePlanet.WORLD_HEIGHT / FiercePlanet.worldHeight;
-//    FiercePlanet.pieceWidth = FiercePlanet.cellWidth * 0.5;
-//    FiercePlanet.pieceHeight = FiercePlanet.cellHeight * 0.5;
+    FiercePlanet.cellsAcross = FiercePlanet.currentLevel.cellsAcross;
+    FiercePlanet.cellsDown = FiercePlanet.currentLevel.cellsDown;
+    FiercePlanet.Orientation.cellWidth = Math.round(FiercePlanet.Orientation.worldWidth / FiercePlanet.cellsAcross);
+    FiercePlanet.Orientation.cellHeight = Math.round(FiercePlanet.Orientation.worldHeight / FiercePlanet.cellsDown);
+    FiercePlanet.Orientation.pieceWidth = Math.round(FiercePlanet.Orientation.cellWidth * 0.5);
+    FiercePlanet.Orientation.pieceHeight = Math.round(FiercePlanet.Orientation.cellHeight * 0.5);
+//    FiercePlanet.Orientation.cellWidth = FiercePlanet.Orientation.worldWidth / FiercePlanet.cellsAcross;
+//    FiercePlanet.Orientation.cellHeight = FiercePlanet.Orientation.worldHeight / FiercePlanet.worldHeight;
+//    FiercePlanet.Orientation.pieceWidth = FiercePlanet.Orientation.cellWidth * 0.5;
+//    FiercePlanet.Orientation.pieceHeight = FiercePlanet.Orientation.cellHeight * 0.5;
     FiercePlanet.scrollingImage.src = "/images/yellow-rain.png";
 
     // Set up level

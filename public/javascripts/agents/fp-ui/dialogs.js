@@ -72,10 +72,10 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
     this.setupDialogs = function() {
         var dialogX = this.calculateWorldLeft();
         var dialogY = this.calculateWorldTop();
-        var dfWidth = FiercePlanet.WORLD_WIDTH * 3 / 5;
-        var dfHeight = FiercePlanet.WORLD_HEIGHT * 3 / 4;
-        var dfX = dialogX + ((FiercePlanet.WORLD_WIDTH - dfWidth) / 2);
-        var dfY = dialogY + ((FiercePlanet.WORLD_HEIGHT - dfHeight) / 2);
+        var dfWidth = FiercePlanet.Orientation.worldWidth * 3 / 5;
+        var dfHeight = FiercePlanet.Orientation.worldHeight * 3 / 4;
+        var dfX = dialogX + ((FiercePlanet.Orientation.worldWidth - dfWidth) / 2);
+        var dfY = dialogY + ((FiercePlanet.Orientation.worldHeight - dfHeight) / 2);
 
         // Dialogs
 
@@ -83,8 +83,8 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
             .html('New Level')
             .dialog({
                 position: [dialogX, dialogY],
-                width: FiercePlanet.WORLD_WIDTH + 7,
-                height: FiercePlanet.WORLD_HEIGHT + 7,
+                width: FiercePlanet.Orientation.worldWidth + 7,
+                height: FiercePlanet.Orientation.worldHeight + 7,
                 autoOpen: false,
                 modal: true,
                 title: 'New Level',
@@ -108,8 +108,8 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
             .html('Level Complete!')
             .dialog({
                                                           position: [dialogX, dialogY],
-                                                          width: FiercePlanet.WORLD_WIDTH + 7,
-                                                          height: FiercePlanet.WORLD_HEIGHT + 7,
+                                                          width: FiercePlanet.Orientation.worldWidth + 7,
+                                                          height: FiercePlanet.Orientation.worldHeight + 7,
                 autoOpen: false,
                  modal: true,
                 title: 'Level Complete!',
@@ -129,8 +129,8 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
             .html('Complete game!')
             .dialog({
                  position: [dialogX, dialogY],
-                 width: FiercePlanet.WORLD_WIDTH + 7,
-                 height: FiercePlanet.WORLD_HEIGHT + 7,
+                 width: FiercePlanet.Orientation.worldWidth + 7,
+                 height: FiercePlanet.Orientation.worldHeight + 7,
                 autoOpen: false,
                 modal: true,
                 title: 'Fierce Planet Complete!',
@@ -154,8 +154,8 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
             .html('Game Over!')
             .dialog({
                                                      position: [dialogX, dialogY],
-                                                     width: FiercePlanet.WORLD_WIDTH + 7,
-                                                     height: FiercePlanet.WORLD_HEIGHT + 7,
+                                                     width: FiercePlanet.Orientation.worldWidth + 7,
+                                                     height: FiercePlanet.Orientation.worldHeight + 7,
                 autoOpen: false,
                 modal: true,
                 title: 'Game Over!',
@@ -175,8 +175,8 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
         this.upgradeDeleteDialog = $('#delete-upgrade-dialog')
             .dialog({
                                                           position: [dialogX, dialogY],
-                                                          width: FiercePlanet.WORLD_WIDTH + 7,
-                                                          height: FiercePlanet.WORLD_HEIGHT + 7,
+                                                          width: FiercePlanet.Orientation.worldWidth + 7,
+                                                          height: FiercePlanet.Orientation.worldHeight + 7,
                 autoOpen: false,
                 modal: true,
                 title: 'Upgrade or Delete Resource',
@@ -190,8 +190,8 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
         this.resourceGalleryDialog = $('#resource-gallery-tabs')
             .dialog({
                                                             position: [dialogX, dialogY],
-                                                            width: FiercePlanet.WORLD_WIDTH + 7,
-                                                            height: FiercePlanet.WORLD_HEIGHT + 7,
+                                                            width: FiercePlanet.Orientation.worldWidth + 7,
+                                                            height: FiercePlanet.Orientation.worldHeight + 7,
                 autoOpen: false,
                 modal: true,
                 title: 'Resource Gallery',
@@ -213,8 +213,8 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
         this.levelGalleryDialog = $('#level-gallery-dialog')
             .dialog({
                                               position: [dialogX, dialogY],
-                                                           width: FiercePlanet.WORLD_WIDTH + 7,
-                                                           height: FiercePlanet.WORLD_HEIGHT + 7,
+                                                           width: FiercePlanet.Orientation.worldWidth + 7,
+                                                           height: FiercePlanet.Orientation.worldHeight + 7,
                 autoOpen: false,
                 modal: true,
                 title: 'Level Gallery',
@@ -235,8 +235,8 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
         this.settingsDialog = $('#settings-dialog')
             .dialog({
                                               position: [dialogX, dialogY],
-                                                           width: FiercePlanet.WORLD_WIDTH + 7,
-                                                           height: FiercePlanet.WORLD_HEIGHT + 7,
+                                                           width: FiercePlanet.Orientation.worldWidth + 7,
+                                                           height: FiercePlanet.Orientation.worldHeight + 7,
                 autoOpen: false,
                 modal: true,
                 title: 'Settings',
@@ -282,8 +282,8 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
         this.statsDialog = $('<div></div>')
             .dialog({
                                                     position: [dialogX, dialogY],
-                                                        width: FiercePlanet.WORLD_WIDTH + 7,
-                                                        height: FiercePlanet.WORLD_HEIGHT + 7,
+                                                        width: FiercePlanet.Orientation.worldWidth + 7,
+                                                        height: FiercePlanet.Orientation.worldHeight + 7,
                 autoOpen: false,
                 modal: true,
                 title: 'Vital Statistics',
@@ -336,8 +336,8 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
             .html('Edit level properties')
             .dialog({
                position: [dialogX, dialogY],
-               width: FiercePlanet.WORLD_WIDTH + 7,
-               height: FiercePlanet.WORLD_HEIGHT + 7,
+               width: FiercePlanet.Orientation.worldWidth + 7,
+               height: FiercePlanet.Orientation.worldHeight + 7,
                 autoOpen: false,
                 modal: true,
                 title: 'Edit level properties',

@@ -53,9 +53,9 @@ FiercePlanet.EXTREME_DIFFICULTY = 4;
 
 // Dimension constants
 /** @constant The width of the world (should equal the width of all canvases */
-FiercePlanet.WORLD_WIDTH = 480;
+FiercePlanet.Orientation.worldWidth = 480;
 /** @constant The height of the world (should equal the height of all canvases */
-FiercePlanet.WORLD_HEIGHT = 400;
+FiercePlanet.Orientation.worldHeight = 400;
 
 /** @constant The default width of notices */
 FiercePlanet.WAVE_NOTICE_WIDTH = 200;
@@ -114,12 +114,12 @@ FiercePlanet.globalRecordingCounter = 0;
 
 
 // Dimension variables
-FiercePlanet.worldWidth = 14;
-FiercePlanet.worldHeight = 11;
-FiercePlanet.cellWidth = FiercePlanet.WORLD_WIDTH / FiercePlanet.worldWidth;
-FiercePlanet.cellHeight = FiercePlanet.WORLD_HEIGHT / FiercePlanet.worldHeight;
-FiercePlanet.pieceWidth = FiercePlanet.cellWidth * 0.5;
-FiercePlanet.pieceHeight = FiercePlanet.cellHeight * 0.5;
+FiercePlanet.cellsAcross = 14;
+FiercePlanet.cellsDown = 11;
+FiercePlanet.Orientation.cellWidth = FiercePlanet.Orientation.worldWidth / FiercePlanet.cellsAcross;
+FiercePlanet.Orientation.cellHeight = FiercePlanet.Orientation.worldHeight / FiercePlanet.cellsDown;
+FiercePlanet.Orientation.pieceWidth = FiercePlanet.Orientation.cellWidth * 0.5;
+FiercePlanet.Orientation.pieceHeight = FiercePlanet.Orientation.cellHeight * 0.5;
 
 
 
@@ -133,12 +133,6 @@ FiercePlanet.googleMap = null;
 
 
 // Viewport variables
-FiercePlanet.zoomLevel = 1;
-FiercePlanet.externalZoomLevel = 1;
-
-FiercePlanet.panLeftOffset = 0;
-FiercePlanet.panTopOffset = 0;
-
 FiercePlanet.currentX = null;
 FiercePlanet.currentY = null;
 

@@ -22,8 +22,8 @@ function Notice(text, x, y, start, duration, width, height, backgroundColor, for
     this.text = text || "";
     this.start = start || FiercePlanet.gameCounter;
     this.duration = duration || 150;
-    this.x = x || (Math.random() * (FiercePlanet.WORLD_WIDTH - FiercePlanet.WAVE_NOTICE_WIDTH));
-    this.y = y || Math.random() * (FiercePlanet.WORLD_HEIGHT - FiercePlanet.WAVE_NOTICE_HEIGHT);
+    this.x = x || (Math.random() * (FiercePlanet.Orientation.worldWidth - FiercePlanet.WAVE_NOTICE_WIDTH));
+    this.y = y || Math.random() * (FiercePlanet.Orientation.worldHeight - FiercePlanet.WAVE_NOTICE_HEIGHT);
     this.width = width || FiercePlanet.WAVE_NOTICE_WIDTH;
     this.height = height || FiercePlanet.WAVE_NOTICE_HEIGHT;
     this.backgroundColor = backgroundColor || 'rgba(32, 98, 210)';

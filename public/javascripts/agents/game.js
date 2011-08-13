@@ -117,8 +117,18 @@ FiercePlanet.processAgents = function() {
                     agent.resetCountdownToMove();
                     if (!FiercePlanet.currentLevel.noSpeedChange && World.settings.agentsCanAdjustSpeed)
                         agent.adjustSpeed();
-                    if (!FiercePlanet.currentLevel.noWander && World.settings.agentsCanAdjustWander)
-                        agent.adjustWander(FiercePlanet.cellWidth, FiercePlanet.pieceWidth);
+                    if (!FiercePlanet.currentLevel.noWander && World.settings.agentsCanAdjustWander) {
+                        // Make sure agents don't wander over boxes in 3D view
+                        if (World.settings.showResourcesAsBoxes && World.settings.skewTiles) {
+                            agent.adjustWander(FiercePlanet.Orientation.cellWidth, 0);
+                            agent.wanderX = Math.abs(agent.wanderX);
+                            agent.wanderY = Math.abs(agent.wanderY);
+                        }
+                        else {
+                            agent.adjustWander(FiercePlanet.Orientation.cellWidth, FiercePlanet.Orientation.pieceWidth);
+                        }
+                    }
+
                 }
 
                 if (agent.age > FiercePlanet.maxWaveMoves)
@@ -151,6 +161,18 @@ FiercePlanet.processAgents = function() {
                 agent.incrementCountdownToMove();
             }
         }
+
+
+    }
+    if (World.settings.sendEventsToServer && !World.settings.spectate) {
+        var simpleAgents = [];
+        agents.forEach(function(agent) {
+//            var simpleAgent = new SimpleAgent(agent.agentType, agent.x, agent.y, agent.color, agent.speed, agent.health, agent.wanderX, agent.wanderY, agent.lastMemory, agent.delay, agent.countdownToMove, agent.healthCategoryStats);
+            var simpleAgent = $.extend(true, {}, agent);
+            simpleAgent.wipeMemory();
+            simpleAgents.push(simpleAgent);
+        });
+        notifyEvent('agents', simpleAgents);
     }
 
 

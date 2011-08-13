@@ -20,8 +20,8 @@ function Level(id) {
     this.exitPoints = [];
 
     // Dimensions
-    this.worldWidth = 10;
-    this.worldHeight = 10;
+    this.cellsAcross = 10;
+    this.cellsDown = 10;
 
     // Parameters
     this.initialAgentNumber = 1;
@@ -79,7 +79,7 @@ function Level(id) {
  * @param y
  */
 Level.prototype.getTile = function(x, y) {
-    var tilePosition = y * this.worldWidth + x;
+    var tilePosition = y * this.cellsAcross + x;
     return this.tiles[tilePosition];
 };
 /**
@@ -92,11 +92,11 @@ Level.prototype.getSurroundingTiles = function(x, y) {
 
     if (x > 0)
         surroundingTiles.push(this.getTile(x - 1, y));
-    if (x < this.worldWidth - 1)
+    if (x < this.cellsAcross - 1)
         surroundingTiles.push(this.getTile(x + 1, y));
     if (y > 0)
         surroundingTiles.push(this.getTile(x, y - 1));
-    if (y < this.worldHeight - 1)
+    if (y < this.cellsDown - 1)
         surroundingTiles.push(this.getTile(x, y + 1));
 
     return surroundingTiles;
@@ -119,7 +119,7 @@ Level.prototype.setTiles = function(tiles) {
  * @param tile
  */
 Level.prototype.addTile = function(tile) {
-    var position = tile.y * this.worldWidth + tile.x;
+    var position = tile.y * this.cellsAcross + tile.x;
     if (this.tiles[position] != null)
         throw new Error("Tile is already occupied!");
     this.tiles[position] = tile;
@@ -143,7 +143,7 @@ Level.prototype.addDefaultTile = function(x, y) {
  * @param y
  */
 Level.prototype.removeTile = function(x, y) {
-    var tilePosition = y * this.worldWidth + x;
+    var tilePosition = y * this.cellsAcross + x;
     this.tiles[tilePosition] = undefined;
     // This fails when trying to add back tile at this co-ordinate
 //    this.tiles.splice(tilePosition, 1);
@@ -156,8 +156,8 @@ Level.prototype.removeTile = function(x, y) {
  */
 Level.prototype.fillWithTiles = function() {
     this.tiles = [];
-    for (var i = 0; i < this.worldHeight; i++) {
-        for (var j = 0; j < this.worldWidth; j++) {
+    for (var i = 0; i < this.cellsDown; i++) {
+        for (var j = 0; j < this.cellsAcross; j++) {
             var tile = new Tile(DEFAULT_TILE_COLOR, j, i);
             this.tiles.push(tile);
             this.addCell(tile.x, tile.y, tile);
@@ -172,9 +172,9 @@ Level.prototype.fillWithTiles = function() {
 Level.prototype.removeAllTiles = function() {
 //    this.tiles = [];
 //    this.cells = {};
-    for (var i = 0; i < this.worldWidth; i++) {
-        for (var j = 0; j < this.worldHeight; j++) {
-            var tilePosition = j * this.worldWidth + i;
+    for (var i = 0; i < this.cellsAcross; i++) {
+        for (var j = 0; j < this.cellsDown; j++) {
+            var tilePosition = j * this.cellsAcross + i;
             this.tiles[tilePosition] = undefined;
             this.annulCell(i, j);
         }
@@ -202,9 +202,9 @@ Level.prototype.removeTiles = function(start, number) {
  */
 Level.prototype.generatePath = function() {
     var pathCells = [];
-    for (var i = 0; i < this.worldHeight; i++) {
-        for (var j = 0; j < this.worldWidth; j++) {
-            var tilePosition = i * this.worldWidth + j;
+    for (var i = 0; i < this.cellsDown; i++) {
+        for (var j = 0; j < this.cellsAcross; j++) {
+            var tilePosition = i * this.cellsAcross + j;
             if (this.tiles[tilePosition] == undefined)
                 pathCells.push([j, i]);
         }
@@ -423,6 +423,16 @@ Level.prototype.setCurrentAgents = function(currentAgents) {
     }
 };
 Level.prototype.getAgentByID = function(agentID) { return this.currentAgentsMap[agentID]; };
+
+/**
+ * Add agent
+ */
+Level.prototype.addAgent = function(agent) {
+    this.currentAgents.push(agent);
+    this.currentAgentsMap[agent.id] = agent;
+};
+
+
 /**
  *
  * @param agentType

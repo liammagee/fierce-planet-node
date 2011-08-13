@@ -22,7 +22,8 @@ app.configure(function(){
 });
 
 app.configure('development', function(){
-  app.use(express.errorHandler({ dumpExceptions: true, showStack: true })); 
+//  app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
+    app.use(express.errorHandler());
 });
 
 app.configure('production', function(){
@@ -40,7 +41,7 @@ levels[0].name = 'test level 1';
 levels[1].name = 'test level 2';
 levels[2].name = 'test level 3';
 levelProvider.save(levels, function(error, levels){
-    console.log(error);
+    //console.log(error);
 });
 
 app.get('/', function(req, res){
@@ -90,14 +91,17 @@ app.listen(port);
 var io = require('socket.io').listen(app);
 
 // Hack for heroku... needs web sockets support
-io.configure(function() {
-    io.set("transports", ["xhr-polling", "flashsocket", "json-polling"]);
-});
+//io.configure(function() {
+//    io.set("transports", ["xhr-polling", "flashsocket", "json-polling"]);
+//});
 
-io.sockets.on('connection', function (socket) {
+io.sockets.on('connection', function(socket) {
   socket.emit('message', ['server', 'Welcome to Fierce Planet']);
-  socket.on('message', function (data) {
+  socket.on('message', function(data) {
     socket.broadcast.emit('message', data);
+  });
+  socket.on('event', function(data) {
+    socket.broadcast.emit('event', data);
   });
 });
 

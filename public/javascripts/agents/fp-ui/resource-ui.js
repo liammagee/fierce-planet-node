@@ -30,7 +30,7 @@ FiercePlanet.ResourceUI = FiercePlanet.ResourceUI || {};
                     $('#' + el.id).draggable({
 //                    appendTo: agentCanvas,
 //                    containment: agentCanvas,
-//                    grid: [FiercePlanet.cellWidth, FiercePlanet.cellHeight],
+//                    grid: [FiercePlanet.Orientation.cellWidth, FiercePlanet.Orientation.cellHeight],
                         cursor: "pointer",
                         helper: "clone",
                         start: function(event, ui) {
@@ -127,8 +127,8 @@ FiercePlanet.ResourceUI = FiercePlanet.ResourceUI || {};
         var width = 200, height = 240;
         posX = dialogX + x - (width / 2);
         posY = dialogY + y - (height / 2);
-        posX = (posX < dialogX ? dialogX : (posX + width > dialogX + FiercePlanet.WORLD_WIDTH ? (dialogX + FiercePlanet.WORLD_WIDTH - width) : posX));
-        posY = (posY < dialogY ? dialogY : (posY + height > dialogY + FiercePlanet.WORLD_HEIGHT ? (dialogY + FiercePlanet.WORLD_HEIGHT - height) : posY));
+        posX = (posX < dialogX ? dialogX : (posX + width > dialogX + FiercePlanet.Orientation.worldWidth ? (dialogX + FiercePlanet.Orientation.worldWidth - width) : posX));
+        posY = (posY < dialogY ? dialogY : (posY + height > dialogY + FiercePlanet.Orientation.worldHeight ? (dialogY + FiercePlanet.Orientation.worldHeight - height) : posY));
 
         var swatchCopy = $('#swatch').clone();
         swatchCopy.attr('id', 'inline-swatch');
@@ -230,10 +230,14 @@ FiercePlanet.ResourceUI = FiercePlanet.ResourceUI || {};
             FiercePlanet.currentProfile.spendResource(resource);
             FiercePlanet.currentLevel.addResource(resource);
 
-            FiercePlanet.Drawing.drawResource(resource);
+            FiercePlanet.Drawing.drawResources();
+//            FiercePlanet.Drawing.drawResource(resource);
             FiercePlanet.Drawing.drawResourcesInStore();
 
             FiercePlanet.eventTarget.fire(new Event("resource", resource, "added", FiercePlanet.gameCounter, FiercePlanet.currentLevel));
+            if (World.settings.sendEventsToServer) {
+                notifyEvent('resource', resource);
+            }
         }
         if (World.settings.useInlineResourceSwatch)
             FiercePlanet.currentResourceId = null;

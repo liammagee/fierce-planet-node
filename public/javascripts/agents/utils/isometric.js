@@ -20,11 +20,11 @@ var Isometric = Isometric || {};
 
 // "0.46365 (radians) - it's a “classic” 1:2 isometric angle which lays up perfectly into pixel grid of the computer screen. "
 Isometric.DEFAULT_PERSPECTIVE_ANGLE = 0.46365;
-//Isometric.PERSPECTIVE_ANGLE = 0.30;
-Isometric.PERSPECTIVE_ANGLE = Isometric.DEFAULT_PERSPECTIVE_ANGLE;
+//FiercePlanet.Orientation.perspectiveAngle = 0.30;
+FiercePlanet.Orientation.perspectiveAngle = Isometric.DEFAULT_PERSPECTIVE_ANGLE;
 
 Isometric.DEFAULT_ROTATION_ANGLE = 0;
-Isometric.ROTATION_ANGLE = Isometric.DEFAULT_ROTATION_ANGLE;
+FiercePlanet.Orientation.rotationAngle = Isometric.DEFAULT_ROTATION_ANGLE;
 
 
 /**
@@ -40,11 +40,11 @@ Isometric.offsets3DPoint = function (point3d) {
     var z = point3d[2];
 
     // Cartesian coordinates
-    var xCart = (x-z)*Math.cos(Isometric.PERSPECTIVE_ANGLE);
+    var xCart = (x-z)*Math.cos(FiercePlanet.Orientation.perspectiveAngle);
     // flash coordinates
     var xI = xCart;
     // Cartesian coordinates
-    var yCart = y+(x+z)*Math.sin(Isometric.PERSPECTIVE_ANGLE);
+    var yCart = y+(x+z)*Math.sin(FiercePlanet.Orientation.perspectiveAngle);
     // flash coordinates
     var yI = -yCart;
 
@@ -123,11 +123,11 @@ Isometric.draw3DTile = function (context, origin, tileSize) {
  * @param z
  */
 Isometric.doIsometricOffset = function (xPos, yPos) {
-    var tileOffset = Isometric.offsets3DPoint([FiercePlanet.cellHeight, 0, 0]);
-    var midTileX = (FiercePlanet.worldWidth - 1) / 2;
-    var midTileY = (FiercePlanet.worldHeight - 1) / 2;
-    var midTilePosX = midTileX * FiercePlanet.cellWidth;
-    var midTilePosY = midTileY * FiercePlanet.cellHeight;
+    var tileOffset = Isometric.offsets3DPoint([FiercePlanet.Orientation.cellHeight, 0, 0]);
+    var midTileX = (FiercePlanet.cellsAcross - 1) / 2;
+    var midTileY = (FiercePlanet.cellsDown - 1) / 2;
+    var midTilePosX = midTileX * FiercePlanet.Orientation.cellWidth;
+    var midTilePosY = midTileY * FiercePlanet.Orientation.cellHeight;
 
     var diffX = xPos - midTileX;
     var diffY = yPos - midTileY;
@@ -143,11 +143,11 @@ Isometric.doIsometricOffset = function (xPos, yPos) {
  * TODO: Needs proper mathematical reversal of all angular transformations
  */
 Isometric.normaliseCoordinates = function (x, y) {
-    var tileOffset = Isometric.offsets3DPoint([FiercePlanet.cellHeight, 0, 0]);
-    var midTilePosX = FiercePlanet.WORLD_WIDTH / 2;
-    var midTilePosY = FiercePlanet.WORLD_HEIGHT / 2;
+    var tileOffset = Isometric.offsets3DPoint([FiercePlanet.Orientation.cellHeight, 0, 0]);
+    var midTilePosX = FiercePlanet.Orientation.halfWorldWidth;
+    var midTilePosY = FiercePlanet.Orientation.halfWorldHeight;
 
-    var isoCellRatio = FiercePlanet.cellWidth / (tileOffset.x * 2);
+    var isoCellRatio = FiercePlanet.Orientation.cellWidth / (tileOffset.x * 2);
     var diffX = (x - midTilePosX) * isoCellRatio;
     var diffY = (y - midTilePosY);
     var newXPos = diffX - (diffY * midTilePosX / midTilePosY);
@@ -186,7 +186,7 @@ Isometric.roundTo = function (value, number) {
  * @param z
  */
 Isometric.xFla = function (xOrigin, x, y, z) {
-    var xCart = (x-z)*Math.cos(Isometric.PERSPECTIVE_ANGLE);
+    var xCart = (x-z)*Math.cos(FiercePlanet.Orientation.perspectiveAngle);
     // flash coordinates
     var xI = xCart + xOrigin;
     return (xI);
@@ -200,7 +200,7 @@ Isometric.xFla = function (xOrigin, x, y, z) {
  * @param z
  */
 Isometric.yFla = function (yOrigin, x, y, z) {
-    var yCart = y+(x+z)*Math.sin(Isometric.PERSPECTIVE_ANGLE);
+    var yCart = y+(x+z)*Math.sin(FiercePlanet.Orientation.perspectiveAngle);
     // flash coordinates
     var yI = -yCart + yOrigin;
     return (yI);

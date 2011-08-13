@@ -188,8 +188,8 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
             var offsetX = ex - FiercePlanet.currentX;
             var offsetY = ey - FiercePlanet.currentY;
 
-			var midX = FiercePlanet.WORLD_WIDTH / 2;
-			var midY = FiercePlanet.WORLD_HEIGHT / 2;
+			var midX = FiercePlanet.Orientation.halfWorldWidth;
+			var midY = FiercePlanet.Orientation.halfWorldHeight;
 			var	cx = FiercePlanet.currentX - midX;
 			var	cy = FiercePlanet.currentY - midY;
 			var	nx = ex - midX;
@@ -197,11 +197,10 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
 			var ct = Math.atan2(cy, cx);
 			var nt = Math.atan2(ny, nx);
 			var dt = (nt - ct) * ((Math.abs(nx) / midX) + (Math.abs(ny) / midY));
-//			console.log(dt)
 
-            if (e.which != 1) {
-                Isometric.ROTATION_ANGLE = Isometric.ROTATION_ANGLE + dt;
-                Isometric.PERSPECTIVE_ANGLE = Isometric.PERSPECTIVE_ANGLE + (offsetY / (FiercePlanet.WORLD_HEIGHT / 2));
+            if ((!World.settings.reverseMouseClickEffects && e.which != 1) || (World.settings.reverseMouseClickEffects && e.which == 1)) {
+                FiercePlanet.Orientation.rotationAngle = FiercePlanet.Orientation.rotationAngle + dt;
+                FiercePlanet.Orientation.perspectiveAngle = FiercePlanet.Orientation.perspectiveAngle + (offsetY / (FiercePlanet.Orientation.halfWorldHeight));
             }
             else {
                 FiercePlanet.Drawing.panByDrag(offsetX, offsetY);
@@ -391,31 +390,41 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
      * @param e
      */
     this.getCurrentPositionByCoordinates = function(x, y) {
-        x -= FiercePlanet.panLeftOffset;
-        y -= FiercePlanet.panTopOffset;
-        x /= FiercePlanet.zoomLevel;
-        y /= FiercePlanet.zoomLevel;
-    //    x /= FiercePlanet.externalZoomLevel;
-    //    y /= FiercePlanet.externalZoomLevel;
+        x -= FiercePlanet.Orientation.offsetX;
+        y -= FiercePlanet.Orientation.offsetY;
+        x /= FiercePlanet.Orientation.zoomLevel;
+        y /= FiercePlanet.Orientation.zoomLevel;
+    //    x /= FiercePlanet.Orientation.externalZoomLevel;
+    //    y /= FiercePlanet.Orientation.externalZoomLevel;
 
         // Compensate for border
-        x -= (1 / FiercePlanet.zoomLevel);
-        y -= (1 / FiercePlanet.zoomLevel);
-        var posX = Math.floor(x / FiercePlanet.cellWidth);
-        var posY = Math.floor(y / FiercePlanet.cellHeight);
+        x -= (1 / FiercePlanet.Orientation.zoomLevel);
+        y -= (1 / FiercePlanet.Orientation.zoomLevel);
+
+        // Correct for rotation
+//        if (FiercePlanet.Orientation.rotationAngle != 0) {
+            var newPos = FiercePlanet.Orientation.getRotationOffset(x, y);
+//            console.log(FiercePlanet.Orientation.rotationAngle );
+            console.log('x:' + x + '; y:' + y +'; newx:' + newPos.x + '; new y:' + newPos.y );
+            x = newPos.x;
+            y = newPos.y;
+//        }
+
+        var posX = Math.floor(x / FiercePlanet.Orientation.cellWidth);
+        var posY = Math.floor(y / FiercePlanet.Orientation.cellHeight);
 
 
         // Adjust for full-screen mode
         var sw = $("#baseCanvas").width();
         var sh = $("#baseCanvas").height();
-        posX = Math.floor(posX / (sw / FiercePlanet.WORLD_WIDTH));
-        posY = Math.floor(posY / (sh / FiercePlanet.WORLD_HEIGHT));
+        posX = Math.floor(posX / (sw / FiercePlanet.Orientation.worldWidth));
+        posY = Math.floor(posY / (sh / FiercePlanet.Orientation.worldHeight));
 
-        // Correct for isometric view
+        // Correct for tilt isometric view
         if (World.settings.skewTiles || FiercePlanet.currentLevel.isometric) {
             var point = Isometric.normaliseCoordinates(x, y);
-            posX = Math.floor(point.x / FiercePlanet.cellWidth);
-            posY = Math.floor(point.y / FiercePlanet.cellHeight);
+            posX = Math.floor(point.x / FiercePlanet.Orientation.cellWidth);
+            posY = Math.floor(point.y / FiercePlanet.Orientation.cellHeight);
         }
 
         return {posX:posX, posY:posY};
@@ -476,7 +485,7 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
                 $('#' + el.id).draggable({
     //                    appendTo: agentCanvas,
     //                    containment: agentCanvas,
-    //                    grid: [FiercePlanet.cellWidth, FiercePlanet.cellHeight],
+    //                    grid: [FiercePlanet.Orientation.cellWidth, FiercePlanet.Orientation.cellHeight],
                     cursor: "pointer",
                     helper: "clone",
                     start: function(event, ui) {

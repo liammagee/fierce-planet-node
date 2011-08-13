@@ -13,6 +13,59 @@
       document.getElementById('chat').appendChild(el);
     }
 
+    function receiveEvent(obj){
+//        console.log(obj);
+        var eventType = obj[0];
+        if (eventType == 'level') {
+            var levelNumber = obj[1];
+            if (World.settings.spectate) {
+                FiercePlanet.currentLevelNumber = levelNumber;
+                FiercePlanet.currentLevelPreset = true;
+                FiercePlanet.newLevel();
+//                FiercePlanet.startLevel();
+            }
+        }
+        else if (eventType == 'start') {
+            if (World.settings.spectate) {
+                FiercePlanet.Dialogs.newLevelDialog.dialog('close');
+//                FiercePlanet.startLevel();
+            }
+        }
+        else if (eventType == 'play') {
+            if (World.settings.spectate) {
+//                FiercePlanet.pauseGame();
+            }
+        }
+        else if (eventType == 'pause') {
+            if (World.settings.spectate) {
+//                FiercePlanet.pauseGame();
+            }
+        }
+        else if (eventType == 'resource') {
+//            if (World.settings.spectate) {
+                var resource = obj[1];
+                Level.makeLevelFromJSONObject(resource, Resource.prototype);
+                FiercePlanet.currentLevel.addResource(resource);
+                FiercePlanet.Drawing.drawCanvases();
+//            }
+        }
+        else if (eventType == 'agents') {
+            if (World.settings.spectate) {
+                var agents = obj[1];
+//                for (var i in agents) {
+//                    Level.makeLevelFromJSONObject(agents[i], Agent.prototype);
+//                }
+                FiercePlanet.currentLevel.setCurrentAgents(agents);
+                FiercePlanet.Drawing.clearCanvas('agentCanvas');
+                FiercePlanet.Drawing.drawAgents();
+            }
+        }
+    }
+
+    function notifyEvent(eventType, obj){
+        socket.emit('event', [eventType, obj]);
+    }
+
     function send(){
       var nickname = document.getElementById('nickname').value;
       var val = document.getElementById('messageText').value;
@@ -28,6 +81,9 @@
     var socket = io.connect();
     socket.on('message', function (data) {
       message(data);
+    });
+    socket.on('event', function (data) {
+      receiveEvent(data);
     });
 
 

@@ -28,13 +28,13 @@ $(function(){
             console.log('zooming');
         switch(direction) {
             case 1:
-                FiercePlanet.externalZoomLevel *= 1.2;
+                FiercePlanet.Orientation.externalZoomLevel *= 1.2;
                 break;
             case -1:
-                FiercePlanet.externalZoomLevel /= 1.2;
+                FiercePlanet.Orientation.externalZoomLevel /= 1.2;
                 break;
             case 0:
-                FiercePlanet.externalZoomLevel = 1;
+                FiercePlanet.Orientation.externalZoomLevel = 1;
                 break;
             }
     });
@@ -91,9 +91,10 @@ FiercePlanet.Utils = FiercePlanet.Utils || {};
         World.settings.agentTracing = World.settings.agentTracing || false;
         World.settings.hidePath = World.settings.hidePath || false;
         World.settings.hidePathBorder = World.settings.hidePathBorder || false;
-        World.settings.showGraph = World.settings.showGraph || false;
+        World.settings.showGraph = World.settings.showGraph || true;
 
         World.settings.showChat = World.settings.showChat || true;
+        World.settings.reverseMouseClickEffects = World.settings.reverseMouseClickEffects || false;
 
         World.settings.rivalsVisible = World.settings.rivalsVisible || false;
         World.settings.predatorsVisible = World.settings.predatorsVisible || false;
@@ -105,6 +106,10 @@ FiercePlanet.Utils = FiercePlanet.Utils || {};
 
         World.settings.skewTiles = World.settings.skewTiles || true;
         World.settings.showResourcesAsBoxes = World.settings.showResourcesAsBoxes || true;
+
+
+        World.settings.sendEventsToServer = World.settings.sendEventsToServer || false;
+        World.settings.spectate = World.settings.spectate || false;
     }
 
     /**
@@ -216,7 +221,7 @@ FiercePlanet.Utils = FiercePlanet.Utils || {};
             $('canvas').width(480);
             $('#notifications').css('top', '597px');
             $('#level-editor').css('top', '580px');
-//        FiercePlanet.WORLD_HEIGHT = 480;
+//        FiercePlanet.Orientation.worldHeight = 480;
         }
         else {
             $('#world').height(400);
@@ -225,7 +230,7 @@ FiercePlanet.Utils = FiercePlanet.Utils || {};
             $('canvas').width(480);
             $('#notifications').css('top', '517px');
             $('#level-editor').css('top', '500px');
-            FiercePlanet.WORLD_HEIGHT = 400;
+            FiercePlanet.Orientation.worldHeight = 400;
         }
     };
 

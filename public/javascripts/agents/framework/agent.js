@@ -148,18 +148,6 @@ function Agent(agentType, x, y) {
     // Position-related
     this.x = x;
     this.y = y;
-    this.chronologicalMemory = [];
-    this.memoriesOfPlacesVisited = [];
-    this.memoriesOfPathsUntried = [];
-    this.canCommunicateWithOtherAgents = true;
-    this.memoriesOfPlacesVisitedByOtherAgents = [];
-    this.memoriesOfPathsUntriedByOtherAgents = [];
-    this.memoriesOfResources = [];
-    this.memoriesOfAgents = [];
-    this.lastMemory = null;
-    this.lastUntriedPathMemory = null;
-
-    this.memorise(undefined);
 
     // Speed-related
     this.delay = 0;
@@ -175,6 +163,22 @@ function Agent(agentType, x, y) {
 
     // Whether the agent is 'hit' by a conflicting agent
     this.isHit = false;
+
+    this.canCommunicateWithOtherAgents = true;
+
+    // Memory related
+    this.chronologicalMemory = [];
+    this.memoriesOfPlacesVisited = [];
+    this.memoriesOfPathsUntried = [];
+    this.memoriesOfPlacesVisitedByOtherAgents = [];
+    this.memoriesOfPathsUntriedByOtherAgents = [];
+    this.memoriesOfResources = [];
+    this.memoriesOfAgents = [];
+    this.lastMemory = null;
+    this.lastUntriedPathMemory = null;
+
+    this.memorise(undefined);
+
 
     // IMPORTED ABM FEATURES - EXPERIMENTAL
     /* Gender: UNSPECIFIED: 0, MALE: -1; FEMALE:1 */
@@ -509,7 +513,7 @@ Agent.prototype.memorise = function(level) {
             this.lastUntriedPathMemory = new Memory(this.id, this.age, x - 1, y);
             this.memoriesOfPathsUntried[[x - 1, y]] = this.lastUntriedPathMemory;
         }
-        if (x + 1 < level.worldWidth && level.getTile(x + 1, y) == undefined && this.memoriesOfPlacesVisited[[x + 1, y]] == undefined) {
+        if (x + 1 < level.cellsAcross && level.getTile(x + 1, y) == undefined && this.memoriesOfPlacesVisited[[x + 1, y]] == undefined) {
             // Add path cell to memory
             this.lastUntriedPathMemory = new Memory(this.id, this.age, x + 1, y);
             this.memoriesOfPathsUntried[[x + 1, y]] = this.lastUntriedPathMemory;
@@ -519,7 +523,7 @@ Agent.prototype.memorise = function(level) {
             this.lastUntriedPathMemory = new Memory(this.id, this.age, x, y - 1);
             this.memoriesOfPathsUntried[[x, y - 1]] = this.lastUntriedPathMemory;
         }
-        if (y + 1 < level.worldHeight && level.getTile(x, y + 1) == undefined && this.memoriesOfPlacesVisited[[x, y + 1]] == undefined) {
+        if (y + 1 < level.cellsDown && level.getTile(x, y + 1) == undefined && this.memoriesOfPlacesVisited[[x, y + 1]] == undefined) {
             // Add path cell to memory
             this.lastUntriedPathMemory = new Memory(this.id, this.age, x, y + 1);
             this.memoriesOfPathsUntried[[x, y + 1]] = this.lastUntriedPathMemory;
@@ -649,8 +653,8 @@ Agent.prototype.findPosition = function(level, withNoRepeat, withNoCollision, wi
         var dir = directions[i];
 
         var offScreen1 = 0;
-        var offScreenWidth = level.worldWidth - 1;
-        var offScreenHeight = level.worldHeight - 1;
+        var offScreenWidth = level.cellsAcross - 1;
+        var offScreenHeight = level.cellsDown - 1;
         var offset = 1;
         var toContinue = false;
         switch (dir) {
@@ -975,5 +979,42 @@ Agent.prototype.hasNeighbouringResources = function(level, x, y) {
     return null;
 };
 
+/**
+ * Wipes the agent's memory
+ */
+Agent.prototype.wipeMemory = function() {
+    this.chronologicalMemory = [];
+    this.memoriesOfPlacesVisited = [];
+    this.memoriesOfPathsUntried = [];
+    this.memoriesOfPlacesVisitedByOtherAgents = [];
+    this.memoriesOfPathsUntriedByOtherAgents = [];
+    this.memoriesOfResources = [];
+    this.memoriesOfAgents = [];
+//    this.lastMemory = null;
+    this.lastUntriedPathMemory = null;
+};
 
 
+/**
+ * Mock agent - intentionally simplified for network transmission
+ * @param agentType
+ * @param x
+ * @param y
+ * @param color
+ * @param health
+ * @param speed
+ */
+function SimpleAgent(agentType, x, y, color, speed, health, wanderX, wanderY, lastMemory, delay, countdownToMove, healthCategoryStats) {
+    this.agentType = agentType;
+    this.x = x;
+    this.y = y;
+    this.color = color;
+    this.health = health;
+    this.speed = speed;
+    this.wanderX = wanderX;
+    this.wanderY = wanderY;
+    this.lastMemory = lastMemory;
+    this.delay = delay;
+    this.countdownToMove = countdownToMove;
+    this.healthCategoryStats = healthCategoryStats;
+}
