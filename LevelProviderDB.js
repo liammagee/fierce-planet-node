@@ -7,30 +7,31 @@ require('./public/javascripts/agents/framework/resource.js');
 require('./public/javascripts/agents/framework/tile.js');
 
 
-//console.log(World);
-//console.log(module.exports);
-//console.log(module.exports.Level);
-//var level = new Level();
-//console.log(level);
-//console.log('got here');
-
 var Db = require('mongodb').Db;
 var Connection = require('mongodb').Connection;
 var Server = require('mongodb').Server;
 var BSON = require('mongodb').BSON;
 var ObjectID = require('mongodb').ObjectID;
+var username, password;
 
-LevelProvider = function(host, port){
-  this.db= new Db('node-mongo-fp', new Server(host, port, {auto_reconnect: true}, {}));
-  this.db.open(function(){});
+LevelProvider = function(name, host, port, username, password, callback){
+  this.db = new Db(name, new Server(host, port, {auto_reconnect: true}, {}));
+  this.db.open(function(err, db){
+      // Authenticate
+    db.authenticate(username, password, function(error, res) {
+        if( error ) callback(error);
+        else callback(null, res);
+    });
+  });
 };
 LevelProvider.prototype.levels = [];
 
+
 LevelProvider.prototype.getCollection= function(callback) {
-  this.db.collection('levels', function(error, level_collection) {
-    if( error ) callback(error);
-    else callback(null, level_collection);
-  });
+    this.db.collection('levels', function(error, level_collection) {
+      if( error ) callback(error);
+      else callback(null, level_collection);
+    });
 };
 
 LevelProvider.prototype.findAll = function(callback) {
@@ -73,7 +74,7 @@ LevelProvider.prototype.save = function(levels, callback) {
 
         level_collection.remove({}, function(err, r) {
             level_collection.insert(levels, function() {
-              callback(null, levels);
+              callback(error, levels);
             });
         });
       }
