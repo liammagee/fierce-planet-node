@@ -1,0 +1,43 @@
+#profile-dialog
+  form(method='/profile/updete')
+    - if ('undefined' !== typeof errors && errors.length)
+      ul#errors
+        - each error in errors
+          li.error= error
+    - if (everyauth.user)
+      #field
+        label(for='profile-nickname') Nickname
+        input#profile-nickname(name='nickname')
+      #field
+        label(for='profile-profileClass') Profile class
+        span#profile-profileClass= everyauth.user.profile.profileClass
+      #field
+        label(for='profile-progressTowardsNextClass') Progress towards next class
+        span#profile-progressTowardsNextClass= everyauth.user.profile.progressTowardsNextClass
+      #field
+        label(for='profile-credits') Credits
+        span#profile-credits= everyauth.user.profile.credits
+      #field
+        label(for='profile-capabilities') Capabilities
+        span#profile-capabilities= everyauth.user.profile.capabilities
+      #field
+        label(for='profile-totalSaved') Total saved
+        span#profile-totalSaved= everyauth.user.profile.totalSaved
+      #field
+        label(for='profile-totalExpired') Total expired
+        span#profile-totalExpired= everyauth.user.profile.totalExpired
+      #field
+        label(for='profile-totalResourcesSpent') Total resources spent
+        span#profile-totalResourcesSpent= everyauth.user.profile.totalResourcesSpent
+      #field
+        label(for='profile-currentScore') Current score
+        span#profile-currentScore= everyauth.user.profile.currentScore
+      #field
+        label(for='profile-highestScore') Highest score
+        span#profile-highestScore= everyauth.user.profile.highestScore
+      #field
+        label(for='profile-currentLevel') Current level
+        span#profile-currentLevel= everyauth.user.profile.currentLevel
+      #field
+        label(for='profile-highestLevel') Highest level
+        span#profile-highestLevel= everyauth.user.profile.highestLevel

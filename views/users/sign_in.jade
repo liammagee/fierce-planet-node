@@ -1,0 +1,7 @@
+h1= title
+#levels
+    - each level in levels
+      div.level
+        div.title
+            a.thumbnail(id='levelSelect' + level.id)!= level.name
+        div.body= level.tiles

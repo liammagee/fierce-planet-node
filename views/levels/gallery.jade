@@ -1,0 +1,13 @@
+h3= title
+
+#levels
+  - each level in levels
+    div.level
+      div.title
+        a.customLevel(id='levelSelect' + level._id,href='#')!= level.name
+      div.body= level.tiles
+
+script(type='text/javascript')
+  $(document).ready(function() {
+    $('.customLevel').click(FiercePlanet.GeneralUI.changeLevelDirectly);
+  });

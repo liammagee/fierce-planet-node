@@ -1,0 +1,26 @@
+#login-dialog
+  h2 Sign in
+  div#localSignIn
+    form(action='/login', method='post')
+      #login
+        label(for=everyauth.password.loginFormFieldName) Login
+        input(type='text', name=everyauth.password.loginFormFieldName)
+      #password
+        label(for=everyauth.password.passwordFormFieldName) Password
+        input(type='password', name=everyauth.password.passwordFormFieldName)
+      #submit
+        input(type='submit') Login
+  div#remoteSignIn
+    div Sign in with:
+      div
+        a(href='/auth/facebook')
+          img(src='/images/intridea-authbuttons/png/facebook_32.png', alt='Facebook')
+          span Facebook
+      div
+        a(href='/auth/google')
+          img(src='/images/intridea-authbuttons/png/google_32.png', alt='Google')
+          span Google
+    div
+      a(href='/register') Register
+    //div Forget your password?
+

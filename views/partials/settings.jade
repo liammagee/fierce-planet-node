@@ -1,0 +1,134 @@
+#settings-dialog
+  #settings-tabs
+    ul
+      li
+        a(href='#user-interface') User interface
+      li
+        a(href='#agent-settings') Agent
+      li
+        a(href='#resource-settings') Resource
+      li
+        a(href='#testing') Testing
+    #user-interface
+      div
+        input#noticesVisible(type='checkbox', checked='checked')
+        label(for='noticesVisible') Show in-game notices
+      div
+        input#statusBarVisible(type='checkbox', checked='checked')
+        label(for='statusBarVisible') Show status bar
+      div
+        input#scrollingImageVisible(type='checkbox', checked='checked')
+        label(for='scrollingImageVisible') Show scrolling image
+      div
+        input#catastrophesVisible(type='checkbox', checked='checked')
+        label(for='catastrophesVisible') Show catastrophes
+      div
+        input#disableKeyboardShortcuts(type='checkbox')
+        label(for='disableKeyboardShortcuts') Disable keyboard shortcuts
+      div
+        input#soundsPlayable(type='checkbox')
+        label(for='soundsPlayable') Play sounds
+      div
+        input#useInlineResourceSwatch(type='checkbox')
+        label(for='useInlineResourceSwatch') Show inline resource pop-up
+      div
+        input#allowInlinePanning(type='checkbox', checked='checked')
+        label(for='allowInlinePanning') Allow inline panning
+      div
+        input#hidePath(type='checkbox')
+        label(for='hidePath') Hide path
+      div
+        input#hidePathBorder(type='checkbox')
+        label(for='hidePathBorder') Hide path border
+      div
+        input#showGraph(type='checkbox')
+        label(for='showGraph') Show graph
+      div
+        input#showChat(type='checkbox', checked='checked')
+        label(for='showChat') Show chat
+      div
+        input#makeSquare(type='checkbox')
+        label(for='makeSquare') Make world square
+      div
+        input#reverseMouseClickEffects(type='checkbox')
+        label(for='reverseMouseClickEffects') Reverse mouse click effects
+    #agent-settings
+      div
+        input#agentsCanCommunicate(type='checkbox', checked='checked')
+        label(for='agentsCanCommunicate') Agents share their memories
+      div
+        input#agentsHaveRandomInitialHealth(type='checkbox')
+        label(for='agentsHaveRandomInitialHealth') Agents have random initial health
+      div
+        input#agentsCanAdjustSpeed(type='checkbox')
+        label(for='agentsCanAdjustSpeed') Agents can change their speed
+      div
+        input#agentsCanAdjustWander(type='checkbox')
+        label(for='agentsCanAdjustWander') Agents can wander
+      div
+        input#agentTracing(type='checkbox')
+        label(for='agentTracing') Show agent movement
+      div Health cost per move:
+        span#agentCostPerMoveDisplay
+        br
+        div.slider-component#agentCostPerMove
+    #resource-settings
+      div
+        input#resourcesInTension(type='checkbox')
+        label(for='resourcesInTension') Resources affect neighbouring resources
+      div
+        input#resourcesInTensionGlobally(type='checkbox')
+        label(for='resourcesInTensionGlobally') Resources affect all other resources
+      div
+        input#ignoreResourceBalance(type='checkbox')
+        label(for='ignoreResourceBalance') Resource balance has no effect
+      div
+        input#applyGeneralHealth(type='checkbox')
+        label(for='applyGeneralHealth') Resource categories have no effect
+      div
+        input#resourcesDiminishAtFixedRates(type='checkbox')
+        label(for='resourcesDiminishAtFixedRates') Resources diminish at fixed rates
+      div Rate of resource recovery:
+        span#rateOfResourceRecoveryDisplay
+        br
+        div.slider-component#rateOfResourceRecovery
+    #testing
+      div
+        input#recording(type='checkbox')
+        label(for='recording') Record game
+      div
+        input#godMode(type='checkbox')
+        label(for='godMode') Play in 'god' mode
+      div
+        input#showHealthReductionInGodMode(type='checkbox')
+        label(for='showHealthReductionInGodMode') Show health reduction in 'god' mode
+      div
+        input#rivalsVisible(type='checkbox')
+        label(for='rivalsVisible') Show rivals
+      div
+        input#predatorsVisible(type='checkbox')
+        label(for='predatorsVisible') Show predators
+      div
+        input#tilesMutable(type='checkbox')
+        label(for='tilesMutable') Allow tiles to be added
+      div
+        input#tilesRemovable(type='checkbox')
+        label(for='tilesRemovable') Allow tiles to be removed
+      div
+        input#skewTiles(type='checkbox', checked='checked')
+        label(for='skewTiles') View in 3D
+      div
+        input#showResourcesAsBoxes(type='checkbox', checked='checked')
+        label(for='showResourcesAsBoxes') Show resources as boxes in 3D
+      div
+        input#sendEventsToServer(type='checkbox', checked='checked')
+        label(for='sendEventsToServer') Send events to server
+      div
+        input#spectate(type='checkbox')
+        label(for='spectate') Spectate
+      div
+        input#firstPerson(type='checkbox')
+        label(for='firstPerson') First Person
+      //          div
+      //            input#backgroundIconsVisible(type='checkbox')
+      //           label(for='backgroundIconsVisible')  Show background icons
