@@ -25,9 +25,11 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
     this.resourceGalleryDialog = null;
     this.newLevelDialog = null;
     this.settingsDialog = null;
+    this.profileDialog = null;
     this.creditsDialog = null;
     this.genericDialog = null;
     this.highScores = null;
+    this.login = null;
 
     // Level editor dialogs
     this.designFeaturesDialog = null;
@@ -263,6 +265,47 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
                   }
             });
 
+        this.loginDialog = $('#login-dialog')
+            .dialog({
+                position: [dialogX, dialogY],
+                width: FiercePlanet.Orientation.worldWidth + 7,
+                height: FiercePlanet.Orientation.worldHeight + 7,
+                autoOpen: false,
+                modal: true,
+                title: 'Login',
+                buttons: {
+                    "Login": function() {
+                        $( this ).dialog( "close" );
+                        FiercePlanet.startLevel();
+                    },
+                    "Cancel": function() {
+                        $( this ).dialog( "close" );
+                    }
+                }
+            });
+
+        this.profileDialog = $('#profile-dialog')
+            .dialog({
+                position: [dialogX, dialogY],
+                width: FiercePlanet.Orientation.worldWidth + 7,
+                height: FiercePlanet.Orientation.worldHeight + 7,
+                autoOpen: false,
+                modal: true,
+                title: 'Profile',
+                buttons: {
+                    "Update profile": function() {
+                        $( this ).dialog( "close" );
+                        FiercePlanet.ProfileUI.saveProfile(function(res) {
+                            FiercePlanet.currentProfile = FiercePlanet.Utils.makeFromJSONObject(res.profile, Profile.prototype);
+                            $('#welcome-link').innerHTML = 'Welcome ' + FiercePlanet.currentProfile.nickname;
+                        });
+                    },
+                    "Cancel": function() {
+                        $( this ).dialog( "close" );
+                    }
+                }
+            });
+
         // Add setting specific controls here
         $("#agentCostPerMove").slider({ value: World.settings.agentCostPerMove, min: -10, max: -1, step: 1, animate: "normal",
                 slide: function( event, ui ) {
@@ -397,6 +440,9 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
         });
 
 
+        // Set up tabs here
+        $("#extended-area").tabs();
+
     };
 
     /**
@@ -484,26 +530,26 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
     this.showResourceGallery = function() {
         FiercePlanet.pauseGame();
 
-        $('#current-profile-class')[0].innerHTML = FiercePlanet.currentProfile.profile_class;
+        $('#current-profile-class')[0].innerHTML = FiercePlanet.currentProfile.profileClass;
         $('#current-credits')[0].innerHTML = FiercePlanet.currentProfile.credits;
         $('#current-capabilities')[0].innerHTML = FiercePlanet.currentProfile.capabilities.join(", ");
 
         var accessibleCapabilities = [];
         var purchasableItems = [];
 
-        if (FiercePlanet.profile_class == FP_Profile.PROFILE_CLASSES[0]) {
+        if (FiercePlanet.profileClass == FP_Profile.PROFILE_CLASSES[0]) {
             accessibleCapabilities = FiercePlanet.NOVICE_CAPABILITIES;
         }
-        else if (FiercePlanet.profile_class == FP_Profile.PROFILE_CLASSES[1]) {
+        else if (FiercePlanet.profileClass == FP_Profile.PROFILE_CLASSES[1]) {
             accessibleCapabilities = FiercePlanet.PLANNER_CAPABILITIES;
         }
-        else if (FiercePlanet.profile_class == FP_Profile.PROFILE_CLASSES[2]) {
+        else if (FiercePlanet.profileClass == FP_Profile.PROFILE_CLASSES[2]) {
             accessibleCapabilities = FiercePlanet.EXPERT_CAPABILITIES;
         }
-        else if (FiercePlanet.profile_class == FP_Profile.PROFILE_CLASSES[3]) {
+        else if (FiercePlanet.profileClass == FP_Profile.PROFILE_CLASSES[3]) {
             accessibleCapabilities = FiercePlanet.VISIONARY_CAPABILITIES;
         }
-        else if (FiercePlanet.profile_class == FP_Profile.PROFILE_CLASSES[4]) {
+        else if (FiercePlanet.profileClass == FP_Profile.PROFILE_CLASSES[4]) {
             accessibleCapabilities = FiercePlanet.GENIUS_CAPABILITIES;
         }
         // TODO: Temporarily enable all capabilities
@@ -604,6 +650,14 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
     this.showCredits = function() {
         FiercePlanet.pauseGame();
         FiercePlanet.Dialogs.creditsDialog.dialog('open');
+    };
+
+    /**
+     * Shows the Fierce Planet login
+     */
+    this.showLogin = function() {
+        FiercePlanet.pauseGame();
+        FiercePlanet.Dialogs.loginDialog.dialog('open');
     };
 
 }).apply(FiercePlanet.Dialogs);

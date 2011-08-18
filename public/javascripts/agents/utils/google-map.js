@@ -265,8 +265,9 @@ var GoogleMapUtils = GoogleMapUtils || {};
      * Simple method for coercing a value to a floored integer
      * @param value
      */
-    this.createMap = function(options) {
-        map = new google.maps.Map(document.getElementById("map_canvas"), options);
+    this.createMap = function(options, altCanvasName) {
+        var canvasName = altCanvasName || 'map_canvas';
+        map = new google.maps.Map(document.getElementById(canvasName), options);
 
         // push the credit/copyright custom control
         map.controls[google.maps.ControlPosition.BOTTOM_RIGHT].push(creditNode);

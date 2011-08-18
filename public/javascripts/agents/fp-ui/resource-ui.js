@@ -177,8 +177,8 @@ FiercePlanet.ResourceUI = FiercePlanet.ResourceUI || {};
     this.deleteCurrentResource = function () {
         var foundResource = FiercePlanet.currentLevel.getCurrentResourceIndex(FiercePlanet.currentResource);
         if (foundResource > -1) {
-            FiercePlanet.currentProfile.current_level_resources_in_store += 5;
-            FiercePlanet.currentProfile.current_level_resources_spent -= 5;
+            FiercePlanet.currentProfile.currentLevelResourcesInStore += 5;
+            FiercePlanet.currentProfile.currentLevelResourcesSpent -= 5;
 //            FiercePlanet.currentLevel.resources.splice(foundResource, 1);
             FiercePlanet.currentLevel.removeResource(FiercePlanet.currentResource);
             FiercePlanet.Drawing.drawResourcesInStore();
@@ -194,9 +194,9 @@ FiercePlanet.ResourceUI = FiercePlanet.ResourceUI || {};
             var foundResource = FiercePlanet.currentLevel.getCurrentResourceIndex(FiercePlanet.currentResource);
             if (foundResource > -1) {
                 var resource = FiercePlanet.currentLevel.resources[foundResource];
-                if (resource.upgradeLevel <= 4 && FiercePlanet.currentProfile.current_level_resources_in_store >= resource.upgradeCost) {
-                    FiercePlanet.currentProfile.current_level_resources_in_store -= resource.upgradeCost;
-                    FiercePlanet.currentProfile.current_level_resources_spent += resource.upgradeCost;
+                if (resource.upgradeLevel <= 4 && FiercePlanet.currentProfile.currentLevelResourcesInStore >= resource.upgradeCost) {
+                    FiercePlanet.currentProfile.currentLevelResourcesInStore -= resource.upgradeCost;
+                    FiercePlanet.currentProfile.currentLevelResourcesSpent += resource.upgradeCost;
                     resource.upgradeLevel = resource.upgradeLevel + 1;
                     FiercePlanet.Drawing.drawResource(resource);
                     FiercePlanet.Drawing.drawResourcesInStore();
@@ -222,7 +222,7 @@ FiercePlanet.ResourceUI = FiercePlanet.ResourceUI || {};
         var resourceType = World.resolveResourceType(resourceCode);
         var resource = new Resource(resourceType, posX, posY);
 
-        if (FiercePlanet.currentProfile.current_level_resources_in_store < resource.cost) {
+        if (FiercePlanet.currentProfile.currentLevelResourcesInStore < resource.cost) {
             FiercePlanet.currentNotice = new Notice('Not enough resources for now - save some more agents!');
             return;
         }
@@ -236,7 +236,8 @@ FiercePlanet.ResourceUI = FiercePlanet.ResourceUI || {};
 
             FiercePlanet.eventTarget.fire(new Event("resource", resource, "added", FiercePlanet.gameCounter, FiercePlanet.currentLevel));
             if (World.settings.sendEventsToServer) {
-                notifyEvent('resource', resource);
+                notifyEvent('resources', FiercePlanet.currentLevel.resources);
+//                notifyEvent('resource', resource);
             }
         }
         if (World.settings.useInlineResourceSwatch)

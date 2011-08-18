@@ -791,17 +791,6 @@ Level.prototype.processNeighbouringAgents = function(agent) {
         agent.adjustGeneralHealth(-10);
 };
 
-/**
- * Makes a level from a JSON object
- */
-Level.makeLevelFromJSONObject = function(newLevel, prototype) {
-    for (var key in prototype) {
-        if (typeof(prototype[key]) == "function") {
-            newLevel[key] = prototype[key];
-        }
-    }
-};
-
 
 if (typeof(exports) != "undefined")
     exports.Level = Level;

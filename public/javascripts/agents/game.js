@@ -143,7 +143,7 @@ FiercePlanet.processAgents = function() {
                         FiercePlanet.nullifiedAgents.push(agent);
                         FiercePlanet.Drawing.drawExpiredAgent(agent);
                         if (agent.agentType == AgentTypes.CITIZEN_AGENT_TYPE)
-                            FiercePlanet.currentProfile.current_level_expired++;
+                            FiercePlanet.currentProfile.currentLevelExpired++;
                        FiercePlanet.Drawing.drawExpired();
                     }
                     else {
@@ -164,7 +164,8 @@ FiercePlanet.processAgents = function() {
 
 
     }
-    if (World.settings.sendEventsToServer && !World.settings.spectate) {
+    if (World.settings.sendEventsToServer) {
+//    if (World.settings.sendEventsToServer && !World.settings.spectate) {
         var simpleAgents = [];
         agents.forEach(function(agent) {
 //            var simpleAgent = new SimpleAgent(agent.agentType, agent.x, agent.y, agent.color, agent.speed, agent.health, agent.wanderX, agent.wanderY, agent.lastMemory, agent.delay, agent.countdownToMove, agent.healthCategoryStats);
@@ -177,7 +178,7 @@ FiercePlanet.processAgents = function() {
 
 
 
-    if (FiercePlanet.currentProfile.current_level_expired >= FiercePlanet.currentLevel.expiryLimit) {
+    if (FiercePlanet.currentProfile.currentLevelExpired >= FiercePlanet.currentLevel.expiryLimit) {
         return FiercePlanet.gameOver();
     }
 

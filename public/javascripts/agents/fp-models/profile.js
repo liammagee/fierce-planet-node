@@ -18,7 +18,12 @@ FP_Profile.PROFILE_UPGRADE_SCORES = [500, 1000, 2500, 5000, 0];
 /** @constant The costs of obtaining capabilities related to each profile class */
 FP_Profile.CAPABILITY_COSTS = [0, 100, 200, 300, 500];
 
-
+FP_Profile.NOVICE_CAPABILITIES = ["farm", "water", "clinic"];
+FP_Profile.PLANNER_CAPABILITIES = FP_Profile.NOVICE_CAPABILITIES.concat(["shop", "park", "school"]);
+FP_Profile.EXPERT_CAPABILITIES = FP_Profile.PLANNER_CAPABILITIES.concat(["bank", "air", "legal"]);
+FP_Profile.VISIONARY_CAPABILITIES = FP_Profile.EXPERT_CAPABILITIES.concat(["factory", "energy", "democracy"]);
+FP_Profile.GENIUS_CAPABILITIES = FP_Profile.VISIONARY_CAPABILITIES.concat(["stockmarket", "biodiversity", "festival"]);
+FP_Profile.STARTING_STORE = 0;
 
 /**
  * Defines a user Profile.
@@ -28,53 +33,53 @@ FP_Profile.CAPABILITY_COSTS = [0, 100, 200, 300, 500];
 function Profile() {
     // Profile-level properties, defining current class, capabilities and credits
     this.id = -1;
-    this.profile_class = FP_Profile.PROFILE_CLASSES[0];
-    this.capabilities = FiercePlanet.NOVICE_CAPABILITIES;
-    this.progress_towards_next_class = 0;
+    this.profileClass = FP_Profile.PROFILE_CLASSES[0];
+    this.capabilities = FP_Profile.NOVICE_CAPABILITIES;
+    this.progressTowardsNextClass = 0;
     this.status = '';
     this.credits = 0;
 
-    this.highest_level = 0;
-    this.highest_score = 0;
-    this.total_levels = 0;
+    this.highestLevel = 0;
+    this.highestScore = 0;
+    this.totalLevels = 0;
 
-    this.total_saved = 0;
-    this.total_expired = 0;
-    this.total_resources_spent = 0;
-    this.total_resources_spent_by_category = {};
-    this.ave_saved = 0;
-    this.ave_expired = 0;
-    this.ave_resources_spent = 0;
-    this.ave_resources_spent_by_category = {};
+    this.totalSaved = 0;
+    this.totalExpired = 0;
+    this.totalResourcesSpent = 0;
+    this.totalResourcesSpentByCategory = {};
+    this.aveSaved = 0;
+    this.aveExpired = 0;
+    this.aveResourcesSpent = 0;
+    this.aveResourcesSpentByCategory = {};
 
 
     // Game statistics - must be reset every new game
-    this.game_total_levels = 0;
-    this.game_highest_level = 0;
-    this.game_score = 0;
+    this.gameTotalLevels = 0;
+    this.gameHighestLevel = 0;
+    this.gameScore = 0;
 
-    this.game_total_saved = 0;
-    this.game_total_expired = 0;
-    this.game_total_resources_spent = 0;
-    this.game_total_resources_spent_by_category = {};
-    this.game_ave_saved = 0;
-    this.game_ave_expired = 0;
-    this.game_ave_resources_spent = 0;
-    this.game_ave_resources_spent_by_category = {};
+    this.gameTotalSaved = 0;
+    this.gameTotalExpired = 0;
+    this.gameTotalResourcesSpent = 0;
+    this.gameTotalResourcesSpentByCategory = {};
+    this.gameAveSaved = 0;
+    this.gameAveExpired = 0;
+    this.gameAveResourcesSpent = 0;
+    this.gameAveResourcesSpentByCategory = {};
 
 
     // Level statistics
-    this.current_level = 1;
-    this.current_level_is_preset = true;
-    this.current_score = 0;
-    this.current_level_waves = 0;
-    this.current_level_saved_this_wave = 0;
+    this.currentLevel = 1;
+    this.currentLevelIsPreset = true;
+    this.currentScore = 0;
+    this.currentLevelWaves = 0;
+    this.currentLevelSavedThisWave = 0;
 
-    this.current_level_saved = 0;
-    this.current_level_expired = 0;
-    this.current_level_resources_in_store = FiercePlanet.STARTING_STORE;
-    this.current_level_resources_spent = 0;
-    this.current_level_resources_spent_by_category = {};
+    this.currentLevelSaved = 0;
+    this.currentLevelExpired = 0;
+    this.currentLevelResourcesInStore = FP_Profile.STARTING_STORE;
+    this.currentLevelResourcesSpent = 0;
+    this.currentLevelResourcesSpentByCategory = {};
 }
 
 
@@ -82,9 +87,9 @@ function Profile() {
  * Initialises the Profile's non-persistent properties
  */
 Profile.prototype._initialise = function() {
-    this.current_level_saved = this.current_level_saved || 0;
+    this.currentLevelSaved = this.currentLevelSaved || 0;
     // TODO: These reference the FiercePlanet namespace
-    this.current_level_resources_in_store = this.current_level_resources_in_store || FiercePlanet.STARTING_STORE;
+    this.currentLevelResourcesInStore = this.currentLevelResourcesInStore || FP_Profile.STARTING_STORE;
 };
 
 
@@ -92,15 +97,15 @@ Profile.prototype._initialise = function() {
  * Resets the current statistics 
  */
 Profile.prototype.resetCurrentStats = function(initialStore) {
-    this.current_level_saved = 0;
-    this.current_level_expired = 0;
+    this.currentLevelSaved = 0;
+    this.currentLevelExpired = 0;
 
-    this.current_level_resources_in_store = FiercePlanet.currentLevel.initialResourceStore || FiercePlanet.STARTING_STORE;
-    this.current_level_resources_spent = 0;
-    this.current_level_resources_spent_by_category = {};
+    this.currentLevelResourcesInStore = FiercePlanet.currentLevel.initialResourceStore || FP_Profile.STARTING_STORE;
+    this.currentLevelResourcesSpent = 0;
+    this.currentLevelResourcesSpentByCategory = {};
     for (var i = 0; i < World.resourceCategories.length; i++) {
         var category = World.resourceCategories[i];
-        this.current_level_resources_spent_by_category[category.code] = 0;
+        this.currentLevelResourcesSpentByCategory[category.code] = 0;
     }
 };
 
@@ -109,7 +114,7 @@ Profile.prototype.resetCurrentStats = function(initialStore) {
  * Initialises the Profile's non-persistent properties
  */
 Profile.prototype.initialiseResourceStore = function(initialStore) {
-    this.current_level_resources_in_store = initialStore || FiercePlanet.STARTING_STORE;
+    this.currentLevelResourcesInStore = initialStore || FP_Profile.STARTING_STORE;
 };
 
 
@@ -119,54 +124,54 @@ Profile.prototype.initialiseResourceStore = function(initialStore) {
  */
 Profile.prototype.compileProfileStats = function(currentLevel) {
     // Update level data
-    this.current_level = currentLevel._id || this.current_level;
-    this.current_level_is_preset = currentLevel.isPresetLevel || this.current_level_is_preset;
+    this.currentLevel = currentLevel._id || this.currentLevel;
+    this.currentLevelIsPreset = currentLevel.isPresetLevel || this.currentLevelIsPreset;
 
     // Update level data
 
     // Update game data
-    if (this.game_highest_level < this.current_level)
-        this.game_highest_level = this.current_level;
-    if (this.game_score < this.current_score)
-        this.game_score = this.current_score;
-    this.game_total_levels ++;
-    this.game_total_saved += this.current_level_saved;
-    this.game_total_expired += this.current_level_expired;
-    this.game_total_resources_spent += this.current_level_resources_spent;
-    this.game_ave_saved = this.game_total_saved / this.game_total_levels;
-    this.game_ave_expired = this.game_total_expired / this.game_total_levels;
-    this.game_ave_resources_spent = this.game_total_resources_spent / this.game_total_levels;
-    var ks = Object.keys(this.current_level_resources_spent_by_category);
+    if (this.gameHighestLevel < this.currentLevel)
+        this.gameHighestLevel = this.currentLevel;
+    if (this.gameScore < this.currentScore)
+        this.gameScore = this.currentScore;
+    this.gameTotalLevels ++;
+    this.gameTotalSaved += this.currentLevelSaved;
+    this.gameTotalExpired += this.currentLevelExpired;
+    this.gameTotalResourcesSpent += this.currentLevelResourcesSpent;
+    this.gameAveSaved = this.gameTotalSaved / this.gameTotalLevels;
+    this.gameAveExpired = this.gameTotalExpired / this.gameTotalLevels;
+    this.gameAveResourcesSpent = this.gameTotalResourcesSpent / this.gameTotalLevels;
+    var ks = Object.keys(this.currentLevelResourcesSpentByCategory);
     for (var i = 0; i < ks.length; i++) {
         var key = ks[i];
-        var current_level_count = this.current_level_resources_spent_by_category[key];
-        var game_count = this.game_total_resources_spent_by_category[key] || 0;
+        var current_level_count = this.currentLevelResourcesSpentByCategory[key];
+        var game_count = this.gameTotalResourcesSpentByCategory[key] || 0;
         game_count += current_level_count;
-        this.game_total_resources_spent_by_category[key] = game_count;
-        this.game_ave_resources_spent_by_category[key] = game_count / this.game_total_levels;
+        this.gameTotalResourcesSpentByCategory[key] = game_count;
+        this.gameAveResourcesSpentByCategory[key] = game_count / this.gameTotalLevels;
     }
 
 
     // Update profile data
-    if (this.highest_score < this.current_score)
-        this.highest_score = this.current_score;
-    if (this.highest_level < this.current_level)
-        this.highest_level = this.current_level;
-    this.credits += this.current_level_resources_in_store;
-    this.total_levels ++;
-    this.total_saved += this.current_level_saved;
-    this.total_expired += this.current_level_expired;
-    this.total_resources_spent += this.current_level_resources_spent;
-    this.ave_saved = this.total_saved / this.total_levels;
-    this.ave_expired = this.total_expired / this.total_levels;
-    this.ave_resources_spent = this.total_resources_spent / this.total_levels;
+    if (this.highestScore < this.currentScore)
+        this.highestScore = this.currentScore;
+    if (this.highestLevel < this.currentLevel)
+        this.highestLevel = this.currentLevel;
+    this.credits += this.currentLevelResourcesInStore;
+    this.totalLevels ++;
+    this.totalSaved += this.currentLevelSaved;
+    this.totalExpired += this.currentLevelExpired;
+    this.totalResourcesSpent += this.currentLevelResourcesSpent;
+    this.aveSaved = this.totalSaved / this.totalLevels;
+    this.aveExpired = this.totalExpired / this.totalLevels;
+    this.aveResourcesSpent = this.totalResourcesSpent / this.totalLevels;
     for (var i = 0; i < ks.length; i++) {
         var key = ks[i];
-        var current_level_count = this.current_level_resources_spent_by_category[key];
-        var total_count = this.total_resources_spent_by_category[key] || 0;
+        var current_level_count = this.currentLevelResourcesSpentByCategory[key];
+        var total_count = this.totalResourcesSpentByCategory[key] || 0;
         total_count += current_level_count;
-        this.total_resources_spent_by_category[key] = total_count;
-        this.ave_resources_spent_by_category[key] = total_count / this.total_levels;
+        this.totalResourcesSpentByCategory[key] = total_count;
+        this.aveResourcesSpentByCategory[key] = total_count / this.totalLevels;
     }
 
     this.evaluateProfileClass();
@@ -180,7 +185,7 @@ Profile.prototype.compileProfileStats = function(currentLevel) {
  * Reverts the current profile score to the previous game score
  */
 Profile.prototype.resetScores = function() {
-    this.current_score = this.game_score = 0;
+    this.currentScore = this.gameScore = 0;
 };
 
 
@@ -189,7 +194,7 @@ Profile.prototype.resetScores = function() {
  * Reverts the current profile score to the previous game score
  */
 Profile.prototype.revertScore = function() {
-    this.current_score = this.game_score;
+    this.currentScore = this.gameScore;
 };
 
 
@@ -197,7 +202,7 @@ Profile.prototype.revertScore = function() {
  * Updates the current profile score 
  */
 Profile.prototype.updateScore = function() {
-    this.game_score = this.current_score;
+    this.gameScore = this.currentScore;
 };
 
 
@@ -207,11 +212,11 @@ Profile.prototype.updateScore = function() {
  * Reverts the current profile score to the previous game score
  */
 Profile.prototype.processSavedAgent = function(currentWave) {
-    this.current_score += FiercePlanet.SAVE_SCORE;
-    this.current_level_saved++;
-    this.current_level_saved_this_wave++;
+    this.currentScore += FiercePlanet.SAVE_SCORE;
+    this.currentLevelSaved++;
+    this.currentLevelSavedThisWave++;
     var resource_bonus = (currentWave < 5 ? 4 : (currentWave < 10 ? 3 : (currentWave < 20 ? 2 : 1)));
-    this.current_level_resources_in_store += resource_bonus;
+    this.currentLevelResourcesInStore += resource_bonus;
 };
 
 
@@ -221,9 +226,9 @@ Profile.prototype.processSavedAgent = function(currentWave) {
  */
 Profile.prototype.spendResource = function(resource) {
     var resourceCategory = resource.category.code;
-    this.current_level_resources_in_store -= resource.cost;
-    this.current_level_resources_spent += resource.cost;
-    this.current_level_resources_spent_by_category[resourceCategory] += 1;
+    this.currentLevelResourcesInStore -= resource.cost;
+    this.currentLevelResourcesSpent += resource.cost;
+    this.currentLevelResourcesSpentByCategory[resourceCategory] += 1;
 };
 
 
@@ -231,24 +236,24 @@ Profile.prototype.spendResource = function(resource) {
  * Adjust the profile class, based on the total number of agents saved
  */
 Profile.prototype.evaluateProfileClass = function() {
-    if (this.total_saved > FP_Profile.PROFILE_UPGRADE_SCORES[3]) {
-        this.profile_class = FP_Profile.PROFILE_CLASSES[4];
-        this.progress_towards_next_class = FP_Profile.PROFILE_UPGRADE_SCORES[0];
+    if (this.totalSaved > FP_Profile.PROFILE_UPGRADE_SCORES[3]) {
+        this.profileClass = FP_Profile.PROFILE_CLASSES[4];
+        this.progressTowardsNextClass = FP_Profile.PROFILE_UPGRADE_SCORES[0];
     }
-    else if (this.total_saved > FP_Profile.PROFILE_UPGRADE_SCORES[2]) {
-        this.profile_class = FP_Profile.PROFILE_CLASSES[3];
-        this.progress_towards_next_class = FP_Profile.PROFILE_UPGRADE_SCORES[3] - this.total_saved;
+    else if (this.totalSaved > FP_Profile.PROFILE_UPGRADE_SCORES[2]) {
+        this.profileClass = FP_Profile.PROFILE_CLASSES[3];
+        this.progressTowardsNextClass = FP_Profile.PROFILE_UPGRADE_SCORES[3] - this.totalSaved;
     }
-    else if (this.total_saved > FP_Profile.PROFILE_UPGRADE_SCORES[1]) {
-        this.profile_class = FP_Profile.PROFILE_CLASSES[2];
-        this.progress_towards_next_class = FP_Profile.PROFILE_UPGRADE_SCORES[2] - this.total_saved;
+    else if (this.totalSaved > FP_Profile.PROFILE_UPGRADE_SCORES[1]) {
+        this.profileClass = FP_Profile.PROFILE_CLASSES[2];
+        this.progressTowardsNextClass = FP_Profile.PROFILE_UPGRADE_SCORES[2] - this.totalSaved;
     }
-    else if (this.total_saved > FP_Profile.PROFILE_UPGRADE_SCORES[0]) {
-        this.profile_class = FP_Profile.PROFILE_CLASSES[1];
-        this.progress_towards_next_class = FP_Profile.PROFILE_UPGRADE_SCORES[1] - this.total_saved;
+    else if (this.totalSaved > FP_Profile.PROFILE_UPGRADE_SCORES[0]) {
+        this.profileClass = FP_Profile.PROFILE_CLASSES[1];
+        this.progressTowardsNextClass = FP_Profile.PROFILE_UPGRADE_SCORES[1] - this.totalSaved;
     }
     else {
-        this.progress_towards_next_class = FP_Profile.PROFILE_UPGRADE_SCORES[0] - this.total_saved;
+        this.progressTowardsNextClass = FP_Profile.PROFILE_UPGRADE_SCORES[0] - this.totalSaved;
     }
 };
 
@@ -256,7 +261,6 @@ Profile.prototype.evaluateProfileClass = function() {
  * Add functions to JSON-restored object
  */
 Profile.makeProfile = function(proxyProfile) {
-    proxyProfile.updateStats = Profile.prototype.updateStats;
     proxyProfile.evaluateProfileClass = Profile.prototype.evaluateProfileClass;
 
     proxyProfile.spendResource = Profile.prototype.spendResource;
@@ -264,7 +268,7 @@ Profile.makeProfile = function(proxyProfile) {
     proxyProfile.updateScore = Profile.prototype.updateScore;
     proxyProfile.revertScore = Profile.prototype.revertScore;
     proxyProfile.resetScores = Profile.prototype.resetScores;
-    proxyProfile.updateStats = Profile.prototype.updateStats;
+    proxyProfile.updateScore = Profile.prototype.updateScore;
     proxyProfile.initialiseResourceStore = Profile.prototype.initialiseResourceStore;
     proxyProfile.resetCurrentStats = Profile.prototype.resetCurrentStats;
     proxyProfile.compileProfileStats = Profile.prototype.compileProfileStats;
@@ -273,3 +277,6 @@ Profile.makeProfile = function(proxyProfile) {
     proxyProfile._initialise();
 
 };
+
+if (typeof(exports) != "undefined")
+    exports.Profile = Profile;

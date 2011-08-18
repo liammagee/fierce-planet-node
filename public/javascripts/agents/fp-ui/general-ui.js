@@ -26,6 +26,11 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
         // Set admin functions to previously stored defaults
         FiercePlanet.Utils.getAndRetrieveProperties();
 
+        // Menu functions
+        $('#login').click(FiercePlanet.Dialogs.showLogin);
+        $('#logout').click(FiercePlanet.ProfileUI.logout);
+        $('#welcome-link').click(FiercePlanet.ProfileUI.editProfile);
+
         // Control panel functions
         $('#playAgents').click(FiercePlanet.playGame);
         $('#slowDown').click(FiercePlanet.slowDown);
@@ -84,6 +89,7 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
 
         // Trap relevant key strokes
         if (!World.settings.disableKeyboardShortcuts) {
+            $(document).unbind("keydown");
             $(document).keydown(FiercePlanet.GeneralUI.handleKeyboardShortcuts);
             $('input, textarea, select, form').focus(function() {
                 $(document).unbind("keydown");
@@ -235,74 +241,108 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
         if (e.ctrlKey || e.altKey || e.metaKey)
             return;
 
-        switch (e.which) {
-            // +, -, 0: Zoom functions
-            case 107:
-                FiercePlanet.Drawing.zoom(1);
-                break;
-            case 109:
-                FiercePlanet.Drawing.zoom(-1);
-                break;
-            case 96:
-                FiercePlanet.Drawing.zoom(0);
-                break;
-            // Arrow buttons, 'h': Pan functions
-            case 37:
-                FiercePlanet.Drawing.pan(2);
-                break;
-            case 38:
-                FiercePlanet.Drawing.pan(0);
-                break;
-            case 39:
-                FiercePlanet.Drawing.pan(3);
-                break;
-            case 40:
-                FiercePlanet.Drawing.pan(1);
-                break;
-            case 72:
-                FiercePlanet.Drawing.pan(4);
-                break;
-            // 'p': Play/pause game
-            case 80:
-                FiercePlanet.playGame();
-                break;
-            // 'n': New game
-            case 78:
-                FiercePlanet.newGame();
-                break;
-            // 'r': Restart game
-            case 82:
-                FiercePlanet.restartLevel();
-                break;
-            // 'w': Rewind
-            case 87:
-                FiercePlanet.slowDown();
-                break;
-            // 'f': Fast forward
-            case 70:
-                FiercePlanet.speedUp();
-                break;
-            // 't': Tutorial
-            case 84:
-                $('#tutorial').click();
-                break;
-            // 'g': Gallery
-            case 71:
-                $('#level-gallery').click();
-                break;
-            // 's': Settings
-            case 83:
-                FiercePlanet.Dialogs.showSettings();
-                break;
-            // 'e': Editor
-            case 69:
-                $('#editor').click();
-                break;
-            // '$': Resource Gallery
-            case 52:
-                if (e.shiftKey)
-                    FiercePlanet.showResourceGallery();
-                break;
+
+        if (World.settings.firstPerson) {
+//            console.log(e.which);
+            var myAgent = FiercePlanet.currentLevel.currentAgents[0];
+            if (myAgent) {
+                switch (e.which) {
+                    // +, -, 0: Zoom functions
+                    case 37:
+                    case 65:
+                        myAgent.x = myAgent.x - 1;
+                        break;
+                    case 39:
+                    case 68:
+                        myAgent.x = myAgent.x + 1;
+                        break;
+                    case 38:
+                    case 87:
+                        myAgent.y = myAgent.y - 1;
+                        break;
+                    case 40:
+                    case 83:
+                        myAgent.y = myAgent.y + 1;
+                        break;
+                }
+                myAgent.lastMemory.x = myAgent.x;
+                myAgent.lastMemory.y = myAgent.y;
+
+                FiercePlanet.Drawing.clearCanvas('#agentCanvas');
+                FiercePlanet.Drawing.drawAgents();
+            }
+        }
+        else {
+            switch (e.which) {
+                // +, -, 0: Zoom functions
+                case 107:
+                    FiercePlanet.Drawing.zoom(1);
+                    break;
+                case 109:
+                    FiercePlanet.Drawing.zoom(-1);
+                    break;
+                case 96:
+                    FiercePlanet.Drawing.zoom(0);
+                    break;
+                // Arrow buttons, 'h': Pan functions
+                case 37:
+                    FiercePlanet.Drawing.pan(2);
+                    break;
+                case 38:
+                    FiercePlanet.Drawing.pan(0);
+                    break;
+                case 39:
+                    FiercePlanet.Drawing.pan(3);
+                    break;
+                case 40:
+                    FiercePlanet.Drawing.pan(1);
+                    break;
+                case 72:
+                    FiercePlanet.Drawing.pan(4);
+                    break;
+                // 'p': Play/pause game
+                case 80:
+                    FiercePlanet.playGame();
+                    break;
+                // 'n': New game
+                case 78:
+                    FiercePlanet.newGame();
+                    break;
+                // 'r': Restart game
+                case 82:
+                    FiercePlanet.restartLevel();
+                    break;
+                // 'w': Rewind
+                case 87:
+                    FiercePlanet.slowDown();
+                    break;
+                // 'f': Fast forward
+                case 70:
+                    FiercePlanet.speedUp();
+                    break;
+                // 't': Tutorial
+                case 84:
+                    $('#tutorial').click();
+                    break;
+                // 'g': Gallery
+                case 71:
+                    $('#level-gallery').click();
+                    break;
+                // 's': Settings
+                case 83:
+                    FiercePlanet.Dialogs.showSettings();
+                    break;
+                // 'e': Editor
+                case 69:
+                    $('#editor').click();
+                    break;
+                // '$': Resource Gallery
+                case 52:
+                    if (e.shiftKey)
+                        FiercePlanet.showResourceGallery();
+                    break;
+            }
+
         }
     };
 
@@ -349,7 +389,7 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
             }
             if (ex >= x && ex <= x + w && ey >= y && ey <= y + h) {
                 FiercePlanet.currentNotice = undefined;
-                FiercePlanet.Drawing.clearCanvas('noticeCanvas');
+                FiercePlanet.Drawing.clearCanvas('#noticeCanvas');
             }
         }
     };
@@ -540,9 +580,9 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
         // Retrieve level object from server
         $.get('/levels/' + level, function(tmpLevel) {
             if (tmpLevel) {
-                Level.makeLevelFromJSONObject(tmpLevel, Level.prototype);
+                FiercePlanet.Utils.makeFromJSONObject(tmpLevel, Level.prototype);
                 for (var i in tmpLevel.resources) {
-                    Level.makeLevelFromJSONObject(tmpLevel.resources[i], Resource.prototype);
+                    FiercePlanet.Utils.makeFromJSONObject(tmpLevel.resources[i], Resource.prototype);
                 }
                 tmpLevel.levelResources = tmpLevel.resources;
 

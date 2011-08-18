@@ -20,12 +20,34 @@ FiercePlanet.ProfileUI = FiercePlanet.ProfileUI || {};
 (function() {
 
     /**
+     * Logs out the current user
+     */
+    this.editProfile = function() {
+        $.get('/profile/get', function(res) {
+            FiercePlanet.currentProfile = FiercePlanet.Utils.makeFromJSONObject(res.profile, Profile.prototype);
+        });
+        $('#profile-nickname').val(FiercePlanet.currentProfile.nickname);
+        $('#profile-profileClass').innerHTML = (FiercePlanet.currentProfile.profileClass);
+        $('#profile-progressTowardsNextClass').innerHTML = (FiercePlanet.currentProfile.progressTowardsNextClass);
+        $('#profile-credits').innerHTML = (FiercePlanet.currentProfile.credits);
+        $('#profile-capabilities').innerHTML = (FiercePlanet.currentProfile.capabilities);
+        $('#profile-totalSaved').innerHTML = (FiercePlanet.currentProfile.totalSaved);
+        $('#profile-totalExpired').innerHTML = (FiercePlanet.currentProfile.totalExpired);
+        $('#profile-totalResourcesSpent').innerHTML = (FiercePlanet.currentProfile.totalResourcesSpent);
+        $('#profile-currentScore').innerHTML = (FiercePlanet.currentProfile.currentScore);
+        $('#profile-highestScore').innerHTML = (FiercePlanet.currentProfile.highestScore);
+        $('#profile-currentLevel').innerHTML = (FiercePlanet.currentProfile.currentLevel);
+        $('#profile-highestLevel').innerHTML = (FiercePlanet.currentProfile.highestLevel);
+        FiercePlanet.Dialogs.profileDialog.dialog('open');
+    };
+
+    /**
      * Loads available settings from local storage
      */
     this.loadProfileSettingsFromStorage = function () {
         FiercePlanet.currentLevelNumber = (localStorage.currentLevelNumber != undefined ? parseInt(localStorage.currentLevelNumber) : FiercePlanet.currentLevelNumber);
         FiercePlanet.currentLevelPreset = (localStorage.currentLevelPreset != undefined ? (localStorage.currentLevelPreset === 'true') : FiercePlanet.currentLevelPreset);
-        FiercePlanet.current_score = (localStorage.current_score != undefined ? parseInt(localStorage.current_score) : FiercePlanet.current_score);
+        FiercePlanet.currentScore = (localStorage.currentScore != undefined ? parseInt(localStorage.currentScore) : FiercePlanet.currentScore);
         if (localStorage.currentProfile) {
             var cp = localStorage.currentProfile;
     //        FiercePlanet.currentProfile = $.evalJSON(cp);
@@ -47,13 +69,7 @@ FiercePlanet.ProfileUI = FiercePlanet.ProfileUI || {};
      * Compiles statistics for this level
      */
     this.serializeProfile = function() {
-        var resourceCount = FiercePlanet.currentLevel.resources.length;
-        var profileProxy = {};
-        profileProxy = FiercePlanet.currentProfile;
-        var stats = {
-            profile_object: $.toJSON(profileProxy)
-        };
-        return stats;
+        return { profile: $.toJSON(FiercePlanet.currentProfile)};
     };
 
     /**
@@ -61,9 +77,10 @@ FiercePlanet.ProfileUI = FiercePlanet.ProfileUI || {};
      * @param func
      */
     this.saveProfile = function(func) {
-        if (FiercePlanet.currentProfile.id > -1) {
-            $.post("/profiles/" + FiercePlanet.currentProfile.id + "/update_stats", FiercePlanet.ProfileUI.serializeProfile(), func);
-        }
+        $.post("/profile/update", FiercePlanet.ProfileUI.serializeProfile(), func);
+//        if (FiercePlanet.currentProfile.id > -1) {
+//            $.post("/profile/update", FiercePlanet.ProfileUI.serializeProfile(), func);
+//        }
     };
 
     /**
@@ -88,23 +105,23 @@ FiercePlanet.ProfileUI = FiercePlanet.ProfileUI || {};
                 "</tr>" +
                 "<tr>" +
                 "<td>Score:</td>" +
-                "<td>" + FiercePlanet.currentProfile.current_score + "</td>" +
+                "<td>" + FiercePlanet.currentProfile.currentScore + "</td>" +
                 "</tr>" +
                 "<tr>" +
                 "<td>Citizens saved:</td>" +
-                "<td>" + FiercePlanet.currentProfile.current_level_saved + "</td>" +
+                "<td>" + FiercePlanet.currentProfile.currentLevelSaved + "</td>" +
                 "</tr>" +
                 "<tr>" +
                 "<td>Citizens expired:</td>" +
-                "<td>" + FiercePlanet.currentProfile.current_level_expired + "</td>" +
+                "<td>" + FiercePlanet.currentProfile.currentLevelExpired + "</td>" +
                 "</tr>" +
                 "<tr>" +
                 "<td>Resources spent:</td>" +
-                "<td>" + FiercePlanet.currentProfile.current_level_resources_spent + "</td>" +
+                "<td>" + FiercePlanet.currentProfile.currentLevelResourcesSpent + "</td>" +
                 "</tr>" +
                 "<tr>" +
                 "<td>Resources remaining:</td>" +
-                "<td>" + FiercePlanet.currentProfile.current_level_resources_in_store + "</td>" +
+                "<td>" + FiercePlanet.currentProfile.currentLevelResourcesInStore + "</td>" +
                 "</tr>" +
                 "<tr>" +
                 "<td></td>" +
@@ -112,19 +129,19 @@ FiercePlanet.ProfileUI = FiercePlanet.ProfileUI || {};
                 "</tr>" +
                 "<tr>" +
                 "<td>Total saved:</td>" +
-                "<td>" + FiercePlanet.currentProfile.game_total_saved + "</td>" +
+                "<td>" + FiercePlanet.currentProfile.gameTotalSaved + "</td>" +
                 "</tr>" +
                 "<tr>" +
                 "<td>Total expired:</td>" +
-                "<td>" + FiercePlanet.currentProfile.game_total_expired + "</td>" +
+                "<td>" + FiercePlanet.currentProfile.gameTotalExpired + "</td>" +
                 "</tr>" +
                 "<tr>" +
                 "<td>Total resources spent:</td>" +
-                "<td>" + FiercePlanet.currentProfile.game_total_resources_spent + "</td>" +
+                "<td>" + FiercePlanet.currentProfile.gameTotalResourcesSpent + "</td>" +
                 "</tr>" +
                 "<tr>" +
                 "<td>Profile class:</td>" +
-                "<td>" + FiercePlanet.currentProfile.profile_class + "</td>" +
+                "<td>" + FiercePlanet.currentProfile.profileClass + "</td>" +
                 "</tr>" +
                 "<tr>" +
                 "<td>Credits:</td>" +

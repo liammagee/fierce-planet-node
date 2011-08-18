@@ -89,10 +89,10 @@ FiercePlanet.Recording = FiercePlanet.Recording || {};
 //                FiercePlanet.currentLevel = level;
                     FiercePlanet.globalRecordingCounter++;
                     FiercePlanet.waveCounter++;
-                    FiercePlanet.Drawing.clearCanvas('resourceCanvas');
-                    FiercePlanet.Drawing.clearCanvas('scrollingCanvas');
-                    FiercePlanet.Drawing.clearCanvas('noticeCanvas');
-                    FiercePlanet.Drawing.clearCanvas('agentCanvas');
+                    FiercePlanet.Drawing.clearCanvas('#resourceCanvas');
+                    FiercePlanet.Drawing.clearCanvas('#scrollingCanvas');
+                    FiercePlanet.Drawing.clearCanvas('#noticeCanvas');
+                    FiercePlanet.Drawing.clearCanvas('#agentCanvas');
 
                     FiercePlanet.Drawing.drawEntryPoints();
                     FiercePlanet.Drawing.drawExitPoints();

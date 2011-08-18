@@ -5,12 +5,174 @@
 
 
 
-var express = require('express');
+var express = require('express')
+    , everyauth = require('everyauth')
+    , conf = require('./conf');
+
+//var jsdom = require('jsdom').jsdom
+//  , myWindow = jsdom().createWindow()
+//  , $ = require('jquery')
+//  , jq = require('jquery').create()
+//  , jQuery = require('jquery').create(myWindow)
+//  ;
+
+// MongoDB stuff
+var FPProvider = require('./FPProviderDB').FPProvider;
+var levels = [
+    new Level(21),
+    new Level(22),
+    new Level(23)
+];
+levels[0].name = 'test level 1';
+levels[1].name = 'test level 2';
+levels[2].name = 'test level 3';
+
+var fpProvider = new FPProvider('app708577', 'staff.mongohq.com', '10089', 'heroku', '0846c19ac36a5b9e920880bf188dd43e', function(error, res) {
+    if( error ) console.log(error);
+    else if (res) {
+        fpProvider.save(levels, function(error, levels){});
+    }
+});
 
 var app = module.exports = express.createServer();
 
-// Configuration
+// Everyauth config
+everyauth.debug = true;
 
+var usersById = {};
+var nextUserId = 0;
+
+function addUser (source, sourceUser) {
+  var user;
+  if (arguments.length === 1) { // password-based
+    user = sourceUser = source;
+    user.id = ++nextUserId;
+    usersById[nextUserId] = user;
+  } else { // non-password-based
+    user = usersById[++nextUserId] = {id: nextUserId};
+    user[source] = sourceUser;
+  }
+
+  // Save to MongoDB
+    fpProvider.saveUser(user, function(error, res) {
+        if (res)
+            user = res;
+    });
+}
+var usersByFbId = {};
+var usersByGoogleId = {};
+var usersByLogin = {
+  'brian@example.com': addUser({ login: 'brian@example.com', password: 'password'})
+};
+everyauth.password.extractExtraRegistrationParams( function (req) {
+  return {
+      nickname: req.body.nickname
+  };
+});
+
+everyauth.everymodule
+  .findUserById( function (id, callback) {
+    callback(null, usersById[id]);
+  });
+everyauth
+  .facebook
+    .appId(conf.fb.appId)
+    .appSecret(conf.fb.appSecret)
+    .findOrCreateUser( function (session, accessToken, accessTokenExtra, fbUserMetadata) {
+      return usersByFbId[fbUserMetadata.id] ||
+        (usersByFbId[fbUserMetadata.id] = addUser('facebook', fbUserMetadata));
+    })
+    .redirectPath('/');
+everyauth.google
+  .myHostname('http://localhost:3000')
+  .appId(conf.google.clientId)
+  .appSecret(conf.google.clientSecret)
+  .scope('https://www.google.com/m8/feeds/')
+  .findOrCreateUser( function (sess, accessToken, extra, googleUser) {
+    googleUser.refreshToken = extra.refresh_token;
+    googleUser.expiresIn = extra.expires_in;
+    return usersByGoogleId[googleUser.id] || (usersByGoogleId[googleUser.id] = addUser('google', googleUser));
+  })
+  .redirectPath('/');
+everyauth
+  .password
+    .loginWith('email')
+    .getLoginPath('/login')
+    .postLoginPath('/login')
+    .loginView('login.jade')
+//    .loginLocals({
+//      title: 'Login'
+//    })
+//    .loginLocals(function (req, res) {
+//      return {
+//        title: 'Login'
+//      }
+//    })
+    .loginLocals( function (req, res, done) {
+      setTimeout( function () {
+        done(null, {
+          title: 'Async login'
+        });
+      }, 200);
+    })
+    .authenticate( function (login, password) {
+        var promise = this.Promise();
+      var errors = [];
+      if (!login) errors.push('Missing login');
+      if (!password) errors.push('Missing password');
+        if (errors.length) return promise.fulfill(errors)
+        
+      // Add mongo lookup here
+      fpProvider.authenticateUser(login, password, function(error, user) {
+        if (error) return promise.fulfill([error])
+          if (!user.id) user.id = user._id;
+          usersById[user.id] = user;
+        promise.fulfill(user);
+      });
+        return promise;
+    })
+
+    .getRegisterPath('/register')
+    .postRegisterPath('/register')
+    .registerView('register.jade')
+//    .registerLocals({
+//      title: 'Register'
+//    })
+//    .registerLocals(function (req, res) {
+//      return {
+//        title: 'Sync Register'
+//      }
+//    })
+    .registerLocals( function (req, res, done) {
+      setTimeout( function () {
+        done(null, {
+          title: 'Async Register'
+        });
+      }, 200);
+    })
+    .validateRegistration( function (newUserAttrs, errors) {
+      var login = newUserAttrs.login;
+      if (usersByLogin[login]) errors.push('Login already taken');
+      return errors;
+    })
+    .registerUser( function (newUserAttrs) {
+        var promise = this.Promise();
+
+      // Add mongo lookup here
+        fpProvider.saveUser(newUserAttrs, function(error, user) {
+            if (error) return promise.fulfill([error]);
+            if (!user.id) user.id = user._id;
+            usersById[user.id] = user;
+            promise.fulfill(user);
+        });
+        return promise;
+    })
+
+    .loginSuccessRedirect('/')
+    .registerSuccessRedirect('/');
+
+
+// Configuration stuff
 app.configure(function(){
   app.set('views', __dirname + '/views');
   app.set('view engine', 'jade');
@@ -21,18 +183,29 @@ app.configure(function(){
 //    var uri = parseUri(app.set('connstring'));
 //    console.log('host is: ' + uri.host);
 
+
+  app.use(express.bodyParser());
+    app.use(express.cookieParser());
+    app.use(express.session({ secret: "very fierce planet" }));
+    // Use mongo alternative?
+//    app.use(express.session({ store: mongostore(app.set('connstring')), secret: 'topsecret' }));
     // use connect-mongo as session middleware
 //    app.use(express.session({
 //        secret: 'topsecret',
 //        store: new store({ db: app.set('m_database'), host: uri.host })
 //    }));
-//    // use express logger
-//    app.use(express.logger({ format: '\x1b[1m:method\x1b[0m \x1b[33m:url\x1b[0m :response-time ms' }));
+    app.use(everyauth.middleware());
+//    app.use(mongooseAuth.middleware());
+    app.use(express.methodOverride());
 
-  app.use(express.bodyParser());
-    app.use(express.cookieParser());
-  app.use(express.methodOverride());
-  app.use(app.router);
+        // IMPORTANT!!!!!!! Do not add app.router, to your middleware chain
+        // explicitly, or you will run into problems accessing `req.user`
+        // i.e., do not use app.use(app.router). Let express do this for you
+        // automatically for you upon your first app.get or app.post.
+    app.use(app.router);
+
+  // use express logger
+//  app.use(express.logger({ format: '\x1b[1m:method\x1b[0m \x1b[33m:url\x1b[0m :response-time ms' }));
   app.use(express.static(__dirname + '/public'));
 });
 
@@ -45,23 +218,13 @@ app.configure('production', function(){
 });
 
 
-var LevelProvider = require('./LevelProviderDB').LevelProvider;
-//var levelProvider = new LevelProvider('127.0.0.1', 27017);
-var levels = [
-    new Level(21),
-    new Level(22),
-    new Level(23)
-];
-levels[0].name = 'test level 1';
-levels[1].name = 'test level 2';
-levels[2].name = 'test level 3';
 
-var levelProvider = new LevelProvider('app708577', 'staff.mongohq.com', '10089', 'heroku', '0846c19ac36a5b9e920880bf188dd43e', function(error, res) {
-    if( error ) console.log(error);
-    else if (res) {
-        levelProvider.save(levels, function(error, levels){});
-    }
-});
+// Now.js stuff - fails on Windows, Node 0.5.4
+//var everyone = require("now").initialize(app);
+
+// Everyauth stuff
+everyauth.helpExpress(app);
+
 
 // Routes
 app.get('/', function(req, res){
@@ -72,7 +235,7 @@ app.get('/', function(req, res){
 });
 
 app.get('/levels/gallery', function(req, res){
-  levelProvider.findAll(function(error, levels){
+  fpProvider.findAll(function(error, levels){
       res.render('levels/gallery.jade', { locals: {
           title: 'Levels',
           layout: false,
@@ -84,7 +247,7 @@ app.get('/levels/gallery', function(req, res){
 });
 
 app.get('/levels/list', function(req, res){
-  levelProvider.findAll(function(error, levels){
+  fpProvider.findAll(function(error, levels){
       res.render('levels/index.jade', { locals: {
           title: 'Levels',
           levels: levels
@@ -97,26 +260,58 @@ app.get('/levels/list', function(req, res){
 app.get('/levels/:id', function(req, res){
     var id = req.params.id;
     if (id) {
-        levelProvider.findById(id, function(error, level){
+        fpProvider.findById(id, function(error, level){
             res.send(level);
         });
     }
 });
 
-// User-related routes
-app.get('/users/sign_in', function(req, res){
-    res.render('users/sign_in.jade');
+app.get('/profile/get', function(req, res){
+    if (req.user) {
+        res.send(req.user);
+    }
+});
+
+app.post('/profile/update', function(req, res){
+    if (req.user && req.body.profile) {
+        req.user.profile = $.parseJSON(req.body.profile);
+//        var profile = $.parseJSON(req.params.profile);
+        fpProvider.updateUser(req.user, function(error, user){
+            res.send(user);
+        });
+    }
 });
 
 
+
+// Run express
 var port = process.env.PORT || 3000;
 app.listen(port);
 
+// Socket IO stuff
 var io = require('socket.io').listen(app);
+//io.listen(app);
 
 // Hack for heroku... needs web sockets support
-io.configure(function() {
-    io.set("transports", ["xhr-polling", "flashsocket", "json-polling"]);
+io.configure('production', function(){
+  io.enable('browser client etag');
+  io.set('log level', 0);
+
+  io.set('transports', [
+    'websocket'
+  , 'flashsocket'
+  , 'htmlfile'
+  , 'xhr-polling'
+  , 'jsonp-polling'
+  ]);
+});
+
+io.configure('development', function(){
+  io.set('transports', ['websocket']);
+    io.set('log level', 0);
+});
+io.configure(function(){
+    io.set('log level', 0);
 });
 
 io.sockets.on('connection', function(socket) {

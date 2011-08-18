@@ -1,6 +1,12 @@
 {
-    "name": "application-name"
-  , "version": "0.0.1"
+    "name": "Fierce Planet"
+  , "description": "Fierce Planet is a simple game for learning about sustainability"
+  , "version": "0.1.1"
+  , "repository": {
+    "type": "git",
+    "url": "git://github.com/doclm/fierce-planet.git"
+  }
+  , "author": "Liam Magee <liam.magee@gmail.com> (http://blog.fierce-planet.com/)"
   , "private": true
   , "dependencies": {
       "express": "2.4.3"
@@ -9,5 +15,12 @@
     , "mongodb": ">= 0.9.6-7"
     , "socket.io": ">= 0.7.7"
     , "now": ">= 0.7"
+    , "everyauth": ">= 0.2"
+    , "jake": ">= 0.1.8"
+    , "mongoose": ">= 1.0"
+    , "node-proxy": "0.4.0"
+    , "run": ">= 0.1.1"
+    , "mongoose-auth": ">= 0.0.11"
+    , "jquery": ">= 1.6.2"
   }
 }

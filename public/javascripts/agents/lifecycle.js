@@ -110,7 +110,12 @@ FiercePlanet.startLevel = function() {
     FiercePlanet._startAudio();
     FiercePlanet.Drawing.animateLevel();
     // Start a new level
-    FiercePlanet.newWave();
+    if (World.settings.firstPerson) {
+        FiercePlanet.currentLevel.generateAgents(AgentTypes.CITIZEN_AGENT_TYPE, 1);
+    }
+    else {
+        FiercePlanet.newWave();
+    }
 };
 
 /**
@@ -120,7 +125,7 @@ FiercePlanet.newWave = function() {
     FiercePlanet.maxWaveMoves = 0;
     FiercePlanet.waveCounter = 0;
     FiercePlanet.waveDelayCounter = 0;
-    FiercePlanet.currentProfile.current_level_saved_this_wave = 0;
+    FiercePlanet.currentProfile.currentLevelSavedThisWave = 0;
 
     FiercePlanet.currentLevel.generateAgents(AgentTypes.CITIZEN_AGENT_TYPE, FiercePlanet.numAgents);
 

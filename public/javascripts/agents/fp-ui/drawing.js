@@ -26,11 +26,11 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
     this.drawGame = function() {
         // Clear canvases
         $('#map_canvas').empty();
-        this.clearCanvas('baseCanvas');
-        this.clearCanvas('resourceCanvas');
-        this.clearCanvas('scrollingCanvas');
-        this.clearCanvas('noticeCanvas');
-        this.clearCanvas('agentCanvas');
+        this.clearCanvas('#baseCanvas');
+        this.clearCanvas('#resourceCanvas');
+        this.clearCanvas('#scrollingCanvas');
+        this.clearCanvas('#noticeCanvas');
+        this.clearCanvas('#agentCanvas');
 
         // Draw basic elements
 //    if ((FiercePlanet.currentLevel.mapOptions() != undefined && FiercePlanet.currentLevel.mapOptions()['latitude'] != undefined && FiercePlanet.currentLevel.mapOptions()['longitude'] != undefined)
@@ -52,7 +52,27 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         this.drawResources();
         this.drawScrollingLayer();
         this.drawScoreboard();
+    };
 
+    /**
+     * Draws the game
+     */
+    this.drawMirrorGame = function() {
+        // Clear canvases
+        $('#alt_map_canvas').empty();
+        this.clearCanvas('#alt_baseCanvas');
+        this.clearCanvas('#alt_resourceCanvas');
+        this.clearCanvas('#alt_scrollingCanvas');
+        this.clearCanvas('#alt_noticeCanvas');
+        this.clearCanvas('#alt_agentCanvas');
+
+        this.drawMap('alt_map_canvas');
+        this.drawPath('#alt_baseCanvas');
+
+        this.drawEntryPoints('#alt_baseCanvas');
+        this.drawExitPoints('#alt_baseCanvas');
+        this.drawResources('#alt_resourceCanvas');
+        this.drawScrollingLayer('#alt_scrollingCanvas');
     };
 
 
@@ -61,11 +81,11 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
      */
     this.drawCanvases = function() {
         // Clear canvases
-        this.clearCanvas('baseCanvas');
-        this.clearCanvas('resourceCanvas');
-    //    this.clearCanvas('scrollingCanvas');
-    //    this.clearCanvas('noticeCanvas');
-        this.clearCanvas('agentCanvas');
+        this.clearCanvas('#baseCanvas');
+        this.clearCanvas('#resourceCanvas');
+    //    this.clearCanvas('#scrollingCanvas');
+    //    this.clearCanvas('#noticeCanvas');
+        this.clearCanvas('#agentCanvas');
     
         // Draw basic elements
     //    if ((FiercePlanet.currentLevel.mapOptions() != undefined && FiercePlanet.currentLevel.mapOptions()['latitude'] != undefined && FiercePlanet.currentLevel.mapOptions()['longitude'] != undefined)
@@ -126,8 +146,9 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
     /**
      * Draws the current level path
      */
-    this.drawPath = function() {
-        var canvas = $('#baseCanvas')[0];
+    this.drawPath = function(altCanvasName) {
+        var canvasName = altCanvasName || '#baseCanvas';
+        var canvas = $(canvasName)[0];
         var ctx = canvas.getContext('2d');
 //        this.clearCanvas('baseCanvas');
 //        ctx.clearRect(0, 0, FiercePlanet.Orientation.worldWidth, FiercePlanet.Orientation.worldHeight );
@@ -222,7 +243,8 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
     /**
      * Callback method for Google Maps
      */
-    this.drawMap = function() {
+    this.drawMap = function(altCanvasName) {
+        var canvasName = altCanvasName || 'map_canvas';
     //    if (FiercePlanet.googleMap == undefined)
         if (FiercePlanet.currentLevel != undefined) {
             var mapOptions = GoogleMapUtils.defaultOptions();
@@ -232,14 +254,14 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
             if (FiercePlanet.Orientation.zoomLevel > 1)
                 mapOptions['zoom'] = mapOptions['zoom'] + Math.log(FiercePlanet.Orientation.zoomLevel) / Math.log(1.5);
     
-            FiercePlanet.googleMap = GoogleMapUtils.createMap(mapOptions);
+            FiercePlanet.googleMap = GoogleMapUtils.createMap(mapOptions, canvasName);
     
             FiercePlanet.mapOptions = mapOptions;
     //        if (FiercePlanet.currentLevel.mapOptions()['tilt'] != undefined && FiercePlanet.currentLevel.mapOptions()['tilt'] != 'no')
     //            FiercePlanet.googleMap.setTilt(45);
         }
         else {
-            FiercePlanet.googleMap = new google.maps.Map($("#map_canvas")[0], mapOptions);
+            FiercePlanet.googleMap = new google.maps.Map($(canvasName)[0], mapOptions);
         }
     };
     
@@ -247,8 +269,9 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
     /**
      * Draws exit points on the map
      */
-    this.drawExitPoints = function() {
-        var canvas = $('#baseCanvas')[0];
+    this.drawExitPoints = function(altCanvasName) {
+        var canvasName = altCanvasName || '#baseCanvas';
+        var canvas = $(canvasName)[0];
         var ctx = canvas.getContext('2d');
 
         // Rotation logic here - TODO: Refactor out
@@ -301,8 +324,9 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
     /**
      * Draws entry points on the map
      */
-    this.drawEntryPoints = function() {
-        var canvas = $('#baseCanvas')[0];
+    this.drawEntryPoints = function(altCanvasName) {
+        var canvasName = altCanvasName || '#baseCanvas';
+        var canvas = $(canvasName)[0];
         var ctx = canvas.getContext('2d');
 
 
@@ -363,7 +387,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
      */
     this.drawNotice = function(notice) {
         if (FiercePlanet.currentNotice != null) {
-            this.clearCanvas('noticeCanvas');
+            this.clearCanvas('#noticeCanvas');
             var canvas = $('#noticeCanvas')[0];
             var ctx = canvas.getContext('2d');
     
@@ -503,11 +527,13 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
     /**
      * Draw all of the resources
      */
-    this.drawResources = function() {
-        var resources = FiercePlanet.currentLevel.resources;
+    this.drawResources = function(altCanvasName, altResources) {
+        var canvasName = altCanvasName || '#resourceCanvas';
+
+        var resources = altResources || FiercePlanet.currentLevel.resources;
 
         if ((World.settings.skewTiles || FiercePlanet.currentLevel.isometric) && World.settings.showResourcesAsBoxes) {
-            this.clearCanvas("resourceCanvas");
+            this.clearCanvas(canvasName);
             var len = FiercePlanet.Orientation.cellsAcross;
             resources.sort(function(a, b) {
                 return (((a.y * len) - a.x > (b.y * len) - b.x) ? 1 : ((a.y * len) - a.x < (b.y * len) - b.x) ? -1 : 0);
@@ -519,7 +545,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
 //        }
 
         // Inlined version
-        var canvas = $('#resourceCanvas')[0];
+        var canvas = $(canvasName)[0];
         var ctx = canvas.getContext('2d');
 
         ctx.save();
@@ -625,8 +651,9 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
      * Draw an individual resource
      * @param resource
      */
-    this.drawResource = function(resource) {
-        var canvas = $('#resourceCanvas')[0];
+    this.drawResource = function(resource, altCanvasName) {
+        var canvasName = altCanvasName || '#resourceCanvas';
+        var canvas = $(canvasName)[0];
         var ctx = canvas.getContext('2d');
     
         ctx.save();
@@ -807,7 +834,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
      * @param canvasID
      */
     this.clearCanvas = function(canvasID) {
-        var canvas = $('#' + canvasID)[0];
+        var canvas = $(canvasID)[0];
         var ctx = canvas.getContext('2d');
         var w = canvas.width;
         var h = canvas.height;
@@ -946,7 +973,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         var offsetY = (y - lastY) * (increment);
         var intX = (x - offsetX);
         var intY = (y - offsetY);
-    
+
         if (FiercePlanet.currentLevel.allowOffscreenCycling) {
             var halfWay = (increment < 0.5);
             if (x == FiercePlanet.cellsAcross - 1 && lastX == 0) {
@@ -996,8 +1023,9 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
     /**
      * Draw agents on the agent canvas
      */
-    this.drawAgents = function() {
-        var canvas = $('#agentCanvas')[0];
+    this.drawAgents = function(altCanvasName, altAgents) {
+        var canvasName = altCanvasName || '#agentCanvas';
+        var canvas = $(canvasName)[0];
         var ctx = canvas.getContext('2d');
 
 
@@ -1008,7 +1036,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         ctx.translate(midTilePosX, midTilePosY);
         ctx.rotate(FiercePlanet.Orientation.rotationAngle);
 
-        var agents = FiercePlanet.currentLevel.currentAgents;
+        var agents = altAgents || FiercePlanet.currentLevel.currentAgents;
         for (var i = 0; i < agents.length; i += 1) {
             var agent = agents[i];
     
@@ -1095,10 +1123,11 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
     /**
      * Draw the scrolling layer
      */
-    this.drawScrollingLayer = function() {
+    this.drawScrollingLayer = function(altCanvasName) {
         if (World.settings.scrollingImageVisible) {
-            this.clearCanvas('scrollingCanvas');
-            var canvas = $('#scrollingCanvas')[0];
+            var canvasName = altCanvasName || '#scrollingCanvas';
+            this.clearCanvas(canvasName);
+            var canvas = $(canvasName)[0];
             var ctx = canvas.getContext('2d');
     
             // Add logic for catastrophe here
@@ -1157,7 +1186,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
     this.drawProfileClass = function() {
         var e = $('#profile-class-display')[0];
         if (e != undefined)
-            e.innerHTML = FiercePlanet.currentProfile.profile_class;
+            e.innerHTML = FiercePlanet.currentProfile.profileClass;
     };
     
     /**
@@ -1165,7 +1194,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
      */
     this.drawScore = function() {
         var e = $('#score-display')[0];
-        e.innerHTML = FiercePlanet.Utils.zeroFill(FiercePlanet.currentProfile.current_score, 5);
+        e.innerHTML = FiercePlanet.Utils.zeroFill(FiercePlanet.currentProfile.currentScore, 5);
     };
     
     /**
@@ -1173,7 +1202,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
      */
     this.drawHighestScore = function() {
         var e = $('#highest-score-display')[0];
-        var hs = FiercePlanet.currentProfile.highest_score;
+        var hs = FiercePlanet.currentProfile.highestScore;
         if (hs == undefined)
             hs = 0;
         e.innerHTML = hs.toString();
@@ -1184,7 +1213,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
      */
     this.drawResourcesInStore = function() {
         var e = $('#goodness-display')[0];
-        e.innerHTML = FiercePlanet.currentProfile.current_level_resources_in_store.toString();
+        e.innerHTML = FiercePlanet.currentProfile.currentLevelResourcesInStore.toString();
     };
     
     /**
@@ -1196,7 +1225,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         var e = $('#expired-citizens')[0];
         var expiredHTML = '';
         for (var i = 0, len = FiercePlanet.currentLevel.expiryLimit; i < len; i++) {
-            if (i < FiercePlanet.currentProfile.current_level_expired)
+            if (i < FiercePlanet.currentProfile.currentLevelExpired)
                 expiredHTML += '<div id="expired-citizen"></div>';
             else
                 expiredHTML += '<div id="healthy-citizen"></div>';
@@ -1209,7 +1238,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
      */
     this.drawSaved = function() {
         var e = $('#saved-display')[0];
-        var saved = FiercePlanet.currentProfile.current_level_saved.toString();
+        var saved = FiercePlanet.currentProfile.currentLevelSaved.toString();
         var totalSaveable = FiercePlanet.currentLevel.getTotalSaveableAgents();
         e.innerHTML = saved + " out of " + totalSaveable;
     };
@@ -1483,8 +1512,8 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
             var savedData = plot.getData()[0].data;
             var expiredData = plot.getData()[1].data;
             if (FiercePlanet.levelCounter > 0) {
-                savedData.push([FiercePlanet.levelCounter, FiercePlanet.currentProfile.current_level_saved]);
-                expiredData.push([FiercePlanet.levelCounter, FiercePlanet.currentProfile.current_level_expired]);
+                savedData.push([FiercePlanet.levelCounter, FiercePlanet.currentProfile.currentLevelSaved]);
+                expiredData.push([FiercePlanet.levelCounter, FiercePlanet.currentProfile.currentLevelExpired]);
             }
     
             plot.setData([
