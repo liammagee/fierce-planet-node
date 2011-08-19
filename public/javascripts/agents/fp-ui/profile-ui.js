@@ -22,10 +22,16 @@ FiercePlanet.ProfileUI = FiercePlanet.ProfileUI || {};
     /**
      * Logs out the current user
      */
-    this.editProfile = function() {
+    this.getProfile = function() {
         $.get('/profile/get', function(res) {
             FiercePlanet.currentProfile = FiercePlanet.Utils.makeFromJSONObject(res.profile, Profile.prototype);
         });
+    };
+    /**
+     * Logs out the current user
+     */
+    this.editProfile = function() {
+        this.getProfile();
         $('#profile-nickname').val(FiercePlanet.currentProfile.nickname);
         $('#profile-profileClass').innerHTML = (FiercePlanet.currentProfile.profileClass);
         $('#profile-progressTowardsNextClass').innerHTML = (FiercePlanet.currentProfile.progressTowardsNextClass);

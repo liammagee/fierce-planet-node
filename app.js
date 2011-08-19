@@ -9,12 +9,12 @@ var express = require('express')
     , everyauth = require('everyauth')
     , conf = require('./conf');
 
-//var jsdom = require('jsdom').jsdom
-//  , myWindow = jsdom().createWindow()
-//  , $ = require('jquery')
-//  , jq = require('jquery').create()
-//  , jQuery = require('jquery').create(myWindow)
-//  ;
+var jsdom = require('jsdom').jsdom
+  , myWindow = jsdom().createWindow()
+  , $ = require('jquery')
+  , jq = require('jquery').create()
+  , jQuery = require('jquery').create(myWindow)
+  ;
 
 // MongoDB stuff
 var FPProvider = require('./FPProviderDB').FPProvider;
@@ -31,8 +31,19 @@ var fpProvider = new FPProvider('app708577', 'staff.mongohq.com', '10089', 'hero
     if( error ) console.log(error);
     else if (res) {
         fpProvider.save(levels, function(error, levels){});
+        /*
+        var user = { email: 'brian@example.com', password: 'password'};
+        var user2 = { email: 'brian2@example.com', password: 'password'};
+        fpProvider.saveUsers([user, user2], function(error, res) {
+            console.log(error)
+            if (res)
+                console.log(res)
+        });
+        */
     }
 });
+
+
 
 var app = module.exports = express.createServer();
 
@@ -55,15 +66,14 @@ function addUser (source, sourceUser) {
 
   // Save to MongoDB
     fpProvider.saveUser(user, function(error, res) {
+        console.log(error)
         if (res)
             user = res;
     });
 }
 var usersByFbId = {};
 var usersByGoogleId = {};
-var usersByLogin = {
-  'brian@example.com': addUser({ login: 'brian@example.com', password: 'password'})
-};
+var usersByLogin = {};
 everyauth.password.extractExtraRegistrationParams( function (req) {
   return {
       nickname: req.body.nickname
@@ -159,10 +169,12 @@ everyauth
         var promise = this.Promise();
 
       // Add mongo lookup here
-        fpProvider.saveUser(newUserAttrs, function(error, user) {
+        fpProvider.saveUser(newUserAttrs, function(error, users) {
             if (error) return promise.fulfill([error]);
+            var user = users[0];
             if (!user.id) user.id = user._id;
             usersById[user.id] = user;
+            console.log(user);
             promise.fulfill(user);
         });
         return promise;
@@ -220,7 +232,7 @@ app.configure('production', function(){
 
 
 // Now.js stuff - fails on Windows, Node 0.5.4
-//var everyone = require("now").initialize(app);
+var everyone = require("now").initialize(app);
 
 // Everyauth stuff
 everyauth.helpExpress(app);
@@ -274,10 +286,12 @@ app.get('/profile/get', function(req, res){
 
 app.post('/profile/update', function(req, res){
     if (req.user && req.body.profile) {
-        req.user.profile = $.parseJSON(req.body.profile);
+        var user = req.user;
+        user.profile = $.parseJSON(req.body.profile);
 //        var profile = $.parseJSON(req.params.profile);
-        fpProvider.updateUser(req.user, function(error, user){
-            res.send(user);
+        fpProvider.updateUser(user, function(error, result){
+            console.log(result.toString())
+            res.send(result.toString());
         });
     }
 });
@@ -311,7 +325,7 @@ io.configure('development', function(){
     io.set('log level', 0);
 });
 io.configure(function(){
-    io.set('log level', 0);
+    io.set('log level', 3);
 });
 
 io.sockets.on('connection', function(socket) {

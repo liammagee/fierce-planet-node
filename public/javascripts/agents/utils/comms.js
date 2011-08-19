@@ -79,7 +79,9 @@
     }
 
     function send(){
-      var nickname = document.getElementById('nickname').value;
+        if (!FiercePlanet.currentProfile.nickname)
+            alert("Please login before using the chat facility")
+      var nickname = FiercePlanet.currentProfile.nickname;
       var val = document.getElementById('messageText').value;
       socket.emit('message', [nickname, val]);
       document.getElementById('messageText').value = '';

@@ -131,15 +131,13 @@ FPProvider.prototype.getUserById = function(user_id, callback) {
 };
 
 FPProvider.prototype.updateUser = function(user, callback) {
-    console.log(user)
     this.getUserCollection(function(error, user_collection) {
         if( error ) callback(error);
         else {
-            user_collection.remove({_id: user._id}, function(err, r) {
-//            user_collection.remove({_id: user_collection.db.bson_serializer.ObjectID.createFromHexString(user._id)}, function(err, r) {
-                user_collection.insert(user, function() {
-                  callback(error, user);
-                });
+            console.log('p');
+            console.log(user);
+            user_collection.save(user,{safe:true}, function(error, result) {
+                callback(error, result);
             });
         }
     });
@@ -157,11 +155,23 @@ FPProvider.prototype.saveUser = function(user, callback) {
                 // Make sure the user has a profile and a nickname
                 user.profile = new Profile();
                 user.profile.nickname = user.profile.nickname || user.nickname || user.email;
-                user_collection.insert(user, function() {
-                  callback(error, user);
+                user_collection.insert(user, function(e, u) {
+                  callback(e, u);
                 });
               }
               else callback(null, result)
+            });
+        }
+    });
+};
+
+FPProvider.prototype.saveUsers = function(users, callback) {
+//    console.log(sourceUser)
+    this.getUserCollection(function(error, user_collection) {
+        if( error ) callback(error);
+        else {
+            user_collection.insert(users, function(e, u) {
+              callback(e, u);
             });
         }
     });

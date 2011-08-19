@@ -91,11 +91,11 @@ script(src='/javascripts/agents/dev.js?1312325102')
 
 script(type='text/javascript')
   $(document).ready(function() {
+    FiercePlanet.ProfileUI.getProfile();
     $('.thumbnail, .customLevel').click(FiercePlanet.GeneralUI.changePresetLevelDirectly);
     FiercePlanet.GeneralUI.highlightGalleryItem(FiercePlanet.currentLevelNumber);
     $('#difficulty-input-' + FiercePlanet.levelOfDifficulty).attr('checked', 'checked');
     $(".difficultyInput").click(FiercePlanet.GeneralUI.changeDifficulty);
-
     // Remove text selection - TODO: needs to be more granular
     // document.onselectstart = function() {return false;} // ie
     // document.onmousedown = function() {return false;} // mozilla

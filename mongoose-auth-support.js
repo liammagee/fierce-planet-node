@@ -39,6 +39,6 @@ UserSchema.plugin(mongooseAuth, {
         }
 });
 mongoose.model('User', UserSchema);
-mongoose.connect('mongodb://heroku:e4ac2a0e4c20fe1d1e45d27c3e126186@staff.mongohq.com:10089/app708577');
+mongoose.connect('mongodb://heroku:0846c19ac36a5b9e920880bf188dd43e@staff.mongohq.com:10089/app708577');
 //mongoose.connect('mongodb://localhost/test');
 User = mongoose.model('User');

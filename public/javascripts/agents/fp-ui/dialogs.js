@@ -294,10 +294,12 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
                 title: 'Profile',
                 buttons: {
                     "Update profile": function() {
+                        FiercePlanet.currentProfile.nickname = $('#profile-nickname').val();
                         $( this ).dialog( "close" );
+
                         FiercePlanet.ProfileUI.saveProfile(function(res) {
-                            FiercePlanet.currentProfile = FiercePlanet.Utils.makeFromJSONObject(res.profile, Profile.prototype);
-                            $('#welcome-link').innerHTML = 'Welcome ' + FiercePlanet.currentProfile.nickname;
+                            if (res == '1')
+                                $('#welcome-link')[0].innerHTML = 'Welcome ' + FiercePlanet.currentProfile.nickname;
                         });
                     },
                     "Cancel": function() {
