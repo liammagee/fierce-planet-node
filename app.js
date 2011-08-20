@@ -316,15 +316,15 @@ var nicknames = {};
 var duels = {};
 
 
-//io.configure(function(){
-//    io.set("transports", ["xhr-polling"]);
-//    io.set("polling duration", 10);
-//});
+io.configure(function(){
+    io.set("transports", ["xhr-polling"]);
+    io.set("polling duration", 10);
+});
 
 // Hack for heroku... needs web sockets support
 io.configure('production', function(){
-  io.enable('browser client etag');
-  io.set('log level', 1);
+//  io.enable('browser client etag');
+//  io.set('log level', 1);
 
   io.set("transports", ["xhr-polling"]);
   io.set("polling duration", 10);
@@ -337,16 +337,16 @@ io.configure('production', function(){
 });
 
 // For development
-io.configure('development', function(){
-  io.set('transports', [
-    'websocket'
-  , 'flashsocket'
-  , 'htmlfile'
-  , 'xhr-polling'
-  , 'jsonp-polling'
-  ]);
-    io.set("polling duration", 10);
-});
+//io.configure('development', function(){
+//  io.set('transports', [
+//    'websocket'
+//  , 'flashsocket'
+//  , 'htmlfile'
+//  , 'xhr-polling'
+//  , 'jsonp-polling'
+//  ]);
+//    io.set("polling duration", 10);
+//});
 
 
 

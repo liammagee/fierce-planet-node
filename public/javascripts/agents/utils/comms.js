@@ -134,6 +134,10 @@ socket.on('nicknames', function (nicknames) {
   for (var i in nicknames) {
     $('#nicknames').append($('<b>').text(nicknames[i]));
   }
+  $('#duel-nicknames').empty().append($('<span>Online: </span>'));
+  for (var i in nicknames) {
+    $('#duel-nicknames').append($('<div>').append($('<span>').text(nicknames[i] + ': ').append($('<a class="invite-player" id="' + nicknames[i] + '">').text('Invite'))));
+  }
 });
 
 socket.on('user message', message);
