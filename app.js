@@ -315,6 +315,11 @@ var io = sio.listen(app);
 var nicknames = {};
 var duels = {};
 
+
+io.configure(function(){
+  io.set('log level', 0);
+});
+
 // Hack for heroku... needs web sockets support
 io.configure('production', function(){
   io.enable('browser client etag');
@@ -326,10 +331,6 @@ io.configure('production', function(){
   , 'xhr-polling'
   , 'jsonp-polling'
   ]);
-});
-
-io.configure(function(){
-  io.set('log level', 0);
 });
 
 
