@@ -316,19 +316,18 @@ var nicknames = {};
 var duels = {};
 
 // Hack for heroku... needs web sockets support
-/*
 io.configure('production', function(){
   io.enable('browser client etag');
   io.set('log level', 1);
 
-//  io.set('transports', [
-//  , 'flashsocket'
-//  , 'htmlfile'
-//  , 'xhr-polling'
-//  , 'jsonp-polling'
-//  ]);
+  io.set('transports', [
+  , 'flashsocket'
+  , 'htmlfile'
+  , 'xhr-polling'
+  , 'jsonp-polling'
+  ]);
 });
-*/
+
 io.configure(function(){
   io.set('log level', 0);
 });
