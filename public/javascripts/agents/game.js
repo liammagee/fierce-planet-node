@@ -168,12 +168,12 @@ FiercePlanet.processAgents = function() {
 //    if (World.settings.sendEventsToServer && !World.settings.spectate) {
         var simpleAgents = [];
         agents.forEach(function(agent) {
-//            var simpleAgent = new SimpleAgent(agent.agentType, agent.x, agent.y, agent.color, agent.speed, agent.health, agent.wanderX, agent.wanderY, agent.lastMemory, agent.delay, agent.countdownToMove, agent.healthCategoryStats);
-            var simpleAgent = $.extend(true, {}, agent);
-            simpleAgent.wipeMemory();
+            var simpleAgent = new SimpleAgent(agent.agentType, agent.x, agent.y, agent.color, agent.speed, agent.health, agent.wanderX, agent.wanderY, agent.lastMemory, agent.delay, agent.countdownToMove, agent.healthCategoryStats);
+//            var simpleAgent = $.extend(true, {}, agent);
+//            simpleAgent.wipeMemory();
             simpleAgents.push(simpleAgent);
         });
-        notifyEvent('agents', simpleAgents);
+        notifyServerOfEvent('agents', simpleAgents);
     }
 
 

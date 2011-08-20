@@ -16,6 +16,9 @@ var FiercePlanet = FiercePlanet || {};
  */
 FiercePlanet.loadGame = function() {
     // Load relevant settings, if available
+    FiercePlanet.Orientation.adjustParameters(FiercePlanet.Orientation.DEFAULT_WORLD_WIDTH, FiercePlanet.Orientation.DEFAULT_WORLD_HEIGHT);
+
+    // Load relevant settings, if available
     FiercePlanet.ProfileUI.loadProfileSettingsFromStorage();
 
     // Initialise World settings
@@ -80,7 +83,7 @@ FiercePlanet.newLevel = function() {
     $("#notifications").toggle(World.settings.statusBarVisible);
     FiercePlanet.GeneralUI.notify("Starting level " + FiercePlanet.currentLevel.id + "...");
     if (World.settings.sendEventsToServer) {
-        notifyEvent("level", FiercePlanet.currentLevel.id);
+        notifyServerOfEvent("level", FiercePlanet.currentLevel.id);
     }
 //    FiercePlanet.GeneralUI.levelInfo();
 };
@@ -104,7 +107,7 @@ FiercePlanet.restartLevel = function() {
  */
 FiercePlanet.startLevel = function() {
     if (World.settings.sendEventsToServer) {
-        notifyEvent("start", null);
+        notifyServerOfEvent("start", null);
     }
 
     FiercePlanet._startAudio();
@@ -199,7 +202,7 @@ FiercePlanet.playGame = function() {
     }
     else {
         if (World.settings.sendEventsToServer) {
-            notifyEvent("play", null);
+            notifyServerOfEvent("play", null);
         }
         FiercePlanet._startAudio();
         $('#playAgents').removeClass('pausing');
@@ -219,7 +222,7 @@ FiercePlanet.pauseGame = function() {
     if (!FiercePlanet.inPlay)
         return;
     if (World.settings.sendEventsToServer) {
-        notifyEvent("pause", null);
+        notifyServerOfEvent("pause", null);
     }
 
     FiercePlanet._stopAudio();

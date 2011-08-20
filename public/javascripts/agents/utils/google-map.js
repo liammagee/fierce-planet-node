@@ -266,8 +266,9 @@ var GoogleMapUtils = GoogleMapUtils || {};
      * @param value
      */
     this.createMap = function(options, altCanvasName) {
-        var canvasName = altCanvasName || 'map_canvas';
-        map = new google.maps.Map(document.getElementById(canvasName), options);
+        var canvasName = altCanvasName || '#map_canvas';
+        map = new google.maps.Map($(canvasName)[0], options);
+//        map = new google.maps.Map(document.getElementById('map_canvas'), options);
 
         // push the credit/copyright custom control
         map.controls[google.maps.ControlPosition.BOTTOM_RIGHT].push(creditNode);

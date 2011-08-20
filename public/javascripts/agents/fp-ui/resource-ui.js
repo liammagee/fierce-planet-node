@@ -236,7 +236,7 @@ FiercePlanet.ResourceUI = FiercePlanet.ResourceUI || {};
 
             FiercePlanet.eventTarget.fire(new Event("resource", resource, "added", FiercePlanet.gameCounter, FiercePlanet.currentLevel));
             if (World.settings.sendEventsToServer) {
-                notifyEvent('resources', FiercePlanet.currentLevel.resources);
+                notifyServerOfEvent('resources', FiercePlanet.currentLevel.resources);
 //                notifyEvent('resource', resource);
             }
         }

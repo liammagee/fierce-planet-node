@@ -5,26 +5,19 @@
  * MIT Licensed
  */
 
+    var duelingAgents = [];
 
-
-    function message(obj){
-      var el = document.createElement('p');
-      el.innerHTML = '<b>' + esc(obj[0]) + ':</b> ' + esc(obj[1]);
-      document.getElementById('chat').appendChild(el);
-    }
-
-    function receiveEvent(obj){
-        var eventType = obj[0];
-        console.log(eventType);
+    function receiveServerEvent(nickname, eventType, obj){
         if (eventType == 'level') {
-            var levelNumber = obj[1];
+            var levelNumber = obj;
             if (World.settings.spectate) {
                 FiercePlanet.currentLevelNumber = levelNumber;
                 FiercePlanet.currentLevelPreset = true;
                 FiercePlanet.newLevel();
 //                FiercePlanet.startLevel();
             }
-            FiercePlanet.Drawing.drawMirrorGame();
+            // TODO: Fix - causes problems with main Google screen
+//            FiercePlanet.Drawing.drawMirrorGame();
             $('#alt_gameworld').show();
         }
         else if (eventType == 'start') {
@@ -45,60 +38,142 @@
         }
         else if (eventType == 'resources') {
 //            if (World.settings.spectate) {
-                var resources = obj[1];
+                var resources = obj;
                 for (var i in resources) {
                     FiercePlanet.Utils.makeFromJSONObject(resources[i], Resource.prototype);
                 }
 //                FiercePlanet.currentLevel.addResource(resource);
-                FiercePlanet.Drawing.drawResources('alt_resourceCanvas', resources);
+                FiercePlanet.Drawing.drawResources('#alt_resourceCanvas', resources);
 //            }
         }
         else if (eventType == 'agents') {
-//            if (World.settings.spectate) {
-                var agents = obj[1];
-//                for (var i in agents) {
-//                    Level.makeLevelFromJSONObject(agents[i], Agent.prototype);
-//                }
-                // Co-op mode
+            var agents = obj;
+            // Co-op mode
 //                FiercePlanet.currentLevel.setCurrentAgents(agents);
 //                FiercePlanet.Drawing.clearCanvas('#agentCanvas');
 //                FiercePlanet.Drawing.drawAgents();
-                FiercePlanet.Drawing.clearCanvas('#alt_agentCanvas');
-                FiercePlanet.Drawing.drawAgents('#alt_agentCanvas', agents);
-                if (World.settings.spectate) {
-                    FiercePlanet.processAgents();
-                    FiercePlanet._stopAgents();
-//                FiercePlanet.drawCanvases();
-                }
-//            }
+            FiercePlanet.Drawing.clearCanvas('#alt_agentCanvas');
+            FiercePlanet.Drawing.drawAgents('#alt_agentCanvas', agents);
+            if (World.settings.spectate) {
+                FiercePlanet.processAgents();
+                FiercePlanet._stopAgents();
+            }
+        }
+        else if (eventType == 'agent') {
+            duelingAgents.push(obj);
+            // Co-op mode
+//                FiercePlanet.currentLevel.setCurrentAgents(agents);
+//                FiercePlanet.Drawing.clearCanvas('#agentCanvas');
+//                FiercePlanet.Drawing.drawAgents();
+            FiercePlanet.Drawing.clearCanvas('#alt_agentCanvas');
+            FiercePlanet.Drawing.drawAgents('#alt_agentCanvas', duelingAgents);
+            if (World.settings.spectate) {
+                FiercePlanet.processAgents();
+                FiercePlanet._stopAgents();
+            }
         }
     }
 
-    function notifyEvent(eventType, obj){
-        socket.emit('event', [eventType, obj]);
-    }
 
     function send(){
         if (!FiercePlanet.currentProfile.nickname)
             alert("Please login before using the chat facility")
       var nickname = FiercePlanet.currentProfile.nickname;
       var val = document.getElementById('messageText').value;
-      socket.emit('message', [nickname, val]);
+      socket.emit('user message', $('#messageText').val());
       document.getElementById('messageText').value = '';
-      message([nickname, val])
+      message($('#messageText').val())
     }
 
     function esc(msg){
       return msg.replace(/</g, '&lt;').replace(/>/g, '&gt;');
     };
+      // dom manipulation
+      $(function () {
+          /*
+        $('#set-nickname').submit(function (ev) {
+          socket.emit('nickname', $('#nick').val(), function (set) {
+            if (!set) {
+              clear();
+              return $('#chat').addClass('nickname-set');
+            }
+            $('#nickname-err').css('visibility', 'visible');
+          });
+          return false;
+        });
+        */
+
+      });
+
 
     var socket = io.connect();
-    socket.on('message', function (data) {
-      message(data);
+//
+//    socket.on('connect', function () {
+//      $('#chat').addClass('connected');
+//    });
+
+socket.on('connect', function () {
+  $('#chat').addClass('connected');
+    var nickname = FiercePlanet.currentProfile.nickname || 'anonymous';
+    socket.emit('nickname', nickname, function (set) {
+      if (!set) {
+        $('#message').val(''); //.focus();
+//        clear();
+        //return $('#chat').addClass('nickname-set');
+      }
+      //$('#nickname-err').css('visibility', 'visible');
     });
-    socket.on('event', function (data) {
-      receiveEvent(data);
+});
+
+socket.on('announcement', function (msg) {
+  $('#lines').append($('<p>').append($('<em>').text(msg)));
+});
+
+socket.on('nicknames', function (nicknames) {
+  $('#nicknames').empty().append($('<span>Online: </span>'));
+  for (var i in nicknames) {
+    $('#nicknames').append($('<b>').text(nicknames[i]));
+  }
+});
+
+socket.on('user message', message);
+socket.on('reconnect', function () {
+  $('#lines').remove();
+  message('System', 'Reconnected to the server');
+});
+
+socket.on('reconnecting', function () {
+  message('System', 'Attempting to re-connect to the server');
+});
+
+socket.on('error', function (e) {
+  message('System', e ? e : 'A unknown error occurred');
+});
+function notifyServerOfEvent(eventType, obj){
+    socket.emit('lifecycle event', eventType, obj);
+}
+socket.on('lifecycle event', function (nickname, eventType, data) {
+  receiveServerEvent(nickname, eventType, data);
+});
+
+function message(from, msg) {
+  $('#lines').append($('<p>').append($('<b>').text(from), msg));
+}
+
+$(document).ready(function() {
+    $('#send-message').submit(function () {
+      message('me', $('#message').val());
+      socket.emit('user message', $('#message').val());
+      clear();
+      $('#lines').get(0).scrollTop = 10000000;
+      return false;
     });
+
+    function clear () {
+      $('#message').val('').focus();
+    };
+});
+
 
 
 

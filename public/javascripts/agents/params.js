@@ -53,9 +53,9 @@ FiercePlanet.EXTREME_DIFFICULTY = 4;
 
 // Dimension constants
 /** @constant The width of the world (should equal the width of all canvases */
-FiercePlanet.Orientation.worldWidth = 480;
+//FiercePlanet.Orientation.worldWidth = 480;
 /** @constant The height of the world (should equal the height of all canvases */
-FiercePlanet.Orientation.worldHeight = 400;
+//FiercePlanet.Orientation.worldHeight = 400;
 
 /** @constant The default width of notices */
 FiercePlanet.WAVE_NOTICE_WIDTH = 200;

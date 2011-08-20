@@ -70,7 +70,7 @@ body {
 	border-radius:4px;
 	background:#1F62C1;
 	display:block;
-	width:480px; height:400px;
+	/*width:480px; height:400px;*/
 }
 #notifications {
 	font-size:24px;
@@ -78,7 +78,6 @@ body {
 	height:30px;
 	left:0px;
 	position:absolute;
-	width: 480px;
 	padding: 7px;
 	background: #1F62C1;
     border-radius:4px;

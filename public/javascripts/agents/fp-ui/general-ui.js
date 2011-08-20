@@ -444,8 +444,6 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
         // Correct for rotation
 //        if (FiercePlanet.Orientation.rotationAngle != 0) {
             var newPos = FiercePlanet.Orientation.getRotationOffset(x, y);
-//            console.log(FiercePlanet.Orientation.rotationAngle );
-            console.log('x:' + x + '; y:' + y +'; newx:' + newPos.x + '; new y:' + newPos.y );
             x = newPos.x;
             y = newPos.y;
 //        }
@@ -630,7 +628,7 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
         // Clear canvases
     //    $('#content-pane').offset({left: 0, top: -110, width: sw, height: sh});
         $('#content-pane').css({left: 0, top: -110, width: sw, height: sh});
-        $('#map_canvas, #baseCanvas, #resourceCanvas, #scrollingCanvas, #noticeCanvas, #agentCanvas').css({left: 0, top: 0, width: sw, height: sh});
+//        $('#map_canvas, #baseCanvas, #resourceCanvas, #scrollingCanvas, #noticeCanvas, #agentCanvas').css({left: 0, top: 0, width: sw, height: sh});
     //    $('#map_canvas').css({left: 0, top: 0, width: sw, height: sh});
     //    $('#baseCanvas, #resourceCanvas, #scrollingCanvas, #noticeCanvas, #agentCanvas').width(600);
     //    $('#baseCanvas').css({left: 0, top: 0, width: sw, height: sh});

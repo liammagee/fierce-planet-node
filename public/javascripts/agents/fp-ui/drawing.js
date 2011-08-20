@@ -44,7 +44,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
 //        FiercePlanet.drawPath();
 //    }
 //        if (World.settings.drawMap)
-            this.drawMap();
+        this.drawMap();
         this.drawPath();
 
         this.drawEntryPoints();
@@ -66,7 +66,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         this.clearCanvas('#alt_noticeCanvas');
         this.clearCanvas('#alt_agentCanvas');
 
-        this.drawMap('alt_map_canvas');
+        this.drawMap('#alt_map_canvas');
         this.drawPath('#alt_baseCanvas');
 
         this.drawEntryPoints('#alt_baseCanvas');
@@ -244,7 +244,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
      * Callback method for Google Maps
      */
     this.drawMap = function(altCanvasName) {
-        var canvasName = altCanvasName || 'map_canvas';
+        var canvasName = altCanvasName || '#map_canvas';
     //    if (FiercePlanet.googleMap == undefined)
         if (FiercePlanet.currentLevel != undefined) {
             var mapOptions = GoogleMapUtils.defaultOptions();
@@ -1312,7 +1312,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
                 this.panByDrag(-offset, 0);
                 break;
             case 4:
-                this.panByDrag(- FiercePlanet.Orientation.offsetX / FiercePlanet.Orientation.zoomLevel, - FiercePlanet.offsetY / FiercePlanet.Orientation.zoomLevel);
+                this.panByDrag(- FiercePlanet.Orientation.offsetX / FiercePlanet.Orientation.zoomLevel, - FiercePlanet.Orientation.offsetY / FiercePlanet.Orientation.zoomLevel);
                 break;
         }
     };

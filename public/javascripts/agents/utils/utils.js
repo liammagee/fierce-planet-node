@@ -226,13 +226,13 @@ FiercePlanet.Utils = FiercePlanet.Utils || {};
 //        FiercePlanet.Orientation.worldHeight = 480;
         }
         else {
-            $('#world').height(400);
-            $('#map_canvas').height(400);
-            $('canvas').height(400);
-            $('canvas').width(480);
-            $('#notifications').css('top', '517px');
-            $('#level-editor').css('top', '500px');
-            FiercePlanet.Orientation.worldHeight = 400;
+//            $('#world').height(500);
+//            $('#map_canvas').height(500);
+//            $('canvas').height(500);
+//            $('canvas').width(600);
+//            $('#notifications').css('top', '517px');
+//            $('#level-editor').css('top', '500px');
+//            FiercePlanet.Orientation.worldHeight = 400;
         }
     };
 

@@ -232,7 +232,7 @@ app.configure('production', function(){
 
 
 // Now.js stuff - fails on Windows, Node 0.5.4
-var everyone = require("now").initialize(app);
+//var everyone = require("now").initialize(app);
 
 // Everyauth stuff
 everyauth.helpExpress(app);
@@ -284,6 +284,12 @@ app.get('/profile/get', function(req, res){
     }
 });
 
+
+app.get('/chat', function (req, res) {
+  res.render('chat', { layout: false });
+});
+
+
 app.post('/profile/update', function(req, res){
     if (req.user && req.body.profile) {
         var user = req.user;
@@ -302,40 +308,100 @@ app.post('/profile/update', function(req, res){
 var port = process.env.PORT || 3000;
 app.listen(port);
 
+
 // Socket IO stuff
-var io = require('socket.io').listen(app);
-//io.listen(app);
+var sio = require('socket.io');
+var io = sio.listen(app);
+var nicknames = {};
+var duels = {};
 
 // Hack for heroku... needs web sockets support
+/*
 io.configure('production', function(){
   io.enable('browser client etag');
-  io.set('log level', 0);
+  io.set('log level', 1);
 
-  io.set('transports', [
-    'websocket'
-  , 'flashsocket'
-  , 'htmlfile'
-  , 'xhr-polling'
-  , 'jsonp-polling'
-  ]);
+//  io.set('transports', [
+//  , 'flashsocket'
+//  , 'htmlfile'
+//  , 'xhr-polling'
+//  , 'jsonp-polling'
+//  ]);
 });
-
-io.configure('development', function(){
-  io.set('transports', ['websocket']);
-    io.set('log level', 0);
-});
+*/
 io.configure(function(){
-    io.set('log level', 3);
+  io.set('log level', 0);
 });
 
-io.sockets.on('connection', function(socket) {
-  socket.emit('message', ['server', 'Welcome to Fierce Planet']);
-  socket.on('message', function(data) {
-    socket.broadcast.emit('message', data);
+
+
+io.sockets.on('connection', function (socket) {
+  socket.on('user message', function (msg) {
+    socket.broadcast.emit('user message', socket.nickname, msg);
   });
-  socket.on('event', function(data) {
-    socket.broadcast.emit('event', data);
+
+  socket.on('nickname', function (nick, fn) {
+    if (nicknames[nick]) {
+      fn(true);
+    } else {
+      fn(false);
+      nicknames[nick] = socket.nickname = nick;
+      socket.broadcast.emit('announcement', nick + ' connected');
+      io.sockets.emit('nicknames', nicknames);
+    }
+  });
+
+  socket.on('initiate duel', function(rival, data) {
+    socket.broadcast.emit('event', socket.nickname, data);
+  });
+
+  socket.on('lifecycle event', function(eventType, data) {
+    socket.broadcast.emit('lifecycle event', socket.nickname, eventType, data);
+  });
+
+  socket.on('disconnect', function () {
+    if (!socket.nickname) return;
+
+    delete nicknames[socket.nickname];
+    socket.broadcast.emit('announcement', socket.nickname + ' disconnected');
+    socket.broadcast.emit('nicknames', nicknames);
   });
 });
+
+
+//
+//io.sockets.on('connection', function(socket) {
+////  socket.emit('announcement', 'server', 'Welcome to Fierce Planet');
+//
+//    socket.on('user message', function (msg) {
+//      socket.broadcast.emit('user message', socket.nickname, msg);
+//    });
+//
+//    socket.on('nickname', function (nick, fn) {
+//      if (nicknames[nick]) {
+//        fn(true);
+//      } else {
+//        fn(false);
+//        nicknames[nick] = socket.nickname = nick;
+//        socket.broadcast.emit('announcement', nick + ' connected');
+//        io.sockets.emit('nicknames', nicknames);
+//      }
+//    });
+//
+//  socket.on('message', function(data) {
+//    socket.broadcast.emit('message', socket.nickname, data);
+//  });
+//  socket.on('event', function(data) {
+//    socket.broadcast.emit('event', socket.nickname, data);
+//  });
+//
+//    socket.on('disconnect', function () {
+//      if (!socket.nickname) return;
+//
+//      delete nicknames[socket.nickname];
+//      socket.broadcast.emit('announcement', socket.nickname + ' disconnected');
+//      socket.broadcast.emit('nicknames', nicknames);
+//    });
+//});
 
 console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
