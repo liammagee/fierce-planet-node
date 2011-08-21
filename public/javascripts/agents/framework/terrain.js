@@ -20,3 +20,9 @@ function Terrain(color, alpha) {
     this.alpha = alpha || DEFAULT_TERRAIN_ALPHA;
 }
 Terrain.DEFAULT_TERRAIN = new Terrain(DEFAULT_TERRAIN_COLOR);
+
+if (typeof(exports) != "undefined") {
+    exports.DEFAULT_TERRAIN_COLOR = DEFAULT_TERRAIN_COLOR;
+    exports.DEFAULT_TERRAIN_ALPHA = DEFAULT_TERRAIN_ALPHA;
+    exports.Terrain = Terrain;
+}

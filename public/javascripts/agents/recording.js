@@ -36,7 +36,7 @@ FiercePlanet.Recording = FiercePlanet.Recording || {};
                     level.setCurrentAgents(agents);
                     level.setResources(FiercePlanet.currentLevel.resources);
                     // Serialised option, for remote persistence
-                    FiercePlanet.recordedLevels[FiercePlanet.globalRecordingCounter] = $.toJSON(level);
+                    FiercePlanet.recordedLevels[FiercePlanet.globalRecordingCounter] = JSON.stringify(level);
                     // Local option
 //                FiercePlanet.recordedLevels[FiercePlanet.globalRecordingCounter] = level;
                     FiercePlanet.globalRecordingCounter++;
@@ -84,7 +84,7 @@ FiercePlanet.Recording = FiercePlanet.Recording || {};
                 try {
                     FiercePlanet.Drawing.clearAgents();
                     // Serialised option, for remote persistence
-                    FiercePlanet.currentLevel = $.evalJSON(level);
+                    FiercePlanet.currentLevel = JSON.parse(level);
                     // Local option
 //                FiercePlanet.currentLevel = level;
                     FiercePlanet.globalRecordingCounter++;

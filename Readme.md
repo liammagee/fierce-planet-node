@@ -55,7 +55,25 @@ Fierce Planet 0.1.x is compatible with node 0.4.x.
 
 ## Running Tests
 
-TBD
+Fierce Planet uses to Jasmine for test coverage.
+
+To run tests in Jasmine Node (from the command line):
+
+    $ npm install jasmine-node
+    $ node_modules/jasmine-node/bin/jasmine-node spec
+
+To run tests in Jasmine Runner (from the browser), first get the slightly modifed version from:
+
+    $ cd node_modules
+    $ git clone git://github.com/doclm/jasmine-tool.git
+
+(The modifications allow multiple files to be loaded as sources).
+Then run:
+
+    $ cd ..
+    $ node_modules/jasmine-runner/bin/jasmine run
+
+And direct the browser to http://localhost:8124/.
 
 
 ## License

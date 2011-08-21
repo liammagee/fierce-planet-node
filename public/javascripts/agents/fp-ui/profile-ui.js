@@ -56,7 +56,7 @@ FiercePlanet.ProfileUI = FiercePlanet.ProfileUI || {};
         FiercePlanet.currentScore = (localStorage.currentScore != undefined ? parseInt(localStorage.currentScore) : FiercePlanet.currentScore);
         if (localStorage.currentProfile) {
             var cp = localStorage.currentProfile;
-    //        FiercePlanet.currentProfile = $.evalJSON(cp);
+    //        FiercePlanet.currentProfile = JSON.parse(cp);
         }
 
     };
@@ -67,7 +67,7 @@ FiercePlanet.ProfileUI = FiercePlanet.ProfileUI || {};
     this.storeProfileData = function() {
         localStorage.currentLevelNumber = FiercePlanet.currentLevelNumber;
         localStorage.currentLevelPreset = FiercePlanet.currentLevel.isPresetLevel;
-        localStorage.currentProfile = $.toJSON(FiercePlanet.currentProfile);
+        localStorage.currentProfile = JSON.stringify(FiercePlanet.currentProfile);
     };
 
 
@@ -75,7 +75,7 @@ FiercePlanet.ProfileUI = FiercePlanet.ProfileUI || {};
      * Compiles statistics for this level
      */
     this.serializeProfile = function() {
-        return { profile: $.toJSON(FiercePlanet.currentProfile)};
+        return { profile: JSON.stringify(FiercePlanet.currentProfile)};
     };
 
     /**

@@ -1022,4 +1022,6 @@ function SimpleAgent(agentType, x, y, color, speed, health, wanderX, wanderY, la
 if (typeof(exports) != "undefined") {
     exports.AgentType = AgentType;
     exports.Agent = Agent;
+    exports.INITIAL_HEALTH = INITIAL_HEALTH;
+    exports.DEFAULT_SPEED = DEFAULT_SPEED;
 }

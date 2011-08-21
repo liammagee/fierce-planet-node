@@ -86,7 +86,7 @@ initWorld = (function() {
                         ownProperties[key] = this[key];
                     }
                 }
-                return $.toJSON(ownProperties);
+                return (JSON.stringify(ownProperties));
             },
 
             /** Deserialise just the settings from JSON */
