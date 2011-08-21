@@ -1,9 +1,11 @@
 script
-  $('.invite-player').click(function(e) {console.log(e)}  );
-  $('.invite-player').click(invitePlayer);
-  var invitePlayer = function(e) {
-    console.log(e)
-  };
+  $(document).ready(function(){
+    var invitePlayer = function(e) {
+      console.log(e)
+    };
+    //$('.invite-player').click(function(e) {console.log(this.id)}  );
+    $('.invite-player').click(invitePlayer);
+  });
 #extended-area
   ul
     li

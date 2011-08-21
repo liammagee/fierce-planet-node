@@ -1018,3 +1018,8 @@ function SimpleAgent(agentType, x, y, color, speed, health, wanderX, wanderY, la
     this.countdownToMove = countdownToMove;
     this.healthCategoryStats = healthCategoryStats;
 }
+
+if (typeof(exports) != "undefined") {
+    exports.AgentType = AgentType;
+    exports.Agent = Agent;
+}

@@ -105,6 +105,10 @@
 
       });
 
+    var invitePlayer = function(e) {
+      console.log(this.id);
+    };
+
 
     var socket = io.connect();
 //
@@ -138,6 +142,7 @@ socket.on('nicknames', function (nicknames) {
   for (var i in nicknames) {
     $('#duel-nicknames').append($('<div>').append($('<span>').text(nicknames[i] + ': ').append($('<a class="invite-player" id="' + nicknames[i] + '">').text('Invite'))));
   }
+  $('.invite-player').click(invitePlayer);
 });
 
 socket.on('user message', message);
