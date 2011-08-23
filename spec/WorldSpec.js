@@ -1,20 +1,20 @@
 
 // Running in Node?
 if (typeof(global) != "undefined") {
-    global.Log = require('../public/javascripts/agents/utils/log').Log;
-    global.ResourceCategory = require('../public/javascripts/agents/framework/resource').ResourceCategory;
-    global.ResourceType = require('../public/javascripts/agents/framework/resource').ResourceType;
-    global.Resource = require('../public/javascripts/agents/framework/resource').Resource;
-    global.World = require('../public/javascripts/agents/framework/world').World;
-    global.Level = require('../public/javascripts/agents/framework/level').Level;
-    global.AgentType = require('../public/javascripts/agents/framework/agent').AgentType;
-    global.Agent = require('../public/javascripts/agents/framework/agent').Agent;
-    global.DEFAULT_SPEED = require('../public/javascripts/agents/framework/agent').DEFAULT_SPEED;
-    global.INITIAL_HEALTH = require('../public/javascripts/agents/framework/agent').INITIAL_HEALTH;
-    global.Culture = require('../public/javascripts/agents/framework/culture').Culture;
-    global.Tile = require('../public/javascripts/agents/framework/tile').Tile;
-    global.DEFAULT_TILE_COLOR = require('../public/javascripts/agents/framework/terrain').DEFAULT_TILE_COLOR;
-    global.Terrain = require('../public/javascripts/agents/framework/terrain').Terrain;
+    global.Log = require('../public/javascripts/fp/utils/log').Log;
+    global.ResourceCategory = require('../public/javascripts/fp/framework/resource').ResourceCategory;
+    global.ResourceType = require('../public/javascripts/fp/framework/resource').ResourceType;
+    global.Resource = require('../public/javascripts/fp/framework/resource').Resource;
+    global.World = require('../public/javascripts/fp/framework/world').World;
+    global.Level = require('../public/javascripts/fp/framework/level').Level;
+    global.AgentType = require('../public/javascripts/fp/framework/agent').AgentType;
+    global.Agent = require('../public/javascripts/fp/framework/agent').Agent;
+    global.DEFAULT_SPEED = require('../public/javascripts/fp/framework/agent').DEFAULT_SPEED;
+    global.INITIAL_HEALTH = require('../public/javascripts/fp/framework/agent').INITIAL_HEALTH;
+    global.Culture = require('../public/javascripts/fp/framework/culture').Culture;
+    global.Tile = require('../public/javascripts/fp/framework/tile').Tile;
+    global.DEFAULT_TILE_COLOR = require('../public/javascripts/fp/framework/terrain').DEFAULT_TILE_COLOR;
+    global.Terrain = require('../public/javascripts/fp/framework/terrain').Terrain;
 
     var jsdom = require('jsdom').jsdom,
         myWindow = jsdom().createWindow(),
@@ -22,7 +22,7 @@ if (typeof(global) != "undefined") {
         jq = require('jquery/dist/node-jquery').create(),
         jQuery = require('jquery/dist/node-jquery').create(myWindow);
 
-    require('../public/javascripts/jstat-1.0.0')
+    require('../public/javascripts/jstat-1.0.0/js/jstat-1.0.0')
     require('../public/javascripts/sylvester/sylvester')
 
 // Add these variables to global namespace

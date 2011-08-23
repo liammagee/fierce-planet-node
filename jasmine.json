@@ -1,19 +1,18 @@
 {
  "COMMENT":"Folders must end with a /",
  "src_dir"  : [
-       "/public/javascripts/jquery-1.6.2.js"
-     , "/public/javascripts/jasmine-jquery-1.2.0.js"
-     , "/public/javascripts/jquery.json-2.2.min.js"
+       "/public/javascripts/jquery/jquery-1.6.2.js"
+     , "/public/javascripts/jquery/jasmine-jquery-1.2.0.js"
      , "/public/javascripts/jstat-1.0.0/js/jstat-0.1.0.min.js"
      , "/public/javascripts/sylvester/sylvester.js"
-     , "/public/javascripts/agents/utils/log.js"
-     , "/public/javascripts/agents/framework/world.js"
-     , "/public/javascripts/agents/framework/resource.js"
-     , "/public/javascripts/agents/framework/level.js"
-     , "/public/javascripts/agents/framework/agent.js"
-     , "/public/javascripts/agents/framework/culture.js"
-     , "/public/javascripts/agents/framework/tile.js"
-     , "/public/javascripts/agents/framework/terrain.js"
+     , "/public/javascripts/fp/utils/log.js"
+     , "/public/javascripts/fp/framework/world.js"
+     , "/public/javascripts/fp/framework/resource.js"
+     , "/public/javascripts/fp/framework/level.js"
+     , "/public/javascripts/fp/framework/agent.js"
+     , "/public/javascripts/fp/framework/culture.js"
+     , "/public/javascripts/fp/framework/tile.js"
+     , "/public/javascripts/fp/framework/terrain.js"
  ],
  "spec_dir" : "/spec/",
 

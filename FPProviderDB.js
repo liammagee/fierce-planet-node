@@ -1,12 +1,12 @@
 var levelCounter = 1;
 
-World = require('./public/javascripts/agents/framework/world.js').World;
-Level = require('./public/javascripts/agents/framework/level.js').Level;
-require('./public/javascripts/agents/framework/agent.js');
-require('./public/javascripts/agents/framework/resource.js');
-require('./public/javascripts/agents/framework/tile.js');
+World = require('./public/javascripts/fp/framework/world.js').World;
+Level = require('./public/javascripts/fp/framework/level.js').Level;
+require('./public/javascripts/fp/framework/agent.js');
+require('./public/javascripts/fp/framework/resource.js');
+require('./public/javascripts/fp/framework/tile.js');
 
-var Profile = require('./public/javascripts/agents/fp-models/profile.js').Profile;
+var Profile = require('./public/javascripts/fp/fp-models/profile.js').Profile;
 
 
 
@@ -59,7 +59,7 @@ FPProvider.prototype.findById = function(id, callback) {
       }
     });};
 
-FPProvider.prototype.save = function(levels, callback) {
+FPProvider.prototype.loadLevels = function(levels, callback) {
     this.getCollection(function(error, level_collection) {
       if( error ) callback(error)
       else {
@@ -83,6 +83,7 @@ FPProvider.prototype.save = function(levels, callback) {
       }
     });
 };
+
 FPProvider.prototype.deleteAll = function(callback) {
     this.getCollection(function(error, level_collection) {
       if( error ) callback(error)
@@ -130,12 +131,26 @@ FPProvider.prototype.getUserById = function(user_id, callback) {
     });
 };
 
+FPProvider.prototype.updateLevel = function(level, callback) {
+    this.getCollection(function(error, level_collection) {
+        if( error ) callback(error);
+        else {
+            if (level._id) {
+                level._id = level_collection.db.bson_serializer.ObjectID.createFromHexString(level._id)
+            }
+            level_collection.save(level, {safe:true}, function(error, result) {
+                callback(error, result);
+            });
+        }
+    });
+};
 FPProvider.prototype.updateUser = function(user, callback) {
     this.getUserCollection(function(error, user_collection) {
         if( error ) callback(error);
         else {
-            console.log('p');
-            console.log(user);
+            if (user._id) {
+                user._id = user_collection.db.bson_serializer.ObjectID.createFromHexString(user._id)
+            }
             user_collection.save(user,{safe:true}, function(error, result) {
                 callback(error, result);
             });

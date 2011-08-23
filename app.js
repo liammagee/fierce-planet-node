@@ -30,7 +30,7 @@ levels[2].name = 'test level 3';
 var fpProvider = new FPProvider('app708577', 'staff.mongohq.com', '10089', 'heroku', '0846c19ac36a5b9e920880bf188dd43e', function(error, res) {
     if( error ) console.log(error);
     else if (res) {
-        fpProvider.save(levels, function(error, levels){});
+        fpProvider.loadLevels(levels, function(error, levels){});
         /*
         var user = { email: 'brian@example.com', password: 'password'};
         var user2 = { email: 'brian2@example.com', password: 'password'};
@@ -260,30 +260,54 @@ app.get('/levels/gallery', function(req, res){
 
 app.get('/levels/list', function(req, res){
   fpProvider.findAll(function(error, levels){
-      res.render('levels/index.jade', { locals: {
-          title: 'Levels',
-          levels: levels
-          }
-      });
-//      res.send(levels);
+      res.send(levels);
   });
 });
 
 app.get('/levels/:id', function(req, res){
     var id = req.params.id;
+    console.log(id)
     if (id) {
         fpProvider.findById(id, function(error, level){
+            console.log('Opening level')
+            if (level.tiles)
+                console.log('Tiles length: ' + level.tiles.length)
+            else
+                console.log('No tiles')
             res.send(level);
         });
     }
 });
 
-app.get('/profile/get', function(req, res){
-    if (req.user) {
-        res.send(req.user);
+app.post('/levels/update', function(req, res){
+    if (req.body.level) {
+        var level = JSON.parse(req.body.level);
+        console.log('Saving level')
+        if (level.tiles)
+            console.log('Tiles length: ' + level.tiles.length)
+//        console.log(level)
+        fpProvider.updateLevel(level, function(error, result){
+            res.send(result.toString());
+        });
     }
 });
 
+app.post('/levels/new', function(req, res){
+    if (req.body) {
+        var level = JSON.parse(req.body.level);
+        console.log('Creating new level')
+        if (level.tiles)
+            console.log('Tiles length: ' + level.tiles.length)
+//        console.log(level)
+        fpProvider.updateLevel(level, function(error, result){
+            res.send(result);
+        });
+    }
+});
+
+app.get('/profile/get', function(req, res){
+    res.send(req.user);
+});
 
 app.get('/chat', function (req, res) {
   res.render('chat', { layout: false });
@@ -293,7 +317,7 @@ app.get('/chat', function (req, res) {
 app.post('/profile/update', function(req, res){
     if (req.user && req.body.profile) {
         var user = req.user;
-        user.profile = $.parseJSON(req.body.profile);
+        user.profile = JSON.parse(req.body.profile);
 //        var profile = $.parseJSON(req.params.profile);
         fpProvider.updateUser(user, function(error, result){
             console.log(result.toString())
@@ -317,8 +341,9 @@ var duels = {};
 
 
 io.configure(function(){
-    io.set("transports", ["xhr-polling"]);
-    io.set("polling duration", 10);
+//    io.set("transports", ["xhr-polling"]);
+//    io.set("polling duration", 10);
+  io.set('log level', 0);
 });
 
 // Hack for heroku... needs web sockets support

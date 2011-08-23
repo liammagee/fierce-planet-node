@@ -1,10 +1,10 @@
 var levelCounter = 1;
 
-World = require('./public/javascripts/agents/framework/world.js').World;
-Level = require('./public/javascripts/agents/framework/level.js').Level;
-require('./public/javascripts/agents/framework/agent.js');
-require('./public/javascripts/agents/framework/resource.js');
-require('./public/javascripts/agents/framework/tile.js');
+World = require('./public/javascripts/fp/framework/world.js').World;
+Level = require('./public/javascripts/fp/framework/level.js').Level;
+require('./public/javascripts/fp/framework/agent.js');
+require('./public/javascripts/fp/framework/resource.js');
+require('./public/javascripts/fp/framework/tile.js');
 
 
 console.log(World);

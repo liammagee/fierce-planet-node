@@ -6,7 +6,7 @@ script
     //$('.invite-player').click(function(e) {console.log(this.id)}  );
     $('.invite-player').click(invitePlayer);
   });
-#extended-area
+#extended-area(style='display:none')
   ul
     li
       a(href='#chat-area') Chat area
@@ -14,6 +14,8 @@ script
       a(href='#alt_gameworld') Duel
     li
       a(href='#world-graph') Graph
+    li
+      a(href='#console') Console
   #chat-area
     #chat
       #messages
@@ -36,4 +38,6 @@ script
       canvas.scrollable-canvas#alt_resourceCanvas(z-index='6',width='480',height='400')
       canvas#alt_scrollingCanvas(z-index='7',width='480',height='400')
   #world-graph
+  #console
+    #jqconsole
 
