@@ -75,7 +75,7 @@ body {
 #notifications {
 	font-size:24px;
 	top:517px;
-	height:30px;
+	height:300px;
 	left:0px;
 	position:absolute;
 	padding: 7px;
@@ -580,6 +580,7 @@ li.over {
 
 #extended-area {
     top: 590px;
+    left: 500px;
     width: 494px;
     position: absolute;
     padding: 0px;

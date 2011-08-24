@@ -30,7 +30,8 @@ levels[2].name = 'test level 3';
 var fpProvider = new FPProvider('app708577', 'staff.mongohq.com', '10089', 'heroku', '0846c19ac36a5b9e920880bf188dd43e', function(error, res) {
     if( error ) console.log(error);
     else if (res) {
-        fpProvider.loadLevels(levels, function(error, levels){});
+        // Remove existing levels, and add new levels
+//        fpProvider.loadLevels(levels, function(error, levels){});
         /*
         var user = { email: 'brian@example.com', password: 'password'};
         var user2 = { email: 'brian2@example.com', password: 'password'};
