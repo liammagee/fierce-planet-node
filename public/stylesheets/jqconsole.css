@@ -1,0 +1,85 @@
+/*html, body {*/
+  /*background-color: #333;*/
+  /*color: white;*/
+  /*font-family: monospace;*/
+  /*font-weight: bold;*/
+  /*margin: 0;*/
+  /*padding: 0;*/
+/*}*/
+.jqconsole {
+    color: #000;
+    height: 280px;
+    width:460px;
+    background: #fff;
+    color: #000;
+  bottom: 0;
+  left: 0;
+  margin: 0;
+  padding: 10px;
+  padding-bottom: 10px;
+  position: relative;
+  overflow: auto;
+  right: 0;
+  top: 0;
+}
+.jqconsole-cursor {
+  background-color: #999;
+}
+.jqconsole-blurred .jqconsole-cursor {
+  background-color: #666;
+}
+.jqconsole-prompt {
+  color: #0d0;
+}
+.jqconsole-old-prompt {
+  color: #0b0;
+  font-weight: normal;
+}
+.jqconsole-input {
+  color: #dd0;
+}
+.jqconsole-old-input {
+  color: #bb0;
+  font-weight: normal;
+}
+.brace {
+  color: #00FFFF;
+}
+.paran {
+  color: #FF00FF;
+}
+.bracket {
+  color: #FFFF00;
+}
+
+pre {
+white-space: pre;
+white-space: pre-wrap;
+word-wrap: break-word;
+padding: 15px;
+}
+
+/*
+www.codecademy.com
+#console{
+    width:100%;min-height:1px;clear:both
+}
+#console #console_overlay{
+    display:none;position:absolute;z-index:100;height:100%;width:100%;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.6);text-align:center
+}
+#console #console_overlay h2{margin:50px 0 20px}
+#console #console_overlay h2,#console #console_overlay p{color:white;text-shadow:none}
+#console .jqconsole{background-color:#EEE;font-family:monospace;font-weight:600;border:2px solid #CCC;line-height:1.5em;overflow-y:auto;position:relative;margin-top:2px}
+#console .jqconsole p{margin:0;padding:0}
+#console .jqconsole .output{color:green;display:block;margin-bottom:10px}
+#console .jqconsole .log{display:block;padding:5px 10px;margin:0 0 10px;position:relative}
+#console .jqconsole-cursor{background-color:#999}
+#console .jqconsole-blurred .jqconsole-cursor{background-color:#666}
+#console .jqconsole-input{color:#dd0}
+#console .jqconsole-old-input{color:#bb0;font-weight:normal}
+#console .brace{color:lime}
+#console .paran{color:lime}
+#console .bracket{color:lime}
+#console .error{color:crimson}
+#console .log{background:beige;border-radius:5px;-moz-border-radius:5px;-webkit-border-radius:5px}
+*/

@@ -1,0 +1,111 @@
+#level-properties-dialog
+  #edit-properties-tabs
+    ul
+      li
+        a(href='#core-fields') Basic
+        a(href='#advanced-fields') Advanced
+        a(href='#google-fields') Google Maps
+
+    form#level-properties(action='/levels/new', method='post')
+      #core-fields
+        .field
+        .field
+          label(for='level-id') ID
+          span#level-id
+        .field
+          label(for='level-name') Name
+          input#level-name(type='text', name='name')
+        .field
+          label(for='level-url') URL
+          input#level-url(type='text', name='url')
+          a(target='_blank', href='', style='font-size:0.9em') (Open in new window)
+        .field
+          label(for='level-width') Width
+          select#level-width(name='world_width')
+            option(name='5') 5
+            option(name='10') 10
+            option(name='20') 20
+            option(name='50') 50
+            option(name='100') 100
+        .field
+          label(for='level-height') Height
+          input#level-height(type='text', name='world_height')
+          select#level-height(name='world_height')
+            option(name='5') 5
+            option(name='10') 10
+            option(name='20') 20
+            option(name='50') 50
+            option(name='100') 100
+        .field
+          label(for='level-initial_agent_number') Initial # of agents
+          select#level-initial_agent_number(name='initial_agent_number')
+            option(name='1') 1
+            option(name='2') 2
+            option(name='3') 3
+            option(name='4') 4
+            option(name='5') 5
+            option(name='10') 10
+            option(name='20') 20
+            option(name='50') 50
+            option(name='100') 100
+        .field
+          label(for='level-wave_number') # of waves
+          select#level-wave_number(name='wave_number')
+            option(name='1') 1
+            option(name='2') 2
+            option(name='3') 3
+            option(name='4') 4
+            option(name='5') 5
+            option(name='10') 10
+            option(name='20') 20
+            option(name='50') 50
+            option(name='100') 100
+        .field
+          label(for='level-expiry_limit') Expiry limit
+          select#level-expiry_limit(name='expiry_limit')
+            option(name='1') 1
+            option(name='2') 2
+            option(name='3') 3
+            option(name='4') 4
+            option(name='5') 5
+            option(name='10') 10
+            option(name='20') 20
+            option(name='50') 50
+            option(name='100') 100
+      #advanced-fields
+        .field
+          label(for='level-notice') Notice
+          textarea#level-notice(rows='5', name='notice')
+        .field
+          input#level-allow_offscreen_cycling(type='checkbox', name='allow_offscreen_cycling')
+          label(for='level-allow_offscreen_cycling') Allow offscreen cycling
+        .field
+          input#level-allow_patches_on_path(type='checkbox', name='allow_patches_on_path')
+          label(for='level-allow_patches_on_path') Allow patches on path
+      #google-fields
+        p Note: you can include a Google Map as the background image.
+        div Google Map Fields
+        .field
+          label(for='level-google_map_type_idexpiry_limit') Map type
+          select#level-google_map_type_id(name='google_map_type_id')
+            option(name='satellite') SATELLITE
+            option(name='roadmap') ROADMAP
+            option(name='hybrid') HYBRID
+            option(name='terrain') TERRAIN
+            option(name='sky') SKY
+            option(name='mars_visible') MARS - VISIBLE
+            option(name='mars_infrared') MARS - INFRARED
+            option(name='mars_elevation') MARS - ELEVATION
+            option(name='moon') MOON
+        .field
+          label(for='level-google_map_lat') Latitude
+          input#level-google_map_lat(type='text', size='10', name='google_map_lat')
+        .field
+          label(for='level-google_map_long') Longitude
+          input#level-google_map_long(type='text', size='10', name='google_map_long')
+        .field
+          label(for='level-google_map_tilt') Tilt
+          input#level-google_map_tilt(type='text', size='10', name='google_map_tilt')
+        .field
+          label(for='level-google_map_zoom') Zoom
+          input#level-google_map_zoom(type='text', size='10', name='google_map_zoom')
