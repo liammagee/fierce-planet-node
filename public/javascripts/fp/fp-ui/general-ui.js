@@ -108,6 +108,12 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
         }
 
         FiercePlanet.GeneralUI.bindGameMouseEvents();
+
+        $('#extended-area, #controls').draggable({cursor: "pointer"});
+        $('#gameworld').resizable().draggable({handler: '#notifications', cancel: '#world'});
+        $('#gameworld').disableSelection();
+        $('#global-info-panel').draggable({cancel: '#swatch', cursor: "pointer"});
+
     };
 
     /**

@@ -7,36 +7,124 @@ $(function() {
   window.jqconsole = $('#console').jqconsole(header, '> ');
   //window.jqconsole = $('#notifications').jqconsole(header, 'JS> ');
 
+  jqconsole.zone = {};
+  jqconsole.JSMode = false;
+
   // Abort prompt on Ctrl+Z.
   jqconsole.RegisterShortcut('Z', function() {
     jqconsole.AbortPrompt();
-      jqconsole.JSMode = false;
-      jqconsole.Write('Leaving JS mode\n');
+      jqconsole.prompt_label_main = '>';
+      if (jqconsole.zone.name) {
+          jqconsole.Write('Bye - you\'re leaving the ');
+          jqconsole.Write(jqconsole.zone.name, 'quote');
+          jqconsole.Write(' zone.\n');
+          jqconsole.zone = {};
+      }
     handler();
   });
 
-  jqconsole.JSMode = false;
   jqconsole.RegisterMatching('{', '}', 'brace');
   jqconsole.RegisterMatching('(', ')', 'paran');
   jqconsole.RegisterMatching('[', ']', 'bracket');
+
   // Handle a command.
-  var handler = function(command) {
-    if (command) {
-      if (! jqconsole.JSMode) {
-          if (command == 'help') {
-              jqconsole.Write('help\n');
-          }
-          else if (command == 'js') {
-              jqconsole.Write('Now going to JS mode\n');
-              jqconsole.JSMode = true;
-          }
+  var showHelp = function() {
+      jqconsole.Write("Hi! I'm here to help...\n");
+      jqconsole.Write("Here's some commands that tell me what to do:\n");
+      jqconsole.Write("help", 'code');
+      jqconsole.Write(" - this thing right here!\n");
+      jqconsole.Write("js", 'code');
+      jqconsole.Write(" - enter JavaScript zone.\n");
+      jqconsole.Write("chat", 'code');
+      jqconsole.Write(" - enter Chat zone.\n");
+      jqconsole.Write("fp", 'code');
+      jqconsole.Write(" - enter 'Fierce Planet' zone.\n");
+      jqconsole.Write("tutorial", 'code');
+      jqconsole.Write(" - enter Tutorial zone.\n");
+      jqconsole.Write("zone", 'code');
+      jqconsole.Write(" - tells you what zone you're in!\n");
+      jqconsole.Write("Type help:\n");
+  }
+
+  var showConsoleTutorial = function() {
+      jqconsole.Write("Let's work together!\n\n");
+      jqconsole.Write("You tell me some things to do, and I try to do them.\n\n");
+  }
+
+  var showZone = function() {
+      jqconsole.Write('You\'re now entering the ');
+      jqconsole.Write(jqconsole.zone.name, 'quote');
+      jqconsole.Write(' zone.\n');
+      showEscape();
+  }
+
+  var showEscape = function() {
+      jqconsole.Write('Leave the ');
+      jqconsole.Write(jqconsole.zone.name, 'quote');
+      jqconsole.Write(' zone by typing: ');
+      jqconsole.Write('Ctrl + Z', 'quote');
+      jqconsole.Write('.\n');
+  }
+
+  var showCurrentZone = function() {
+      if (jqconsole.zone.name) {
+          jqconsole.Write('You\'re in the ');
+          jqconsole.Write(jqconsole.zone.name, 'quote');
+          jqconsole.Write(' zone.\n');
       }
       else {
-          try {
-            jqconsole.Write('==> ' + window.eval(command) + '\n');
+          jqconsole.Write('You\'re not in any zone at all!\n');
+      }
+  }
+
+  var handler = function(command) {
+    if (command) {
+      if (jqconsole.zone.js) {
+            try {
+              jqconsole.Write('==> ' + window.eval(command) + '\n');
+            } catch (e) {
+              jqconsole.Write('ERROR: ' + e.message + '\n', 'error');
+            }
+      }
+      else {
+          if (command == 'help' || command == 'h' || command == '?') {
+              showHelp();
+          }
+          else if (command == 'js') {
               jqconsole.prompt_label_main = 'js>';
-          } catch (e) {
-            jqconsole.Write('ERROR: ' + e.message + '\n');
+              jqconsole.JSMode = true;
+              jqconsole.zone.name = 'JavaScript';
+              jqconsole.zone.js = true;
+              showZone();
+              jqconsole.Write('Try entering a JavaScript command, like this:\n\n');
+              jqconsole.Write("alert('Hello Fierce Planet!')\n\n", 'code');
+          }
+          else if (command == 'fp') {
+              jqconsole.prompt_label_main = 'fp>';
+              jqconsole.zone.name = 'Fierce Planet';
+              jqconsole.zone.fp = true;
+              showZone();
+          }
+          else if (command == 'chat') {
+              jqconsole.prompt_label_main = 'chatty>';
+              jqconsole.zone.name = 'Chat';
+              jqconsole.zone.chat = true;
+              showZone();
+          }
+          else if (command == 'tute' || command == 'tutorial') {
+              jqconsole.prompt_label_main = 'tute>';
+              jqconsole.zone.name = 'Tutorial';
+              jqconsole.zone.chat = true;
+              showZone();
+          }
+          else if (command == 'zone') {
+              showCurrentZone();
+          }
+          else {
+              jqconsole.Write('Oops! Not sure what ');
+              jqconsole.Write(command, 'quote');
+              jqconsole.Write(' means.\n');
+              showHelp();
           }
       }
     }
