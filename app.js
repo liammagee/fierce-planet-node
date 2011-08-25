@@ -342,15 +342,15 @@ var duels = {};
 
 
 io.configure(function(){
-//    io.set("transports", ["xhr-polling"]);
-//    io.set("polling duration", 10);
-  io.set('log level', 0);
+    io.set("transports", ["xhr-polling"]);
+    io.set("polling duration", 10);
+//  io.set('log level', 0);
 });
 
 // Hack for heroku... needs web sockets support
 io.configure('production', function(){
-//  io.enable('browser client etag');
-//  io.set('log level', 1);
+  io.enable('browser client etag');
+  io.set('log level', 1);
 
   io.set("transports", ["xhr-polling"]);
   io.set("polling duration", 10);
