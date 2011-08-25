@@ -167,6 +167,8 @@ socket.on('lifecycle event', function (nickname, eventType, data) {
 
 function message(from, msg) {
   $('#lines').append($('<p>').append($('<b>').text(from), msg));
+    if (jqconsole.zone.chat)
+        jqconsole.Write(from + ': ' + msg + '\n');
 }
 
 $(document).ready(function() {

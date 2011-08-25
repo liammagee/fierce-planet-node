@@ -86,6 +86,14 @@ $(function() {
               jqconsole.Write('ERROR: ' + e.message + '\n', 'error');
             }
       }
+      if (jqconsole.zone.chat) {
+          if (command == 'list') {
+              showHelp();
+          }
+          else {
+              socket.emit('user message', command);
+          }
+      }
       else {
           if (command == 'help' || command == 'h' || command == '?') {
               showHelp();
