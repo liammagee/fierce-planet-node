@@ -1,37 +1,9 @@
-script
-  $(document).ready(function(){
-
-    var invitePlayer = function(e) {
-      console.log(e)
-    };
-    //$('.invite-player').click(function(e) {console.log(this.id)}  );
-    $('.invite-player').click(invitePlayer);
-
-  });
-//#extended-area(style='display:none')
 #extended-area(style='top: 500')
   ul
     li
-      a(href='#chat-area') Chat area
-    li
-      a(href='#alt_gameworld') Duel
-    li
       a(href='#world-graph') Graph
     li
-      a(href='#test-console') Console
-    li
-      a(href='#jquery-holder') Terminal
-  #chat-area
-    #chat
-      #messages
-        #nicknames
-        #lines
-      form#send-message
-        input#message
-        button Send
-        //input#sendMessage(type='submit', value='Send')
-      #connecting
-        .wrap Connecting to socket.io server
+      a(href='#alt_gameworld') Duel
   #alt_gameworld
     #duel-nicknames
     #alt_world
@@ -43,7 +15,3 @@ script
       canvas.scrollable-canvas#alt_resourceCanvas(z-index='6',width='480',height='400')
       canvas#alt_scrollingCanvas(z-index='7',width='480',height='400')
   #world-graph
-  #test-console
-    //#jqconsole
-  #jquery-terminal
-    #terminal(style='display:none')

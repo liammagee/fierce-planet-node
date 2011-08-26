@@ -13,7 +13,7 @@ $(function() {
   // Abort prompt on Ctrl+Z.
   jqconsole.RegisterShortcut('Z', function() {
     jqconsole.AbortPrompt();
-      jqconsole.prompt_label_main = '>';
+      jqconsole.prompt_label_main = '> ';
       if (jqconsole.zone.name) {
           jqconsole.Write('Bye - you\'re leaving the ');
           jqconsole.Write(jqconsole.zone.name, 'quote');
@@ -78,28 +78,26 @@ $(function() {
   }
 
   var handler = function(command) {
+//      jqconsole.SetPromptText('hello')
     if (command) {
       if (jqconsole.zone.js) {
-            try {
-              jqconsole.Write('==> ' + window.eval(command) + '\n');
-            } catch (e) {
-              jqconsole.Write('ERROR: ' + e.message + '\n', 'error');
-            }
+          jsHandler(command);
       }
-      if (jqconsole.zone.chat) {
-          if (command == 'list') {
-              showHelp();
-          }
-          else {
-              socket.emit('user message', command);
-          }
+      else if (jqconsole.zone.fp) {
+          fpHandler(command);
+      }
+      else if (jqconsole.zone.chat) {
+          chatHandler(command);
+      }
+      else if (jqconsole.zone.duel) {
+          duelHandler(command);
       }
       else {
           if (command == 'help' || command == 'h' || command == '?') {
               showHelp();
           }
           else if (command == 'js') {
-              jqconsole.prompt_label_main = 'js>';
+              jqconsole.prompt_label_main = 'js> ';
               jqconsole.JSMode = true;
               jqconsole.zone.name = 'JavaScript';
               jqconsole.zone.js = true;
@@ -108,19 +106,21 @@ $(function() {
               jqconsole.Write("alert('Hello Fierce Planet!')\n\n", 'code');
           }
           else if (command == 'fp') {
-              jqconsole.prompt_label_main = 'fp>';
+              jqconsole.prompt_label_main = 'fp> ';
               jqconsole.zone.name = 'Fierce Planet';
               jqconsole.zone.fp = true;
               showZone();
+              jqconsole.Write('Now you can play with Fierce Planet settings!\n\n');
+              jqconsole.Write('For example, try the following: \n\n');
           }
           else if (command == 'chat') {
-              jqconsole.prompt_label_main = 'chatty>';
+              jqconsole.prompt_label_main = 'chatty> ';
               jqconsole.zone.name = 'Chat';
               jqconsole.zone.chat = true;
               showZone();
           }
           else if (command == 'tute' || command == 'tutorial') {
-              jqconsole.prompt_label_main = 'tute>';
+              jqconsole.prompt_label_main = 'tute> ';
               jqconsole.zone.name = 'Tutorial';
               jqconsole.zone.chat = true;
               showZone();
@@ -136,6 +136,7 @@ $(function() {
           }
       }
     }
+
     jqconsole.Prompt(true, handler, function(command) {
       // Continue line if can't compile the command.
       try {
@@ -150,6 +151,61 @@ $(function() {
       return false;
     });
   };
+
+  var fpHandler = function(command) {
+      if (command == 'settings' || command == 's') {
+          for (var member in World.settings) {
+              if (World.settings.hasOwnProperty(member)) {
+                  jqconsole.Write(member + ': ' + World.settings[member] + '\n');
+              }
+          }
+          jqconsole.Write('To something, type "set [value]" \n');
+      }
+      else if (command == 'debug' || command == 'd') {
+          showHelp();
+      }
+      else if (command == 'show settings') {
+          FiercePlanet.Dialogs.showSettings();
+      }
+      else if (command == 'help') {
+          showHelp();
+      }
+      else {
+          socket.emit('user message', command);
+      }
+  }
+
+  var chatHandler = function(command) {
+      if (command == 'list') {
+          showHelp();
+      }
+      else if (command == 'help') {
+          showHelp();
+      }
+      else {
+          socket.emit('user message', command);
+      }
+  }
+
+  var duelHandler = function(command) {
+      if (command == 'list') {
+          showHelp();
+      }
+      else if (command == 'help') {
+          showHelp();
+      }
+      else {
+          socket.emit('user message', command);
+      }
+  }
+
+  var jsHandler = function(command) {
+      try {
+        jqconsole.Write('==> ' + window.eval(command) + '\n');
+      } catch (e) {
+        jqconsole.Write('ERROR: ' + e.message + '\n', 'error');
+      }
+  }
 
   // Initiate the first prompt.
   handler();

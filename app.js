@@ -396,6 +396,10 @@ io.sockets.on('connection', function (socket) {
     socket.broadcast.emit('event', socket.nickname, data);
   });
 
+  socket.on('list users', function(rival, data) {
+    sockets.emit('nicknames', nicknames);
+  });
+
   socket.on('lifecycle event', function(eventType, data) {
     socket.broadcast.emit('lifecycle event', socket.nickname, eventType, data);
   });
