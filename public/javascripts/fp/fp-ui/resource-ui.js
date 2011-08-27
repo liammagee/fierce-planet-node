@@ -33,6 +33,7 @@ FiercePlanet.ResourceUI = FiercePlanet.ResourceUI || {};
 //                    grid: [FiercePlanet.Orientation.cellWidth, FiercePlanet.Orientation.cellHeight],
                         cursor: "pointer",
                         helper: "clone",
+                        zIndex: 1000,
                         start: function(event, ui) {
                             FiercePlanet.currentResourceId = this.id;
                         }
@@ -188,7 +189,7 @@ FiercePlanet.ResourceUI = FiercePlanet.ResourceUI || {};
 
 
     /**
-     * Upgrade the current page (NOTE: SHOULD BE TIED TO PROFILE CAPABILITIES
+     * Upgrade the current page (NOT E: SHOULD BE TIED TO PROFILE CAPABILITIES
      */
     this.upgradeCurrentResource = function () {
             var foundResource = FiercePlanet.currentLevel.getCurrentResourceIndex(FiercePlanet.currentResource);

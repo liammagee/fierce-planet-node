@@ -64,7 +64,6 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
         // Admin functions
         $('#debug').click(FiercePlanet.processAgents);
         $('#replay').click(FiercePlanet.Recording.replayWorld);
-        $('#script-editor').click(FiercePlanet.Dev.openConsole);
         $('#story-board').click(FiercePlanet.Dev.showStoryboard);
 
 
@@ -113,6 +112,10 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
         $('#gameworld').resizable().draggable({handler: '#handle', cancel: '#world, #console'});
         $('#gameworld').disableSelection();
         $('#global-info-panel').draggable({cancel: '#swatch', cursor: "pointer"});
+        $('.swatch-draggable').css({ zIndex: 1000})
+        $('.swatch-instance').css({ zIndex: 1000})
+
+        jqconsole.Focus();
 
     };
 
@@ -241,6 +244,9 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
      *  Add key handling events
      */
     this.handleKeyboardShortcuts = function(e) {
+
+        console.log(e.which)
+        
         if (World.settings.disableKeyboardShortcuts)
             return;
 
@@ -281,6 +287,24 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
         }
         else {
             switch (e.which) {
+                // tilda
+                case 27:
+                    jqconsole.Focus();
+                    break;
+                // tilda
+                case 192:
+                    if ($('#notifications').height() > 40) {
+//                        $('#console').removeClass('tilda');
+                        $('#console').css({height: 20});
+                        $('#notifications').height(40);
+                    }
+                    else {
+//                        $('#console').addClass('tilda');
+                        $('#console').css({height: 180});
+                        $('#notifications').height(200);
+                    }
+
+                    break;
                 // +, -, 0: Zoom functions
                 case 107:
                     FiercePlanet.Drawing.zoom(1);
@@ -642,8 +666,8 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
     //    $('#baseCanvas, #resourceCanvas, #scrollingCanvas, #noticeCanvas, #agentCanvas').width(600);
     //    $('#baseCanvas').css({left: 0, top: 0, width: sw, height: sh});
     //    $('#baseCanvas').width(sw / 2);
-        $('#controls').css({left: 0, top: 210, zIndex: 1000});
-        $('#swatch').css({left: sw - 160, top: sh - 400, zIndex: 1000});
+        $('#controls').css({left: 0, top: 210, zIndex: 1});
+        $('#swatch').css({left: sw - 160, top: sh - 400, zIndex: 1});
 
         FiercePlanet.drawGame();
 

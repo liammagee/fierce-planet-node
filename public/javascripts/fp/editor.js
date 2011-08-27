@@ -209,7 +209,7 @@ FiercePlanet.Editor = FiercePlanet.Editor || {};
      * Allows the map to be editable
      */
     this.editMap = function() {
-        $('#map_canvas').css({zIndex: 1000});
+        $('#map_canvas').css({zIndex: 100});
         var mapOptions = GoogleMapUtils.defaultOptions();
         $.extend(mapOptions, FiercePlanet.currentLevel.mapOptions);
         $.extend(mapOptions, {

@@ -35,6 +35,7 @@ body {
 	padding-bottom: 20px;
     left:510px;
     width:170px;
+    z-index: 10;
 }
 #user-info {
 	clear:both;
@@ -59,7 +60,7 @@ body {
 #gameworld  {
 	clear:both;
 	position:relative;
-    z-index: 1000;
+    z-index: 1;
 }
 #world {
 	position:absolute;
@@ -70,6 +71,7 @@ body {
 	border-radius:4px;
 	background:#1F62C1;
 	display:block;
+    z-index: 1;
 	/*width:480px; height:400px;*/
 }
 #level-name {
@@ -160,7 +162,7 @@ body {
 	top:185px;
 	width:61px;
 	padding:50px 10px 0;
-	z-index:100;
+	z-index:1;
     background: #1F62C1;
 	background: -webkit-gradient(linear, 0% 0%, 100% 0%, from(#1F62C1), to(#203275));
 	background: -moz-linear-gradient(0% 100% 0deg,#1F62C1, #203275);
@@ -173,6 +175,7 @@ body {
 	top: 292px;
     width:165px;
 	font-size:10px;
+    z-index: 10;
 }
 
 #level-editor {
@@ -320,9 +323,11 @@ background-position: -101px -101px;
 	text-decoration: none;
 	padding: 2px;
 	margin-right: 10px;
+    z-index: 1000;
 }
 #swatch img, #inline-swatch img, #gallery-items img {
 	border-radius:4px;
+    z-index: 1000;
 }
 #gallery-stats {
     position:absolute;
@@ -657,7 +662,7 @@ li.over {
 }
 .jqconsole-cursor {
   background-color: #999;
-
+    z-index: 2;
 }
 .jqconsole-blurred .jqconsole-cursor {
   background-color: #666;
@@ -718,6 +723,13 @@ white-space: pre;
 white-space: pre-wrap;
 word-wrap: break-word;
 padding: 15px;
+}
+.tilda {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1100;
 }
 
 /*
