@@ -85,7 +85,7 @@ FiercePlanet.newLevel = function() {
     if (World.settings.sendEventsToServer) {
         notifyServerOfEvent("level", FiercePlanet.currentLevel.id);
     }
-//    FiercePlanet.GeneralUI.levelInfo();
+    FiercePlanet.GeneralUI.levelInfo();
 };
 
 
