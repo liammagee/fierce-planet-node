@@ -72,6 +72,8 @@ script(src='/javascripts/fp/fp-ui/general-ui.js')
 script(src='/javascripts/fp/fp-ui/orientation.js')
 script(src='/javascripts/fp/fp-ui/profile-ui.js')
 script(src='/javascripts/fp/fp-ui/resource-ui.js')
+script(src='/javascripts/fp/fp-ui/google-map.js')
+script(src='/javascripts/fp/fp-ui/isometric.js')
 
 script(src='/javascripts/fp/editor.js')
 script(src='/javascripts/fp/lifecycle.js')
@@ -80,8 +82,6 @@ script(src='/javascripts/fp/recording.js')
 script(src='/javascripts/fp/utils/utils.js')
 script(src='/javascripts/fp/utils/comms.js')
 script(src='/javascripts/fp/utils/log.js')
-script(src='/javascripts/fp/utils/google-map.js')
-script(src='/javascripts/fp/utils/isometric.js')
 script(src='/javascripts/fp/game.js')
 
 // Last to load - has strong dependencies on all other classes
@@ -97,6 +97,7 @@ script(src='/javascripts/fp/dev.js')
 script(type='text/javascript')
   $(document).ready(function() {
     FiercePlanet.ProfileUI.getProfile();
+
     $('.thumbnail, .customLevel').click(FiercePlanet.GeneralUI.changePresetLevelDirectly);
     FiercePlanet.GeneralUI.highlightGalleryItem(FiercePlanet.currentLevelNumber);
     $('#difficulty-input-' + FiercePlanet.levelOfDifficulty).attr('checked', 'checked');
@@ -104,4 +105,9 @@ script(type='text/javascript')
     // Remove text selection - TODO: needs to be more granular
     // document.onselectstart = function() {return false;} // ie
     // document.onmousedown = function() {return false;} // mozilla
+
+    // Default to 3d
+    World.settings.skewTiles = true;
+    $('#3d')[0].innerHTML = 'View 2D';
+    FiercePlanet.Drawing.drawGame();
   });

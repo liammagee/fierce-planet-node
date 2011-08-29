@@ -179,8 +179,6 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
                 var newOrigin = Isometric.doIsometricOffset(xPos, yPos);
                 var originXp = newOrigin.x + FiercePlanet.Orientation.cellWidth / 2;
                 var originYp = newOrigin.y + FiercePlanet.Orientation.cellHeight;
-//                    ctx.translate(-originXp, -originYp);
-//                    ctx.rotate(FiercePlanet.Orientation.rotationAngle);
                 originXp = originXp - (FiercePlanet.Orientation.worldWidth) / 2;
                 originYp = originYp - (FiercePlanet.Orientation.worldHeight) / 2;
                 Isometric.draw3DTile(ctx, [originXp, originYp], FiercePlanet.Orientation.cellHeight);
@@ -198,7 +196,6 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
                     ctx.strokeStyle = '#ccc'; //pathColor;
                     ctx.stroke();
                 }
-//                    ctx.translate(originXp, originYp);
             }
             else {
                 // Rotation logic here - TODO: Refactor out
