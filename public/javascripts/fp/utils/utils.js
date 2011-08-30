@@ -192,7 +192,10 @@ FiercePlanet.Utils = FiercePlanet.Utils || {};
      */
     this.processSettings = function() {
         // Handle setting specific settings
+
+        // Open extended area if we are showing the graph
         if (World.settings.showGraph) {
+            FiercePlanet.Dialogs.extendedAreaDialog.dialog('open');
             FiercePlanet.Drawing.drawGraph();
         }
         else {
@@ -213,6 +216,7 @@ FiercePlanet.Utils = FiercePlanet.Utils || {};
 
         // Makes elements movable
         FiercePlanet.GeneralUI.makeElementsMovable();
+
 
         if (World.settings.resourcesUpgradeable)
             $('#upgrade-option').css('display', 'block');

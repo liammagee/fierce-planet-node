@@ -34,6 +34,7 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
     // Level editor dialogs
     this.designFeaturesDialog = null;
     this.editPropertiesDialog = null;
+    this.extendedAreaDialog = null;
 
     /**
      * Calculates the left position of the 'world' element
@@ -360,6 +361,23 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
                 }
             });
 
+
+
+        this.extendedAreaDialog = $('#extended-area-dialog')
+            .dialog({
+               position: [1100, 35],
+               width: 550,
+               height: 560,
+                autoOpen: false,
+                modal: false,
+                title: 'Extended Panel',
+                buttons: {
+                    "Cancel": function() {
+                        $( this ).dialog( "close" );
+                    }
+                }
+
+            });
 
         this.designFeaturesDialog = $('#level-features')
             .dialog({
