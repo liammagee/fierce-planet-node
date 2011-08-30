@@ -106,17 +106,20 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
             });
         }
 
+        // Bind mouse events
         FiercePlanet.GeneralUI.bindGameMouseEvents();
 
-        $('#extended-area, #controls').draggable({cursor: "pointer"});
-        $('#gameworld').resizable().draggable({handler: '#handle', cancel: '#world, #console'});
-        $('#gameworld').disableSelection();
-        $('#global-info-panel').draggable({cancel: '#swatch', cursor: "pointer"});
-        $('.swatch-draggable').css({ zIndex: 1000})
-        $('.swatch-instance').css({ zIndex: 1000})
+        FiercePlanet.GeneralUI.makeElementsMovable();
 
+        $('textarea').blur(function() {
+            $('#notifications').height(40);
+        });
+        $('textarea').focus(function() {
+            $('#notifications').height(200);
+        });
+
+        // Finally, focus on the console. Good idea?
         jqconsole.Focus();
-
     };
 
     /**
@@ -245,8 +248,6 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
      */
     this.handleKeyboardShortcuts = function(e) {
 
-        console.log(e.which)
-        
         if (World.settings.disableKeyboardShortcuts)
             return;
 
@@ -461,14 +462,27 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
      * @param e
      */
     this.getCurrentPositionByCoordinates = function(x, y) {
+        // Correct for pan offsets
         x -= FiercePlanet.Orientation.offsetX;
         y -= FiercePlanet.Orientation.offsetY;
-        x /= FiercePlanet.Orientation.zoomLevel;
-        y /= FiercePlanet.Orientation.zoomLevel;
+
+        // Get midpoints
+        var mx = FiercePlanet.Orientation.halfWorldWidth;
+        var my = FiercePlanet.Orientation.halfWorldHeight;
+        // Get differences
+        var dx = x - mx;
+        var dy = y - my;
+
+        // Correct for zoom level
+        x = mx + (dx / FiercePlanet.Orientation.zoomLevel);
+        y = my + (dy / FiercePlanet.Orientation.zoomLevel);
+        // Old. TODO: Remove once tested
+        // x /= FiercePlanet.Orientation.zoomLevel;
+        // y /= FiercePlanet.Orientation.zoomLevel;
+        // TODO: Determine if this is still relevant
     //    x /= FiercePlanet.Orientation.externalZoomLevel;
     //    y /= FiercePlanet.Orientation.externalZoomLevel;
-
-        // Compensate for border
+        // Correct for border
         x -= (1 / FiercePlanet.Orientation.zoomLevel);
         y -= (1 / FiercePlanet.Orientation.zoomLevel);
 
@@ -479,9 +493,9 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
             y = newPos.y;
 //        }
 
+        // Obtain the current cell based on mouse co-ordinates
         var posX = Math.floor(x / FiercePlanet.Orientation.cellWidth);
         var posY = Math.floor(y / FiercePlanet.Orientation.cellHeight);
-
 
         // Adjust for full-screen mode
         var sw = $("#baseCanvas").width();
@@ -496,6 +510,7 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
             posY = Math.floor(point.y / FiercePlanet.Orientation.cellHeight);
         }
 
+        // Return the cell position
         return {posX:posX, posY:posY};
     };
 
@@ -512,8 +527,27 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
 
 
     /**
-     * Adds a notice to the level information area.
-     * @param notice
+     *  Makes key elements divs movable (draggable), if the setting is set to true
+     */
+    this.makeElementsMovable = function() {
+        if (World.settings.makeElementsMovable) {
+            $('#extended-area, #controls').draggable({cursor: "pointer"});
+            $('#gameworld').resizable().draggable({handler: '#handle', cancel: '#world, #console'});
+            $('#global-info-panel').draggable({cancel: '#swatch', cursor: "pointer"});
+        }
+        else {
+            $('#extended-area, #controls').draggable('destroy');
+            $('#gameworld').draggable('destroy');
+            $('#global-info-panel').draggable('destroy');
+        }
+        $('#gameworld').disableSelection();
+        $('.swatch-draggable').css({ zIndex: 1000})
+        $('.swatch-instance').css({ zIndex: 1000})
+    };
+
+
+    /**
+     * Show level information
      */
     this.levelInfo = function() {
         var levelHTML = "";

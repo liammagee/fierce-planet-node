@@ -47,6 +47,8 @@ FiercePlanet.Orientation = FiercePlanet.Orientation || {};
 
         this.rotationAngle = this.DEFAULT_ROTATION_ANGLE;
         this.perspectiveAngle = this.DEFAULT_PERSPECTIVE_ANGLE;
+
+        this.adjustParameters(this.DEFAULT_WORLD_WIDTH, this.DEFAULT_WORLD_HEIGHT);
     };
 
     this.recalibrateParameters = function() {
@@ -58,37 +60,47 @@ FiercePlanet.Orientation = FiercePlanet.Orientation || {};
         this.pieceHeight = this.cellHeight * 0.5;
     };
 
+
     this.adjustParameters = function(width, height) {
-        this.worldWidth = width;
-        this.worldHeight = height;
+        try {
+            this.worldWidth = parseInt(width);
+            this.worldHeight = parseInt(height);
+        }
+        catch (e) {
+            // Likely to be incorrect formatting
+            Log.warn(e);
+        }
         this.resizeWorld();
         this.recalibrateParameters();
     };
 
     this.resizeWorld = function() {
-        var canvases = $('#world, #imageCanvas, #map_canvas, #baseCanvas, #noticeCanvas, #agentCanvas, #resourceCanvas, #scrollingCanvas');
-        //, #alt_map_canvas
-        $('#map_canvas')[0].width = this.worldWidth;
-        $('#map_canvas')[0].height = this.worldHeight;
-        $('#baseCanvas')[0].width = this.worldWidth;
-        $('#baseCanvas')[0].height = this.worldHeight;
-        $('#noticeCanvas')[0].width = this.worldWidth;
-        $('#noticeCanvas')[0].height = this.worldHeight;
-        $('#agentCanvas')[0].width = this.worldWidth;
-        $('#agentCanvas')[0].height = this.worldHeight;
-        $('#resourceCanvas')[0].width = this.worldWidth;
-        $('#resourceCanvas')[0].height = this.worldHeight;
-        $('#scrollingCanvas')[0].width = this.worldWidth;
-        $('#scrollingCanvas')[0].height = this.worldHeight;
-        canvases.css({width: this.worldWidth, height: this.worldHeight});
-        canvases.width(this.worldWidth);
-        canvases.height(this.worldHeight);
-        $('#wrapper').css({width: 1570 - this.worldWidth});
-        $('#controls').css({left: 385 - this.worldWidth});
-        $('#world').css({left: 480 - this.worldWidth});
-        $('#notifications').css({left: 480 - this.worldWidth, top: 117 + this.worldHeight, width: this.worldWidth});
-        $('#level-editor').css({left: 480 - this.worldWidth, top: 190 + this.worldHeight, width: this.worldWidth});
-//        $('#extended-area').css({left: 480 - this.worldWidth, top: 190 + this.worldHeight, width: this.worldWidth});
+        try {
+            var canvases = $('#world, #imageCanvas, #map_canvas, #baseCanvas, #noticeCanvas, #agentCanvas, #resourceCanvas, #scrollingCanvas');
+            //, #alt_map_canvas
+            $('#map_canvas')[0].width = this.worldWidth;
+            $('#map_canvas')[0].height = this.worldHeight;
+            $('#baseCanvas')[0].width = this.worldWidth;
+            $('#baseCanvas')[0].height = this.worldHeight;
+            $('#noticeCanvas')[0].width = this.worldWidth;
+            $('#noticeCanvas')[0].height = this.worldHeight;
+            $('#agentCanvas')[0].width = this.worldWidth;
+            $('#agentCanvas')[0].height = this.worldHeight;
+            $('#resourceCanvas')[0].width = this.worldWidth;
+            $('#resourceCanvas')[0].height = this.worldHeight;
+            $('#scrollingCanvas')[0].width = this.worldWidth;
+            $('#scrollingCanvas')[0].height = this.worldHeight;
+            canvases.css({width: this.worldWidth, height: this.worldHeight});
+            canvases.width(this.worldWidth);
+            canvases.height(this.worldHeight);
+            $('#wrapper').css({width: 1570 - this.worldWidth});
+            $('#controls').css({left: 385 - this.worldWidth});
+            $('#world').css({left: 480 - this.worldWidth});
+            $('#notifications').css({left: 480 - this.worldWidth, top: 117 + this.worldHeight, width: this.worldWidth});
+            $('#level-editor').css({left: 480 - this.worldWidth, top: 190 + this.worldHeight, width: this.worldWidth});
+    //        $('#extended-area').css({left: 480 - this.worldWidth, top: 190 + this.worldHeight, width: this.worldWidth});
+        }
+        catch (e) {}
     };
 
     this.getRotationOffset = function(x, y) {

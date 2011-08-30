@@ -1414,7 +1414,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         FiercePlanet.Drawing.zoom(0);
         FiercePlanet.Drawing.panByDrag(- FiercePlanet.Orientation.offsetX / FiercePlanet.Orientation.zoomLevel, - FiercePlanet.Orientation.offsetY / FiercePlanet.Orientation.zoomLevel);
         FiercePlanet.Orientation.reset();
-        FiercePlanet.Drawing.drawCanvases();
+        FiercePlanet.Drawing.drawGame();
     };
 
     /**

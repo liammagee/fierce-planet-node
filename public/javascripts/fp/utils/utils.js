@@ -91,9 +91,10 @@ FiercePlanet.Utils = FiercePlanet.Utils || {};
         World.settings.agentTracing = World.settings.agentTracing || false;
         World.settings.hidePath = World.settings.hidePath || false;
         World.settings.hidePathBorder = World.settings.hidePathBorder || false;
+        World.settings.hideLevelInfo = World.settings.hideLevelInfo || false;
         World.settings.showGraph = World.settings.showGraph || true;
-
         World.settings.showChat = World.settings.showChat || true;
+        World.settings.makeElementsMovable = World.settings.makeElementsMovable || false;
         World.settings.reverseMouseClickEffects = World.settings.reverseMouseClickEffects || false;
 
         World.settings.rivalsVisible = World.settings.rivalsVisible || false;
@@ -106,7 +107,6 @@ FiercePlanet.Utils = FiercePlanet.Utils || {};
 
         World.settings.skewTiles = World.settings.skewTiles || true;
         World.settings.showResourcesAsBoxes = World.settings.showResourcesAsBoxes || true;
-
 
         World.settings.sendEventsToServer = World.settings.sendEventsToServer || false;
         World.settings.spectate = World.settings.spectate || false;
@@ -199,6 +199,7 @@ FiercePlanet.Utils = FiercePlanet.Utils || {};
             FiercePlanet.Drawing.clearGraph();
         }
 
+
         if (World.settings.disableKeyboardShortcuts)
             $(document).unbind('keydown');
         else {
@@ -209,6 +210,9 @@ FiercePlanet.Utils = FiercePlanet.Utils || {};
         // Update based on allowInlinePanning property
         FiercePlanet.GeneralUI.unbindGameMouseEvents();
         FiercePlanet.GeneralUI.bindGameMouseEvents();
+
+        // Makes elements movable
+        FiercePlanet.GeneralUI.makeElementsMovable();
 
         if (World.settings.resourcesUpgradeable)
             $('#upgrade-option').css('display', 'block');

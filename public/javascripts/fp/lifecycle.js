@@ -82,10 +82,10 @@ FiercePlanet.newLevel = function() {
     FiercePlanet.currentNotice = FiercePlanet.currentLevel.tip;
     $("#notifications").toggle(World.settings.statusBarVisible);
     FiercePlanet.GeneralUI.notify("Starting level " + FiercePlanet.currentLevel.id + "...");
-    if (World.settings.sendEventsToServer) {
+    if (World.settings.sendEventsToServer)
         notifyServerOfEvent("level", FiercePlanet.currentLevel.id);
-    }
-    FiercePlanet.GeneralUI.levelInfo();
+    if (! World.settings.hideLevelInfo)
+        FiercePlanet.GeneralUI.levelInfo();
 };
 
 

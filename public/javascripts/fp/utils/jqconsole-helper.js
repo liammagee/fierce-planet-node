@@ -291,6 +291,7 @@ $(function() {
               jqconsole.Write(width + '\n')
               jqconsole.Write(height + '\n')
               FiercePlanet.Orientation.adjustParameters(width, height);
+              FiercePlanet.Drawing.drawGame();
           }
           catch (e) {
               jqconsole.Write(e + '\n')

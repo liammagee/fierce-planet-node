@@ -664,6 +664,9 @@ li.over {
   background-color: #999;
     z-index: 2;
 }
+.jqconsole-blurred {
+    height: 20px;
+}
 .jqconsole-blurred .jqconsole-cursor {
   background-color: #666;
 }
