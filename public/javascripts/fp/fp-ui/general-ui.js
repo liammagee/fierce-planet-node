@@ -65,6 +65,7 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
         $('#debug').click(FiercePlanet.processAgents);
         $('#replay').click(FiercePlanet.Recording.replayWorld);
         $('#story-board').click(FiercePlanet.Dev.showStoryboard);
+        $('#high-scores').click(FiercePlanet.ProfileUI.showHighScores);
 
 
         // Level editor functions

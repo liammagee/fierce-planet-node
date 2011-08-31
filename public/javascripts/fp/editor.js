@@ -109,7 +109,6 @@ FiercePlanet.Editor = FiercePlanet.Editor || {};
         if (FiercePlanet.isMouseDown) {
             FiercePlanet.isMouseMoving = true;
             var __ret = FiercePlanet.GeneralUI.getCurrentPosition(e);
-            console.log(__ret.posX)
             FiercePlanet.currentLevel.removeTile(__ret.posX, __ret.posY);
             FiercePlanet.Drawing.drawCanvases();
         }
@@ -126,7 +125,6 @@ FiercePlanet.Editor = FiercePlanet.Editor || {};
         FiercePlanet.currentX = __ret.posX;
         FiercePlanet.currentY = __ret.posY;
 
-        console.log([FiercePlanet.currentX, FiercePlanet.currentY]);
         var currentTile = FiercePlanet.currentLevel.getTile(FiercePlanet.currentX, FiercePlanet.currentY);
         if (currentTile == undefined && !FiercePlanet.isMouseMoving) {
             FiercePlanet.Editor.showDesignFeaturesDialog(e);
@@ -209,7 +207,8 @@ FiercePlanet.Editor = FiercePlanet.Editor || {};
      * Allows the map to be editable
      */
     this.editMap = function() {
-        $('#map_canvas').css({zIndex: 100});
+        FiercePlanet.editingMap = true;
+        $('#map_canvas').css({zIndex: 8});
         var mapOptions = GoogleMapUtils.defaultOptions();
         $.extend(mapOptions, FiercePlanet.currentLevel.mapOptions);
         $.extend(mapOptions, {
@@ -230,7 +229,7 @@ FiercePlanet.Editor = FiercePlanet.Editor || {};
      * Allows the map to be editable
      */
     this.saveMap = function() {
-        var center = FiercePlanet.googleMap.getCenter();
+        var center = [FiercePlanet.googleMap.getCenter().lat(), FiercePlanet.googleMap.getCenter().lng()];
         var tilt = FiercePlanet.googleMap.getTilt();
         var zoom = FiercePlanet.googleMap.getZoom();
         var mapTypeId = FiercePlanet.googleMap.getMapTypeId();
@@ -246,6 +245,7 @@ FiercePlanet.Editor = FiercePlanet.Editor || {};
      * Allows the map to be editable
      */
     this.closeMap = function() {
+        FiercePlanet.editingMap = false;
         var mapOptions = GoogleMapUtils.defaultOptions();
         $.extend(mapOptions, FiercePlanet.currentLevel.mapOptions);
         $.extend(mapOptions, {
@@ -259,7 +259,7 @@ FiercePlanet.Editor = FiercePlanet.Editor || {};
             zoomControl: false
             });
         FiercePlanet.googleMap = GoogleMapUtils.createMap(mapOptions);
-        $('#map_canvas').css({zIndex: 1});
+        $('#map_canvas').css({zIndex: 2});
         FiercePlanet.Drawing.drawCanvases();
     };
 

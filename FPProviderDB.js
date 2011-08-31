@@ -48,6 +48,18 @@ FPProvider.prototype.findAll = function(callback) {
       }
     });};
 
+FPProvider.prototype.findAllByUser = function(user, callback) {
+    this.getCollection(function(error, level_collection) {
+      if( error ) callback(error)
+      else {
+//        level_collection.find({user_id: level_collection.db.bson_serializer.ObjectID.createFromHexString(user._id)}).toArray(function(error, results) {
+        level_collection.find({user_id: user._id}).toArray(function(error, results) {
+          if( error ) callback(error)
+          else callback(null, results)
+        });
+      }
+    });};
+
 FPProvider.prototype.findById = function(id, callback) {
     this.getCollection(function(error, level_collection) {
       if( error ) callback(error)
@@ -59,6 +71,29 @@ FPProvider.prototype.findById = function(id, callback) {
       }
     });};
 
+FPProvider.prototype.deleteById = function(id, callback) {
+    this.getCollection(function(error, level_collection) {
+      if( error ) callback(error)
+      else {
+          level_collection.remove({_id: level_collection.db.bson_serializer.ObjectID.createFromHexString(id)}, function(err, r) {
+            if( error ) callback(error)
+            else callback(null, r)
+          });
+      }
+    });};
+
+FPProvider.prototype.updateLevel = function(level, callback) {
+    this.getCollection(function(error, level_collection) {
+        if( error ) callback(error);
+        else {
+            if (level._id)
+                level._id = level_collection.db.bson_serializer.ObjectID.createFromHexString(level._id)
+            level_collection.save(level, {safe:true}, function(error, result) {
+                callback(error, result);
+            });
+        }
+    });
+};
 FPProvider.prototype.loadLevels = function(levels, callback) {
     this.getCollection(function(error, level_collection) {
       if( error ) callback(error)
@@ -80,6 +115,21 @@ FPProvider.prototype.loadLevels = function(levels, callback) {
               callback(error, levels);
             });
         });
+      }
+    });
+};
+
+FPProvider.prototype.findHighScores = function(callback) {
+    this.getCollection(function(error, user_collection) {
+      if( error ) callback(error)
+      else {
+          // TODO: MongoDB order by / limit
+          user_collection.find().toArray(function(error, results) {
+            if( error ) callback(error)
+            else {
+                callback(null, results)
+            }
+          });
       }
     });
 };
@@ -131,26 +181,10 @@ FPProvider.prototype.getUserById = function(user_id, callback) {
     });
 };
 
-FPProvider.prototype.updateLevel = function(level, callback) {
-    this.getCollection(function(error, level_collection) {
-        if( error ) callback(error);
-        else {
-            if (level._id) {
-                level._id = level_collection.db.bson_serializer.ObjectID.createFromHexString(level._id)
-            }
-            level_collection.save(level, {safe:true}, function(error, result) {
-                callback(error, result);
-            });
-        }
-    });
-};
 FPProvider.prototype.updateUser = function(user, callback) {
     this.getUserCollection(function(error, user_collection) {
         if( error ) callback(error);
         else {
-            if (user._id) {
-                user._id = user_collection.db.bson_serializer.ObjectID.createFromHexString(user._id)
-            }
             user_collection.save(user,{safe:true}, function(error, result) {
                 callback(error, result);
             });
@@ -166,15 +200,17 @@ FPProvider.prototype.saveUser = function(user, callback) {
             user_collection.findOne({email: user.email}, function(error, result) {
               if( error ) callback(error)
               // If user is not found, save it here
-              else if (result == undefined) {
+              else {
+                  console.log('got here')
                 // Make sure the user has a profile and a nickname
-                user.profile = new Profile();
-                user.profile.nickname = user.profile.nickname || user.nickname || user.email;
-                user_collection.insert(user, function(e, u) {
+                if (user.profile == undefined) {
+                    user.profile = new Profile();
+                    user.profile.nickname = user.profile.nickname || user.nickname || user.email;
+                }
+                user_collection.save(user, function(e, u) {
                   callback(e, u);
                 });
               }
-              else callback(null, result)
             });
         }
     });
@@ -201,14 +237,9 @@ FPProvider.prototype.authenticateUser = function(email, password, callback) {
               // If user is not found, save it here
               else if (result == undefined) {
                 // Make sure the user has a profile and a nickname
-                  console.log('got ere')
                   callback("Could not authenticate - no user found with email of " + email)
               }
               else {
-                  console.log(result)
-                  console.log(password)
-                  console.log(result.password == password)
-                  console.log(result.password === password)
                   if (result.password == password) {
                       callback(null, result);
                       return;

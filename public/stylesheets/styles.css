@@ -74,6 +74,15 @@ body {
     z-index: 1;
 	/*width:480px; height:400px;*/
 }
+
+#imageCanvas        { z-index: 1 }
+#map_canvas         { z-index: 2 }
+#baseCanvas         { z-index: 3 }
+#noticeCanvas       { z-index: 4 }
+#agentCanvas        { z-index: 5 }
+#resourceCanvas     { z-index: 6 }
+#scrollingCanvas    { z-index: 7 }
+
 #level-name {
 	font-size:18px;
 }

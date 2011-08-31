@@ -63,14 +63,23 @@ function addUser (source, sourceUser) {
   } else { // non-password-based
     user = usersById[++nextUserId] = {id: nextUserId};
     user[source] = sourceUser;
+
+      // For FaceBook
+    if (sourceUser.email)
+        user.email = sourceUser.email;
+      // For Google
+    else if (sourceUser.id)
+        user.email = sourceUser.id;
   }
 
   // Save to MongoDB
     fpProvider.saveUser(user, function(error, res) {
-        console.log(error)
         if (res)
             user = res;
     });
+    console.log(user)
+
+  return user;
 }
 var usersByFbId = {};
 var usersByGoogleId = {};
@@ -93,8 +102,10 @@ everyauth
       return usersByFbId[fbUserMetadata.id] ||
         (usersByFbId[fbUserMetadata.id] = addUser('facebook', fbUserMetadata));
     })
+//    .redirectPath('http://cold-autumn-453.heroku.com/');
     .redirectPath('/');
 everyauth.google
+//  .myHostname('http://cold-autumn-453.heroku.com/')
   .myHostname('http://localhost:3000')
   .appId(conf.google.clientId)
   .appSecret(conf.google.clientSecret)
@@ -170,12 +181,11 @@ everyauth
         var promise = this.Promise();
 
       // Add mongo lookup here
-        fpProvider.saveUser(newUserAttrs, function(error, users) {
+        fpProvider.saveUser(newUserAttrs, function(error, user) {
             if (error) return promise.fulfill([error]);
-            var user = users[0];
+//            var user = users[0];
             if (!user.id) user.id = user._id;
             usersById[user.id] = user;
-            console.log(user);
             promise.fulfill(user);
         });
         return promise;
@@ -260,33 +270,33 @@ app.get('/levels/gallery', function(req, res){
 });
 
 app.get('/levels/list', function(req, res){
-  fpProvider.findAll(function(error, levels){
+  fpProvider.findAllByUser(req.user, function(error, levels){
       res.send(levels);
   });
 });
 
 app.get('/levels/:id', function(req, res){
     var id = req.params.id;
-    console.log(id)
     if (id) {
         fpProvider.findById(id, function(error, level){
-            console.log('Opening level')
-            if (level.tiles)
-                console.log('Tiles length: ' + level.tiles.length)
-            else
-                console.log('No tiles')
+            res.send(level);
+        });
+    }
+});
+
+app.get('/levels/destroy/:id', function(req, res){
+    var id = req.params.id;
+    if (id) {
+        fpProvider.findById(id, function(error, level){
             res.send(level);
         });
     }
 });
 
 app.post('/levels/update', function(req, res){
-    if (req.body.level) {
+    if (req.body.level && req.user) {
         var level = JSON.parse(req.body.level);
-        console.log('Saving level')
-        if (level.tiles)
-            console.log('Tiles length: ' + level.tiles.length)
-//        console.log(level)
+        level.user_id = req.user._id;
         fpProvider.updateLevel(level, function(error, result){
             res.send(result.toString());
         });
@@ -296,14 +306,16 @@ app.post('/levels/update', function(req, res){
 app.post('/levels/new', function(req, res){
     if (req.body) {
         var level = JSON.parse(req.body.level);
-        console.log('Creating new level')
-        if (level.tiles)
-            console.log('Tiles length: ' + level.tiles.length)
-//        console.log(level)
         fpProvider.updateLevel(level, function(error, result){
             res.send(result);
         });
     }
+});
+
+app.get('/profiles/high_scores', function(req, res){
+    fpProvider.findHighScores(id, function(error, results){
+        res.send(results);
+    });
 });
 
 app.get('/profile/get', function(req, res){
@@ -319,9 +331,7 @@ app.post('/profile/update', function(req, res){
     if (req.user && req.body.profile) {
         var user = req.user;
         user.profile = JSON.parse(req.body.profile);
-//        var profile = $.parseJSON(req.params.profile);
         fpProvider.updateUser(user, function(error, result){
-            console.log(result.toString())
             res.send(result.toString());
         });
     }

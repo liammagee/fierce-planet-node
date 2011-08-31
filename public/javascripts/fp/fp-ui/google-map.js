@@ -267,6 +267,9 @@ var GoogleMapUtils = GoogleMapUtils || {};
      */
     this.createMap = function(options, altCanvasName) {
         var canvasName = altCanvasName || '#map_canvas';
+        // If this is not a LatLng object, make one
+        if (options && !options.center.lat)
+            options.center = new google.maps.LatLng(options.center[0], options.center[1]);
         map = new google.maps.Map($(canvasName)[0], options);
 //        map = new google.maps.Map(document.getElementById('map_canvas'), options);
 

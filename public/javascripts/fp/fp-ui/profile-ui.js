@@ -32,7 +32,7 @@ FiercePlanet.ProfileUI = FiercePlanet.ProfileUI || {};
      * Logs out the current user
      */
     this.editProfile = function() {
-        this.getProfile();
+        FiercePlanet.ProfileUI.getProfile();
         $('#profile-nickname').val(FiercePlanet.currentProfile.nickname);
         $('#profile-profileClass').innerHTML = (FiercePlanet.currentProfile.profileClass);
         $('#profile-progressTowardsNextClass').innerHTML = (FiercePlanet.currentProfile.progressTowardsNextClass);
@@ -85,6 +85,19 @@ FiercePlanet.ProfileUI = FiercePlanet.ProfileUI || {};
      */
     this.saveProfile = function(func) {
         $.post("/profile/update", FiercePlanet.ProfileUI.serializeProfile(), func);
+//        if (FiercePlanet.currentProfile.id > -1) {
+//            $.post("/profile/update", FiercePlanet.ProfileUI.serializeProfile(), func);
+//        }
+    };
+
+    /**
+     * Retrieves high scores
+     * @param func
+     */
+    this.showHighScores = function() {
+        $.post("/profiles/high_scores", function(data) {
+            console.log(data);
+        });
 //        if (FiercePlanet.currentProfile.id > -1) {
 //            $.post("/profile/update", FiercePlanet.ProfileUI.serializeProfile(), func);
 //        }

@@ -1,6 +1,6 @@
 #menu
   #user-links
-    - if (!everyauth.loggedIn || !everyauth.user)
+    - if (!everyauth.user)
       a#login(href='#') Login
     - else
       a#welcome-link(href='#')= 'Welcome ' + everyauth.user.profile.nickname

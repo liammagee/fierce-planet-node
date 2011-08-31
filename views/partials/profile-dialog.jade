@@ -1,43 +1,47 @@
+style
+  .field { position: absolute; left: 200; }
+  .field-row { padding: 4px }
+  .field-row label { padding-right: 20px; }
 #profile-dialog
-  form(method='/profile/updete')
+  form(method='/profile/update')
     - if ('undefined' !== typeof errors && errors.length)
       ul#errors
         - each error in errors
           li.error= error
     - if (everyauth.user)
-      #field
+      .field-row
         label(for='profile-nickname') Nickname
-        input#profile-nickname(name='nickname')
-      #field
+        input.field#profile-nickname(name='nickname')
+      .field-row
         label(for='profile-profileClass') Profile class
-        span#profile-profileClass= everyauth.user.profile.profileClass
-      #field
+        span.field.field#profile-profileClass= everyauth.user.profile.profileClass
+      .field-row
         label(for='profile-progressTowardsNextClass') Progress towards next class
-        span#profile-progressTowardsNextClass= everyauth.user.profile.progressTowardsNextClass
-      #field
+        span.field.field#profile-progressTowardsNextClass= everyauth.user.profile.progressTowardsNextClass
+      .field-row
         label(for='profile-credits') Credits
-        span#profile-credits= everyauth.user.profile.credits
-      #field
+        span.field.field#profile-credits= everyauth.user.profile.credits
+      .field-row
         label(for='profile-capabilities') Capabilities
-        span#profile-capabilities= everyauth.user.profile.capabilities
-      #field
+        span.field#profile-capabilities= everyauth.user.profile.capabilities
+      .field-row
         label(for='profile-totalSaved') Total saved
-        span#profile-totalSaved= everyauth.user.profile.totalSaved
-      #field
+        span.field#profile-totalSaved= everyauth.user.profile.totalSaved
+      .field-row
         label(for='profile-totalExpired') Total expired
-        span#profile-totalExpired= everyauth.user.profile.totalExpired
-      #field
+        span.field#profile-totalExpired= everyauth.user.profile.totalExpired
+      .field-row
         label(for='profile-totalResourcesSpent') Total resources spent
-        span#profile-totalResourcesSpent= everyauth.user.profile.totalResourcesSpent
-      #field
+        span.field#profile-totalResourcesSpent= everyauth.user.profile.totalResourcesSpent
+      .field-row
         label(for='profile-currentScore') Current score
-        span#profile-currentScore= everyauth.user.profile.currentScore
-      #field
+        span.field#profile-currentScore= everyauth.user.profile.currentScore
+      .field-row
         label(for='profile-highestScore') Highest score
-        span#profile-highestScore= everyauth.user.profile.highestScore
-      #field
+        span.field#profile-highestScore= everyauth.user.profile.highestScore
+      .field-row
         label(for='profile-currentLevel') Current level
-        span#profile-currentLevel= everyauth.user.profile.currentLevel
-      #field
+        span.field#profile-currentLevel= everyauth.user.profile.currentLevel
+      .field-row
         label(for='profile-highestLevel') Highest level
-        span#profile-highestLevel= everyauth.user.profile.highestLevel
+        span.field#profile-highestLevel= everyauth.user.profile.highestLevel

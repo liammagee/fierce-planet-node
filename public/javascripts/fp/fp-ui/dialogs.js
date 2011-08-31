@@ -730,7 +730,6 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
                     tmpLevel.levelResources = tmpLevel.resources;
                     */
 
-
                     // TODO: Set up forms
                     if (FiercePlanet.levelTimerId)
                         clearInterval(FiercePlanet.levelTimerId);
@@ -757,8 +756,8 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
         if (FiercePlanet.inDesignMode) {
             $.post('/levels/update', { level: JSON.stringify(FiercePlanet.currentLevel) }, function(res) {
                 if (res) {
-                    console.log('Saved level');
-                    console.log(res);
+//                    console.log('Saved level');
+//                    console.log(res);
                 }
             });
         }

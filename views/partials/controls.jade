@@ -37,8 +37,9 @@
     a#openLevelGallery(href='#') Levels
   div
     a#settings(href='#') Settings
-  div
-    a#editor(href='#') Editor
+  - if (everyauth.user)
+    div
+      a#editor(href='#') Editor
   div.divide
 
   //#admin-controls
