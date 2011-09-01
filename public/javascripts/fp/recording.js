@@ -51,7 +51,7 @@ FiercePlanet.Recording = FiercePlanet.Recording || {};
      * Replay the game
      */
     this.replayWorld = function() {
-            FiercePlanet._stopAgents();
+            FiercePlanet.Lifecycle._stopAgents();
             FiercePlanet.existingCurrentLevel = FiercePlanet.currentLevel;
             clearInterval(FiercePlanet.agentTimerId);
             FiercePlanet.globalRecordingCounter = 0;

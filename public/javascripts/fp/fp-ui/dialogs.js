@@ -96,7 +96,7 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
                         // Animation effect
                         // For spinning, try: http://www.zachstronaut.com/posts/2009/08/07/jquery-animate-css-rotate-scale.html
                         $( this ).dialog( "close" );
-                        FiercePlanet.startLevel();
+                        FiercePlanet.Lifecycle.startLevel();
                     },
                     "Cancel": function() {
                         $( this ).dialog( "close" );
@@ -118,11 +118,11 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
                 title: 'Level Complete!',
                 buttons: {
                     "Next Level": function() {
-                        FiercePlanet.newLevel();
+                        FiercePlanet.Lifecycle.newLevel();
                         $( this ).dialog( "close" );
                     },
                     "Cancel": function() {
-                        FiercePlanet.newLevel();
+                        FiercePlanet.Lifecycle.newLevel();
                         $( this ).dialog( "close" );
                     }
                 }
@@ -139,11 +139,11 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
                 title: 'Fierce Planet Complete!',
                 buttons: {
                     "Bonus Level": function() {
-                        FiercePlanet.newLevel();
+                        FiercePlanet.Lifecycle.newLevel();
                         $( this ).dialog( "close" );
                     },
                     "New Game": function() {
-                        FiercePlanet.newGame();
+                        FiercePlanet.Lifecycle.newGame();
                         $( this ).dialog( "close" );
                     },
                     "Cancel": function() {
@@ -164,11 +164,11 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
                 title: 'Game Over!',
                 buttons: {
                     "Restart Level": function() {
-                        FiercePlanet.restartLevel();
+                        FiercePlanet.Lifecycle.restartLevel();
                         $( this ).dialog( "close" );
                     },
                     "New Game": function() {
-                        FiercePlanet.newGame();
+                        FiercePlanet.Lifecycle.newGame();
                         $( this ).dialog( "close" );
                     }
                 }
@@ -223,7 +223,7 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
                 title: 'Level Gallery',
                 buttons: {
                     "Open level": function() {
-                        FiercePlanet.newLevel();
+                        FiercePlanet.Lifecycle.newLevel();
                         $( this ).dialog( "close" );
                     },
                     "Cancel": function() {
@@ -298,7 +298,7 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
                 buttons: {
                     "Login": function() {
                         $( this ).dialog( "close" );
-                        FiercePlanet.startLevel();
+                        FiercePlanet.Lifecycle.startLevel();
                     },
                     "Cancel": function() {
                         $( this ).dialog( "close" );
@@ -475,7 +475,7 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
             if (confirm("Stop current game and begin the tutorial?")) {
                 FiercePlanet.currentLevelNumber = 0;
                 FiercePlanet.currentLevelPreset = true;
-                FiercePlanet.restartLevel();
+                FiercePlanet.Lifecycle.restartLevel();
             }
         });
 
@@ -492,7 +492,7 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
 //    FiercePlanet.currentProfile.updateStats(FiercePlanet.currentProfile.resources_in_store, FiercePlanet.currentProfile.saved_agent_count);
         // Try to save results to the server
         if (FiercePlanet.currentProfile.id > -1) {
-            FiercePlanet.saveProfile(function(data) {
+            FiercePlanet.ProfileUI.saveProfile(function(data) {
                    this.openGameOverDialog();
                });
         }
@@ -519,7 +519,7 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
     this.showCompleteGameDialog = function() {
         // Try to save results to the server
         if (FiercePlanet.currentProfile.id > -1) {
-            FiercePlanet.saveProfile(function(data) {
+            FiercePlanet.ProfileUI.saveProfile(function(data) {
                    this.openCompleteGameDialog();
                });
         }
@@ -545,7 +545,7 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
      */
     this.showCompleteLevelDialog = function() {
         if (FiercePlanet.currentProfile.id > -1) {
-            FiercePlanet.saveProfile(function(data) {
+            FiercePlanet.ProfileUI.saveProfile(function(data) {
                    this.openCompleteLevelDialog();
                });
         }
@@ -568,7 +568,7 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
      * Show the resource gallery, and allow the user to pick from a range of capabilities
      */
     this.showResourceGallery = function() {
-        FiercePlanet.pauseGame();
+        FiercePlanet.Lifecycle.pauseGame();
 
         $('#current-profile-class')[0].innerHTML = FiercePlanet.currentProfile.profileClass;
         $('#current-credits')[0].innerHTML = FiercePlanet.currentProfile.credits;
@@ -672,7 +672,7 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
      * Shows the Fierce Planet settings
      */
     this.showSettings = function() {
-        FiercePlanet.pauseGame();
+        FiercePlanet.Lifecycle.pauseGame();
         FiercePlanet.Dialogs.settingsDialog.dialog('open');
     };
 
@@ -680,7 +680,7 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
      * Shows the Fierce Planet level gallery
      */
     this.showLevelGallery = function() {
-        FiercePlanet.pauseGame();
+        FiercePlanet.Lifecycle.pauseGame();
         FiercePlanet.Dialogs.levelGalleryDialog.dialog('open');
     };
 
@@ -688,7 +688,7 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
      * Shows the Fierce Planet level editor
      */
     this.showLevelEditor = function() {
-        FiercePlanet.pauseGame();
+        FiercePlanet.Lifecycle.pauseGame();
         $('#new-level').click(FiercePlanet.Dialogs.newLevel);
         $.get('/levels/list', function(res) {
             if (res) {
@@ -706,7 +706,7 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
      * Shows the Fierce Planet level editor
      */
     this.newLevel = function() {
-        FiercePlanet.pauseGame();
+        FiercePlanet.Lifecycle.pauseGame();
         FiercePlanet.Dialogs.levelEditorDialog.dialog('close');
         FiercePlanet.Dialogs.editPropertiesDialog.dialog('open');
     };
@@ -719,8 +719,6 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
             $.get('/levels/' + this.id, function(res) {
                 if (res) {
                     console.log('Opening level');
-                    console.log(level._id);
-                    console.log(level.tiles);
                     var tmpLevel = FiercePlanet.Utils.makeFromJSONObject(res, Level.prototype);
                     tmpLevel.resources = [];
                     /*
@@ -816,7 +814,7 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
      * Shows the Fierce Planet credits
      */
     this.showCredits = function() {
-        FiercePlanet.pauseGame();
+        FiercePlanet.Lifecycle.pauseGame();
         FiercePlanet.Dialogs.creditsDialog.dialog('open');
     };
 
@@ -824,7 +822,7 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
      * Shows the Fierce Planet login
      */
     this.showLogin = function() {
-        FiercePlanet.pauseGame();
+        FiercePlanet.Lifecycle.pauseGame();
         FiercePlanet.Dialogs.loginDialog.dialog('open');
     };
 

@@ -6,10 +6,18 @@
  */
 
 
+var FiercePlanet = FiercePlanet || {};
+
+
+/**
+ * @namespace Contains isometric utility functions
+ */
+FiercePlanet.GoogleMapUtils = FiercePlanet.GoogleMapUtils || {};
+
 /**
  * @namespace Contains google map utility functions
  */
-var GoogleMapUtils = GoogleMapUtils || {};
+//var GoogleMapUtils = GoogleMapUtils || {};
 
 
 (function() {
@@ -425,7 +433,7 @@ var GoogleMapUtils = GoogleMapUtils || {};
         return initialLocation;
     }
 
-}).apply(GoogleMapUtils);
+}).apply(FiercePlanet.GoogleMapUtils);
 
 
 

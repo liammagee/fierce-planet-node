@@ -32,11 +32,11 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
         $('#welcome-link').click(FiercePlanet.ProfileUI.editProfile);
 
         // Control panel functions
-        $('#playAgents').click(FiercePlanet.playGame);
-        $('#slowDown').click(FiercePlanet.slowDown);
-        $('#speedUp').click(FiercePlanet.speedUp);
-        $('#newGame').click(FiercePlanet.newGame);
-        $('#restartLevel').click(FiercePlanet.restartLevel);
+        $('#playAgents').click(FiercePlanet.Lifecycle.playGame);
+        $('#slowDown').click(FiercePlanet.Lifecycle.slowDown);
+        $('#speedUp').click(FiercePlanet.Lifecycle.speedUp);
+        $('#newGame').click(FiercePlanet.Lifecycle.newGame);
+        $('#restartLevel').click(FiercePlanet.Lifecycle.restartLevel);
         $('#showResourceGallery').click(FiercePlanet.Dialogs.showResourceGallery);
 
         // Pan/zoomFunctions
@@ -62,7 +62,7 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
         $('#rotateRight').click(FiercePlanet.Drawing.rotateRight);
 
         // Admin functions
-        $('#debug').click(FiercePlanet.processAgents);
+        $('#debug').click(FiercePlanet.Game.processAgents);
         $('#replay').click(FiercePlanet.Recording.replayWorld);
         $('#story-board').click(FiercePlanet.Dev.showStoryboard);
         $('#high-scores').click(FiercePlanet.ProfileUI.showHighScores);
@@ -336,23 +336,23 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
                     break;
                 // 'p': Play/pause game
                 case 80:
-                    FiercePlanet.playGame();
+                    FiercePlanet.Lifecycle.playGame();
                     break;
                 // 'n': New game
                 case 78:
-                    FiercePlanet.newGame();
+                    FiercePlanet.Lifecycle.newGame();
                     break;
                 // 'r': Restart game
                 case 82:
-                    FiercePlanet.restartLevel();
+                    FiercePlanet.Lifecycle.restartLevel();
                     break;
                 // 'w': Rewind
                 case 87:
-                    FiercePlanet.slowDown();
+                    FiercePlanet.Lifecycle.slowDown();
                     break;
                 // 'f': Fast forward
                 case 70:
-                    FiercePlanet.speedUp();
+                    FiercePlanet.Lifecycle.speedUp();
                     break;
                 // 't': Tutorial
                 case 84:
@@ -373,7 +373,7 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
                 // '$': Resource Gallery
                 case 52:
                     if (e.shiftKey)
-                        FiercePlanet.showResourceGallery();
+                        FiercePlanet.Dialogs.showResourceGallery();
                     break;
             }
 
@@ -507,7 +507,7 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
 
         // Correct for tilt isometric view
         if (World.settings.skewTiles || FiercePlanet.currentLevel.isometric) {
-            var point = Isometric.normaliseCoordinates(x, y);
+            var point = FiercePlanet.Isometric.normaliseCoordinates(x, y);
             posX = Math.floor(point.x / FiercePlanet.Orientation.cellWidth);
             posY = Math.floor(point.y / FiercePlanet.Orientation.cellHeight);
         }
@@ -660,7 +660,7 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
                 // Remember this level, along with other data
                 FiercePlanet.ProfileUI.storeProfileData();
                 FiercePlanet.Dialogs.levelGalleryDialog.dialog('close');
-                FiercePlanet.newLevel();
+                FiercePlanet.Lifecycle.newLevel();
             }
         });
     };
@@ -670,7 +670,7 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
      */
     this.highlightGalleryItem =  function(level) {
         $('.thumbnail').css({color: 'inherit', backgroundColor: 'inherit' });
-        if (level > 0 && level <= 11) {
+        if (level > 0 && level <= 20) {
             $('#levelSelect' + level).animate({
                 color: "#000",
                 backgroundColor: "#ffffaa"
@@ -705,7 +705,7 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
         $('#controls').css({left: 0, top: 210, zIndex: 1});
         $('#swatch').css({left: sw - 160, top: sh - 400, zIndex: 1});
 
-        FiercePlanet.drawGame();
+        FiercePlanet.Drawing.drawGame();
 
     };
 

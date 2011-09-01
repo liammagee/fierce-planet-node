@@ -37,6 +37,17 @@ FiercePlanet.Orientation = FiercePlanet.Orientation || {};
     this.pieceWidth = 0;
     this.pieceHeight = 0;
 
+    this.offsetX = 0;
+    this.offsetY = 0;
+
+    this.zoomLevel = 1;
+    this.externalZoomLevel = 1;
+    this.zoomMagnificationFactor = 1.5;
+
+    this.rotationAngle = this.DEFAULT_ROTATION_ANGLE;
+    this.perspectiveAngle = this.DEFAULT_PERSPECTIVE_ANGLE;
+
+    
     this.reset = function() {
         this.offsetX = 0;
         this.offsetY = 0;
@@ -54,8 +65,8 @@ FiercePlanet.Orientation = FiercePlanet.Orientation || {};
     this.recalibrateParameters = function() {
         this.halfWorldWidth = this.worldWidth / 2;
         this.halfWorldHeight = this.worldHeight / 2;
-        this.cellWidth = FiercePlanet.Orientation.worldWidth / FiercePlanet.cellsAcross;
-        this.cellHeight = FiercePlanet.Orientation.worldHeight / FiercePlanet.cellsDown;
+        this.cellWidth = FiercePlanet.Orientation.worldWidth / FiercePlanet.Orientation.cellsAcross;
+        this.cellHeight = FiercePlanet.Orientation.worldHeight / FiercePlanet.Orientation.cellsDown;
         this.pieceWidth = this.cellWidth * 0.5;
         this.pieceHeight = this.cellHeight * 0.5;
     };

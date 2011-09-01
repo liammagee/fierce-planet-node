@@ -5,79 +5,102 @@
  * MIT Licensed
  */
 
-var duelingAgents = [];
 
-function receiveServerEvent(nickname, eventType, obj){
-    if (eventType == 'level') {
-        var levelNumber = obj;
-        if (World.settings.spectate) {
-            FiercePlanet.currentLevelNumber = levelNumber;
-            FiercePlanet.currentLevelPreset = true;
-            FiercePlanet.newLevel();
-//                FiercePlanet.startLevel();
-        }
-        // TODO: Fix - causes problems with main Google screen
-//            FiercePlanet.Drawing.drawMirrorGame();
-        $('#alt_gameworld').show();
-    }
-    else if (eventType == 'start') {
-        if (World.settings.spectate) {
-            FiercePlanet.Dialogs.newLevelDialog.dialog('close');
-//                FiercePlanet.startLevel();
-        }
-    }
-    else if (eventType == 'play') {
-        if (World.settings.spectate) {
-//                FiercePlanet.pauseGame();
-        }
-    }
-    else if (eventType == 'pause') {
-        if (World.settings.spectate) {
-            FiercePlanet.pauseGame();
-        }
-    }
-    else if (eventType == 'resources') {
-//            if (World.settings.spectate) {
-            var resources = obj;
-            for (var i in resources) {
-                FiercePlanet.Utils.makeFromJSONObject(resources[i], Resource.prototype);
+
+var FiercePlanet = FiercePlanet || {};
+
+/**
+ * @namespace Contains communication functions
+ */
+FiercePlanet.Comms = FiercePlanet.Comms || {};
+
+(function(){
+    this.duelingAgents = [];
+
+    this.receiveServerEvent = function(nickname, eventType, obj){
+        if (eventType == 'level') {
+            var levelNumber = obj;
+            if (World.settings.spectate) {
+                FiercePlanet.currentLevelNumber = levelNumber;
+                FiercePlanet.currentLevelPreset = true;
+                FiercePlanet.Lifecycle.newLevel();
+//                FiercePlanet.Lifecycle.startLevel();
             }
+            // TODO: Fix - causes problems with main Google screen
+//            FiercePlanet.Drawing.drawMirrorGame();
+            $('#alt_gameworld').show();
+        }
+        else if (eventType == 'start') {
+            if (World.settings.spectate) {
+                FiercePlanet.Dialogs.newLevelDialog.dialog('close');
+//                FiercePlanet.Lifecycle.startLevel();
+            }
+        }
+        else if (eventType == 'play') {
+            if (World.settings.spectate) {
+//                FiercePlanet.Lifecycle.pauseGame();
+            }
+        }
+        else if (eventType == 'pause') {
+            if (World.settings.spectate) {
+                FiercePlanet.Lifecycle.pauseGame();
+            }
+        }
+        else if (eventType == 'resources') {
+//            if (World.settings.spectate) {
+                var resources = obj;
+                for (var i in resources) {
+                    FiercePlanet.Utils.makeFromJSONObject(resources[i], Resource.prototype);
+                }
 //                FiercePlanet.currentLevel.addResource(resource);
-            FiercePlanet.Drawing.drawResources('#alt_resourceCanvas', resources);
+                FiercePlanet.Drawing.drawResources('#alt_resourceCanvas', resources);
 //            }
-    }
-    else if (eventType == 'agents') {
-        var agents = obj;
-        // Co-op mode
+        }
+        else if (eventType == 'agents') {
+            var agents = obj;
+            // Co-op mode
 //                FiercePlanet.currentLevel.setCurrentAgents(agents);
 //                FiercePlanet.Drawing.clearCanvas('#agentCanvas');
 //                FiercePlanet.Drawing.drawAgents();
-        FiercePlanet.Drawing.clearCanvas('#alt_agentCanvas');
-        FiercePlanet.Drawing.drawAgents('#alt_agentCanvas', agents);
-        if (World.settings.spectate) {
-            FiercePlanet.processAgents();
-            FiercePlanet._stopAgents();
+            FiercePlanet.Drawing.clearCanvas('#alt_agentCanvas');
+            FiercePlanet.Drawing.drawAgents('#alt_agentCanvas', agents);
+            if (World.settings.spectate) {
+                FiercePlanet.Lifecycle.processAgents();
+                FiercePlanet.Lifecycle._stopAgents();
+            }
         }
-    }
-    else if (eventType == 'agent') {
-        duelingAgents.push(obj);
-        // Co-op mode
+        else if (eventType == 'agent') {
+            duelingAgents.push(obj);
+            // Co-op mode
 //                FiercePlanet.currentLevel.setCurrentAgents(agents);
 //                FiercePlanet.Drawing.clearCanvas('#agentCanvas');
 //                FiercePlanet.Drawing.drawAgents();
-        FiercePlanet.Drawing.clearCanvas('#alt_agentCanvas');
-        FiercePlanet.Drawing.drawAgents('#alt_agentCanvas', duelingAgents);
-        if (World.settings.spectate) {
-            FiercePlanet.processAgents();
-            FiercePlanet._stopAgents();
+            FiercePlanet.Drawing.clearCanvas('#alt_agentCanvas');
+            FiercePlanet.Drawing.drawAgents('#alt_agentCanvas', duelingAgents);
+            if (World.settings.spectate) {
+                FiercePlanet.Lifecycle.processAgents();
+                FiercePlanet.Lifecycle._stopAgents();
+            }
         }
     }
-}
+
+    this.notifyServerOfEvent = function(eventType, obj){
+        socket.emit('lifecycle event', eventType, obj);
+    }
 
 
-function esc(msg){
-  return msg.replace(/</g, '&lt;').replace(/>/g, '&gt;');
-};
+
+    this.esc = function(msg){
+      return FiercePlanet.Comms.msg.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    };
+
+
+    this.message = function(from, msg) {
+        if (jqconsole.zone.chat)
+            jqconsole.Write(from + ': ' + msg + '\n');
+    }
+
+}).apply(FiercePlanet.Comms);
 
 
 
@@ -85,44 +108,36 @@ var socket = io.connect();
 
 socket.on('connect', function () {
     var nickname = FiercePlanet.currentProfile.nickname || 'anonymous';
-    socket.emit('nickname', nickname, function (areadySet) {
-      if (!areadySet) {
-          message('');
+    socket.emit('nickname', nickname, function (alreadySet) {
+      if (!alreadySet) {
+          FiercePlanet.Comms.message('');
       }
     });
 });
 
 socket.on('announcement', function (msg) {
-    message(msg);
+    FiercePlanet.Comms.message(msg);
 });
 
 socket.on('nicknames', function (nicknames) {
-    message(nicknames);
+    FiercePlanet.Comms.message(nicknames);
 });
 
-socket.on('user message', message);
+socket.on('user message', FiercePlanet.Comms.message);
 socket.on('reconnect', function () {
-    message('Reconnected to the server');
+    FiercePlanet.Comms.message('Reconnected to the server');
 });
 
 socket.on('reconnecting', function () {
-    message('Attempting to re-connect to the server');
+    FiercePlanet.Comms.message('Attempting to re-connect to the server');
 });
 
 socket.on('error', function (e) {
-  message('System', e ? e : 'A unknown error occurred');
+  FiercePlanet.Comms.message('System', e ? e : 'A unknown error occurred');
 });
-function notifyServerOfEvent(eventType, obj){
-    socket.emit('lifecycle event', eventType, obj);
-}
 socket.on('lifecycle event', function (nickname, eventType, data) {
-  receiveServerEvent(nickname, eventType, data);
+  FiercePlanet.Comms.receiveServerEvent(nickname, eventType, data);
 });
-
-function message(from, msg) {
-    if (jqconsole.zone.chat)
-        jqconsole.Write(from + ': ' + msg + '\n');
-}
 
 
 

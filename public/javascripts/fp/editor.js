@@ -11,7 +11,7 @@ var FiercePlanet = FiercePlanet || {};
 
 
 /**
- * @namespace Contains drawing functions
+ * @namespace Contains editor functions
  */
 FiercePlanet.Editor = FiercePlanet.Editor || {};
 
@@ -53,7 +53,7 @@ FiercePlanet.Editor = FiercePlanet.Editor || {};
         $("#remove-exit-point").click(function(e) {
             FiercePlanet.currentLevel.removeExitPoint(FiercePlanet.currentX, FiercePlanet.currentY);
             FiercePlanet.Dialogs.designFeaturesDialog.dialog('close');
-            FiercePlanet.drawGame();
+            FiercePlanet.Drawing.drawGame();
         });
 
         $("#remove-resource").click(function(e) {
@@ -86,7 +86,7 @@ FiercePlanet.Editor = FiercePlanet.Editor || {};
 
         FiercePlanet.inDesignMode = true;
 
-        FiercePlanet._initialiseGame();
+        FiercePlanet.Lifecycle._initialiseGame();
     };
 
     /**
@@ -209,7 +209,7 @@ FiercePlanet.Editor = FiercePlanet.Editor || {};
     this.editMap = function() {
         FiercePlanet.editingMap = true;
         $('#map_canvas').css({zIndex: 8});
-        var mapOptions = GoogleMapUtils.defaultOptions();
+        var mapOptions = FiercePlanet.GoogleMapUtils.defaultOptions();
         $.extend(mapOptions, FiercePlanet.currentLevel.mapOptions);
         $.extend(mapOptions, {
                 disableDefaultUI: false,
@@ -221,7 +221,7 @@ FiercePlanet.Editor = FiercePlanet.Editor || {};
                 streetViewControl: true,
                 zoomControl: true
             });
-        FiercePlanet.googleMap = GoogleMapUtils.createMap(mapOptions);
+        FiercePlanet.googleMap = FiercePlanet.GoogleMapUtils.createMap(mapOptions);
         FiercePlanet.Drawing.drawCanvases();
     };
 
@@ -246,7 +246,7 @@ FiercePlanet.Editor = FiercePlanet.Editor || {};
      */
     this.closeMap = function() {
         FiercePlanet.editingMap = false;
-        var mapOptions = GoogleMapUtils.defaultOptions();
+        var mapOptions = FiercePlanet.GoogleMapUtils.defaultOptions();
         $.extend(mapOptions, FiercePlanet.currentLevel.mapOptions);
         $.extend(mapOptions, {
             disableDefaultUI: true,
@@ -258,7 +258,7 @@ FiercePlanet.Editor = FiercePlanet.Editor || {};
             streetViewControl: false,
             zoomControl: false
             });
-        FiercePlanet.googleMap = GoogleMapUtils.createMap(mapOptions);
+        FiercePlanet.googleMap = FiercePlanet.GoogleMapUtils.createMap(mapOptions);
         $('#map_canvas').css({zIndex: 2});
         FiercePlanet.Drawing.drawCanvases();
     };

@@ -875,7 +875,7 @@ FiercePlanet.PresetLevels.level11.teardown = function() {
 FiercePlanet.PresetLevels.level12 = new Level(12);
 FiercePlanet.PresetLevels.level12.isometric = true;
 FiercePlanet.PresetLevels.level12.allowResourcesOnPath = true;
-FiercePlanet.PresetLevels.level12.initialResourceStore = 3000;
+FiercePlanet.PresetLevels.level12.initialResourceStore = 100;
 FiercePlanet.PresetLevels.level12.isPresetLevel = true;
 FiercePlanet.PresetLevels.level12.addEntryPoint(0, 0);
 FiercePlanet.PresetLevels.level12.addExitPoint(4, 4);
@@ -884,20 +884,19 @@ FiercePlanet.PresetLevels.level12.cellsDown = 5;
 FiercePlanet.PresetLevels.level12.initialAgentNumber = 1;
 FiercePlanet.PresetLevels.level12.waveNumber = 3;
 FiercePlanet.PresetLevels.level12.expiryLimit = 20;
-FiercePlanet.PresetLevels.level12.name = ("Tutorial");
-FiercePlanet.PresetLevels.level12.introduction = ("" +
-        "<p>The citizens of Fierce Planet are in danger of extinction. Their cities have been destroyed &mdash; there is a shortage of food and water, law and order has broken down, and disease is rampant.</p>" +
-        "<p>The aim of the game is to help citizens survive as they build a sustainable city. Their start point is marked by a green circle, and the goal by a white circle. Both circles reflect your progress as more waves of citizens come through.</p> " +
-        "<p>You can save your citizens by placing <em>resources</em> on tiles around their path. You can click on tiles to select a resource, or drag resources from the panel on the right onto the game map.</p> " +
-        "<p>Resources come in three kinds: economic, environmental and social. Your citizens need all of these to build a sustainable city. " +
-        "If you don't provide enough resources of a particular kind, your citizens will start turning that colour. This indicates you need to put down some resources of that colour to help your citizens.</p> " +
-        "<p>You start with a limited amount of resources. Saving citizens will allow you to place more resources, which will allow you to help others.</p> " +
-        "<p>Begin by placing some resources on the map. When you are ready, click the 'Play' button in the Control Panel on the left. After a few seconds, citizens will start marching towards their goal.</p> "
+FiercePlanet.PresetLevels.level12.name = ("Oh-ho!");
+FiercePlanet.PresetLevels.level12.introduction = (""
+        + "<p>New threats have emerged....</p>"
         );
-FiercePlanet.PresetLevels.level12.conclusion = ("Well done - you have completed the tutorial. Now time to help your citizens on Level 1.");
+FiercePlanet.PresetLevels.level12.conclusion = ("Well done.");
 
 FiercePlanet.PresetLevels.level12.setup = function() {
-//    this.fillWithTiles();
+    this.fillWithTiles();
+    this.removeTiles(20, 5);
+    this.removeTiles(15, 1);
+    this.removeTiles(10, 5);
+    this.removeTiles(9, 1);
+    this.removeTiles(0, 5);
 };      
 
 

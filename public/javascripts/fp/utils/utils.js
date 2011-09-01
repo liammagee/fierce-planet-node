@@ -183,7 +183,7 @@ FiercePlanet.Utils = FiercePlanet.Utils || {};
 
         FiercePlanet.Utils.processSettings();
 
-        FiercePlanet.restartLevel();
+        FiercePlanet.Lifecycle.restartLevel();
     };
 
 

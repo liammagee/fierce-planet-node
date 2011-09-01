@@ -180,22 +180,22 @@ $(function() {
           FiercePlanet.ProfileUI.logout();
       }
       else if (command == 'play' || command == 'p') {
-          FiercePlanet.playGame();
+          FiercePlanet.Lifecycle.playGame();
       }
       else if (command == 'draw' || command == 'd') {
           FiercePlanet.Drawing.drawGame();
       }
       else if (command == 'speed-up' || command == 'su') {
-          FiercePlanet.speedUp();
+          FiercePlanet.Lifecycle.speedUp();
       }
       else if (command == 'slow-down' || command == 'sd') {
-          FiercePlanet.slowDown();
+          FiercePlanet.Lifecycle.slowDown();
       }
       else if (command == 'new-game' || command == 'ng') {
-          FiercePlanet.newGame();
+          FiercePlanet.Lifecycle.newGame();
       }
       else if (command == 'restart-level' || command == 'rl') {
-          FiercePlanet.restartLevel();
+          FiercePlanet.Lifecycle.restartLevel();
       }
       else if (command == 'show-resources' || command == 'srg') {
           FiercePlanet.Dialogs.showResourceGallery();
@@ -263,7 +263,7 @@ $(function() {
           FiercePlanet.Drawing.resetView();
       }
       else if (command == 'debug' || command == 'd') {
-          FiercePlanet.processAgents();
+          FiercePlanet.Game.processAgents();
       }
       else if (command == 'storyboard' || command == 'sb') {
           FiercePlanet.Dev.showStoryboard();

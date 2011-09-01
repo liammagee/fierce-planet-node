@@ -113,16 +113,6 @@ FiercePlanet.globalRecordingCounter = 0;
 
 
 
-// Dimension variables
-FiercePlanet.cellsAcross = 14;
-FiercePlanet.cellsDown = 11;
-FiercePlanet.Orientation.cellWidth = FiercePlanet.Orientation.worldWidth / FiercePlanet.cellsAcross;
-FiercePlanet.Orientation.cellHeight = FiercePlanet.Orientation.worldHeight / FiercePlanet.cellsDown;
-FiercePlanet.Orientation.pieceWidth = FiercePlanet.Orientation.cellWidth * 0.5;
-FiercePlanet.Orientation.pieceHeight = FiercePlanet.Orientation.cellHeight * 0.5;
-
-
-
 // General visual and audio variables
 FiercePlanet.scrollingImage = new Image(); // City image
 FiercePlanet.scrollingImageX = 0;

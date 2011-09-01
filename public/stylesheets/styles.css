@@ -456,7 +456,7 @@ li.over {
 
 /* For dialogs */
 
-#default-levels {
+.quests {
      padding: 4px;
     overflow: auto;
  }
