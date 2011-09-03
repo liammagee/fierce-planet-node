@@ -294,6 +294,7 @@ app.get('/levels/destroy/:id', function(req, res){
 app.post('/levels/save', function(req, res){
     if (req.body.level && req.user) {
         var level = JSON.parse(req.body.level);
+        console.log(level._id)
         console.log(level.user_id)
         console.log(req.user._id)
         if (! level.user_id)

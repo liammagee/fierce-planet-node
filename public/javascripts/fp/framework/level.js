@@ -155,7 +155,7 @@ Level.prototype.removeTile = function(x, y) {
 };
 
 /**
- *
+ * Fill all available cells with tiles
  */
 Level.prototype.fillWithTiles = function() {
     this.tiles = [];
@@ -170,7 +170,7 @@ Level.prototype.fillWithTiles = function() {
 };
 
 /**
- *
+ * Remove all tiles from the level
  */
 Level.prototype.removeAllTiles = function() {
 //    this.tiles = [];

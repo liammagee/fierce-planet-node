@@ -436,6 +436,8 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
                 },
                open: function(){
                    $("#edit-properties-tabs").tabs();
+					$('#level-name').focus();
+					$('#level-name').select();
                }
             });
 

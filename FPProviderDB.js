@@ -55,7 +55,6 @@ FPProvider.prototype.findAllByUser = function(user, callback) {
       if( error ) callback(error)
       else {
 //        level_collection.find({user_id: level_collection.db.bson_serializer.ObjectID.createFromHexString(user._id)}).toArray(function(error, results) {
-          console.log(user._id)
         level_collection.find({user_id: user._id}).toArray(function(error, results) {
           if( error ) callback(error)
           else callback(null, results)
@@ -89,8 +88,11 @@ FPProvider.prototype.updateLevel = function(level, callback) {
     this.getCollection(function(error, level_collection) {
         if( error ) callback(error);
         else {
-            if (level._id)
+			console.log("level id: " + level._id)
+            if (level._id && typeof(level._id) === 'string')
                 level._id = level_collection.db.bson_serializer.ObjectID.createFromHexString(level._id)
+	        if (level.user_id && typeof(level.user_id) === 'string')
+	                level.user_id = level_collection.db.bson_serializer.ObjectID.createFromHexString(level.user_id)
             level_collection.save(level, {safe:true}, function(error, result) {
                 callback(error, result);
             });
@@ -204,7 +206,6 @@ FPProvider.prototype.saveUser = function(user, callback) {
               if( error ) callback(error)
               // If user is not found, save it here
               else {
-                  console.log('got here')
                 // Make sure the user has a profile and a nickname
                 if (user.profile == undefined) {
                     user.profile = new Profile();

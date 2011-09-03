@@ -38,10 +38,16 @@ FiercePlanet.LevelUI = FiercePlanet.LevelUI || {};
         // Create new level
         FiercePlanet.previousLevel = FiercePlanet.currentLevel;
         FiercePlanet.currentLevel = new Level(-1);
+		FiercePlanet.currentLevelNumber = -1;
+		FiercePlanet.currentLevelPreset = false;
         FiercePlanet.currentLevel.name = '[Enter the level name here]';
+		FiercePlanet.currentLevel.fillWithTiles();
 
         // Prepare the level properties form
         FiercePlanet.LevelUI.prepareLevelPropertiesForm();
+
+		// Draw the level
+		FiercePlanet.Drawing.drawGame();
 
         // Show the edit properties dialog
         FiercePlanet.Dialogs.editPropertiesDialog.dialog('open');
@@ -79,12 +85,15 @@ FiercePlanet.LevelUI = FiercePlanet.LevelUI || {};
     this.saveLevel = function() {
 //        if (FiercePlanet.inDesignMode) {
             var level = FiercePlanet.currentLevel;
+			console.log("level id: " + level._id)
             // Cf. http://stackoverflow.com/questions/1184624/serialize-form-to-json-with-jquery
             var a = $("#level-properties").serializeArray();
             a.forEach(function(item) {
                 level[item.name] = item.value || '';
             });
             $.post('/levels/save', { level: JSON.stringify(level) }, function(response) {
+				if (response._id && ! FiercePlanet.currentLevel._id)
+					FiercePlanet.currentLevel._id = response._id
                 Log.info(response);
                 FiercePlanet.Editor.setupLevelEditor();
             });
