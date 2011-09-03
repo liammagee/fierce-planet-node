@@ -426,7 +426,7 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
                 title: 'Edit level properties',
                 buttons: {
                     "Save Level": function() {
-                        FiercePlanet.Dialogs.createNewLevel();
+                        FiercePlanet.LevelUI.saveLevel();
                         //FiercePlanet.Drawing.drawGame();
                         $( this ).dialog( "close" );
                     },
@@ -682,132 +682,6 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
     this.showLevelGallery = function() {
         FiercePlanet.Lifecycle.pauseGame();
         FiercePlanet.Dialogs.levelGalleryDialog.dialog('open');
-    };
-
-    /**
-     * Shows the Fierce Planet level editor
-     */
-    this.showLevelEditor = function() {
-        FiercePlanet.Lifecycle.pauseGame();
-        $('#new-level').click(FiercePlanet.Dialogs.newLevel);
-        $.get('/levels/list', function(res) {
-            if (res) {
-                $('#existing-levels').empty();
-                res.forEach(function(item) {
-                    $('#existing-levels').append('<div><a class="level-editor" href="#" id="' + item._id + '">' + item.name + '</a></div>');
-                });
-                $('.level-editor').click(FiercePlanet.Dialogs.openLevel);
-            }
-        });
-        FiercePlanet.Dialogs.levelEditorDialog.dialog('open');
-    };
-
-    /**
-     * Shows the Fierce Planet level editor
-     */
-    this.newLevel = function() {
-        FiercePlanet.Lifecycle.pauseGame();
-        FiercePlanet.Dialogs.levelEditorDialog.dialog('close');
-        FiercePlanet.Editor.prepareNewLevel();
-        FiercePlanet.Dialogs.editPropertiesDialog.dialog('open');
-    };
-
-    /**
-     * Shows the Fierce Planet level editor
-     */
-    this.openLevel = function() {
-        if (this.id) {
-            $.get('/levels/' + this.id, function(res) {
-                if (res) {
-                    console.log('Opening level');
-                    var tmpLevel = FiercePlanet.Utils.makeFromJSONObject(res, Level.prototype);
-                    tmpLevel.resources = [];
-                    /*
-                    for (var i in tmpLevel.resources) {
-                        FiercePlanet.Utils.makeFromJSONObject(tmpLevel.resources[i], Resource.prototype);
-                    }
-                    tmpLevel.levelResources = tmpLevel.resources;
-                    */
-
-                    // TODO: Set up forms
-                    if (FiercePlanet.levelTimerId)
-                        clearInterval(FiercePlanet.levelTimerId);
-                    FiercePlanet.levelTimerId = setInterval("FiercePlanet.Dialogs.saveLevel()", 5000);
-
-                    // Set the current level number and preset value
-                    FiercePlanet.currentLevelNumber = tmpLevel.id;
-                    FiercePlanet.currentLevelPreset = false;
-                    FiercePlanet.currentLevel = tmpLevel;
-
-                    // Finally, construct the level editor
-                    FiercePlanet.Editor.setupLevelEditor();
-
-                    FiercePlanet.Dialogs.levelEditorDialog.dialog('close');
-                }
-            });
-        }
-    };
-
-    /**
-     * Shows the Fierce Planet level editor
-     */
-    this.saveLevel = function() {
-        if (FiercePlanet.inDesignMode) {
-            $.post('/levels/update', { level: JSON.stringify(FiercePlanet.currentLevel) }, function(res) {
-                if (res) {
-//                    console.log('Saved level');
-//                    console.log(res);
-                }
-            });
-        }
-    };
-
-
-    /**
-     *
-     */
-    this.createNewLevel = function() {
-//        if (FiercePlanet.inDesignMode) {
-            var level = new Level(-1);
-//            var level = {};
-            // Cf. http://stackoverflow.com/questions/1184624/serialize-form-to-json-with-jquery
-            var a = $("#level-properties").serializeArray();
-            a.forEach(function(item) {
-                level[item.name] = item.value || '';
-//                if (level[item.name] !== undefined) {
-//                    if (!level[item.name].push) {
-//                        level[item.name] = [level[item.name]];
-//                    }
-//                    level[item.name].push(item.value || '');
-//                } else {
-//                    level[item.name] = item.value || '';
-//                }
-            });
-            $.post('/levels/new', { level: JSON.stringify(level) }, function(res) {
-                if (res) {
-                    var tmpLevel = FiercePlanet.Utils.makeFromJSONObject(res, Level.prototype);
-                    tmpLevel.resources = [];
-                    /*
-                    tmpLevel.resources = tmpLevel.resources || [];
-                    for (var i in tmpLevel.resources) {
-                        console.log(tmpLevel.resources[i])
-                        FiercePlanet.Utils.makeFromJSONObject(tmpLevel.resources[i], Resource.prototype);
-                    }
-                    */
-
-                    // TODO: Set up forms
-//                    var levelTimerId = setInterval("FiercePlanet.Dialogs.saveLevel()", 5000);
-
-                    // Set the current level number and preset value
-                    FiercePlanet.currentLevelNumber = tmpLevel.id;
-                    FiercePlanet.currentLevelPreset = false;
-                    FiercePlanet.currentLevel = tmpLevel;
-
-                    // Finally, construct the level editor
-                    FiercePlanet.Editor.setupLevelEditor();
-                }
-            });
-//        }
     };
 
 

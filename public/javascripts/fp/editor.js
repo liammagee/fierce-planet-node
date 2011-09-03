@@ -72,7 +72,6 @@ FiercePlanet.Editor = FiercePlanet.Editor || {};
     this.setupLevelEditor = function() {
         $('#delete-upgrade').hide();
 //    $('#swatch').hide();
-        FiercePlanet.Editor.loadCurrentLevel();
         $('#level-editor').show();
 
         var canvas = $('#scrollingCanvas');
@@ -90,22 +89,6 @@ FiercePlanet.Editor = FiercePlanet.Editor || {};
         FiercePlanet.Console.minimise();
 
         FiercePlanet.Lifecycle._initialiseGame();
-    };
-
-    /**
-     * Handle mouse down event in the editor
-     * @param e
-     */
-    this.prepareNewLevel = function() {
-        $('level-properties').attr('_id', '');
-    };
-
-    /**
-     * Load properties
-     * @param e
-     */
-    this.loadCurrentLevel = function() {
-        $('level-properties').attr('_id', FiercePlanet.currentLevel._id);
     };
 
     /**
@@ -180,13 +163,6 @@ FiercePlanet.Editor = FiercePlanet.Editor || {};
     this.undoAction = function() {
         FiercePlanet.currentLevel.tiles = (FiercePlanet.oldTiles);
         FiercePlanet.Drawing.drawCanvases();
-    };
-
-    /**
-     * Shows the level properties dialog
-     */
-    this.showLevelProperties = function() {
-        FiercePlanet.Dialogs.editPropertiesDialog.dialog('open');
     };
 
     /**

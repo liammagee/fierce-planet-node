@@ -7,7 +7,8 @@
 
 var express = require('express')
     , everyauth = require('everyauth')
-    , conf = require('./conf');
+    , conf = require('./conf')
+    , MongoStore = require('connect-mongodb');
 
 var jsdom = require('jsdom').jsdom
   , myWindow = jsdom().createWindow()
@@ -27,20 +28,12 @@ levels[0].name = 'test level 1';
 levels[1].name = 'test level 2';
 levels[2].name = 'test level 3';
 
-var fpProvider = new FPProvider('app708577', 'staff.mongohq.com', '10089', 'heroku', '0846c19ac36a5b9e920880bf188dd43e', function(error, res) {
+
+
+var fpProvider = new FPProvider('test', '127.0.0.1', '27017', function(error, res) {
+//var fpProvider = new FPProvider('app708577', 'staff.mongohq.com', '10089', 'heroku', '0846c19ac36a5b9e920880bf188dd43e', function(error, res) {
     if( error ) console.log(error);
     else if (res) {
-        // Remove existing levels, and add new levels
-//        fpProvider.loadLevels(levels, function(error, levels){});
-        /*
-        var user = { email: 'brian@example.com', password: 'password'};
-        var user2 = { email: 'brian2@example.com', password: 'password'};
-        fpProvider.saveUsers([user, user2], function(error, res) {
-            console.log(error)
-            if (res)
-                console.log(res)
-        });
-        */
     }
 });
 
@@ -209,7 +202,12 @@ app.configure(function(){
 
   app.use(express.bodyParser());
     app.use(express.cookieParser());
-    app.use(express.session({ secret: "very fierce planet" }));
+    app.use(express.session({
+        secret: "very fierce planet"
+        , store: new MongoStore({ db: fpProvider.db })
+    }));
+//    , maxAge : new Date(Date.now() + 3600000) //1 Hour
+
     // Use mongo alternative?
 //    app.use(express.session({ store: mongostore(app.set('connstring')), secret: 'topsecret' }));
     // use connect-mongo as session middleware
@@ -293,24 +291,22 @@ app.get('/levels/destroy/:id', function(req, res){
     }
 });
 
-app.post('/levels/update', function(req, res){
+app.post('/levels/save', function(req, res){
     if (req.body.level && req.user) {
         var level = JSON.parse(req.body.level);
-        level.user_id = req.user._id;
+        console.log(level.user_id)
+        console.log(req.user._id)
+        if (! level.user_id)
+            level.user_id = req.user._id;
         fpProvider.updateLevel(level, function(error, result){
-            res.send(result.toString());
+            if (error) res.send(error);
+            else  {
+                res.send({_id: level._id});
+            }
         });
     }
 });
 
-app.post('/levels/new', function(req, res){
-    if (req.body) {
-        var level = JSON.parse(req.body.level);
-        fpProvider.updateLevel(level, function(error, result){
-            res.send(result);
-        });
-    }
-});
 
 app.get('/profiles/high_scores', function(req, res){
     fpProvider.findHighScores(id, function(error, results){
@@ -354,7 +350,7 @@ var duels = {};
 io.configure(function(){
     io.set("transports", ["xhr-polling"]);
     io.set("polling duration", 10);
-//  io.set('log level', 0);
+  io.set('log level', 0);
 });
 
 // Hack for heroku... needs web sockets support

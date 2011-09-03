@@ -7,8 +7,8 @@
         a(href='#advanced-fields') Advanced
       li
         a(href='#google-fields') Google Maps
-    form#level-properties(action='/levels/new', method='post')
-      input#level-id(type='hidden', name='_id')
+    form#level-properties(method='post')
+      input#level-object-id(type='hidden', name='_id')
       #core-fields
         .level-field
         .level-field
@@ -87,7 +87,7 @@
         p Note: you can include a Google Map as the background image.
         div Google Map Fields
         .level-field
-          label(for='level-google_map_type_idexpiry_limit') Map type
+          label(for='level-google_map_type_id') Map type
           select#level-google_map_type_id(name='google_map_type_id')
             option(name='satellite') SATELLITE
             option(name='roadmap') ROADMAP

@@ -218,7 +218,7 @@ FiercePlanet.Utils = FiercePlanet.Utils || {};
         FiercePlanet.GeneralUI.makeElementsMovable();
 
         // Load optional scripts dynamically
-        FiercePlanet.AjaxUtils.loadScripts();
+        FiercePlanet.Utils.loadScripts();
 
 
         if (World.settings.resourcesUpgradeable)
@@ -259,6 +259,20 @@ FiercePlanet.Utils = FiercePlanet.Utils || {};
         return obj;
     };
 
+
+    /**
+     * Loads optional scripts dynamically
+     */
+    this.loadScripts = function() {
+        // TODO: Add settings checks to test for which scripts need to be loaded
+        var scripts = ['/javascripts/fp/utils/test.js'];
+        try {
+//            $.getScript(scripts[0], function() {
+//                console.log(FiercePlanet.Test.initialised);
+//            });
+        }
+        catch (e) {}
+    };
 
 }).apply(FiercePlanet.Utils);
 

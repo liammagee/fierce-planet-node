@@ -21,10 +21,12 @@ FPProvider = function(name, host, port, username, password, callback){
   this.db = new Db(name, new Server(host, port, {auto_reconnect: true}, {}));
   this.db.open(function(err, db){
       // Authenticate
-    db.authenticate(username, password, function(error, res) {
-        if( error ) callback(error);
-        else callback(null, res);
-    });
+      if (username && password) {
+          db.authenticate(username, password, function(error, res) {
+            if( error ) callback(error);
+            else callback(null, res);
+        });
+      }
   });
 };
 FPProvider.prototype.levels = [];
@@ -53,6 +55,7 @@ FPProvider.prototype.findAllByUser = function(user, callback) {
       if( error ) callback(error)
       else {
 //        level_collection.find({user_id: level_collection.db.bson_serializer.ObjectID.createFromHexString(user._id)}).toArray(function(error, results) {
+          console.log(user._id)
         level_collection.find({user_id: user._id}).toArray(function(error, results) {
           if( error ) callback(error)
           else callback(null, results)

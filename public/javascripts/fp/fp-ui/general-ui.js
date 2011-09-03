@@ -52,7 +52,7 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
         $('#settings').click(FiercePlanet.Dialogs.showSettings);
         $('#credits').click(FiercePlanet.Dialogs.showCredits);
         $('#openLevelGallery').click(FiercePlanet.Dialogs.showLevelGallery);
-        $('#editor').click(FiercePlanet.Dialogs.showLevelEditor);
+        $('#editor').click(FiercePlanet.LevelUI.listLevels);
         $('#3d').click(FiercePlanet.Drawing.toggle3d);
 
         $('#resetView').click(FiercePlanet.Drawing.resetView);
@@ -70,12 +70,12 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
 
         // Level editor functions
         try {
-            $('#show-level-properties').click(FiercePlanet.Editor.showLevelProperties);
+            $('#show-level-properties').click(FiercePlanet.LevelUI.showLevelProperties);
             $('#refresh-tiles').click(FiercePlanet.Editor.refreshTiles);
             $('#fill-all').click(FiercePlanet.Editor.fillAllTiles);
             $('#undo-action').click(FiercePlanet.Editor.undoAction);
             $('#cancel-level-editor').click(FiercePlanet.Editor.cancelLevelEditor);
-            $('#save-level').click(FiercePlanet.Dialogs.saveLevel);
+            $('#save-level').click(FiercePlanet.LevelUI.saveLevel);
             $('#clear-entry-points').click(FiercePlanet.Editor.clearEntryPoints);
             $('#clear-exit-points').click(FiercePlanet.Editor.clearExitPoints);
 

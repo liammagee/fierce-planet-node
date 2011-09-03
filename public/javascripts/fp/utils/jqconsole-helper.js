@@ -16,6 +16,7 @@ FiercePlanet.Console = FiercePlanet.Console || {};
      * Minimises the console
      */
     this.minimise = function() {
+        $('.jqconsole').height(20);
         $('#notifications').height(40);
     };
 
@@ -23,6 +24,7 @@ FiercePlanet.Console = FiercePlanet.Console || {};
      * Maximises the console
      */
     this.maximise = function() {
+        $('.jqconsole').height(180);
         $('#notifications').height(200);
     };
 
@@ -294,7 +296,7 @@ $(function() {
           FiercePlanet.Dialogs.showLevelGallery();
       }
       else if (command == 'editor' || command == 'ed') {
-          FiercePlanet.Dialogs.showLevelEditor();
+          FiercePlanet.LevelUI.showLevelEditor();
       }
       else if (command == 'toggle' || command == 'tog') {
           FiercePlanet.Drawing.toggle3d();
