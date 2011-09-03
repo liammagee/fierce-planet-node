@@ -143,7 +143,7 @@ everyauth
       if (!login) errors.push('Missing login');
       if (!password) errors.push('Missing password');
         if (errors.length) return promise.fulfill(errors)
-        
+
       // Add mongo lookup here
       fpProvider.authenticateUser(login, password, function(error, user) {
         if (error) return promise.fulfill([error])

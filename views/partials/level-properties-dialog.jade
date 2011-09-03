@@ -8,6 +8,7 @@
       li
         a(href='#google-fields') Google Maps
     form#level-properties(action='/levels/new', method='post')
+      input#level-id(type='hidden', name='_id')
       #core-fields
         .level-field
         .level-field
@@ -30,7 +31,6 @@
             option(name='100') 100
         .level-field
           label(for='level-height') Height
-          input#level-height(type='text', name='world_height')
           select#level-height(name='world_height')
             option(name='5') 5
             option(name='10') 10

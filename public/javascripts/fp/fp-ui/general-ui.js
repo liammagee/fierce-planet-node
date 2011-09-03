@@ -110,14 +110,12 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
         // Bind mouse events
         FiercePlanet.GeneralUI.bindGameMouseEvents();
 
+        // Make elements movable
         FiercePlanet.GeneralUI.makeElementsMovable();
 
-        $('textarea').blur(function() {
-            $('#notifications').height(40);
-        });
-        $('textarea').focus(function() {
-            $('#notifications').height(200);
-        });
+        // Make elements movable
+        FiercePlanet.Console.registerEvents();
+
 
 
         // Finally, focus on the console. Good idea?
@@ -162,7 +160,7 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
         topMostCanvas.unbind('mousedown', FiercePlanet.GeneralUI.registerMouseDown);
         topMostCanvas.unbind('mousemove', FiercePlanet.GeneralUI.registerMouseMove);
         topMostCanvas.unbind('mouseup', FiercePlanet.GeneralUI.registerMouseUp);
-        topMostCanvas.unmousewheel();
+//        topMostCanvas.unmousewheel();
         topMostCanvas.unbind("contextmenu");
     };
 

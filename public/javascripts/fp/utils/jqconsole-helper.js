@@ -1,3 +1,41 @@
+/*
+ * Fierce Planet - Chat utilities
+ * Various utility methods
+ * Copyright (C) 2011 Liam Magee
+ * MIT Licensed
+ */
+
+
+var FiercePlanet = FiercePlanet || {};
+
+FiercePlanet.Console = FiercePlanet.Console || {};
+
+(function() {
+
+    /**
+     * Minimises the console
+     */
+    this.minimise = function() {
+        $('#notifications').height(40);
+    };
+
+    /**
+     * Maximises the console
+     */
+    this.maximise = function() {
+        $('#notifications').height(200);
+    };
+
+    this.registerEvents = function() {
+        $('textarea').blur(function() {
+            FiercePlanet.Console.minimise();
+        });
+        $('textarea').focus(function() {
+            FiercePlanet.Console.maximise();
+        });
+    }
+}).apply(FiercePlanet.Console);
+
 $(function() {
   // Creating the console.
   var header = 'Welcome to Fierce Planet!\n' +
@@ -51,7 +89,7 @@ $(function() {
       jqconsole.Write(" - enter Tutorial zone.\n");
       jqconsole.Write("zone", 'code');
       jqconsole.Write(" - tells you what zone you're in!\n");
-      jqconsole.Write("Type help:\n");
+      //jqconsole.Write("Type help:\n");
   }
 
   var showConsoleTutorial = function() {
@@ -100,6 +138,15 @@ $(function() {
       else if (jqconsole.zone.duel) {
           duelHandler(command);
       }
+      else if (jqconsole.zone.login) {
+          loginHandler(command);
+      }
+      else if (jqconsole.zone.password) {
+          passwordHandler(command);
+      }
+      else if (jqconsole.zone.agent) {
+          agentHandler(command);
+      }
       else {
           if (command == 'help' || command == 'h' || command == '?') {
               showHelp();
@@ -133,13 +180,26 @@ $(function() {
               jqconsole.zone.chat = true;
               showZone();
           }
+          else if (command == 'agent') {
+              jqconsole.prompt_label_main = 'agent> ';
+              jqconsole.zone.name = 'Agent';
+              jqconsole.zone.agent = true;
+              showZone();
+              jqconsole.Write('Now you can set up an agent simulation!\n\n');
+          }
+          else if (command == 'login') {
+              jqconsole.Write("Please tell me who you are.\n\n");
+              jqconsole.Write("Email:\n\n");
+              jqconsole.zone.name = 'Login';
+              jqconsole.zone.login = true;
+          }
           else if (command == 'zone') {
               showCurrentZone();
           }
           else {
               jqconsole.Write('Oops! Not sure what ');
               jqconsole.Write(command, 'quote');
-              jqconsole.Write(' means.\n');
+              jqconsole.Write(' means.\n\n');
               showHelp();
           }
       }
@@ -280,6 +340,7 @@ $(function() {
               }
           }
           catch (e) {
+              jqconsole.Write('Correct syntax: set [property name] [property value]\n\n');
           }
       }
       else if (/resize/.test(command)) {
@@ -361,6 +422,56 @@ $(function() {
         jqconsole.Write('ERROR: ' + e.message + '\n', 'error');
       }
   }
+
+    var loginHandler = function(command) {
+        jqconsole.userCredentials = jqconsole.userCredentials || {};
+        jqconsole.userCredentials['email'] = command;
+        jqconsole.Write("Please now enter your password:\n\n");
+        jqconsole.zone.login = false;
+        jqconsole.zone.password = true;
+    }
+
+    var passwordHandler = function(command) {
+        if (typeof(jqconsole.userCredentials) === 'undefined') {
+            jqconsole.Write("Please enter your login details:\n");
+        }
+        else {
+            jqconsole.userCredentials['password'] = command;
+            // Authenticate
+            $.post('/login', { email: jqconsole.userCredentials['email'], password: jqconsole.userCredentials['password'] }, function(res) {
+                jqconsole.Write(res);
+                jqconsole.zone.password = false;
+            });
+        }
+    }
+
+    var agentHandler = function(command) {
+        if (command == 'new') {
+            FiercePlanet.currentLevel = new Level(-1);
+            FiercePlanet.currentLevel.startRandomly = true;
+            FiercePlanet.currentLevel.waveNumber = 1;
+            FiercePlanet.Drawing.drawGame();
+            jqconsole.Write("How many agents would you like?\n");
+            jqconsole.Prompt(
+                true,
+                function(command) {
+                    FiercePlanet.currentLevel.initialAgentNumber = parseInt(command);
+                    FiercePlanet.numAgents = FiercePlanet.currentLevel.initialAgentNumber;
+                    FiercePlanet.currentLevel.expiryLimit = FiercePlanet.currentLevel.initialAgentNumber;
+                    jqconsole.Write("You've got " + FiercePlanet.currentLevel.initialAgentNumber + " agents!\n");
+                },
+                function(command) {
+                  // Continue line if can't compile the command.
+                    return /\\$/.test(command);
+                });
+        }
+        else if (command == 'start') {
+            FiercePlanet.Lifecycle.newWave();
+        }
+        else if (command == 'help') {
+            showHelp();
+        }
+    }
 
   // Initiate the first prompt.
   handler();

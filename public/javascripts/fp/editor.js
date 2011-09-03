@@ -72,6 +72,7 @@ FiercePlanet.Editor = FiercePlanet.Editor || {};
     this.setupLevelEditor = function() {
         $('#delete-upgrade').hide();
 //    $('#swatch').hide();
+        FiercePlanet.Editor.loadCurrentLevel();
         $('#level-editor').show();
 
         var canvas = $('#scrollingCanvas');
@@ -86,7 +87,25 @@ FiercePlanet.Editor = FiercePlanet.Editor || {};
 
         FiercePlanet.inDesignMode = true;
 
+        FiercePlanet.Console.minimise();
+
         FiercePlanet.Lifecycle._initialiseGame();
+    };
+
+    /**
+     * Handle mouse down event in the editor
+     * @param e
+     */
+    this.prepareNewLevel = function() {
+        $('level-properties').attr('_id', '');
+    };
+
+    /**
+     * Load properties
+     * @param e
+     */
+    this.loadCurrentLevel = function() {
+        $('level-properties').attr('_id', FiercePlanet.currentLevel._id);
     };
 
     /**
@@ -150,6 +169,7 @@ FiercePlanet.Editor = FiercePlanet.Editor || {};
         canvas.unbind('mousemove', FiercePlanet.Editor.handleEditorMouseMove);
         canvas.unbind('mouseup', FiercePlanet.Editor.handleEditorMouseUp);
         FiercePlanet.GeneralUI.bindGameMouseEvents();
+        FiercePlanet.Console.maximise();
         $('#level-editor').hide();
         $('#swatch').show();
     };
@@ -209,6 +229,10 @@ FiercePlanet.Editor = FiercePlanet.Editor || {};
     this.editMap = function() {
         FiercePlanet.editingMap = true;
         $('#map_canvas').css({zIndex: 8});
+//        $('#map_canvas').mousedown(FiercePlanet.GeneralUI.registerMouseDown);
+//        $('#map_canvas').mousemove(FiercePlanet.GeneralUI.registerMouseMove);
+//        $('#map_canvas').mouseup(FiercePlanet.GeneralUI.registerMouseUp);
+
         var mapOptions = FiercePlanet.GoogleMapUtils.defaultOptions();
         $.extend(mapOptions, FiercePlanet.currentLevel.mapOptions);
         $.extend(mapOptions, {

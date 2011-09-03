@@ -23,6 +23,9 @@ FiercePlanet.Lifecycle = FiercePlanet.Lifecycle || {};
      * Called when a game is loaded
      */
     this.loadGame = function() {
+        // Load required scripts dynamically
+        FiercePlanet.Utils.loadScripts();
+
         // Load relevant settings, if available
         FiercePlanet.Orientation.adjustParameters(FiercePlanet.Orientation.DEFAULT_WORLD_WIDTH, FiercePlanet.Orientation.DEFAULT_WORLD_HEIGHT);
 

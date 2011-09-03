@@ -55,6 +55,7 @@ initWorld = (function() {
             /** Do all resources impact upon agents equivalently? */
             applyGeneralHealth: false,
 
+
             /** Are resources in tension - does proximity of resources impact on their benefit?
              *  TODO: Refactor name
               */
@@ -75,6 +76,13 @@ initWorld = (function() {
             /** Cost to agent for every move */
             rateOfResourceRecovery: 0,
 
+            // EXPERIMENTAL FEATURES
+
+            /** Start agents on random squares on the path */
+            randomStarts: false,
+
+            /** Start agents on random squares on the path */
+            randomStarts: false,
 
 
             /** Serialise just the settings to JSON */

@@ -708,6 +708,7 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
     this.newLevel = function() {
         FiercePlanet.Lifecycle.pauseGame();
         FiercePlanet.Dialogs.levelEditorDialog.dialog('close');
+        FiercePlanet.Editor.prepareNewLevel();
         FiercePlanet.Dialogs.editPropertiesDialog.dialog('open');
     };
 

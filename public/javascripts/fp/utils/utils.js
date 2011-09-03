@@ -217,6 +217,9 @@ FiercePlanet.Utils = FiercePlanet.Utils || {};
         // Makes elements movable
         FiercePlanet.GeneralUI.makeElementsMovable();
 
+        // Load optional scripts dynamically
+        FiercePlanet.AjaxUtils.loadScripts();
+
 
         if (World.settings.resourcesUpgradeable)
             $('#upgrade-option').css('display', 'block');
@@ -255,6 +258,7 @@ FiercePlanet.Utils = FiercePlanet.Utils || {};
         }
         return obj;
     };
+
 
 }).apply(FiercePlanet.Utils);
 

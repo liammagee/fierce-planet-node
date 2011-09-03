@@ -37,6 +37,9 @@ function Level(id) {
     // Rendering options
     this.isometric = false;
 
+    // Generation options
+    this.startRandomly = false;
+
 
     // Current level state
     this.tiles = [];
@@ -440,31 +443,26 @@ Level.prototype.addAgent = function(agent) {
  */
 Level.prototype.generateAgents = function(agentType, number) {
     var agents = [];
-    for (var j = 0; j < this.entryPoints.length; j++) {
-        var point = this.entryPoints[j];
-        var x = point[0];
-        var y = point[1];
+    if (this.startRandomly) {
+        // Get pathway length
+        var pl = this.pathway.length;
         for (var i = 0; i < number; i ++) {
-            var agent = new Agent(agentType, x, y);
-            var colorSeed = j % 3;
-            var colorScheme = (colorSeed == 0 ? "000" : (colorSeed == 1 ? "0f0" : "00f"));
-            // TODO: Make this option configurable
-//            agent.setColor(colorScheme);
-            agent.delay = parseInt(Math.random() * DEFAULT_SPEED * 5);
-            agent.canCommunicateWithOtherAgents = (World.settings.agentsCanCommunicate);
-
-            // Reduce health of a random category
-            if (World.settings.agentsHaveRandomInitialHealth) {
-                var categoryLength = World.resourceCategories.length;
-                var categoryToReduceIndex = Math.floor(Math.random() * categoryLength);
-                var categoryToReduce = World.resourceCategories[categoryToReduceIndex];
-
-                // Reduce by no more than 50%
-                var maxReduction = -50;
-                var amountToReduce = Math.ceil(Math.random() * maxReduction);
-                agent.adjustHealthForResourceCategory(amountToReduce, categoryToReduce);
-            }
+            // Generate a random tile position
+            var tp = Math.floor(Math.random() * pl);
+            var tile = this.pathway[tp];
+            var agent = this.generateAgentAtPoint(agentType, tile[0], tile[1]);
             agents.push(agent);
+        }
+    }
+    else {
+        for (var j = 0; j < this.entryPoints.length; j++) {
+            var point = this.entryPoints[j];
+            var x = point[0];
+            var y = point[1];
+            for (var i = 0; i < number; i ++) {
+                var agent = this.generateAgentAtPoint(agentType, x, y);
+                agents.push(agent);
+            }
         }
     }
     $.merge(agents, this.generateWaveAgents(number));
@@ -472,6 +470,34 @@ Level.prototype.generateAgents = function(agentType, number) {
 
     this.setCurrentAgents(agents);
 };
+
+/**
+ * Generate agents at a point
+ * @param numAgents
+ */
+Level.prototype.generateAgentAtPoint = function(agentType, x, y) {
+    var agent = new Agent(agentType, x, y);
+    var colorSeed = j % 3;
+    var colorScheme = (colorSeed == 0 ? "000" : (colorSeed == 1 ? "0f0" : "00f"));
+    // TODO: Make this option configurable
+//            agent.setColor(colorScheme);
+    agent.delay = parseInt(Math.random() * DEFAULT_SPEED * 5);
+    agent.canCommunicateWithOtherAgents = (World.settings.agentsCanCommunicate);
+
+    // Reduce health of a random category
+    if (World.settings.agentsHaveRandomInitialHealth) {
+        var categoryLength = World.resourceCategories.length;
+        var categoryToReduceIndex = Math.floor(Math.random() * categoryLength);
+        var categoryToReduce = World.resourceCategories[categoryToReduceIndex];
+
+        // Reduce by no more than 50%
+        var maxReduction = -50;
+        var amountToReduce = Math.ceil(Math.random() * maxReduction);
+        agent.adjustHealthForResourceCategory(amountToReduce, categoryToReduce);
+    }
+    return agent;
+}
+
 /**
  *
  * @param numAgents

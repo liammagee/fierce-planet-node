@@ -28,6 +28,7 @@ FiercePlanet.ProfileUI = FiercePlanet.ProfileUI || {};
                 FiercePlanet.currentProfile = FiercePlanet.Utils.makeFromJSONObject(res.profile, Profile.prototype);
         });
     };
+    
     /**
      * Logs out the current user
      */
