@@ -97,6 +97,8 @@ FiercePlanet.Lifecycle = FiercePlanet.Lifecycle || {};
             FiercePlanet.Comms.notifyServerOfEvent("level", FiercePlanet.currentLevel.id);
         if (! World.settings.hideLevelInfo)
             FiercePlanet.GeneralUI.levelInfo();
+        else
+            FiercePlanet.Lifecycle.startLevel();
     };
 
 
@@ -121,6 +123,8 @@ FiercePlanet.Lifecycle = FiercePlanet.Lifecycle || {};
             FiercePlanet.Comms.notifyServerOfEvent("start", null);
         }
 
+        FiercePlanet.currentWave = 1;
+        FiercePlanet.numAgents = FiercePlanet.currentLevel.initialAgentNumber;
         FiercePlanet.Lifecycle._startAudio();
         FiercePlanet.Drawing.animateLevel();
         // Start a new level

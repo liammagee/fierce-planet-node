@@ -122,7 +122,6 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
                         $( this ).dialog( "close" );
                     },
                     "Cancel": function() {
-                        FiercePlanet.Lifecycle.newLevel();
                         $( this ).dialog( "close" );
                     }
                 }

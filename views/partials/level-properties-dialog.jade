@@ -38,7 +38,7 @@
             option(name='100') 100
         .level-field
           label(for='level-initial_agent_number') Initial # of agents
-          select#level-initial_agent_number(name='initial_agent_number')
+          select#level-initial_agent_number(name='initialAgentNumber')
             option(name='1') 1
             option(name='2') 2
             option(name='3') 3
@@ -49,8 +49,8 @@
             option(name='50') 50
             option(name='100') 100
         .level-field
-          label(for='level-wave_number') # of waves
-          select#level-wave_number(name='wave_number')
+          label(for='level-wave-number') # of waves
+          select#level-wave-number(name='waveNumber')
             option(name='1') 1
             option(name='2') 2
             option(name='3') 3
@@ -61,8 +61,8 @@
             option(name='50') 50
             option(name='100') 100
         .level-field
-          label(for='level-expiry_limit') Expiry limit
-          select#level-expiry_limit(name='expiry_limit')
+          label(for='level-expiry-limit') Expiry limit
+          select#level-expiry-limit(name='expiryLimit')
             option(name='1') 1
             option(name='2') 2
             option(name='3') 3
@@ -77,11 +77,11 @@
           label(for='level-notice') Notice
           textarea#level-notice(rows='5', name='notice')
         .level-field
-          input#level-allow_offscreen_cycling(type='checkbox', name='allow_offscreen_cycling')
-          label(for='level-allow_offscreen_cycling') Allow offscreen cycling
+          input#level-allow-offscreen-cycling(type='checkbox', name='allowOffscreenCycling')
+          label(for='level-allow-offscreen-cycling') Allow offscreen cycling
         .level-field
-          input#level-allow_patches_on_path(type='checkbox', name='allow_patches_on_path')
-          label(for='level-allow_patches_on_path') Allow patches on path
+          input#level-allow_patches-on-path(type='checkbox', name='allowPatchesOnPath')
+          label(for='level-allow-patches-on-path') Allow patches on path
       #google-fields
         p Note: you can include a Google Map as the background image.
         div Google Map Fields

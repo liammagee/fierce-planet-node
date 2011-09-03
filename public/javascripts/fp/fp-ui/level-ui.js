@@ -138,14 +138,13 @@ FiercePlanet.LevelUI = FiercePlanet.LevelUI || {};
         $('#level-url').val(l.url);
         $('#level-width').val(l.cellsAcross);
         $('#level-height').val(l.cellsDown);
-        $('#level-initial_agent_number').val(l.initialAgentNumber);
-        $('#level-wave_number').val(l.waveNumber);
-        $('#level-expiry_limit').val(l.expiryLimit);
+        $('#level-initial-agent-number').val(l.initialAgentNumber);
+        $('#level-wave-number').val(l.waveNumber);
+        $('#level-expiry-limit').val(l.expiryLimit);
 
         $('#level-notice').val(l.notice);
-        $('#level-allow_offscreen_cycling').val(l.allowOffscreenCycling);
-        $('#level-allow_patches_on_path').val(l.allowResourcesOnPath);
-        $('#level-allow_offscreen_cycling').val(l.allowOffscreenCycling);
+        $('#level-allow-offscreen-cycling').val(l.allowOffscreenCycling);
+        $('#level-allow-patches-on-path').val(l.allowResourcesOnPath);
 
 //        $('#level-google_map_type_id').val(l.mapOptions.mapTypeId);
 //        $('#level-google_map_lat').val(l.mapOptions.center[0]);
