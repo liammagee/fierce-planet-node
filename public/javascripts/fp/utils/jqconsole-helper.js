@@ -187,7 +187,8 @@ $(function() {
               jqconsole.zone.name = 'Agent';
               jqconsole.zone.agent = true;
               showZone();
-              jqconsole.Write('Now you can set up an agent simulation!\n\n');
+              jqconsole.Write('\nNow you can set up an agent simulation!\n');
+              jqconsole.Write('Type "new" to set one up\n\n');
           }
           else if (command == 'login') {
               jqconsole.Write("Please tell me who you are.\n\n");
@@ -450,10 +451,12 @@ $(function() {
     var agentHandler = function(command) {
         if (command == 'new') {
             FiercePlanet.currentLevel = new Level(-1);
-            FiercePlanet.currentLevel.startRandomly = true;
+            FiercePlanet.currentLevel.randomiseAgents = true;
+            FiercePlanet.currentLevel.randomiseResources = true;
             FiercePlanet.currentLevel.waveNumber = 1;
             FiercePlanet.Drawing.drawGame();
             jqconsole.Write("How many agents would you like?\n");
+//            jqconsole.SetPromptText(10);
             jqconsole.Prompt(
                 true,
                 function(command) {
@@ -461,6 +464,10 @@ $(function() {
                     FiercePlanet.numAgents = FiercePlanet.currentLevel.initialAgentNumber;
                     FiercePlanet.currentLevel.expiryLimit = FiercePlanet.currentLevel.initialAgentNumber;
                     jqconsole.Write("You've got " + FiercePlanet.currentLevel.initialAgentNumber + " agents!\n");
+                    jqconsole.Write("You've got " + FiercePlanet.currentLevel.initialResourceNumber + " resources!\n");
+                    FiercePlanet.currentLevel.initialResourceNumber = 10;
+                    FiercePlanet.currentLevel.generateLevelResources();
+                    FiercePlanet.Drawing.drawCanvases();
                 },
                 function(command) {
                   // Continue line if can't compile the command.
@@ -471,7 +478,7 @@ $(function() {
             FiercePlanet.Lifecycle.newWave();
         }
         else if (command == 'help') {
-            showHelp();
+            showAgentHelp();
         }
     }
 

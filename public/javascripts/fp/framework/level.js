@@ -12,8 +12,20 @@
  * @constructor
  * @param id
  */
+function Level() {
+   
+}
+
+/**
+ * Level class definition
+ *
+ * @constructor
+ * @param id
+ */
 function Level(id) {
-    this.id = id;
+    // Sets the id, if passed in; otherwise default to 1001
+    this.id = id || 1001;
+
     this.isPresetLevel = false;
     this.name = id;
     this.entryPoints = [];
@@ -28,6 +40,7 @@ function Level(id) {
     this.waveNumber = 10;
     this.expiryLimit = 20;
     this.initialResourceStore = 100;
+    this.initialResourceNumber = 0;
     this.allowOffscreenCycling = false;
     this.allowResourcesOnPath = false;
     this.customLevel = false;
@@ -38,16 +51,21 @@ function Level(id) {
     this.isometric = false;
 
     // Generation options
-    this.startRandomly = false;
+    this.randomiseAgents = false;
+    this.randomiseResources = false;
 
 
     // Current level state
     this.tiles = [];
     this.tileMap = [];
+
+    // Agent variables
     this.levelAgents = [];
     this.waveAgents = [];
     this.currentAgents = [];
     this.currentAgentsMap = {};
+
+    // Resource variables
     this.levelResources = [];
     this.resources = [];
     this.resourceCategoryCounts = this.resetResourceCategoryCounts();
@@ -64,7 +82,7 @@ function Level(id) {
     this.conclusion = "Congratulations! You have completed level " + this.id + ".";
     this.catastrophe = null;
 
-
+    
     // Google map, image and sound options
     this.mapOptions = null;
     this.mapURL = null;
@@ -251,9 +269,8 @@ Level.prototype.getCells = function() { return this.cells; };
  * @param x
  * @param y
  */
-Level.prototype.getCell = function(x, y) {
-    return this.cells[[x, y]];
-};
+Level.prototype.getCell = function(x, y) { return this.cells[[x, y]]; };
+
 /**
  *
  * @param cells
@@ -443,7 +460,7 @@ Level.prototype.addAgent = function(agent) {
  */
 Level.prototype.generateAgents = function(agentType, number) {
     var agents = [];
-    if (this.startRandomly) {
+    if (this.randomiseAgents) {
         // Get pathway length
         var pl = this.pathway.length;
         for (var i = 0; i < number; i ++) {
@@ -541,7 +558,7 @@ Level.prototype.resetResources = function() {
     this.resources = [];
     this.levelResources = this.levelResources || [];
 
-    for (var i = 0; i < this.levelResources; i++) {
+    for (var i = 0; i < this.levelResources.length; i++) {
         this.resources.push(this.levelResources[i]);
     }
     this.resourceCategoryCounts = this.resetResourceCategoryCounts();
@@ -562,6 +579,31 @@ Level.prototype.setResources = function(resources) {
 Level.prototype.setLevelResources = function(levelResources) {
     this.levelResources = levelResources;
     this.resourceCategoryCounts = this.resetResourceCategoryCounts();
+};
+
+/**
+ *
+ * @param agentType
+ * @param number
+ */
+Level.prototype.generateLevelResources = function() {
+    var agents = [];
+    if (this.randomiseResources && this.initialResourceNumber > 0) {
+        // Get pathway length
+        var a = [];
+//        this.tiles.map(function(tile){(tile != null ? a.push(tile) : null)})
+        this.tiles.map(function(tile){(a.push(tile))})
+        var al = a.length;
+        this.levelResources = [];
+        for (var i = 0; i < this.initialResourceNumber; i ++) {
+            // Generate a random tile position
+            var x = Math.floor(Math.random() * this.cellsAcross);
+            var y = Math.floor(Math.random() * this.cellsDown);
+            var rt = World.resourceTypes[Math.floor(Math.random() * World.resourceTypes.length)];
+            this.levelResources.push(new Resource(rt, x, y));
+        }
+    }
+    this.resetResources();
 };
 
 

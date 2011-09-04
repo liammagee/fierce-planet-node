@@ -81,9 +81,6 @@ initWorld = (function() {
             /** Start agents on random squares on the path */
             randomStarts: false,
 
-            /** Start agents on random squares on the path */
-            randomStarts: false,
-
 
             /** Serialise just the settings to JSON */
             toJSON: function toJSON() {
