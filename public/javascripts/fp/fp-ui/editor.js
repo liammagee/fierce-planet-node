@@ -238,6 +238,7 @@ FiercePlanet.Editor = FiercePlanet.Editor || {};
             zoom: zoom,
             mapTypeId: mapTypeId
         };
+		FiercePlanet.LevelUI.savelevel();
     };
 
     /**
@@ -259,6 +260,7 @@ FiercePlanet.Editor = FiercePlanet.Editor || {};
             });
         FiercePlanet.googleMap = FiercePlanet.GoogleMapUtils.createMap(mapOptions);
         $('#map_canvas').css({zIndex: 2});
+
         FiercePlanet.Drawing.drawCanvases();
     };
 

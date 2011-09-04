@@ -5,8 +5,6 @@
         a(href='#core-fields') Basic
       li
         a(href='#advanced-fields') Advanced
-      li
-        a(href='#google-fields') Google Maps
     form#level-properties(method='post')
       #core-fields
         .level-field
@@ -14,31 +12,65 @@
           label(for='level-id') ID
           span#level-id
         .level-field
-          label(for='level-name') Name
+          label(for='level-name') Name of level: 
           input#level-name(type='text', name='name')
+        div
+          a#level-url(target='_blank', href='', style='font-size:0.9em') (Open in new window)
+        hr
+          div Level dimensions (Note: changing these values may break your maze!)
         .level-field
-          label(for='level-url') URL
-          input#level-url(type='text', name='url')
-          a(target='_blank', href='', style='font-size:0.9em') (Open in new window)
-        .level-field
-          label(for='level-width') Width
+          label(for='level-width') Level width
           select#level-width(name='cellsAcross')
             option(name='5') 5
+            option(name='6') 6
+            option(name='7') 7
+            option(name='8') 8
+            option(name='9') 9
             option(name='10') 10
+            option(name='11') 11
+            option(name='12') 12
+            option(name='13') 13
+            option(name='14') 14
+            option(name='15') 15
+            option(name='16') 16
+            option(name='17') 17
+            option(name='18') 18
+            option(name='19') 19
             option(name='20') 20
+            option(name='25') 25
+            option(name='30') 30
+            option(name='40') 40
             option(name='50') 50
             option(name='100') 100
         .level-field
-          label(for='level-height') Height
+          label(for='level-height') Level height
           select#level-height(name='cellsDown')
             option(name='5') 5
+            option(name='6') 6
+            option(name='7') 7
+            option(name='8') 8
+            option(name='9') 9
             option(name='10') 10
+            option(name='11') 11
+            option(name='12') 12
+            option(name='13') 13
+            option(name='14') 14
+            option(name='15') 15
+            option(name='16') 16
+            option(name='17') 17
+            option(name='18') 18
+            option(name='19') 19
             option(name='20') 20
+            option(name='25') 25
+            option(name='30') 30
+            option(name='40') 40
             option(name='50') 50
             option(name='100') 100
+        hr
         .level-field
-          label(for='level-initial_agent_number') Initial # of agents
-          select#level-initial_agent_number(name='initialAgentNumber')
+          label(for='level-initial-agent-number') Starting number of agents:
+          br
+          select#level-initial-agent-number(name='initialAgentNumber')
             option(name='1') 1
             option(name='2') 2
             option(name='3') 3
@@ -49,7 +81,8 @@
             option(name='50') 50
             option(name='100') 100
         .level-field
-          label(for='level-wave-number') # of waves
+          label(for='level-wave-number') Number of waves:
+          br
           select#level-wave-number(name='waveNumber')
             option(name='1') 1
             option(name='2') 2
@@ -82,30 +115,4 @@
         .level-field
           input#level-allow_patches-on-path(type='checkbox', name='allowPatchesOnPath')
           label(for='level-allow-patches-on-path') Allow patches on path
-      #google-fields
-        p Note: you can include a Google Map as the background image.
-        div Google Map Fields
-        .level-field
-          label(for='level-google_map_type_id') Map type
-          select#level-google_map_type_id(name='google_map_type_id')
-            option(name='satellite') SATELLITE
-            option(name='roadmap') ROADMAP
-            option(name='hybrid') HYBRID
-            option(name='terrain') TERRAIN
-            option(name='sky') SKY
-            option(name='mars_visible') MARS - VISIBLE
-            option(name='mars_infrared') MARS - INFRARED
-            option(name='mars_elevation') MARS - ELEVATION
-            option(name='moon') MOON
-        .level-field
-          label(for='level-google_map_lat') Latitude
-          input#level-google_map_lat(type='text', size='10', name='google_map_lat')
-        .level-field
-          label(for='level-google_map_long') Longitude
-          input#level-google_map_long(type='text', size='10', name='google_map_long')
-        .level-field
-          label(for='level-google_map_tilt') Tilt
-          input#level-google_map_tilt(type='text', size='10', name='google_map_tilt')
-        .level-field
-          label(for='level-google_map_zoom') Zoom
-          input#level-google_map_zoom(type='text', size='10', name='google_map_zoom')
+

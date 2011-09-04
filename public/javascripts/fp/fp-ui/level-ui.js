@@ -94,7 +94,6 @@ FiercePlanet.LevelUI = FiercePlanet.LevelUI || {};
             $.post('/levels/save', { level: JSON.stringify(level) }, function(response) {
 				if (response._id && ! FiercePlanet.currentLevel._id)
 					FiercePlanet.currentLevel._id = response._id
-                Log.info(response);
                 FiercePlanet.Editor.setupLevelEditor();
             });
 //        }
@@ -135,7 +134,7 @@ FiercePlanet.LevelUI = FiercePlanet.LevelUI || {};
         var l = FiercePlanet.currentLevel;
         $('#level-object-id').val(l._id);
         $('#level-name').val(l.name);
-        $('#level-url').val(l.url);
+        $('#level-url').attr('href', '/levels/' + l.id);
         $('#level-width').val(l.cellsAcross);
         $('#level-height').val(l.cellsDown);
         $('#level-initial-agent-number').val(l.initialAgentNumber);
