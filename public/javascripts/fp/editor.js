@@ -222,7 +222,6 @@ FiercePlanet.Editor = FiercePlanet.Editor || {};
                 zoomControl: true
             });
         FiercePlanet.googleMap = FiercePlanet.GoogleMapUtils.createMap(mapOptions);
-        FiercePlanet.Drawing.drawCanvases();
     };
 
     /**

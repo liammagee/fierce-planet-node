@@ -88,6 +88,16 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
                 console.log(err);
         }
 
+		$('#spinner')
+		    .hide()  // hide it initially
+		    .ajaxStart(function() {
+		        $(this).show();
+		    })
+		    .ajaxStop(function() {
+		        $(this).hide();
+		    })
+		;
+
         // Trap relevant key strokes
         if (!World.settings.disableKeyboardShortcuts) {
             $(document).unbind("keydown");

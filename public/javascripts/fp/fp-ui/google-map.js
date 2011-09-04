@@ -299,8 +299,7 @@ FiercePlanet.GoogleMapUtils = FiercePlanet.GoogleMapUtils || {};
 
 
     /**
-     * Simple method for coercing a value to a floored integer
-     * @param value
+     * Generates a set of default (and non-interactive) Google Map options
      */
     this.defaultOptions = function() {
       // push all mapType keys in to a mapTypeId array to set in the mapTypeControlOptions
@@ -392,6 +391,21 @@ FiercePlanet.GoogleMapUtils = FiercePlanet.GoogleMapUtils || {};
         return mapOptions;
     };
 
+
+
+    /**
+     * Generates a set of interactive Google Map options
+     */
+    this.interactiveOptions = function() {
+		var mapOptions = this.defaultOptions();
+		mapOptions['disableDefaultUI'] = false;
+		return mapOptions;
+	}
+
+
+	/**
+	 * Uses geolocation to determine current location
+	 */
     this.currentLocation = function() {
         var initialLocation;
         var siberia = new google.maps.LatLng(60, 105);
