@@ -30,8 +30,8 @@ levels[2].name = 'test level 3';
 
 
 
-var fpProvider = new FPProvider('test', '127.0.0.1', '27017', function(error, res) {
-//var fpProvider = new FPProvider('app708577', 'staff.mongohq.com', '10089', 'heroku', '0846c19ac36a5b9e920880bf188dd43e', function(error, res) {
+//var fpProvider = new FPProvider('test', '127.0.0.1', '27017', function(error, res) {
+var fpProvider = new FPProvider('app708577', 'staff.mongohq.com', '10089', 'heroku', '0846c19ac36a5b9e920880bf188dd43e', function(error, res) {
     if( error ) console.log(error);
     else if (res) {
     }
