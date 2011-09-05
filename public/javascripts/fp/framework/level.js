@@ -12,21 +12,12 @@
  * @constructor
  * @param id
  */
-function Level() {
-   
-}
-
-/**
- * Level class definition
- *
- * @constructor
- * @param id
- */
 function Level(id) {
     // Sets the id, if passed in; otherwise default to 1001
     this.id = id || 1001;
 
     this.isPresetLevel = false;
+    this.isTerminalLevel = false;
     this.name = id;
     this.entryPoints = [];
     this.exitPoints = [];
@@ -141,7 +132,7 @@ Level.prototype.setTiles = function(tiles) {
  */
 Level.prototype.addTile = function(tile) {
     var position = tile.y * this.cellsAcross + tile.x;
-    if (this.tiles[position] != null)
+    if (this.tiles[position] != undefined)
         throw new Error("Tile is already occupied!");
     this.tiles[position] = tile;
     this.removeEntryPoint(tile.x, tile.y);
@@ -236,16 +227,30 @@ Level.prototype.generatePath = function() {
 };
 
 /**
- * Add cell to path
+ * Retrieves the index of the co-ordinate in the path variable
  */
-Level.prototype.addToPath = function(x, y) {
-    this.pathway.push([x, y]);
+Level.prototype.isInPath = function(x, y) {
+    for (var i = 0; i < this.pathway.length; i++) {
+        var coord = this.pathway[i];
+        if (coord[0] == x && coord[1] == y)
+            return i;
+    }
+    return -1;
 };
 /**
  * Add cell to path
  */
+Level.prototype.addToPath = function(x, y) {
+    if (this.isInPath(x, y) == -1)
+        this.pathway.push([x, y]);
+};
+/**
+ * Remove cell from path
+ */
 Level.prototype.removeFromPath = function(x, y) {
-    delete this.pathway[[x, y]];
+    var index = this.isInPath(x, y);
+    if (index > -1)
+        this.pathway.splice(index, 1);
 };
 /**
  * Adds a particular terrain to all parts of the path

@@ -79,6 +79,7 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
             $('#clear-entry-points').click(FiercePlanet.Editor.clearEntryPoints);
             $('#clear-exit-points').click(FiercePlanet.Editor.clearExitPoints);
 
+            $('#toggle-mode').click(FiercePlanet.Editor.toggleMode);
             $('#edit-map').click(FiercePlanet.Editor.editMap);
             $('#save-map').click(FiercePlanet.Editor.saveMap);
             $('#close-map').click(FiercePlanet.Editor.closeMap);

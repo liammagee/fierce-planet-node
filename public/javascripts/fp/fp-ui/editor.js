@@ -70,10 +70,13 @@ FiercePlanet.Editor = FiercePlanet.Editor || {};
      * Set up the level editor
      */
     this.setupLevelEditor = function() {
+
+        // Set up dialogs
         $('#delete-upgrade').hide();
 //    $('#swatch').hide();
         $('#level-editor').show();
 
+        // Set up user interaction
         var canvas = $('#scrollingCanvas');
         canvas.unbind('click');
         canvas.unbind('mousedown');
@@ -84,10 +87,14 @@ FiercePlanet.Editor = FiercePlanet.Editor || {};
         canvas.mousemove(FiercePlanet.Editor.handleEditorMouseMove);
         canvas.mouseup(FiercePlanet.Editor.handleEditorMouseUp);
 
+        // Modify settings
         FiercePlanet.inDesignMode = true;
+        World.settings.skewTiles = false;
 
+        // Minimise console
         FiercePlanet.Console.minimise();
 
+        // Initialise the game
         FiercePlanet.Lifecycle._initialiseGame();
     };
 
@@ -110,8 +117,18 @@ FiercePlanet.Editor = FiercePlanet.Editor || {};
         if (e.preventDefault) e.preventDefault(); // allows us to drop
         if (FiercePlanet.isMouseDown) {
             FiercePlanet.isMouseMoving = true;
-            var __ret = FiercePlanet.GeneralUI.getCurrentPosition(e);
-            FiercePlanet.currentLevel.removeTile(__ret.posX, __ret.posY);
+            var currentPoint = FiercePlanet.GeneralUI.getCurrentPosition(e);
+            if (FiercePlanet.Editor.clearMode) {
+                var currentTile = FiercePlanet.currentLevel.getTile(currentPoint.posX, currentPoint.posY);
+                if (currentTile == undefined ) {
+                    var tile = new Tile(DEFAULT_TILE_COLOR, currentPoint.posX, currentPoint.posY);
+                    FiercePlanet.currentLevel.addTile(tile);
+                    FiercePlanet.Drawing.drawCanvases();
+                }
+            }
+            else {
+                FiercePlanet.currentLevel.removeTile(currentPoint.posX, currentPoint.posY);
+            }
             FiercePlanet.Drawing.drawCanvases();
         }
         return false;
@@ -123,17 +140,26 @@ FiercePlanet.Editor = FiercePlanet.Editor || {};
      */
     this.handleEditorMouseUp = function(e) {
         if (e.preventDefault) e.preventDefault(); // allows us to drop
-        var __ret = FiercePlanet.GeneralUI.getCurrentPosition(e);
-        FiercePlanet.currentX = __ret.posX;
-        FiercePlanet.currentY = __ret.posY;
+        var currentPoint = FiercePlanet.GeneralUI.getCurrentPosition(e);
+        FiercePlanet.currentX = currentPoint.posX;
+        FiercePlanet.currentY = currentPoint.posY;
 
         var currentTile = FiercePlanet.currentLevel.getTile(FiercePlanet.currentX, FiercePlanet.currentY);
-        if (currentTile == undefined && !FiercePlanet.isMouseMoving) {
-            FiercePlanet.Editor.showDesignFeaturesDialog(e);
+        if (FiercePlanet.Editor.clearMode) {
+            if (currentTile == undefined) {
+                var tile = new Tile(DEFAULT_TILE_COLOR, FiercePlanet.currentX, FiercePlanet.currentY);
+                FiercePlanet.currentLevel.addTile(tile);
+                FiercePlanet.Drawing.drawCanvases();
+            }
         }
         else {
-            FiercePlanet.currentLevel.removeTile(FiercePlanet.currentX, FiercePlanet.currentY);
-            FiercePlanet.Drawing.drawCanvases();
+            if (currentTile == undefined && !FiercePlanet.isMouseMoving) {
+                FiercePlanet.Editor.showDesignFeaturesDialog(e);
+            }
+            else {
+                FiercePlanet.currentLevel.removeTile(FiercePlanet.currentX, FiercePlanet.currentY);
+                FiercePlanet.Drawing.drawCanvases();
+            }
         }
 
         FiercePlanet.isMouseDown = false;
@@ -200,11 +226,27 @@ FiercePlanet.Editor = FiercePlanet.Editor || {};
     };
 
     /**
+     * Enter fill mode
+     */
+    this.toggleMode = function() {
+        if (! FiercePlanet.Editor.clearMode) {
+            $('#toggle-mode').html('Fill Mode');
+            FiercePlanet.Editor.clearMode = true;
+            console.log(FiercePlanet.Editor.clearMode)
+        }
+        else {
+            $('#toggle-mode').html('Clear Mode');
+            FiercePlanet.Editor.clearMode = false;
+        }
+    };
+
+    /**
      * Allows the map to be editable
      */
     this.editMap = function() {
         FiercePlanet.editingMap = true;
         $('#map_canvas').css({zIndex: 8});
+        $('canvas').hide();
 //        $('#map_canvas').mousedown(FiercePlanet.GeneralUI.registerMouseDown);
 //        $('#map_canvas').mousemove(FiercePlanet.GeneralUI.registerMouseMove);
 //        $('#map_canvas').mouseup(FiercePlanet.GeneralUI.registerMouseUp);
@@ -238,7 +280,7 @@ FiercePlanet.Editor = FiercePlanet.Editor || {};
             zoom: zoom,
             mapTypeId: mapTypeId
         };
-		FiercePlanet.LevelUI.savelevel();
+		FiercePlanet.LevelUI.saveLevel();
     };
 
     /**
@@ -246,6 +288,8 @@ FiercePlanet.Editor = FiercePlanet.Editor || {};
      */
     this.closeMap = function() {
         FiercePlanet.editingMap = false;
+        $('#map_canvas').css({zIndex: 2});
+        $('canvas').show();
         var mapOptions = FiercePlanet.GoogleMapUtils.defaultOptions();
         $.extend(mapOptions, FiercePlanet.currentLevel.mapOptions);
         $.extend(mapOptions, {
@@ -259,7 +303,6 @@ FiercePlanet.Editor = FiercePlanet.Editor || {};
             zoomControl: false
             });
         FiercePlanet.googleMap = FiercePlanet.GoogleMapUtils.createMap(mapOptions);
-        $('#map_canvas').css({zIndex: 2});
 
         FiercePlanet.Drawing.drawCanvases();
     };

@@ -279,7 +279,6 @@ FiercePlanet.GoogleMapUtils = FiercePlanet.GoogleMapUtils || {};
         if (options && !options.center.lat)
             options.center = new google.maps.LatLng(options.center[0], options.center[1]);
         map = new google.maps.Map($(canvasName)[0], options);
-//        map = new google.maps.Map(document.getElementById('map_canvas'), options);
 
         // push the credit/copyright custom control
         map.controls[google.maps.ControlPosition.BOTTOM_RIGHT].push(creditNode);
@@ -326,7 +325,7 @@ FiercePlanet.GoogleMapUtils = FiercePlanet.GoogleMapUtils || {};
             center: new google.maps.LatLng(69.13811902334064, -32.86834716796875),
 //        center: new google.maps.LatLng(47.5153, 19.0782),
 
-            disableDefaultUI: true,
+            disableDefaultUI: false,
 
             disableDoubleClickZoom: false,
 

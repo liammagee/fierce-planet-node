@@ -37,7 +37,7 @@ FiercePlanet.LevelUI = FiercePlanet.LevelUI || {};
 
         // Create new level
         FiercePlanet.previousLevel = FiercePlanet.currentLevel;
-        FiercePlanet.currentLevel = new Level(-1);
+        FiercePlanet.currentLevel = new Level();
 		FiercePlanet.currentLevelNumber = -1;
 		FiercePlanet.currentLevelPreset = false;
         FiercePlanet.currentLevel.name = '[Enter the level name here]';

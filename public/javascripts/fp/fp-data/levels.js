@@ -811,6 +811,7 @@ FiercePlanet.PresetLevels.level11.expiryLimit = 10;
 FiercePlanet.PresetLevels.level11.initialResourceStore = 3000;
 FiercePlanet.PresetLevels.level11.allowOffscreenCycling = (true);
 FiercePlanet.PresetLevels.level11.name = ("Level 11: It's a Mad World");
+FiercePlanet.PresetLevels.level11.isTerminalLevel = true;
 FiercePlanet.PresetLevels.level11.introduction = (
         "<p>The citizens are safe! There's no mad rush &mdash; time to sit back and watch the world go by....");
 FiercePlanet.PresetLevels.level11.tip = (new Notice("'There is a place. Like no place on Earth. A land full of wonder, mystery, and danger! Some say to survive it: You need to be as mad as a hatter. ' (The Mad Hatter)"));

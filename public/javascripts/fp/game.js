@@ -196,7 +196,7 @@ $(document).ready(function() {
                 FiercePlanet.Lifecycle.completeWave();
                 FiercePlanet.Lifecycle.newWave();
             }
-            else if (FiercePlanet.currentLevelNumber < FiercePlanet.PresetLevels.MAX_DEFAULT_LEVELS) {
+            else if (FiercePlanet.currentLevel.isPresetLevel && ! FiercePlanet.currentLevel.isTerminalLevel) {
                 FiercePlanet.Lifecycle.completeLevel();
                 FiercePlanet.levelDelayCounter = 0;
             }

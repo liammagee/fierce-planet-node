@@ -20,6 +20,14 @@ FiercePlanet.NEW_LEVEL_DELAY = 3000;
  * @constant The time to wait between waves
  */
 FiercePlanet.NEW_WAVE_DELAY = 200;
+/**
+ * @constant The minimum preset level
+ */
+FiercePlanet.MIN_PRESET_LEVEL = 0;
+/**
+ * @constant The maximum preset level
+ */
+FiercePlanet.MAX_PRESET_LEVEL = 1000;
 
 FiercePlanet.resourceRecoveryCycle = 5;
 FiercePlanet.interval = 20;

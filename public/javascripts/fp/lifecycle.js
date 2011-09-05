@@ -668,7 +668,7 @@ FiercePlanet._initialiseGame = function () {
     // Stop any existing timers
     FiercePlanet._stopAgents();
 
-    if (FiercePlanet.currentLevelPreset && (FiercePlanet.currentLevelNumber < 0 || FiercePlanet.currentLevelNumber > 12))
+    if (FiercePlanet.currentLevelPreset && (FiercePlanet.currentLevelNumber < 0 || FiercePlanet.currentLevelNumber > FiercePlanet.PresetLevels.MAX_DEFAULT_LEVELS))
         FiercePlanet.currentLevelNumber = 1;
     if (FiercePlanet.currentLevelPreset) {
         try {

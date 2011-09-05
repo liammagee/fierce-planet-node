@@ -19,14 +19,6 @@ var jsdom = require('jsdom').jsdom
 
 // MongoDB stuff
 var FPProvider = require('./FPProviderDB').FPProvider;
-var levels = [
-    new Level(21),
-    new Level(22),
-    new Level(23)
-];
-levels[0].name = 'test level 1';
-levels[1].name = 'test level 2';
-levels[2].name = 'test level 3';
 
 
 

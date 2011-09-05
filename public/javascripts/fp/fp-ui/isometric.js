@@ -174,10 +174,12 @@ FiercePlanet.Isometric = FiercePlanet.Isometric || {};
         var tileOffset = FiercePlanet.Isometric.offsets3DPoint([FiercePlanet.Orientation.cellHeight, 0, 0]);
 
         // Set up variables to describe the mid point
-        var midTileX = (FiercePlanet.Orientation.cellsAcross - 1) / 2;
-        var midTileY = (FiercePlanet.Orientation.cellsDown - 1) / 2;
-        var midX = midTileX * FiercePlanet.Orientation.cellWidth;
-        var midY = midTileY * FiercePlanet.Orientation.cellHeight;
+//        var midTileX = (FiercePlanet.Orientation.cellsAcross - 1) / 2;
+//        var midTileY = (FiercePlanet.Orientation.cellsDown - 1) / 2;
+//        var midX = midTileX * FiercePlanet.Orientation.cellWidth;
+//        var midY = midTileY * FiercePlanet.Orientation.cellHeight;
+        var midX = FiercePlanet.Orientation.worldWidth / 2;
+        var midY = FiercePlanet.Orientation.worldHeight / 2;
 
         // Get ratio of width to height
         var r = midX / midY;
