@@ -449,36 +449,65 @@ $(function() {
     }
 
     var agentHandler = function(command) {
-        if (command == 'new') {
-            FiercePlanet.currentLevel = new Level(-1);
-            FiercePlanet.currentLevel.randomiseAgents = true;
-            FiercePlanet.currentLevel.randomiseResources = true;
-            FiercePlanet.currentLevel.waveNumber = 1;
-            FiercePlanet.Drawing.drawGame();
-            jqconsole.Write("How many agents would you like?\n");
-//            jqconsole.SetPromptText(10);
-            jqconsole.Prompt(
-                true,
-                function(command) {
+        if (jqconsole.zone.agentSetup > -1) {
+            switch(jqconsole.zone.agentSetup) {
+                case 1:
+                    // Level width
+                    FiercePlanet.currentLevel.cellsAcross = parseInt(command);
+                    FiercePlanet.currentLevel.generatePath();
+                    FiercePlanet.Orientation.cellsAcross = FiercePlanet.currentLevel.cellsAcross;
+                    FiercePlanet.Orientation.recalibrateParameters();
+                    FiercePlanet.Drawing.drawCanvases();
+                    jqconsole.zone.agentSetup = 2;
+                    jqconsole.Write("The level width is " + FiercePlanet.currentLevel.cellsDown + ".\n");
+                    jqconsole.Write("What height would you like?\n");
+                    break;
+                case 2:
+                    // Level height
+                    FiercePlanet.currentLevel.cellsDown = parseInt(command);
+                    FiercePlanet.currentLevel.generatePath();
+                    FiercePlanet.Orientation.cellsDown = FiercePlanet.currentLevel.cellsDown;
+                    FiercePlanet.Orientation.recalibrateParameters();
+                    FiercePlanet.Drawing.drawCanvases();
+                    jqconsole.zone.agentSetup = 3;
+                    jqconsole.Write("The level height is " + FiercePlanet.currentLevel.cellsDown + ".\n");
+                    jqconsole.Write("How many agents would you like?\n");
+                    break;
+                case 3:
+                    // Agent number
                     FiercePlanet.currentLevel.initialAgentNumber = parseInt(command);
                     FiercePlanet.numAgents = FiercePlanet.currentLevel.initialAgentNumber;
                     FiercePlanet.currentLevel.expiryLimit = FiercePlanet.currentLevel.initialAgentNumber;
                     jqconsole.Write("You've got " + FiercePlanet.currentLevel.initialAgentNumber + " agents!\n");
+                    jqconsole.Write("How many resources would you like?\n");
+                    jqconsole.zone.agentSetup = 4;
+                    break;
+                case 4:
+                    // Resource number
+                    FiercePlanet.currentLevel.initialResourceNumber = parseInt(command);
                     jqconsole.Write("You've got " + FiercePlanet.currentLevel.initialResourceNumber + " resources!\n");
-                    FiercePlanet.currentLevel.initialResourceNumber = 10;
                     FiercePlanet.currentLevel.generateLevelResources();
                     FiercePlanet.Drawing.drawCanvases();
-                },
-                function(command) {
-                  // Continue line if can't compile the command.
-                    return /\\$/.test(command);
-                });
+                    jqconsole.zone.agentSetup = -1;
+                    break;
+            }
         }
-        else if (command == 'start') {
-            FiercePlanet.Lifecycle.newWave();
-        }
-        else if (command == 'help') {
-            showAgentHelp();
+        else {
+            if (command == 'new') {
+                FiercePlanet.currentLevel = new Level(-1);
+                FiercePlanet.currentLevel.randomiseAgents = true;
+                FiercePlanet.currentLevel.randomiseResources = true;
+                FiercePlanet.currentLevel.waveNumber = 1;
+                FiercePlanet.Drawing.drawGame();
+                jqconsole.Write("What width would you like?\n");
+                jqconsole.zone.agentSetup = 1;
+            }
+            else if (command == 'start') {
+                FiercePlanet.Lifecycle.newWave();
+            }
+            else if (command == 'help') {
+                showAgentHelp();
+            }
         }
     }
 

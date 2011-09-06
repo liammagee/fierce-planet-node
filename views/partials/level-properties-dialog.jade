@@ -8,18 +8,12 @@
     form#level-properties(method='post')
       #core-fields
         .level-field
-        .level-field
-          label(for='level-id') ID
-          span#level-id
-        .level-field
           label(for='level-name') Name of level: 
           input#level-name(type='text', name='name')
-        div
-          a#level-url(target='_blank', href='', style='font-size:0.9em') (Open in new window)
         hr
           div Level dimensions (Note: changing these values may break your maze!)
         .level-field
-          label(for='level-width') Level width
+          label(for='level-width') Level width:
           select#level-width(name='cellsAcross')
             option(name='5') 5
             option(name='6') 6
@@ -43,7 +37,7 @@
             option(name='50') 50
             option(name='100') 100
         .level-field
-          label(for='level-height') Level height
+          label(for='level-height') Level height:
           select#level-height(name='cellsDown')
             option(name='5') 5
             option(name='6') 6
@@ -94,7 +88,8 @@
             option(name='50') 50
             option(name='100') 100
         .level-field
-          label(for='level-expiry-limit') Expiry limit
+          label(for='level-expiry-limit') Maximum expired citizens:
+          br
           select#level-expiry-limit(name='expiryLimit')
             option(name='1') 1
             option(name='2') 2
@@ -107,12 +102,18 @@
             option(name='100') 100
       #advanced-fields
         .level-field
-          label(for='level-notice') Notice
+          label(for='level-notice') Level introduction
+          br
           textarea#level-notice(rows='5', name='notice')
         .level-field
           input#level-allow-offscreen-cycling(type='checkbox', name='allowOffscreenCycling')
-          label(for='level-allow-offscreen-cycling') Allow offscreen cycling
+          label(for='level-allow-offscreen-cycling') Can citizens run offscreen?
         .level-field
           input#level-allow_patches-on-path(type='checkbox', name='allowPatchesOnPath')
-          label(for='level-allow-patches-on-path') Allow patches on path
+          label(for='level-allow-patches-on-path') Can resources go on the path?
+        .level-field
+          label(for='level-id') ID
+          span#level-id
+        div
+          a#level-url(target='_blank', href='', style='font-size:0.9em') (Open in new window)
 
