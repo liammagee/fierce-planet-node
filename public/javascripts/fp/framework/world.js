@@ -55,6 +55,12 @@ initWorld = (function() {
             /** Do all resources impact upon agents equivalently? */
             applyGeneralHealth: false,
 
+            /** Agents cannot occupy tiles occupied by other agents */
+            agentsOwnTilesExclusively: false,
+
+            /** Agents cannot occupy tiles occupied by resources */
+            resourcesOwnTilesExclusively: false,
+
 
             /** Are resources in tension - does proximity of resources impact on their benefit?
              *  TODO: Refactor name

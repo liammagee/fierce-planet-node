@@ -210,6 +210,24 @@ Level.prototype.removeTiles = function(start, number) {
 };
 
 /**
+ * Adds default tiles to all cells
+ * @param start
+ * @param number
+ */
+Level.prototype.addTiles = function(start, number) {
+    for (var i = start; i < start + number; i++) {
+        if (i >= 0 && i < this.tiles.length) {
+            var x = i % this.cellsAcross;
+            var y = Math.floor(i / this.cellsAcross);
+            var tile = new Tile(DEFAULT_TILE_COLOR, x, y);
+            this.tiles[i] = tile;
+            this.addCell(tile.x, tile.y, tile);
+        }
+    }
+    this.generatePath();
+};
+
+/**
  * Generates a computed path based on the absence of tiles
  */
 Level.prototype.generatePath = function() {
@@ -548,6 +566,18 @@ Level.prototype.getTotalSaveableAgents = function () {
     return totalSaveable;
 };
 
+/**
+ * Find the current resource index
+ */
+Level.prototype.isPositionOccupiedByAgent = function (x, y) {
+    for (var i = 0; i < this.currentAgents.length; i++) {
+        var agent = this.currentAgents[i];
+        if (agent.x == x && agent.y == y)
+            return true;
+    }
+    return false;
+};
+
 
 
 // Resource functions
@@ -707,6 +737,7 @@ Level.prototype.getCurrentResourceIndex = function (resource) {
     }
     return -1;
 };
+
 /**
  * Find the current resource index
  */

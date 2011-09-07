@@ -647,6 +647,7 @@ Agent.prototype.findPosition = function(level, withNoRepeat, withNoCollision, wi
     var lastY = this.lastMemory.y;
     var candidateCells = [];
     var directions = this.randomDirectionOrder();
+    var waitOnCurrentCell = false;
     for (var i = 0; i < directions.length; i++) {
         newX = x;
         newY = y;
@@ -671,16 +672,34 @@ Agent.prototype.findPosition = function(level, withNoRepeat, withNoCollision, wi
                 (y == offScreenHeight ? (withOffscreenCycling ? newY = offScreen1 : toContinue = true) : newY = newY + offset);
                 break;
         }
+        // If we can't repeat and the candidate cell is the last visited cell, continue
+        if (level.isExitPoint(newX, newY))
+            return [newX, newY];
+        // If we can't repeat and the candidate cell is the last visited cell, continue
         if ((withNoRepeat && lastX == newX && lastY == newY) || toContinue) {
             continue;
         }
+        // If the cell is occupied by another agent, don't allow this agent to move there
+        if (World.settings.agentsOwnTilesExclusively && level.isPositionOccupiedByAgent(newX, newY)) {
+            // Wait till the other agent has moved - don't backtrack if no other cells are available
+            waitOnCurrentCell = true;
+            continue;
+        }
+        // If the cell is occupied by a resource, don't allow the agent to move there
+        if (World.settings.resourcesOwnTilesExclusively && level.isPositionOccupiedByResource(newX, newY)) {
+            continue;
+        }
+        // If the candidate cell is valid (part of the path), add it
         if (level.getCell(newX, newY) == undefined) {
             candidateCells.push([newX, newY]);
         }
     }
     // Allow for back-tracking, if there is no way forward
     if (candidateCells.length == 0) {
-        return [lastX, lastY];
+        if (waitOnCurrentCell)
+            return [x, y];
+        else
+            return [lastX, lastY];
     }
 
 
@@ -692,9 +711,6 @@ Agent.prototype.findPosition = function(level, withNoRepeat, withNoCollision, wi
     var candidatesNotInHistory = [];
     for (var i = 0; i < candidateCells.length; i++) {
         var candidate = candidateCells[i];
-        if (level.isExitPoint(candidate[0], candidate[1]))
-            return candidate;
-
 
         if (this.memoriesOfPlacesVisited[candidate] == undefined) {
             var placeVisitedByOtherAgents = false;

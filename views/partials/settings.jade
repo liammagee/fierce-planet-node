@@ -74,6 +74,9 @@
       div
         input#agentTracing(type='checkbox')
         label(for='agentTracing') Show agent movement
+      div
+        input#agentsOwnTilesExclusively(type='checkbox')
+        label(for='agentsOwnTilesExclusively') Agents own tiles exclusively
       div Health cost per move:
         span#agentCostPerMoveDisplay
         br
@@ -94,6 +97,9 @@
       div
         input#resourcesDiminishAtFixedRates(type='checkbox')
         label(for='resourcesDiminishAtFixedRates') Resources diminish at fixed rates
+      div
+        input#resourcesOwnTilesExclusively(type='checkbox')
+        label(for='resourcesOwnTilesExclusively') Resources own tiles exclusively
       div Rate of resource recovery:
         span#rateOfResourceRecoveryDisplay
         br

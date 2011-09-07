@@ -19,7 +19,7 @@ FiercePlanet.PresetLevels = FiercePlanet.PresetLevels || {};
 /**
  * @constant The number of preset levels
  */
-FiercePlanet.PresetLevels.MAX_DEFAULT_LEVELS = 10;
+FiercePlanet.PresetLevels.MAX_DEFAULT_LEVELS = 1000;
 
 /* Level 0 Definition */
 
@@ -871,11 +871,12 @@ FiercePlanet.PresetLevels.level11.teardown = function() {
 };
 
 
+/* QUEST 2 */
+
 /* Level 12 Definition */
 
 FiercePlanet.PresetLevels.level12 = new Level(12);
-FiercePlanet.PresetLevels.level12.isometric = true;
-FiercePlanet.PresetLevels.level12.allowResourcesOnPath = true;
+FiercePlanet.PresetLevels.level12.allowResourcesOnPath = false;
 FiercePlanet.PresetLevels.level12.initialResourceStore = 100;
 FiercePlanet.PresetLevels.level12.isPresetLevel = true;
 FiercePlanet.PresetLevels.level12.addEntryPoint(0, 0);
@@ -892,13 +893,210 @@ FiercePlanet.PresetLevels.level12.introduction = (""
 FiercePlanet.PresetLevels.level12.conclusion = ("Well done.");
 
 FiercePlanet.PresetLevels.level12.setup = function() {
-    this.fillWithTiles();
-    this.removeTiles(20, 5);
-    this.removeTiles(15, 1);
-    this.removeTiles(10, 5);
-    this.removeTiles(9, 1);
-    this.removeTiles(0, 5);
+    this.removeAllTiles();
+//    this.fillWithTiles();
+//    this.removeTiles(100, 100);
+};
+
+/* Level 13 Definition */
+
+FiercePlanet.PresetLevels.level13 = new Level(13);
+FiercePlanet.PresetLevels.level13.isometric = true;
+FiercePlanet.PresetLevels.level13.allowResourcesOnPath = true;
+FiercePlanet.PresetLevels.level13.initialResourceStore = 100;
+FiercePlanet.PresetLevels.level13.isPresetLevel = true;
+FiercePlanet.PresetLevels.level13.addEntryPoint(0, 0);
+FiercePlanet.PresetLevels.level13.addExitPoint(4, 4);
+FiercePlanet.PresetLevels.level13.cellsAcross = 5;
+FiercePlanet.PresetLevels.level13.cellsDown = 5;
+FiercePlanet.PresetLevels.level13.initialAgentNumber = 1;
+FiercePlanet.PresetLevels.level13.waveNumber = 3;
+FiercePlanet.PresetLevels.level13.expiryLimit = 20;
+FiercePlanet.PresetLevels.level13.name = ("Oh-ho!");
+FiercePlanet.PresetLevels.level13.introduction = (""
+        + "<p>New threats have emerged....</p>"
+        );
+FiercePlanet.PresetLevels.level13.conclusion = ("Well done.");
+
+FiercePlanet.PresetLevels.level13.setup = function() {
+    this.removeAllTiles();
+//    this.removeTiles(100, 100);
 };      
+
+/* Level 14 Definition */
+
+FiercePlanet.PresetLevels.level14 = new Level(14);
+FiercePlanet.PresetLevels.level14.isometric = true;
+FiercePlanet.PresetLevels.level14.allowResourcesOnPath = true;
+FiercePlanet.PresetLevels.level14.initialResourceStore = 100;
+FiercePlanet.PresetLevels.level14.isPresetLevel = true;
+FiercePlanet.PresetLevels.level14.addEntryPoint(0, 0);
+FiercePlanet.PresetLevels.level14.addExitPoint(4, 4);
+FiercePlanet.PresetLevels.level14.cellsAcross = 5;
+FiercePlanet.PresetLevels.level14.cellsDown = 5;
+FiercePlanet.PresetLevels.level14.initialAgentNumber = 1;
+FiercePlanet.PresetLevels.level14.waveNumber = 3;
+FiercePlanet.PresetLevels.level14.expiryLimit = 20;
+FiercePlanet.PresetLevels.level14.name = ("Oh-ho!");
+FiercePlanet.PresetLevels.level14.introduction = (""
+        + "<p>New threats have emerged....</p>"
+        );
+FiercePlanet.PresetLevels.level14.conclusion = ("Well done.");
+
+FiercePlanet.PresetLevels.level14.setup = function() {
+    this.fillWithTiles();
+    this.removeTiles(100, 100);
+};      
+
+/* Level 15 Definition */
+
+FiercePlanet.PresetLevels.level15 = new Level(15);
+FiercePlanet.PresetLevels.level15.isometric = true;
+FiercePlanet.PresetLevels.level15.allowResourcesOnPath = true;
+FiercePlanet.PresetLevels.level15.initialResourceStore = 100;
+FiercePlanet.PresetLevels.level15.isPresetLevel = true;
+FiercePlanet.PresetLevels.level15.addEntryPoint(0, 0);
+FiercePlanet.PresetLevels.level15.addExitPoint(4, 4);
+FiercePlanet.PresetLevels.level15.cellsAcross = 5;
+FiercePlanet.PresetLevels.level15.cellsDown = 5;
+FiercePlanet.PresetLevels.level15.initialAgentNumber = 1;
+FiercePlanet.PresetLevels.level15.waveNumber = 3;
+FiercePlanet.PresetLevels.level15.expiryLimit = 20;
+FiercePlanet.PresetLevels.level15.name = ("Oh-ho!");
+FiercePlanet.PresetLevels.level15.introduction = (""
+        + "<p>New threats have emerged....</p>"
+        );
+FiercePlanet.PresetLevels.level15.conclusion = ("Well done.");
+
+FiercePlanet.PresetLevels.level15.setup = function() {
+    this.fillWithTiles();
+    this.removeTiles(100, 100);
+};      
+
+/* Level 16 Definition */
+
+FiercePlanet.PresetLevels.level16 = new Level(16);
+FiercePlanet.PresetLevels.level16.isometric = true;
+FiercePlanet.PresetLevels.level16.allowResourcesOnPath = true;
+FiercePlanet.PresetLevels.level16.initialResourceStore = 100;
+FiercePlanet.PresetLevels.level16.isPresetLevel = true;
+FiercePlanet.PresetLevels.level16.addEntryPoint(0, 0);
+FiercePlanet.PresetLevels.level16.addExitPoint(4, 4);
+FiercePlanet.PresetLevels.level16.cellsAcross = 5;
+FiercePlanet.PresetLevels.level16.cellsDown = 5;
+FiercePlanet.PresetLevels.level16.initialAgentNumber = 1;
+FiercePlanet.PresetLevels.level16.waveNumber = 3;
+FiercePlanet.PresetLevels.level16.expiryLimit = 20;
+FiercePlanet.PresetLevels.level16.name = ("Oh-ho!");
+FiercePlanet.PresetLevels.level16.introduction = (""
+        + "<p>New threats have emerged....</p>"
+        );
+FiercePlanet.PresetLevels.level16.conclusion = ("Well done.");
+
+FiercePlanet.PresetLevels.level16.setup = function() {
+    this.fillWithTiles();
+    this.removeTiles(100, 100);
+};      
+
+/* Level 17 Definition */
+
+FiercePlanet.PresetLevels.level17 = new Level(17);
+FiercePlanet.PresetLevels.level17.isometric = true;
+FiercePlanet.PresetLevels.level17.allowResourcesOnPath = true;
+FiercePlanet.PresetLevels.level17.initialResourceStore = 100;
+FiercePlanet.PresetLevels.level17.isPresetLevel = true;
+FiercePlanet.PresetLevels.level17.addEntryPoint(0, 0);
+FiercePlanet.PresetLevels.level17.addExitPoint(4, 4);
+FiercePlanet.PresetLevels.level17.cellsAcross = 5;
+FiercePlanet.PresetLevels.level17.cellsDown = 5;
+FiercePlanet.PresetLevels.level17.initialAgentNumber = 1;
+FiercePlanet.PresetLevels.level17.waveNumber = 3;
+FiercePlanet.PresetLevels.level17.expiryLimit = 20;
+FiercePlanet.PresetLevels.level17.name = ("Oh-ho!");
+FiercePlanet.PresetLevels.level17.introduction = (""
+        + "<p>New threats have emerged....</p>"
+        );
+FiercePlanet.PresetLevels.level17.conclusion = ("Well done.");
+
+FiercePlanet.PresetLevels.level17.setup = function() {
+    this.fillWithTiles();
+    this.removeTiles(100, 100);
+};      
+
+/* Level 18 Definition */
+
+FiercePlanet.PresetLevels.level18 = new Level(18);
+FiercePlanet.PresetLevels.level18.isometric = true;
+FiercePlanet.PresetLevels.level18.allowResourcesOnPath = true;
+FiercePlanet.PresetLevels.level18.initialResourceStore = 100;
+FiercePlanet.PresetLevels.level18.isPresetLevel = true;
+FiercePlanet.PresetLevels.level18.addEntryPoint(0, 0);
+FiercePlanet.PresetLevels.level18.addExitPoint(4, 4);
+FiercePlanet.PresetLevels.level18.cellsAcross = 5;
+FiercePlanet.PresetLevels.level18.cellsDown = 5;
+FiercePlanet.PresetLevels.level18.initialAgentNumber = 1;
+FiercePlanet.PresetLevels.level18.waveNumber = 3;
+FiercePlanet.PresetLevels.level18.expiryLimit = 20;
+FiercePlanet.PresetLevels.level18.name = ("Oh-ho!");
+FiercePlanet.PresetLevels.level18.introduction = (""
+        + "<p>New threats have emerged....</p>"
+        );
+FiercePlanet.PresetLevels.level18.conclusion = ("Well done.");
+
+FiercePlanet.PresetLevels.level18.setup = function() {
+    this.fillWithTiles();
+    this.removeTiles(100, 100);
+};      
+
+/* Level 19 Definition */
+
+FiercePlanet.PresetLevels.level19 = new Level(19);
+FiercePlanet.PresetLevels.level19.isometric = true;
+FiercePlanet.PresetLevels.level19.allowResourcesOnPath = true;
+FiercePlanet.PresetLevels.level19.initialResourceStore = 100;
+FiercePlanet.PresetLevels.level19.isPresetLevel = true;
+FiercePlanet.PresetLevels.level19.addEntryPoint(0, 0);
+FiercePlanet.PresetLevels.level19.addExitPoint(4, 4);
+FiercePlanet.PresetLevels.level19.cellsAcross = 5;
+FiercePlanet.PresetLevels.level19.cellsDown = 5;
+FiercePlanet.PresetLevels.level19.initialAgentNumber = 1;
+FiercePlanet.PresetLevels.level19.waveNumber = 3;
+FiercePlanet.PresetLevels.level19.expiryLimit = 20;
+FiercePlanet.PresetLevels.level19.name = ("Oh-ho!");
+FiercePlanet.PresetLevels.level19.introduction = (""
+        + "<p>New threats have emerged....</p>"
+        );
+FiercePlanet.PresetLevels.level19.conclusion = ("Well done.");
+
+FiercePlanet.PresetLevels.level19.setup = function() {
+    this.fillWithTiles();
+    this.removeTiles(100, 100);
+};      
+
+/* Level 20 Definition */
+
+FiercePlanet.PresetLevels.level20 = new Level(20);
+FiercePlanet.PresetLevels.level20.isometric = false;
+FiercePlanet.PresetLevels.level20.allowResourcesOnPath = false;
+FiercePlanet.PresetLevels.level20.initialResourceStore = 3000;
+FiercePlanet.PresetLevels.level20.isPresetLevel = true;
+FiercePlanet.PresetLevels.level20.addEntryPoint(19, 0);
+FiercePlanet.PresetLevels.level20.addExitPoint(0, 19);
+FiercePlanet.PresetLevels.level20.cellsAcross = 20;
+FiercePlanet.PresetLevels.level20.cellsDown = 20;
+FiercePlanet.PresetLevels.level20.initialAgentNumber = 1;
+FiercePlanet.PresetLevels.level20.waveNumber = 5;
+FiercePlanet.PresetLevels.level20.expiryLimit = 20;
+FiercePlanet.PresetLevels.level20.name = ("Spaced Out!");
+FiercePlanet.PresetLevels.level20.isTerminalLevel = true;
+FiercePlanet.PresetLevels.level20.introduction = (""
+        + "<p>Somewhere out there in space there is a...</p>"
+        );
+FiercePlanet.PresetLevels.level20.conclusion = ("Well done.");
+
+FiercePlanet.PresetLevels.level20.setup = function() {
+    this.setTiles(JSON.parse('[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,{"color":"0FFF1F","x":1,"y":1,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":2,"y":1,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":3,"y":1,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":4,"y":1,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":5,"y":1,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":6,"y":1,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":7,"y":1,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":8,"y":1,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":9,"y":1,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":10,"y":1,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":11,"y":1,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":12,"y":1,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":13,"y":1,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":14,"y":1,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":15,"y":1,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":16,"y":1,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":17,"y":1,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":18,"y":1,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":19,"y":1,"terrain":{"color":"0FFF1F","alpha":1}},null,{"color":"0FFF1F","x":1,"y":2,"terrain":{"color":"0FFF1F","alpha":1}},null,{"color":"0FFF1F","x":3,"y":2,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":4,"y":2,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":5,"y":2,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":6,"y":2,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":7,"y":2,"terrain":{"color":"0FFF1F","alpha":1}},null,null,null,null,{"color":"0FFF1F","x":12,"y":2,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":13,"y":2,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":14,"y":2,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":15,"y":2,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":16,"y":2,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":17,"y":2,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":18,"y":2,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":19,"y":2,"terrain":{"color":"0FFF1F","alpha":1}},null,{"color":"0FFF1F","x":1,"y":3,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":2,"y":3,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":3,"y":3,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":4,"y":3,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":5,"y":3,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":6,"y":3,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":7,"y":3,"terrain":{"color":"0FFF1F","alpha":1}},null,{"color":"0FFF1F","x":9,"y":3,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":10,"y":3,"terrain":{"color":"0FFF1F","alpha":1}},null,{"color":"0FFF1F","x":12,"y":3,"terrain":{"color":"0FFF1F","alpha":1}},null,null,null,{"color":"0FFF1F","x":16,"y":3,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":17,"y":3,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":18,"y":3,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":19,"y":3,"terrain":{"color":"0FFF1F","alpha":1}},null,null,null,{"color":"0FFF1F","x":3,"y":4,"terrain":{"color":"0FFF1F","alpha":1}},null,null,null,{"color":"0FFF1F","x":7,"y":4,"terrain":{"color":"0FFF1F","alpha":1}},null,null,null,null,{"color":"0FFF1F","x":12,"y":4,"terrain":{"color":"0FFF1F","alpha":1}},null,{"color":"0FFF1F","x":14,"y":4,"terrain":{"color":"0FFF1F","alpha":1}},null,{"color":"0FFF1F","x":16,"y":4,"terrain":{"color":"0FFF1F","alpha":1}},null,null,null,null,{"color":"0FFF1F","x":1,"y":5,"terrain":{"color":"0FFF1F","alpha":1}},null,{"color":"0FFF1F","x":3,"y":5,"terrain":{"color":"0FFF1F","alpha":1}},null,{"color":"0FFF1F","x":5,"y":5,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":6,"y":5,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":7,"y":5,"terrain":{"color":"0FFF1F","alpha":1}},null,null,{"color":"0FFF1F","x":10,"y":5,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":11,"y":5,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":12,"y":5,"terrain":{"color":"0FFF1F","alpha":1}},null,{"color":"0FFF1F","x":14,"y":5,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":15,"y":5,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":16,"y":5,"terrain":{"color":"0FFF1F","alpha":1}},null,{"color":"0FFF1F","x":18,"y":5,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":19,"y":5,"terrain":{"color":"0FFF1F","alpha":1}},null,{"color":"0FFF1F","x":1,"y":6,"terrain":{"color":"0FFF1F","alpha":1}},null,{"color":"0FFF1F","x":3,"y":6,"terrain":{"color":"0FFF1F","alpha":1}},null,null,null,{"color":"0FFF1F","x":7,"y":6,"terrain":{"color":"0FFF1F","alpha":1}},null,{"color":"0FFF1F","x":9,"y":6,"terrain":{"color":"0FFF1F","alpha":1}},null,{"color":"0FFF1F","x":11,"y":6,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":12,"y":6,"terrain":{"color":"0FFF1F","alpha":1}},null,{"color":"0FFF1F","x":14,"y":6,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":15,"y":6,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":16,"y":6,"terrain":{"color":"0FFF1F","alpha":1}},null,null,null,null,{"color":"0FFF1F","x":1,"y":7,"terrain":{"color":"0FFF1F","alpha":1}},null,{"color":"0FFF1F","x":3,"y":7,"terrain":{"color":"0FFF1F","alpha":1}},null,{"color":"0FFF1F","x":5,"y":7,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":6,"y":7,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":7,"y":7,"terrain":{"color":"0FFF1F","alpha":1}},null,{"color":"0FFF1F","x":9,"y":7,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":10,"y":7,"terrain":{"color":"0FFF1F","alpha":1}},null,{"color":"0FFF1F","x":12,"y":7,"terrain":{"color":"0FFF1F","alpha":1}},null,{"color":"0FFF1F","x":14,"y":7,"terrain":{"color":"0FFF1F","alpha":1}},null,{"color":"0FFF1F","x":16,"y":7,"terrain":{"color":"0FFF1F","alpha":1}},null,{"color":"0FFF1F","x":18,"y":7,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":19,"y":7,"terrain":{"color":"0FFF1F","alpha":1}},null,{"color":"0FFF1F","x":1,"y":8,"terrain":{"color":"0FFF1F","alpha":1}},null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,{"color":"0FFF1F","x":0,"y":9,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":1,"y":9,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":2,"y":9,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":3,"y":9,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":4,"y":9,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":5,"y":9,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":6,"y":9,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":7,"y":9,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":8,"y":9,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":9,"y":9,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":10,"y":9,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":11,"y":9,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":12,"y":9,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":13,"y":9,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":14,"y":9,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":15,"y":9,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":16,"y":9,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":17,"y":9,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":18,"y":9,"terrain":{"color":"0FFF1F","alpha":1}},null,null,null,null,null,null,{"color":"0FFF1F","x":5,"y":10,"terrain":{"color":"0FFF1F","alpha":1}},null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,{"color":"0FFF1F","x":1,"y":11,"terrain":{"color":"0FFF1F","alpha":1}},null,{"color":"0FFF1F","x":3,"y":11,"terrain":{"color":"0FFF1F","alpha":1}},null,{"color":"0FFF1F","x":5,"y":11,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":6,"y":11,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":7,"y":11,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":8,"y":11,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":9,"y":11,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":10,"y":11,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":11,"y":11,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":12,"y":11,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":13,"y":11,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":14,"y":11,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":15,"y":11,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":16,"y":11,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":17,"y":11,"terrain":{"color":"0FFF1F","alpha":1}},null,{"color":"0FFF1F","x":19,"y":11,"terrain":{"color":"0FFF1F","alpha":1}},null,{"color":"0FFF1F","x":1,"y":12,"terrain":{"color":"0FFF1F","alpha":1}},null,{"color":"0FFF1F","x":3,"y":12,"terrain":{"color":"0FFF1F","alpha":1}},null,{"color":"0FFF1F","x":5,"y":12,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":6,"y":12,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":7,"y":12,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":8,"y":12,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":9,"y":12,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":10,"y":12,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":11,"y":12,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":12,"y":12,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":13,"y":12,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":14,"y":12,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":15,"y":12,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":16,"y":12,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":17,"y":12,"terrain":{"color":"0FFF1F","alpha":1}},null,{"color":"0FFF1F","x":19,"y":12,"terrain":{"color":"0FFF1F","alpha":1}},null,null,null,{"color":"0FFF1F","x":3,"y":13,"terrain":{"color":"0FFF1F","alpha":1}},null,{"color":"0FFF1F","x":5,"y":13,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":6,"y":13,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":7,"y":13,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":8,"y":13,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":9,"y":13,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":10,"y":13,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":11,"y":13,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":12,"y":13,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":13,"y":13,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":14,"y":13,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":15,"y":13,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":16,"y":13,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":17,"y":13,"terrain":{"color":"0FFF1F","alpha":1}},null,{"color":"0FFF1F","x":19,"y":13,"terrain":{"color":"0FFF1F","alpha":1}},null,{"color":"0FFF1F","x":1,"y":14,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":2,"y":14,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":3,"y":14,"terrain":{"color":"0FFF1F","alpha":1}},null,{"color":"0FFF1F","x":5,"y":14,"terrain":{"color":"0FFF1F","alpha":1}},null,null,null,{"color":"0FFF1F","x":9,"y":14,"terrain":{"color":"0FFF1F","alpha":1}},null,{"color":"0FFF1F","x":11,"y":14,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":12,"y":14,"terrain":{"color":"0FFF1F","alpha":1}},null,null,null,null,{"color":"0FFF1F","x":17,"y":14,"terrain":{"color":"0FFF1F","alpha":1}},null,{"color":"0FFF1F","x":19,"y":14,"terrain":{"color":"0FFF1F","alpha":1}},null,{"color":"0FFF1F","x":1,"y":15,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":2,"y":15,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":3,"y":15,"terrain":{"color":"0FFF1F","alpha":1}},null,{"color":"0FFF1F","x":5,"y":15,"terrain":{"color":"0FFF1F","alpha":1}},null,{"color":"0FFF1F","x":7,"y":15,"terrain":{"color":"0FFF1F","alpha":1}},null,{"color":"0FFF1F","x":9,"y":15,"terrain":{"color":"0FFF1F","alpha":1}},null,null,{"color":"0FFF1F","x":12,"y":15,"terrain":{"color":"0FFF1F","alpha":1}},null,{"color":"0FFF1F","x":14,"y":15,"terrain":{"color":"0FFF1F","alpha":1}},null,{"color":"0FFF1F","x":16,"y":15,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":17,"y":15,"terrain":{"color":"0FFF1F","alpha":1}},null,{"color":"0FFF1F","x":19,"y":15,"terrain":{"color":"0FFF1F","alpha":1}},null,{"color":"0FFF1F","x":1,"y":16,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":2,"y":16,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":3,"y":16,"terrain":{"color":"0FFF1F","alpha":1}},null,{"color":"0FFF1F","x":5,"y":16,"terrain":{"color":"0FFF1F","alpha":1}},null,null,null,{"color":"0FFF1F","x":9,"y":16,"terrain":{"color":"0FFF1F","alpha":1}},null,null,null,null,{"color":"0FFF1F","x":14,"y":16,"terrain":{"color":"0FFF1F","alpha":1}},null,null,{"color":"0FFF1F","x":17,"y":16,"terrain":{"color":"0FFF1F","alpha":1}},null,{"color":"0FFF1F","x":19,"y":16,"terrain":{"color":"0FFF1F","alpha":1}},null,{"color":"0FFF1F","x":1,"y":17,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":2,"y":17,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":3,"y":17,"terrain":{"color":"0FFF1F","alpha":1}},null,{"color":"0FFF1F","x":5,"y":17,"terrain":{"color":"0FFF1F","alpha":1}},null,{"color":"0FFF1F","x":7,"y":17,"terrain":{"color":"0FFF1F","alpha":1}},null,{"color":"0FFF1F","x":9,"y":17,"terrain":{"color":"0FFF1F","alpha":1}},null,{"color":"0FFF1F","x":11,"y":17,"terrain":{"color":"0FFF1F","alpha":1}},null,null,{"color":"0FFF1F","x":14,"y":17,"terrain":{"color":"0FFF1F","alpha":1}},null,{"color":"0FFF1F","x":16,"y":17,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":17,"y":17,"terrain":{"color":"0FFF1F","alpha":1}},null,{"color":"0FFF1F","x":19,"y":17,"terrain":{"color":"0FFF1F","alpha":1}},null,{"color":"0FFF1F","x":1,"y":18,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":2,"y":18,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":3,"y":18,"terrain":{"color":"0FFF1F","alpha":1}},null,{"color":"0FFF1F","x":5,"y":18,"terrain":{"color":"0FFF1F","alpha":1}},null,{"color":"0FFF1F","x":7,"y":18,"terrain":{"color":"0FFF1F","alpha":1}},null,{"color":"0FFF1F","x":9,"y":18,"terrain":{"color":"0FFF1F","alpha":1}},null,{"color":"0FFF1F","x":11,"y":18,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":12,"y":18,"terrain":{"color":"0FFF1F","alpha":1}},null,{"color":"0FFF1F","x":14,"y":18,"terrain":{"color":"0FFF1F","alpha":1}},null,{"color":"0FFF1F","x":16,"y":18,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":17,"y":18,"terrain":{"color":"0FFF1F","alpha":1}},null,{"color":"0FFF1F","x":19,"y":18,"terrain":{"color":"0FFF1F","alpha":1}},null,{"color":"0FFF1F","x":1,"y":19,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":2,"y":19,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":3,"y":19,"terrain":{"color":"0FFF1F","alpha":1}},null,null,null,{"color":"0FFF1F","x":7,"y":19,"terrain":{"color":"0FFF1F","alpha":1}},null,null,null,{"color":"0FFF1F","x":11,"y":19,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":12,"y":19,"terrain":{"color":"0FFF1F","alpha":1}},null,{"color":"0FFF1F","x":14,"y":19,"terrain":{"color":"0FFF1F","alpha":1}},null,null,null,null,{"color":"0FFF1F","x":19,"y":19,"terrain":{"color":"0FFF1F","alpha":1}}]'));
+};
 
 
 // Checked and authorised
