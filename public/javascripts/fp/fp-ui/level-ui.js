@@ -68,8 +68,8 @@ FiercePlanet.LevelUI = FiercePlanet.LevelUI || {};
      * Opens a level
      */
     this.openLevel = function() {
-        if (this.id) {
-            $.get('/levels/' + this.id, function(json) {
+        if ($(this).parent().attr('id')) {
+            $.get('/levels/' + $(this).parent().attr('id'), function(json) {
                 FiercePlanet.LevelUI.constructLevel(json);
 
                 FiercePlanet.Editor.setupLevelEditor();
@@ -79,23 +79,63 @@ FiercePlanet.LevelUI = FiercePlanet.LevelUI || {};
         }
     };
 
+
+    /**
+     * Opens a level
+     */
+    this.deleteLevel = function() {
+        console.log($(this).parent())
+        console.log($(this).parent().attr('id'))
+        if ($(this).parent().attr('id')) {
+            $.get('/levels/destroy/' + $(this).parent().attr('id'), function(res) {
+                if (res) {
+                    $('#existing-levels').empty();
+                    res.forEach(function(item) {
+                        $('#existing-levels').append('<div id="' + item._id + '"><a class="level-editor" href="#">' + item.name + '</a> (<a class="delete-level" href="#">Delete</a>)</div>');
+                    });
+                    $('.level-editor').click(FiercePlanet.LevelUI.openLevel);
+                    $('.delete-level').click(FiercePlanet.LevelUI.deleteLevel);
+                }
+            });
+        }
+    };
+
     /**
      * Save level 
      */
     this.saveLevel = function() {
 //        if (FiercePlanet.inDesignMode) {
-            var level = FiercePlanet.currentLevel;
-			console.log("level id: " + level._id)
-            // Cf. http://stackoverflow.com/questions/1184624/serialize-form-to-json-with-jquery
-            var a = $("#level-properties").serializeArray();
-            a.forEach(function(item) {
-                level[item.name] = item.value || '';
-            });
-            $.post('/levels/save', { level: JSON.stringify(level) }, function(response) {
-				if (response._id && ! FiercePlanet.currentLevel._id)
-					FiercePlanet.currentLevel._id = response._id
-                FiercePlanet.Editor.setupLevelEditor();
-            });
+        var level = FiercePlanet.currentLevel;
+
+        // Retrieve current dimensions
+        var ca = level.cellsAcross;
+        var cd = level.cellsDown;
+
+        // Add properties from the properties form
+        // Cf. http://stackoverflow.com/questions/1184624/serialize-form-to-json-with-jquery
+        var a = $("#level-properties").serializeArray();
+        a.forEach(function(item) {
+            level[item.name] = item.value || '';
+        });
+
+        // If the level has been saved already, and the dimensions have changed, we need to start again
+        if (FiercePlanet.currentLevel._id && (level.cellsAcross != ca || level.cellsDown != cd)) {
+            if (confirm("The level dimensions have changed, and the current maze will be deleted. Should we proceed?")) {
+                // Redo level dimensions
+                level.fillWithTiles();
+            }
+            else {
+                // Reset dimensions
+                level.cellsAcross = ca;
+                level.cellsDown = cd;
+            }
+        }
+
+        $.post('/levels/save', { level: JSON.stringify(level) }, function(response) {
+            if (response._id && ! FiercePlanet.currentLevel._id)
+                FiercePlanet.currentLevel._id = response._id
+            FiercePlanet.Editor.setupLevelEditor();
+        });
 //        }
     };
 
@@ -163,9 +203,10 @@ FiercePlanet.LevelUI = FiercePlanet.LevelUI || {};
             if (res) {
                 $('#existing-levels').empty();
                 res.forEach(function(item) {
-                    $('#existing-levels').append('<div><a class="level-editor" href="#" id="' + item._id + '">' + item.name + '</a></div>');
+                    $('#existing-levels').append('<div id="' + item._id + '"><a class="level-editor" href="#">' + item.name + '</a> (<a class="delete-level" href="#">Delete</a>)</div>');
                 });
                 $('.level-editor').click(FiercePlanet.LevelUI.openLevel);
+                $('.delete-level').click(FiercePlanet.LevelUI.deleteLevel);
             }
             FiercePlanet.Dialogs.levelEditorDialog.dialog('open');
         });

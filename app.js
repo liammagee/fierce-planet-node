@@ -22,8 +22,8 @@ var FPProvider = require('./FPProviderDB').FPProvider;
 
 
 
-//var fpProvider = new FPProvider('test', '127.0.0.1', '27017', function(error, res) {
-var fpProvider = new FPProvider('app708577', 'staff.mongohq.com', '10089', 'heroku', '0846c19ac36a5b9e920880bf188dd43e', function(error, res) {
+var fpProvider = new FPProvider('test', '127.0.0.1', '27017', function(error, res) {
+//var fpProvider = new FPProvider('app708577', 'staff.mongohq.com', '10089', 'heroku', '0846c19ac36a5b9e920880bf188dd43e', function(error, res) {
     if( error ) console.log(error);
     else if (res) {
     }
@@ -277,8 +277,14 @@ app.get('/levels/:id', function(req, res){
 app.get('/levels/destroy/:id', function(req, res){
     var id = req.params.id;
     if (id) {
-        fpProvider.findById(id, function(error, level){
-            res.send(level);
+        fpProvider.deleteById(id, function(error, level){
+            if (error) res.send([]);
+            else {
+                fpProvider.findAllByUser(req.user, function(err, levels){
+                    if (err) res.send([]);
+                    else res.send(levels);
+                });
+            }
         });
     }
 });
@@ -286,9 +292,6 @@ app.get('/levels/destroy/:id', function(req, res){
 app.post('/levels/save', function(req, res){
     if (req.body.level && req.user) {
         var level = JSON.parse(req.body.level);
-        console.log(level._id)
-        console.log(level.user_id)
-        console.log(req.user._id)
         if (! level.user_id)
             level.user_id = req.user._id;
         fpProvider.updateLevel(level, function(error, result){
