@@ -17,21 +17,31 @@ var jsdom = require('jsdom').jsdom
   , jQuery = require('jquery').create(myWindow)
   ;
 
-// MongoDB stuff
-var FPProvider = require('./FPProviderDB').FPProvider;
-
-
-
-var fpProvider = new FPProvider('test', '127.0.0.1', '27017', function(error, res) {
-//var fpProvider = new FPProvider('app708577', 'staff.mongohq.com', '10089', 'heroku', '0846c19ac36a5b9e920880bf188dd43e', function(error, res) {
-    if( error ) console.log(error);
-    else if (res) {
-    }
-});
-
 
 
 var app = module.exports = express.createServer();
+
+
+// MongoDB stuff
+var FPProvider = require('./FPProviderDB').FPProvider;
+var fpProvider;
+
+app.configure('development', function() {
+	fpProvider = new FPProvider('test', '127.0.0.1', '27017', function(error, res) {
+	    if( error ) console.log(error);
+	    else if (res) {
+	    }
+	});
+});
+
+app.configure('production', function() {
+	fpProvider = new FPProvider('app708577', 'staff.mongohq.com', '10089', 'heroku', '0846c19ac36a5b9e920880bf188dd43e', function(error, res) {
+	    if( error ) console.log(error);
+	    else if (res) {
+	    }
+	});
+});
+
 
 // Everyauth config
 everyauth.debug = true;
