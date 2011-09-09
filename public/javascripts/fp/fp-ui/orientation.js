@@ -18,8 +18,8 @@ FiercePlanet.Orientation = FiercePlanet.Orientation || {};
 (function() {
     // Adapted from Danko Kozar, http://www.flashperfection.com/tutorials/Isometric-Transformations-15818.html
 
-    this.DEFAULT_WORLD_WIDTH = 480;
-    this.DEFAULT_WORLD_HEIGHT = 400;
+    this.DEFAULT_WORLD_WIDTH = 600;
+    this.DEFAULT_WORLD_HEIGHT = 500;
 
     this.DEFAULT_ROTATION_ANGLE = 0;
     // "0.46365 (radians) - it's a “classic” 1:2 isometric angle which lays up perfectly into pixel grid of the computer screen. "
@@ -104,7 +104,7 @@ FiercePlanet.Orientation = FiercePlanet.Orientation || {};
             canvases.css({width: this.worldWidth, height: this.worldHeight});
             canvases.width(this.worldWidth);
             canvases.height(this.worldHeight);
-            $('#wrapper').css({width: 1570 - this.worldWidth});
+            $('#wrapper').css({width: 1690 - this.worldWidth});
             $('#controls').css({left: 385 - this.worldWidth});
             $('#world').css({left: 480 - this.worldWidth});
             $('#notifications').css({left: 480 - this.worldWidth, top: 117 + this.worldHeight, width: this.worldWidth});

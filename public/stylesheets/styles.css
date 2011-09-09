@@ -14,10 +14,9 @@ body {
 	display:none;
 }
 #wrapper {
-    background: url(../layout/backgound.jpg);
-    background-repeat: no-repeat;
-    background-position: right;
-    width: 1090px;
+/*   background: url(../layout/.jpg);*/
+    background: url(../layout/Slice-1.jpg) top left no-repeat, url(../layout/Slice-2.jpg) top right no-repeat;
+     		width: 1210px;
 }
 #content-pane {
 	position:relative;
@@ -168,7 +167,7 @@ body {
 #controls {
 	position:absolute;
 	left:-95px;
-	top:185px;
+	top:225px;
 	width:61px;
 	padding:50px 10px 0;
 	z-index:1;
@@ -375,8 +374,8 @@ canvas {
 	position:absolute;
 }
 #map_canvas, #alt_map_canvas {
-	height: 400px;
-	width: 480px;
+	height: 500px;
+	width: 600px;
 	position: absolute;
 	border: #fff 1px solid;
 }
