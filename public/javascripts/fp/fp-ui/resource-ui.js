@@ -36,7 +36,14 @@ FiercePlanet.ResourceUI = FiercePlanet.ResourceUI || {};
                         zIndex: 1000,
                         start: function(event, ui) {
                             FiercePlanet.currentResourceId = this.id;
-                        }
+							FiercePlanet.dragging = true;
+                        },
+	                    drag: function(event, ui) {
+	                        FiercePlanet.Drawing.highlightCell(event);
+	                    },
+						stop: function(event, ui) {
+							FiercePlanet.Drawing.clearCanvas('#noticeCanvas');
+						}
                     });
                     $('#' + el.id).click(function() {
                         FiercePlanet.currentResourceId = this.id;
@@ -50,6 +57,7 @@ FiercePlanet.ResourceUI = FiercePlanet.ResourceUI || {};
                     var y = event.pageY - position.top;
                     var currentPosition = FiercePlanet.GeneralUI.getCurrentPositionByCoordinates(x,y);
                     FiercePlanet.ResourceUI.dropItem(currentPosition.posX, currentPosition.posY);
+					FiercePlanet.dragging = false;
                 }
             });
 
