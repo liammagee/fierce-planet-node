@@ -565,7 +565,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
             // Create a gradient to fill the cell from the bottom up
             var yOffset = (((FiercePlanet.Orientation.cellHeight) * (1.0 - (s / 100))) / 1.2) | 0;
             var resourceGradient = ctx.createLinearGradient(x, y + yOffset, x, y + FiercePlanet.Orientation.cellHeight);
-    //        resourceGradient.addColorStop(0, "#fff");
+//            resourceGradient.addColorStop(0, "#fff");
             resourceGradient.addColorStop(0, "#" + c);
             resourceGradient.addColorStop(0.5, "#" + c);
             resourceGradient.addColorStop(1, "#" + c);
@@ -1567,4 +1567,49 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
                 );
     };
     
+
+    /**
+     *  Process mouse moves
+     */
+    this.highlightCell = function(e) {
+        if (FiercePlanet.currentResourceId) {
+            var __ret = FiercePlanet.GeneralUI.getCurrentPosition(e);
+            var xPos = __ret.posX;
+            var yPos = __ret.posY;
+            this.clearCanvas('#noticeCanvas');
+            var scrollingCanvas = $('#noticeCanvas')[0];
+            var ctx = scrollingCanvas.getContext('2d');
+            ctx.save();
+            ctx.translate(FiercePlanet.Orientation.halfWorldWidth, FiercePlanet.Orientation.halfWorldHeight);
+            ctx.rotate(FiercePlanet.Orientation.rotationAngle);
+
+            var x = xPos * FiercePlanet.Orientation.cellWidth;
+            var y = yPos * FiercePlanet.Orientation.cellHeight;
+
+
+            if ((World.settings.skewTiles || FiercePlanet.currentLevel.isometric)) {
+                var newOrigin = FiercePlanet.Isometric.doIsometricOffset(xPos, yPos);
+                var originXp = newOrigin.x + FiercePlanet.Orientation.cellWidth / 2;
+                var originYp = newOrigin.y + FiercePlanet.Orientation.cellHeight;
+                originXp = originXp - (FiercePlanet.Orientation.worldWidth) / 2;
+                originYp = originYp - (FiercePlanet.Orientation.worldHeight) / 2;
+                FiercePlanet.Isometric.draw3DTile(ctx, [originXp, originYp], FiercePlanet.Orientation.cellHeight);
+
+                ctx.lineWidth = 4;
+                ctx.strokeStyle = '#f00'; //pathColor;
+                ctx.stroke();
+            }
+            else {
+                // Rotation logic here - TODO: Refactor out
+                x = x - FiercePlanet.Orientation.halfWorldWidth;
+                y = y - FiercePlanet.Orientation.halfWorldHeight;
+                ctx.lineWidth = 4;
+                ctx.strokeStyle = '#f00'; //pathColor;
+                ctx.strokeRect(x, y, FiercePlanet.Orientation.cellWidth, FiercePlanet.Orientation.cellHeight);
+            }
+
+            ctx.restore();
+        }
+    };
+
 }).apply(FiercePlanet.Drawing);

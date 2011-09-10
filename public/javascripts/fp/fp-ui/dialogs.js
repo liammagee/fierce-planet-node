@@ -64,7 +64,8 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
         var wrapperY = wrapper.position().top;
         var worldY = world.position().top;
         var dialogY = contentPaneY + wrapperY + worldY;
-        return dialogY;
+//        return dialogY;
+        return dialogY - 178;
     };
 
 

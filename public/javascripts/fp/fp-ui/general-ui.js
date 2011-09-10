@@ -167,9 +167,10 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
 
         topMostCanvas.click(FiercePlanet.handleNoticeEvents);
         topMostCanvas.click(FiercePlanet.ResourceUI.processResourceCanvasClick);
+
+        topMostCanvas.mousemove(FiercePlanet.GeneralUI.registerMouseMove);
         if (World.settings.allowInlinePanning) {
             topMostCanvas.mousedown(FiercePlanet.GeneralUI.registerMouseDown);
-            topMostCanvas.mousemove(FiercePlanet.GeneralUI.registerMouseMove);
             topMostCanvas.mouseup(FiercePlanet.GeneralUI.registerMouseUp);
         }
         topMostCanvas.bind("contextmenu",function(e){
@@ -218,7 +219,10 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
      *  Register mouse move event
      */
     this.registerMouseMove = function(e) {
-        if (FiercePlanet.isMouseDown) {
+        if (FiercePlanet.currentResourceId) {
+            FiercePlanet.Drawing.highlightCell(e);
+        }
+        if (FiercePlanet.isMouseDown && World.settings.allowInlinePanning) {
             FiercePlanet.isMouseMoving = true;
             FiercePlanet.GeneralUI.doMove(e);
         }
