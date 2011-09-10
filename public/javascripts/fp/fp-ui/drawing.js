@@ -289,16 +289,16 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
             if ((World.settings.skewTiles || FiercePlanet.currentLevel.isometric)) {
                 var newOrigin = FiercePlanet.Isometric.doIsometricOffset(point[0], point[1]);
                 x = newOrigin.x + FiercePlanet.Orientation.cellWidth / 2;
-                y = newOrigin.y + FiercePlanet.Orientation.cellWidth / 2;
+                y = newOrigin.y + FiercePlanet.Orientation.cellHeight / 2;
             }
             // Rotation logic here - TODO: Refactor out
             x = x - (FiercePlanet.Orientation.worldWidth) / 2;
             y = y - (FiercePlanet.Orientation.worldHeight) / 2;
-            var width = (FiercePlanet.Orientation.pieceWidth / 2);
+            var radius = (FiercePlanet.Orientation.pieceHeight / 2);
 
             // Draw circle
             ctx.beginPath();
-            ctx.arc(x, y, width, 0, Math.PI * 2, false);
+            ctx.arc(x, y, radius, 0, Math.PI * 2, false);
             ctx.closePath();
             ctx.strokeStyle = "#000";
             ctx.stroke();
@@ -309,7 +309,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
             var progressRatio = (FiercePlanet.currentWave - 1) / FiercePlanet.currentLevel.waveNumber;
             ctx.beginPath();
             ctx.moveTo(x, y);
-            ctx.arc(x, y, width, - Math.PI / 2, - Math.PI / 2 + Math.PI * 2 * progressRatio, false);
+            ctx.arc(x, y, radius, - Math.PI / 2, - Math.PI / 2 + Math.PI * 2 * progressRatio, false);
             ctx.closePath();
             ctx.strokeStyle = "#000";
             ctx.stroke();
@@ -345,18 +345,18 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
             if ((World.settings.skewTiles || FiercePlanet.currentLevel.isometric)) {
                 var newOrigin = FiercePlanet.Isometric.doIsometricOffset(point[0], point[1]);
                 x = newOrigin.x + FiercePlanet.Orientation.cellWidth / 2;
-                y = newOrigin.y + FiercePlanet.Orientation.cellWidth / 2;
+                y = newOrigin.y + FiercePlanet.Orientation.cellHeight / 2;
             }
             // Rotation logic here - TODO: Refactor out
             x = x - (FiercePlanet.Orientation.worldWidth) / 2;
             y = y - (FiercePlanet.Orientation.worldHeight) / 2;
 
-            var width = (FiercePlanet.Orientation.pieceWidth / 2);
+            var radius = (FiercePlanet.Orientation.pieceHeight / 2);
 
 
             // Draw circle
             ctx.beginPath();
-            ctx.arc(x, y, width, 0, Math.PI * 2, false);
+            ctx.arc(x, y, radius, 0, Math.PI * 2, false);
             ctx.closePath();
             ctx.strokeStyle = "#000";
             ctx.stroke();
@@ -367,7 +367,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
             var progressRatio = (FiercePlanet.currentWave - 1) / FiercePlanet.currentLevel.waveNumber;
             ctx.beginPath();
             ctx.moveTo(x, y);
-            ctx.arc(x, y, width, - Math.PI / 2, - Math.PI / 2 + Math.PI * 2 * progressRatio, false);
+            ctx.arc(x, y, radius, - Math.PI / 2, - Math.PI / 2 + Math.PI * 2 * progressRatio, false);
             ctx.closePath();
             ctx.strokeStyle = "#000";
             ctx.stroke();
