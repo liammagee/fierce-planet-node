@@ -32,7 +32,7 @@ body {
 #global-info-panel {
 	position:absolute;
 	padding-bottom: 20px;
-    left:510px;
+    left:630px;
     width:170px;
     z-index: 10;
 }
@@ -63,7 +63,7 @@ body {
 }
 #world {
 	position:absolute;
-	left:0px;
+	left:-120px;
 	top:110px;
 	float: left;
 	padding:7px;
@@ -166,7 +166,7 @@ body {
 /*controls*/
 #controls {
 	position:absolute;
-	left:-95px;
+	left:-215px;
 	top:225px;
 	width:61px;
 	padding:50px 10px 0;
@@ -188,7 +188,7 @@ body {
 
 #level-editor {
     position:absolute;
-    left: 0px;
+    left: -120px;
     top: 500px;
     width: 487px;
 	margin-top: 20px;
@@ -648,7 +648,7 @@ li.over {
 	font-size:18px;
 	top: 517px;
 	height: 200px;
-	left:0px;
+	left:-120px;
 	position:absolute;
 	padding: 7px;
 	background: #1F62C1;

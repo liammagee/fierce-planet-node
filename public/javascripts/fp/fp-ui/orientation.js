@@ -104,11 +104,14 @@ FiercePlanet.Orientation = FiercePlanet.Orientation || {};
             canvases.css({width: this.worldWidth, height: this.worldHeight});
             canvases.width(this.worldWidth);
             canvases.height(this.worldHeight);
-            $('#wrapper').css({width: 1690 - this.worldWidth});
-            $('#controls').css({left: 385 - this.worldWidth});
-            $('#world').css({left: 480 - this.worldWidth});
-            $('#notifications').css({left: 480 - this.worldWidth, top: 117 + this.worldHeight, width: this.worldWidth});
-            $('#level-editor').css({left: 480 - this.worldWidth, top: 190 + this.worldHeight, width: this.worldWidth});
+            $('#wrapper').css({width: 490 + this.worldWidth});
+			$('#global-info-panel').css({left: this.worldWidth - 90});
+			$('#notifications').css({top: 117 + this.worldHeight, width: this.worldWidth});
+            $('#level-editor').css({top: 190 + this.worldHeight, width: this.worldWidth});
+            //$('#controls').css({left: 385 - this.worldWidth});
+            //$('#world').css({left: 480 - this.worldWidth});
+			//$('#notifications').css({left: 480 - this.worldWidth, top: 117 + this.worldHeight, width: this.worldWidth});
+            //$('#level-editor').css({left: 480 - this.worldWidth, top: 190 + this.worldHeight, width: this.worldWidth});
     //        $('#extended-area').css({left: 480 - this.worldWidth, top: 190 + this.worldHeight, width: this.worldWidth});
         }
         catch (e) {}
