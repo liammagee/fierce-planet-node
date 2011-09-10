@@ -592,10 +592,17 @@ Level.prototype.currentAgentHealthStats = function () {
     for (var i = 0; i < this.currentAgents.length; i++) {
         var agent = this.currentAgents[i];
 		for (var j in agent.agentType.healthCategories) {
-			stats[agent.agentType.healthCategories[j].code] += agent.getHealthForResourceCategory(agent.agentType.healthCategories[j]);
+            var h = agent.getHealthForResourceCategory(agent.agentType.healthCategories[j]);
+            console.log(h)
+			stats[agent.agentType.healthCategories[j].code] += h;
 		}
 		stats.total += agent.health;
     }
+    // Average values
+    for (var i in World.resourceCategories) {
+        stats[World.resourceCategories[i].code] /= this.currentAgents.length;
+    }
+    stats.total += this.currentAgents.length;
     return stats;
 };
 

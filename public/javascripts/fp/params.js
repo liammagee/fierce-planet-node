@@ -30,7 +30,7 @@ FiercePlanet.MIN_PRESET_LEVEL = 0;
 FiercePlanet.MAX_PRESET_LEVEL = 1000;
 
 FiercePlanet.resourceRecoveryCycle = 5;
-FiercePlanet.interval = 20;
+FiercePlanet.interval = 40;
 
 
 /**

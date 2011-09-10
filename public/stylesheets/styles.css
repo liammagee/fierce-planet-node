@@ -318,6 +318,18 @@ background-position: -101px -101px;
 	width: 20px; height:20px;
 	float:left;
 }
+#contract{
+	background-image:url(../layout/buttons_a.png);
+	background-position: -5px -175px;
+	width: 20px; height:20px;
+	float:left;
+}
+#expand{
+	background-image:url(../layout/buttons_a.png);
+	background-position: -35px -175px;
+	width: 20px; height:20px;
+	float:left;
+}
 .divide{
 	width:61px; height:10px;
 	border-bottom: 2px solid #1F62C1;

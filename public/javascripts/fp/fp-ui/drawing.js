@@ -1361,6 +1361,22 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
     };
 
     /**
+     * Contract canvas
+     */
+    this.contract = function () {
+        FiercePlanet.Orientation.resizeWorld(480,400);
+        FiercePlanet.Drawing.drawCanvases();
+    };
+
+    /**
+     * Expand canvas
+     */
+    this.expand = function () {
+        FiercePlanet.Orientation.resizeWorld(600,400);
+        FiercePlanet.Drawing.drawCanvases();
+    };
+
+    /**
      * Toggle 3d
      */
     this.toggle3d = function () {
@@ -1448,7 +1464,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
 //        plot = $.plot($("#world-graph"),
 //                [ { data: [[0, 0]], lines: { show: true } }, {data: [[0, 0]], lines: { show: true }} ],
 //                options);
-            plotUpdateInterval = 100;
+            plotUpdateInterval = 250;
             this.updateGraph();
         }
     };
@@ -1458,14 +1474,16 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
      */
     this.refreshGraph = function () {
         if ($("#world-graph")[0]) {
-            var totalSaveable = FiercePlanet.currentLevel ? FiercePlanet.currentLevel.getTotalSaveableAgents() : 55;
+//            var totalSaveable = FiercePlanet.currentLevel ? FiercePlanet.currentLevel.getTotalSaveableAgents() : 55;
+            var totalSaveable = 100;
             var options = {
                 series: { shadowSize: 0 }, // drawing is faster without shadows
                 yaxis: { min: 0, max: totalSaveable }
             };
 			var seedData = [];
 			for (var i in World.resourceCategories) {
-				seedData.push({ data: [[0, 0]], lines: { show: true } });
+                var cat = World.resourceCategories[i];
+				seedData.push({ color: cat.color, data: [[0, 0]], lines: { show: true } });
 			}
 			seedData.push({ data: [[0, 0]], lines: { show: true } });
 
@@ -1482,7 +1500,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         if ($("#world-graph")[0]) {
             $("#world-graph").hide();
             plot = null;
-            plotUpdateInterval = 100;
+            plotUpdateInterval = 250;
             clearTimeout(plotIntervalId);
         }
     };

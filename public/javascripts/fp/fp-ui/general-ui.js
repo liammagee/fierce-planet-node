@@ -49,17 +49,23 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
         $('#zoomOut').click(function() { FiercePlanet.Drawing.zoom(-1);});
         $('#zoomReset').click(function() { FiercePlanet.Drawing.zoom(0);});
 
-        $('#settings').click(FiercePlanet.Dialogs.showSettings);
-        $('#credits').click(FiercePlanet.Dialogs.showCredits);
-        $('#openLevelGallery').click(FiercePlanet.Dialogs.showLevelGallery);
-        $('#editor').click(FiercePlanet.LevelUI.listLevels);
-        $('#3d').click(FiercePlanet.Drawing.toggle3d);
+        // Canvas dimensions
+        $('#contract').click(FiercePlanet.Drawing.contract);
+        $('#expand').click(FiercePlanet.Drawing.expand);
 
+        // Perspective
+        $('#3d').click(FiercePlanet.Drawing.toggle3d);
         $('#resetView').click(FiercePlanet.Drawing.resetView);
         $('#tiltUp').click(FiercePlanet.Drawing.tiltUp);
         $('#tiltDown').click(FiercePlanet.Drawing.tiltDown);
         $('#rotateLeft').click(FiercePlanet.Drawing.rotateLeft);
         $('#rotateRight').click(FiercePlanet.Drawing.rotateRight);
+
+        $('#settings').click(FiercePlanet.Dialogs.showSettings);
+        $('#credits').click(FiercePlanet.Dialogs.showCredits);
+        $('#openLevelGallery').click(FiercePlanet.Dialogs.showLevelGallery);
+        $('#editor').click(FiercePlanet.LevelUI.listLevels);
+
 
         // Admin functions
         $('#debug').click(FiercePlanet.Game.processAgents);
