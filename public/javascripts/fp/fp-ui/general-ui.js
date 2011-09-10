@@ -219,6 +219,9 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
      *  Register mouse move event
      */
     this.registerMouseMove = function(e) {
+        if (FiercePlanet.currentResourceId) {
+            FiercePlanet.Drawing.highlightCell(e);
+        }
         if (FiercePlanet.isMouseDown && World.settings.allowInlinePanning) {
             FiercePlanet.isMouseMoving = true;
             FiercePlanet.GeneralUI.doMove(e);

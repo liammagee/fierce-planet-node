@@ -1572,20 +1572,13 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
      *  Process mouse moves
      */
     this.highlightCell = function(e) {
-		var x = e.pageX - FiercePlanet.Dialogs.calculateWorldLeft();
-		var y = e.pageY - FiercePlanet.Dialogs.calculateWorldTop();
-
-            // var __ret = FiercePlanet.GeneralUI.getCurrentPosition(e);
-			var __ret = FiercePlanet.GeneralUI.getCurrentPositionByCoordinates(x, y);
+        if (FiercePlanet.currentResourceId) {
+            var __ret = FiercePlanet.GeneralUI.getCurrentPosition(e);
             var xPos = __ret.posX;
             var yPos = __ret.posY;
             this.clearCanvas('#noticeCanvas');
-			if (FiercePlanet.currentLevel.isInPath(xPos, yPos) > -1)
-				return;
-
             var scrollingCanvas = $('#noticeCanvas')[0];
             var ctx = scrollingCanvas.getContext('2d');
-
             ctx.save();
             ctx.translate(FiercePlanet.Orientation.halfWorldWidth, FiercePlanet.Orientation.halfWorldHeight);
             ctx.rotate(FiercePlanet.Orientation.rotationAngle);
@@ -1616,6 +1609,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
             }
 
             ctx.restore();
+        }
     };
 
 }).apply(FiercePlanet.Drawing);

@@ -593,7 +593,8 @@ Level.prototype.currentAgentHealthStats = function () {
         var agent = this.currentAgents[i];
 		for (var j in agent.agentType.healthCategories) {
             var h = agent.getHealthForResourceCategory(agent.agentType.healthCategories[j]);
-     		stats[agent.agentType.healthCategories[j].code] += h;
+            console.log(h)
+			stats[agent.agentType.healthCategories[j].code] += h;
 		}
 		stats.total += agent.health;
     }
