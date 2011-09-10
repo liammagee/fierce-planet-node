@@ -36,7 +36,13 @@ FiercePlanet.ResourceUI = FiercePlanet.ResourceUI || {};
                         zIndex: 1000,
                         start: function(event, ui) {
                             FiercePlanet.currentResourceId = this.id;
-                        }
+                        },
+	                    drag: function(event, ui) {
+	                        FiercePlanet.Drawing.highlightCell(event);
+	                    },
+						stop: function(event, ui) {
+							FiercePlanet.Drawing.clearCanvas('#noticeCanvas');
+						}
                     });
                     $('#' + el.id).click(function() {
                         FiercePlanet.currentResourceId = this.id;
