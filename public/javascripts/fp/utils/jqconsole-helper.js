@@ -44,7 +44,7 @@ $(function() {
                '\n' +
                'Type \'help\' to review a list of commands.\n'
       ;
-  window.jqconsole = $('#console').jqconsole(header, '> ');
+  window.jqconsole = $('#console').jqconsole(header, 'What? ');
   //window.jqconsole = $('#notifications').jqconsole(header, 'JS> ');
 
   jqconsole.zone = {};
@@ -53,7 +53,7 @@ $(function() {
   // Abort prompt on Ctrl+Z.
   jqconsole.RegisterShortcut('Z', function() {
     jqconsole.AbortPrompt();
-      jqconsole.prompt_label_main = '> ';
+      jqconsole.prompt_label_main = 'What? ';
       if (jqconsole.zone.name) {
           jqconsole.Write('Bye - you\'re leaving the ');
           jqconsole.Write(jqconsole.zone.name, 'quote');
@@ -154,7 +154,7 @@ $(function() {
               showHelp();
           }
           else if (command == 'js') {
-              jqconsole.prompt_label_main = 'js> ';
+              jqconsole.prompt_label_main = 'js: ';
               jqconsole.JSMode = true;
               jqconsole.zone.name = 'JavaScript';
               jqconsole.zone.js = true;
@@ -163,7 +163,7 @@ $(function() {
               jqconsole.Write("alert('Hello Fierce Planet!')\n\n", 'code');
           }
           else if (command == 'fp') {
-              jqconsole.prompt_label_main = 'fp> ';
+              jqconsole.prompt_label_main = 'fp: ';
               jqconsole.zone.name = 'Fierce Planet';
               jqconsole.zone.fp = true;
               showZone();
@@ -171,19 +171,19 @@ $(function() {
               jqconsole.Write('For example, try the following: \n\n');
           }
           else if (command == 'chat') {
-              jqconsole.prompt_label_main = 'chatty> ';
+              jqconsole.prompt_label_main = 'chat: ';
               jqconsole.zone.name = 'Chat';
               jqconsole.zone.chat = true;
               showZone();
           }
           else if (command == 'tute' || command == 'tutorial') {
-              jqconsole.prompt_label_main = 'tute> ';
+              jqconsole.prompt_label_main = 'tute: ';
               jqconsole.zone.name = 'Tutorial';
               jqconsole.zone.chat = true;
               showZone();
           }
           else if (command == 'agent') {
-              jqconsole.prompt_label_main = 'agent> ';
+              jqconsole.prompt_label_main = 'agent: ';
               jqconsole.zone.name = 'Agent';
               jqconsole.zone.agent = true;
               showZone();

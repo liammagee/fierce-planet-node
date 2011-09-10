@@ -1364,7 +1364,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
      * Contract canvas
      */
     this.contract = function () {
-        FiercePlanet.Orientation.resizeWorld(480,400);
+        FiercePlanet.Orientation.adjustParameters(480,400);
         FiercePlanet.Drawing.drawCanvases();
     };
 
@@ -1372,7 +1372,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
      * Expand canvas
      */
     this.expand = function () {
-        FiercePlanet.Orientation.resizeWorld(600,400);
+        FiercePlanet.Orientation.adjustParameters(600,400);
         FiercePlanet.Drawing.drawCanvases();
     };
 
