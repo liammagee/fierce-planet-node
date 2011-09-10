@@ -1566,7 +1566,6 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
                 }
                 );
     };
-    
 
 
     /**
