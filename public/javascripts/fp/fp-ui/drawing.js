@@ -1568,6 +1568,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
     };
     
 
+
     /**
      *  Process mouse moves
      */
