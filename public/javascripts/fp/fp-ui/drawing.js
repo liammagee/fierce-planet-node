@@ -1463,8 +1463,14 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
                 series: { shadowSize: 0 }, // drawing is faster without shadows
                 yaxis: { min: 0, max: totalSaveable }
             };
+			var seedData = [];
+			for (var i in World.resourceCategories) {
+				seedData.push({ data: [[0, 0]], lines: { show: true } });
+			}
+			seedData.push({ data: [[0, 0]], lines: { show: true } });
+
             plot = $.plot($("#world-graph"),
-                    [ { data: [[0, 0]], lines: { show: true } }, {data: [[0, 0]], lines: { show: true }} ],
+                    seedData,
                     options);
         }
     };
@@ -1487,18 +1493,29 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
     this.updateGraph = function() {
         if ($("#world-graph")[0] && World.settings.showGraph) {
             if (FiercePlanet.inPlay) {
-                var savedData = plot.getData()[0].data;
-                var expiredData = plot.getData()[1].data;
+//                var savedData = plot.getData()[0].data;
+//                var expiredData = plot.getData()[1].data;
+				var data = plot.getData();
                 if (FiercePlanet.levelCounter > 0) {
-                    savedData.push([FiercePlanet.levelCounter, FiercePlanet.currentProfile.currentLevelSaved]);
-                    expiredData.push([FiercePlanet.levelCounter, FiercePlanet.currentProfile.currentLevelExpired]);
+					//data = [];
+					var stats = FiercePlanet.currentLevel.currentAgentHealthStats();
+					var j = 0;
+					for (var i in stats) {
+						var d = [FiercePlanet.levelCounter, stats[i]];
+						data[j].data.push(d);
+						j++;
+					}
+					//data[j].data.push([FiercePlanet.levelCounter, stats.total])
+                    //savedData.push([FiercePlanet.levelCounter, FiercePlanet.currentProfile.currentLevelSaved]);
+                    //expiredData.push([FiercePlanet.levelCounter, FiercePlanet.currentProfile.currentLevelExpired]);
                 }
-
+				plot.setData(data);
+/*
                 plot.setData([
                     { data: savedData, lines: { show: true } },
                     {data: expiredData, lines: { show: true }}
                 ]);
-
+*/
                 plot.setupGrid();
                 plot.draw();
             }

@@ -578,7 +578,26 @@ Level.prototype.isPositionOccupiedByAgent = function (x, y) {
     return false;
 };
 
+// Overall agent health functions
 
+/**
+ * Find the current resource index
+ */
+Level.prototype.currentAgentHealthStats = function () {
+	var stats = {};
+	for (var i in World.resourceCategories) {
+		stats[World.resourceCategories[i].code] = 0;
+	}
+	stats.total = 0;
+    for (var i = 0; i < this.currentAgents.length; i++) {
+        var agent = this.currentAgents[i];
+		for (var j in agent.agentType.healthCategories) {
+			stats[agent.agentType.healthCategories[j].code] += agent.getHealthForResourceCategory(agent.agentType.healthCategories[j]);
+		}
+		stats.total += agent.health;
+    }
+    return stats;
+};
 
 // Resource functions
 /**
