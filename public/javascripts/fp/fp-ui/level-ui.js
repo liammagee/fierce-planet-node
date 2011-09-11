@@ -130,7 +130,12 @@ FiercePlanet.LevelUI = FiercePlanet.LevelUI || {};
                 level.cellsDown = cd;
             }
         }
+        else {
+            // Redo level dimensions
+            level.fillWithTiles();
+        }
 
+        // Save the level
         $.post('/levels/save', { level: JSON.stringify(level) }, function(response) {
             if (response._id && ! FiercePlanet.currentLevel._id)
                 FiercePlanet.currentLevel._id = response._id
