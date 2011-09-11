@@ -44,7 +44,7 @@ $(function() {
                '\n' +
                'Type \'help\' to review a list of commands.\n'
       ;
-  window.jqconsole = $('#console').jqconsole(header, 'What? ');
+  window.jqconsole = $('#console').jqconsole(header, 'Ask me: ');
   //window.jqconsole = $('#notifications').jqconsole(header, 'JS> ');
 
   jqconsole.zone = {};
@@ -53,7 +53,7 @@ $(function() {
   // Abort prompt on Ctrl+Z.
   jqconsole.RegisterShortcut('Z', function() {
     jqconsole.AbortPrompt();
-      jqconsole.prompt_label_main = 'What? ';
+      jqconsole.prompt_label_main = 'Ask me: ';
       if (jqconsole.zone.name) {
           jqconsole.Write('Bye - you\'re leaving the ');
           jqconsole.Write(jqconsole.zone.name, 'quote');

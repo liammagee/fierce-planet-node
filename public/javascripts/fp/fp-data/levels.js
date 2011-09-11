@@ -899,29 +899,30 @@ FiercePlanet.PresetLevels.level12.setup = function() {
 //    this.removeTiles(100, 100);
 };
 
+
 /* Level 13 Definition */
 
 FiercePlanet.PresetLevels.level13 = new Level(13);
-FiercePlanet.PresetLevels.level13.isometric = true;
-FiercePlanet.PresetLevels.level13.allowResourcesOnPath = true;
+FiercePlanet.PresetLevels.level13.allowResourcesOnPath = false;
 FiercePlanet.PresetLevels.level13.initialResourceStore = 100;
 FiercePlanet.PresetLevels.level13.isPresetLevel = true;
-FiercePlanet.PresetLevels.level13.addEntryPoint(0, 0);
-FiercePlanet.PresetLevels.level13.addExitPoint(4, 4);
-FiercePlanet.PresetLevels.level13.cellsAcross = 5;
-FiercePlanet.PresetLevels.level13.cellsDown = 5;
+FiercePlanet.PresetLevels.level13.addEntryPoint(7, 0);
+FiercePlanet.PresetLevels.level13.addEntryPoint(7, 9);
+FiercePlanet.PresetLevels.level13.addExitPoint(7, 3);
+FiercePlanet.PresetLevels.level13.addExitPoint(7, 12);
+FiercePlanet.PresetLevels.level13.cellsAcross = 13;
+FiercePlanet.PresetLevels.level13.cellsDown = 13;
 FiercePlanet.PresetLevels.level13.initialAgentNumber = 1;
-FiercePlanet.PresetLevels.level13.waveNumber = 3;
-FiercePlanet.PresetLevels.level13.expiryLimit = 20;
-FiercePlanet.PresetLevels.level13.name = ("Oh-ho!");
+FiercePlanet.PresetLevels.level13.waveNumber = 10;
+FiercePlanet.PresetLevels.level13.expiryLimit = 10;
+FiercePlanet.PresetLevels.level13.name = ("Back to Baghdad!");
 FiercePlanet.PresetLevels.level13.introduction = (""
         + "<p>New threats have emerged....</p>"
         );
 FiercePlanet.PresetLevels.level13.conclusion = ("Well done.");
 
 FiercePlanet.PresetLevels.level13.setup = function() {
-    this.removeAllTiles();
-//    this.removeTiles(100, 100);
+    this.setTiles(JSON.parse('[{"color":"0FFF1F","x":0,"y":0,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":1,"y":0,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":2,"y":0,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":3,"y":0,"terrain":{"color":"0FFF1F","alpha":1}},null,null,null,null,null,{"color":"0FFF1F","x":9,"y":0,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":0,"y":1,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":1,"y":1,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":2,"y":1,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":3,"y":1,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":4,"y":1,"terrain":{"color":"0FFF1F","alpha":1}},null,null,null,{"color":"0FFF1F","x":8,"y":1,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":9,"y":1,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":0,"y":2,"terrain":{"color":"0FFF1F","alpha":1}},null,null,null,{"color":"0FFF1F","x":4,"y":2,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":5,"y":2,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":6,"y":2,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":7,"y":2,"terrain":{"color":"0FFF1F","alpha":1}},null,{"color":"0FFF1F","x":9,"y":2,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":0,"y":3,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":1,"y":3,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":2,"y":3,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":3,"y":3,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":4,"y":3,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":5,"y":3,"terrain":{"color":"0FFF1F","alpha":1}},null,{"color":"0FFF1F","x":7,"y":3,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":8,"y":3,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":9,"y":3,"terrain":{"color":"0FFF1F","alpha":1}},null,null,{"color":"0FFF1F","x":2,"y":4,"terrain":{"color":"0FFF1F","alpha":1}},null,null,null,null,null,{"color":"0FFF1F","x":8,"y":4,"terrain":{"color":"0FFF1F","alpha":1}},null,null,{"color":"0FFF1F","x":1,"y":5,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":2,"y":5,"terrain":{"color":"0FFF1F","alpha":1}},null,{"color":"0FFF1F","x":4,"y":5,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":5,"y":5,"terrain":{"color":"0FFF1F","alpha":1}},null,{"color":"0FFF1F","x":7,"y":5,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":8,"y":5,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":9,"y":5,"terrain":{"color":"0FFF1F","alpha":1}},null,{"color":"0FFF1F","x":1,"y":6,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":2,"y":6,"terrain":{"color":"0FFF1F","alpha":1}},null,{"color":"0FFF1F","x":4,"y":6,"terrain":{"color":"0FFF1F","alpha":1}},null,null,{"color":"0FFF1F","x":7,"y":6,"terrain":{"color":"0FFF1F","alpha":1}},null,null,{"color":"0FFF1F","x":0,"y":7,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":1,"y":7,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":2,"y":7,"terrain":{"color":"0FFF1F","alpha":1}},null,null,{"color":"0FFF1F","x":5,"y":7,"terrain":{"color":"0FFF1F","alpha":1}},null,null,null,{"color":"0FFF1F","x":9,"y":7,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":2,"y":6,"terrain":{"color":"0FFF1F","alpha":1}},null,{"color":"0FFF1F","x":2,"y":8,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":3,"y":8,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":4,"y":8,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":5,"y":8,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":6,"y":8,"terrain":{"color":"0FFF1F","alpha":1}},null,{"color":"0FFF1F","x":8,"y":8,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":9,"y":8,"terrain":{"color":"0FFF1F","alpha":1}},null,null,null,{"color":"0FFF1F","x":3,"y":9,"terrain":{"color":"0FFF1F","alpha":1}},null,null,{"color":"0FFF1F","x":6,"y":9,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":7,"y":9,"terrain":{"color":"0FFF1F","alpha":1}},{"color":"0FFF1F","x":8,"y":9,"terrain":{"color":"0FFF1F","alpha":1}},null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null]'));
 };      
 
 /* Level 14 Definition */
@@ -1142,3 +1143,10 @@ FiercePlanet.PresetLevels.level10.mapOptions = ({mapTypeId: google.maps.MapTypeI
 FiercePlanet.PresetLevels.level11.mapOptions = ({mapTypeId: google.maps.MapTypeId.SATELLITE, center: new google.maps.LatLng(51, 73), zoom: 2}); // The World
 
 FiercePlanet.PresetLevels.level12.mapOptions = ({mapTypeId: google.maps.MapTypeId.SATELLITE, center: new google.maps.LatLng(40.75537849652072, -73.98745089769363), zoom: 19}); // The World
+FiercePlanet.PresetLevels.level13.mapOptions = ({mapTypeId: google.maps.MapTypeId.SATELLITE, center: new google.maps.LatLng(33.30839307429315, 44.388874769210815), zoom: 16}); // The World
+FiercePlanet.PresetLevels.level14.mapOptions = ({mapTypeId: google.maps.MapTypeId.SATELLITE, center: new google.maps.LatLng(40.75537849652072, -73.98745089769363), zoom: 19}); // The World
+FiercePlanet.PresetLevels.level15.mapOptions = ({mapTypeId: google.maps.MapTypeId.SATELLITE, center: new google.maps.LatLng(40.75537849652072, -73.98745089769363), zoom: 19}); // The World
+FiercePlanet.PresetLevels.level16.mapOptions = ({mapTypeId: google.maps.MapTypeId.SATELLITE, center: new google.maps.LatLng(40.75537849652072, -73.98745089769363), zoom: 19}); // The World
+FiercePlanet.PresetLevels.level17.mapOptions = ({mapTypeId: google.maps.MapTypeId.SATELLITE, center: new google.maps.LatLng(40.75537849652072, -73.98745089769363), zoom: 19}); // The World
+FiercePlanet.PresetLevels.level18.mapOptions = ({mapTypeId: google.maps.MapTypeId.SATELLITE, center: new google.maps.LatLng(40.75537849652072, -73.98745089769363), zoom: 19}); // The World
+FiercePlanet.PresetLevels.level19.mapOptions = ({mapTypeId: google.maps.MapTypeId.SATELLITE, center: new google.maps.LatLng(40.75537849652072, -73.98745089769363), zoom: 19}); // The World
