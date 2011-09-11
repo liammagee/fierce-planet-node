@@ -1464,7 +1464,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
 //        plot = $.plot($("#world-graph"),
 //                [ { data: [[0, 0]], lines: { show: true } }, {data: [[0, 0]], lines: { show: true }} ],
 //                options);
-            plotUpdateInterval = 250;
+            plotUpdateInterval = 100;
             this.updateGraph();
         }
     };

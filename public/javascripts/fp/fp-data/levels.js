@@ -63,7 +63,7 @@ FiercePlanet.PresetLevels.level1.addExitPoint(10, 1);
 FiercePlanet.PresetLevels.level1.cellsAcross = 11;
 FiercePlanet.PresetLevels.level1.cellsDown = 11;
 FiercePlanet.PresetLevels.level1.initialAgentNumber = 1;
-FiercePlanet.PresetLevels.level1.waveNumber = 1;
+FiercePlanet.PresetLevels.level1.waveNumber = 10;
 FiercePlanet.PresetLevels.level1.expiryLimit = 20;
 FiercePlanet.PresetLevels.level1.name = ("Level 1: Welcome to Fierce Planet!");
 FiercePlanet.PresetLevels.level1.introduction = (
