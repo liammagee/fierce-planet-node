@@ -676,28 +676,10 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
     this.changeLevelDirectly =  function() {
         var level = $(this).attr('id');
         level = level.substring(11);
-
-        // Retrieve level object from server
-        $.get('/levels/' + level, function(tmpLevel) {
-            if (tmpLevel) {
-                FiercePlanet.Utils.makeFromJSONObject(tmpLevel, Level.prototype);
-                for (var i in tmpLevel.resources) {
-                    FiercePlanet.Utils.makeFromJSONObject(tmpLevel.resources[i], Resource.prototype);
-                }
-                tmpLevel.levelResources = tmpLevel.resources;
-
-                FiercePlanet.currentLevel = tmpLevel;
-                FiercePlanet.currentLevelNumber = tmpLevel.id;
-                FiercePlanet.currentLevelPreset = false;
-
-                // Remember this level, along with other data
-                FiercePlanet.ProfileUI.storeProfileData();
-                FiercePlanet.Dialogs.levelGalleryDialog.dialog('close');
-                FiercePlanet.Lifecycle.newLevel();
-            }
-        });
+        FiercePlanet.LevelUI.openLevelFromServer(level);
     };
 
+    
     /**
      * Changes the preset level
      */

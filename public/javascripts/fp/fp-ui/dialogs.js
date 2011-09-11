@@ -201,6 +201,7 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
                 buttons: {
                     "Save Capabilities": function() {
                         FiercePlanet.GeneralUI.refreshSwatch();
+                        FiercePlanet.ResourceUI.setupResourceInteraction();
                         FiercePlanet.ProfileUI.saveCapabilities();
                         $( this ).dialog( "close" );
                     },
@@ -493,7 +494,7 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
     this.showGameOverDialog = function () {
 //    FiercePlanet.currentProfile.updateStats(FiercePlanet.currentProfile.resources_in_store, FiercePlanet.currentProfile.saved_agent_count);
         // Try to save results to the server
-        if (FiercePlanet.currentProfile.id > -1) {
+        if (FiercePlanet.currentProfile.saved) {
             FiercePlanet.ProfileUI.saveProfile(function(data) {
                    this.openGameOverDialog();
                });
@@ -520,9 +521,9 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
      */
     this.showCompleteGameDialog = function() {
         // Try to save results to the server
-        if (FiercePlanet.currentProfile.id > -1) {
+        if (FiercePlanet.currentProfile.saved) {
             FiercePlanet.ProfileUI.saveProfile(function(data) {
-                   this.openCompleteGameDialog();
+                   FiercePlanet.Dialogs.openCompleteGameDialog();
                });
         }
         else {
@@ -537,18 +538,16 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
         this.completeGameDialog.html(
                 "Congratulations! In spite of challenges ahead, the citizens of Fierce Planet look forward to a bright and sustainable future!" +
                         FiercePlanet.ProfileUI.generateStats()
-                )
-                .dialog('open');
-        $('#gotoResourceGallery').click(FiercePlanet.showResourceGallery);
+                ).dialog('open');
     };
 
     /**
      * Show the completed level dialog
      */
     this.showCompleteLevelDialog = function() {
-        if (FiercePlanet.currentProfile.id > -1) {
+        if (FiercePlanet.currentProfile.saved) {
             FiercePlanet.ProfileUI.saveProfile(function(data) {
-                   this.openCompleteLevelDialog();
+                   FiercePlanet.Dialogs.openCompleteLevelDialog();
                });
         }
         else {

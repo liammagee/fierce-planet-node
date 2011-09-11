@@ -24,8 +24,17 @@ FiercePlanet.ProfileUI = FiercePlanet.ProfileUI || {};
      */
     this.getProfile = function() {
         $.get('/profile/get', function(res) {
-            if (res)
+            if (res) {
                 FiercePlanet.currentProfile = FiercePlanet.Utils.makeFromJSONObject(res.profile, Profile.prototype);
+                FiercePlanet.currentProfile.saved = true;
+
+                // Refresh the capabilities list
+                FiercePlanet.GeneralUI.refreshSwatch();
+
+                // Handle resource drag and drop and click interactions
+                FiercePlanet.ResourceUI.setupResourceInteraction();
+
+            }
         });
     };
     
@@ -84,11 +93,13 @@ FiercePlanet.ProfileUI = FiercePlanet.ProfileUI || {};
      * Saves current capabilities for this profile
      * @param func
      */
-    this.saveProfile = function(func) {
-        $.post("/profile/update", FiercePlanet.ProfileUI.serializeProfile(), func);
-//        if (FiercePlanet.currentProfile.id > -1) {
-//            $.post("/profile/update", FiercePlanet.ProfileUI.serializeProfile(), func);
-//        }
+    this.saveProfile = function(callback) {
+        try {
+            $.post("/profile/update", FiercePlanet.ProfileUI.serializeProfile(), function(data) {
+                callback(data);
+            });
+        }
+        catch(err) {}
     };
 
     /**
@@ -108,7 +119,7 @@ FiercePlanet.ProfileUI = FiercePlanet.ProfileUI || {};
      * Saves current capabilities for this profile
      */
     this.saveCapabilities = function() {
-        FiercePlanet.ProfileUI.saveProfile();
+        FiercePlanet.ProfileUI.saveProfile(function(data) { Log.info('Saved profile'); });
     };
 
     /**
@@ -166,7 +177,7 @@ FiercePlanet.ProfileUI = FiercePlanet.ProfileUI || {};
                 "</tr>" +
                 "<tr>" +
                 "<td>Credits:</td>" +
-                "<td><span style='font-weight:bold'>" + FiercePlanet.currentProfile.credits + " (<a href='#' id='gotoResourceGallery'>More</a>)</span></td>" +
+                "<td><span style='font-weight:bold'>" + FiercePlanet.currentProfile.credits + "</span></td>" +
                 "</tr>" +
                 "</table>";
         return stats;

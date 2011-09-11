@@ -111,9 +111,11 @@
         .level-field
           input#level-allow_patches-on-path(type='checkbox', name='allowPatchesOnPath')
           label(for='level-allow-patches-on-path') Can resources go on the path?
-        .level-field
-          label(for='level-id') ID
-          span#level-id
+        hr
+        div Sharing
+        div
+          label(for='level-url-display') URL:
+          input#level-url-display(size='60', name='url')
         div
           a#level-url(target='_blank', href='', style='font-size:0.9em') (Open in new window)
 

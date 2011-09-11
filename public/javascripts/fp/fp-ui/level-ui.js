@@ -179,7 +179,8 @@ FiercePlanet.LevelUI = FiercePlanet.LevelUI || {};
         var l = FiercePlanet.currentLevel;
         $('#level-object-id').val(l._id);
         $('#level-name').val(l.name);
-        $('#level-url').attr('href', '/levels/' + l.id);
+        $('#level-url').attr('href', '/levels/share/' + l._id);
+        $('#level-url-display').val('http://www.fierce-planet.com/levels/share/' + l._id);
         $('#level-width').val(l.cellsAcross);
         $('#level-height').val(l.cellsDown);
         $('#level-initial-agent-number').val(l.initialAgentNumber);
@@ -216,6 +217,52 @@ FiercePlanet.LevelUI = FiercePlanet.LevelUI || {};
             FiercePlanet.Dialogs.levelEditorDialog.dialog('open');
         });
     }
+
+    /**
+     * Changes the preset level
+     */
+    this.openLevelFromServer =  function(levelID) {
+        // Retrieve level object from server
+        $.get('/levels/' + levelID, function(tmpLevel) {
+            if (tmpLevel) {
+                FiercePlanet.Utils.makeFromJSONObject(tmpLevel, Level.prototype);
+                for (var i in tmpLevel.resources) {
+                    FiercePlanet.Utils.makeFromJSONObject(tmpLevel.resources[i], Resource.prototype);
+                }
+                tmpLevel.levelResources = tmpLevel.resources;
+
+                FiercePlanet.currentLevel = tmpLevel;
+                FiercePlanet.currentLevelNumber = tmpLevel.id;
+                FiercePlanet.currentLevelPreset = false;
+
+                // Remember this level, along with other data
+                FiercePlanet.ProfileUI.storeProfileData();
+                FiercePlanet.Dialogs.levelGalleryDialog.dialog('close');
+                FiercePlanet.Lifecycle.newLevel();
+            }
+        });
+    };
+
+    /**
+     * Changes the preset level
+     */
+    this.makeLevelFromJSON =  function(tmpLevel) {
+        // Retrieve level object from server
+        FiercePlanet.Utils.makeFromJSONObject(tmpLevel, Level.prototype);
+        for (var i in tmpLevel.resources) {
+            FiercePlanet.Utils.makeFromJSONObject(tmpLevel.resources[i], Resource.prototype);
+        }
+        tmpLevel.levelResources = tmpLevel.resources;
+
+        FiercePlanet.currentLevel = tmpLevel;
+        FiercePlanet.currentLevelNumber = tmpLevel.id;
+        FiercePlanet.currentLevelPreset = false;
+
+        // Remember this level, along with other data
+        FiercePlanet.ProfileUI.storeProfileData();
+        FiercePlanet.Dialogs.levelGalleryDialog.dialog('close');
+        FiercePlanet.Lifecycle.newLevel();
+    };
 
 }).apply(FiercePlanet.LevelUI);
 

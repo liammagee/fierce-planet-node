@@ -282,6 +282,27 @@ app.get('/levels/:id', function(req, res){
             res.send(level);
         });
     }
+    else {
+        res.send({});
+    }
+});
+
+app.get('/levels/share/:id', function(req, res){
+    var id = req.params.id;
+    if (id) {
+        fpProvider.findById(id, function(error, level){
+            res.render('index', {
+                title: 'Fierce Planet',
+                locals: {serverLevel: level }
+            });
+        });
+    }
+    else {
+        res.render('index', {
+            title: 'Fierce Planet',
+            locals: {}
+        });
+    }
 });
 
 app.get('/levels/destroy/:id', function(req, res){
@@ -324,18 +345,17 @@ app.get('/profile/get', function(req, res){
     res.send(req.user);
 });
 
-app.get('/chat', function (req, res) {
-  res.render('chat', { layout: false });
-});
-
-
 app.post('/profile/update', function(req, res){
     if (req.user && req.body.profile) {
         var user = req.user;
         user.profile = JSON.parse(req.body.profile);
+        user.profile.saved = true;
         fpProvider.updateUser(user, function(error, result){
             res.send(result.toString());
         });
+    }
+    else {
+        res.send(-1);
     }
 });
 

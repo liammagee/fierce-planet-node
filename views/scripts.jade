@@ -98,7 +98,6 @@ script(src='/javascripts/fp/dev.js')
 
 script(type='text/javascript')
   $(document).ready(function() {
-    FiercePlanet.ProfileUI.getProfile();
 
     $('.thumbnail, .customLevel').click(FiercePlanet.GeneralUI.changePresetLevelDirectly);
     FiercePlanet.GeneralUI.highlightGalleryItem(FiercePlanet.currentLevelNumber);
@@ -113,3 +112,8 @@ script(type='text/javascript')
     $('#3d')[0].innerHTML = 'View 2D';
     FiercePlanet.Drawing.drawGame();
   });
+- if (typeof(serverLevel) !== 'undefined')
+  script
+    $(document).ready(function() {
+      FiercePlanet.LevelUI.makeLevelFromJSON(!{JSON.stringify(serverLevel)});
+    });

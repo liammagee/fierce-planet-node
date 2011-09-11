@@ -1483,9 +1483,9 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
 			var seedData = [];
 			for (var i in World.resourceCategories) {
                 var cat = World.resourceCategories[i];
-				seedData.push({ color: cat.color, data: [[0, 0]], lines: { show: true } });
+				seedData.push({ color: cat.color, data: [[0, 100]], lines: { show: true } });
 			}
-			seedData.push({ data: [[0, 0]], lines: { show: true } });
+			seedData.push({ color: '#333', data: [[0, 100]], lines: { show: true } });
 
             plot = $.plot($("#world-graph"),
                     seedData,
@@ -1580,6 +1580,10 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
             var xPos = __ret.posX;
             var yPos = __ret.posY;
             this.clearCanvas('#noticeCanvas');
+
+            if (xPos < 0 || xPos >= FiercePlanet.Orientation.cellsAcross || yPos < 0 || yPos >= FiercePlanet.Orientation.cellsDown)
+                return;
+
 			if (FiercePlanet.currentLevel.isInPath(xPos, yPos) > -1)
 				return;
 
@@ -1592,7 +1596,6 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
 
             var x = xPos * FiercePlanet.Orientation.cellWidth;
             var y = yPos * FiercePlanet.Orientation.cellHeight;
-
 
             if ((World.settings.skewTiles || FiercePlanet.currentLevel.isometric)) {
                 var newOrigin = FiercePlanet.Isometric.doIsometricOffset(xPos, yPos);

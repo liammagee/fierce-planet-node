@@ -32,6 +32,7 @@ FP_Profile.STARTING_STORE = 0;
  */
 function Profile() {
     // Profile-level properties, defining current class, capabilities and credits
+    this.saved = false;
     this.id = -1;
     this.profileClass = FP_Profile.PROFILE_CLASSES[0];
     this.capabilities = FP_Profile.NOVICE_CAPABILITIES;

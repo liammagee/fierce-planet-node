@@ -92,8 +92,9 @@ FiercePlanet.Utils = FiercePlanet.Utils || {};
         World.settings.hidePath = World.settings.hidePath || false;
         World.settings.hidePathBorder = World.settings.hidePathBorder || false;
         World.settings.hideLevelInfo = World.settings.hideLevelInfo || false;
-        World.settings.showGraph = World.settings.showGraph || true;
-        World.settings.showChat = World.settings.showChat || true;
+        World.settings.showGraph = World.settings.showGraph || false;
+        World.settings.refreshGraphEveryWave = World.settings.refreshGraphEveryWave || false;
+        World.settings.showChat = World.settings.showChat || false;
         World.settings.makeElementsMovable = World.settings.makeElementsMovable || false;
         World.settings.reverseMouseClickEffects = World.settings.reverseMouseClickEffects || false;
 
