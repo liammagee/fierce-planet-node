@@ -130,7 +130,7 @@ FiercePlanet.LevelUI = FiercePlanet.LevelUI || {};
                 level.cellsDown = cd;
             }
         }
-        else {
+        else if (! FiercePlanet.currentLevel._id) {
             // Redo level dimensions
             level.fillWithTiles();
         }
