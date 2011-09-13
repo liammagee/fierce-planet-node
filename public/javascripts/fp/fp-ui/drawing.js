@@ -564,9 +564,11 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
 
             // Create a gradient to fill the cell from the bottom up
             var yOffset = (((FiercePlanet.Orientation.cellHeight) * (1.0 - (s / 100))) / 1.2) | 0;
-            var resourceGradient = ctx.createLinearGradient(x, y + yOffset, x, y + FiercePlanet.Orientation.cellHeight);
-//            resourceGradient.addColorStop(0, "#fff");
-            resourceGradient.addColorStop(0, "#" + c);
+            var rgx =  - FiercePlanet.Orientation.halfWorldWidth + x;
+            var rgys = - FiercePlanet.Orientation.halfWorldHeight + y + yOffset;
+            var rgye = - FiercePlanet.Orientation.halfWorldHeight + y + FiercePlanet.Orientation.cellHeight;
+            var resourceGradient = ctx.createLinearGradient(rgx, rgys, rgx, rgye);
+            resourceGradient.addColorStop(0, "#fff");
             resourceGradient.addColorStop(0.5, "#" + c);
             resourceGradient.addColorStop(1, "#" + c);
 
@@ -670,9 +672,11 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
 
         // Create a gradient to fill the cell from the bottom up
         var yOffset = (((FiercePlanet.Orientation.cellHeight) * (1.0 - (s / 100))) / 1.2) | 0;
-        var resourceGradient = ctx.createLinearGradient(x, y + yOffset, x, y + FiercePlanet.Orientation.cellHeight);
-//        resourceGradient.addColorStop(0, "#fff");
-        resourceGradient.addColorStop(0, "#" + c);
+        var rgx =  - FiercePlanet.Orientation.halfWorldWidth + x;
+        var rgys = - FiercePlanet.Orientation.halfWorldHeight + y + yOffset;
+        var rgye = - FiercePlanet.Orientation.halfWorldHeight + y + FiercePlanet.Orientation.cellHeight;
+        var resourceGradient = ctx.createLinearGradient(rgx, rgys, rgx, rgye);
+        resourceGradient.addColorStop(0, "#fff");
         resourceGradient.addColorStop(0.5, "#" + c);
         resourceGradient.addColorStop(1, "#" + c);
 

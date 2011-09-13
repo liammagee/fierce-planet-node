@@ -118,6 +118,11 @@ FiercePlanet.Editor = FiercePlanet.Editor || {};
         if (FiercePlanet.isMouseDown) {
             FiercePlanet.isMouseMoving = true;
             var currentPoint = FiercePlanet.GeneralUI.getCurrentPosition(e);
+
+            // Return if the co-ordinates are outside the level bounds
+            if (currentPoint.posX < 0 || currentPoint.posX >= FiercePlanet.currentLevel.cellsAcross || currentPoint.posY < 0 || currentPoint.posY >= FiercePlanet.currentLevel.cellsDown)
+                return;
+
             if (FiercePlanet.Editor.clearMode) {
                 var currentTile = FiercePlanet.currentLevel.getTile(currentPoint.posX, currentPoint.posY);
                 if (currentTile == undefined ) {
@@ -141,6 +146,11 @@ FiercePlanet.Editor = FiercePlanet.Editor || {};
     this.handleEditorMouseUp = function(e) {
         if (e.preventDefault) e.preventDefault(); // allows us to drop
         var currentPoint = FiercePlanet.GeneralUI.getCurrentPosition(e);
+
+        // Return if the co-ordinates are outside the level bounds
+        if (currentPoint.posX < 0 || currentPoint.posX >= FiercePlanet.currentLevel.cellsAcross || currentPoint.posY < 0 || currentPoint.posY >= FiercePlanet.currentLevel.cellsDown)
+            return;
+
         FiercePlanet.currentX = currentPoint.posX;
         FiercePlanet.currentY = currentPoint.posY;
 
