@@ -87,7 +87,7 @@ FiercePlanet.Orientation = FiercePlanet.Orientation || {};
 
     this.resizeWorld = function() {
         try {
-            var canvases = $('#world, #imageCanvas, #map_canvas, #baseCanvas, #noticeCanvas, #agentCanvas, #resourceCanvas, #scrollingCanvas');
+            var canvases = $('#world, #imageCanvas, #map_canvas, #baseCanvas, #guideCanvas, #noticeCanvas, #agentCanvas, #resourceCanvas, #scrollingCanvas');
             //, #alt_map_canvas
             $('#map_canvas')[0].width = this.worldWidth;
             $('#map_canvas')[0].height = this.worldHeight;
@@ -95,6 +95,8 @@ FiercePlanet.Orientation = FiercePlanet.Orientation || {};
             $('#baseCanvas')[0].height = this.worldHeight;
             $('#noticeCanvas')[0].width = this.worldWidth;
             $('#noticeCanvas')[0].height = this.worldHeight;
+            $('#guideCanvas')[0].width = this.worldWidth;
+            $('#guideCanvas')[0].height = this.worldHeight;
             $('#agentCanvas')[0].width = this.worldWidth;
             $('#agentCanvas')[0].height = this.worldHeight;
             $('#resourceCanvas')[0].width = this.worldWidth;
@@ -130,6 +132,16 @@ FiercePlanet.Orientation = FiercePlanet.Orientation || {};
         return {x: newX, y: newY};
     };
 
+
+    /**
+     * Make full screen
+     */
+    this.makeFullScreen = function () {
+        var sw = $("body").width();
+        var sh = $("body").height();
+
+        FiercePlanet.Orientation.adjustParameters(sw - 160, sh - 400);
+    };
 
     this.reset();
 

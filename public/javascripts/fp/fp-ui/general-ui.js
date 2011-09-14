@@ -160,12 +160,12 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
      *  Does all the necessary binding for in-game mouse events
      */
     this.bindGameMouseEvents = function() {
-        var topMostCanvas = $('#scrollingCanvas');
+        var topMostCanvas = FiercePlanet.GeneralUI.getTopMostCanvas();
 
         if (typeof console != "undefined")
             console.log('Binding mouse events');
 
-        topMostCanvas.click(FiercePlanet.handleNoticeEvents);
+        topMostCanvas.click(FiercePlanet.GeneralUI.handleNoticeEvents);
         topMostCanvas.click(FiercePlanet.ResourceUI.processResourceCanvasClick);
 
         topMostCanvas.mousemove(FiercePlanet.GeneralUI.registerMouseMove);
@@ -187,7 +187,7 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
      *  Does all the necessary binding for in-game mouse events
      */
     this.unbindGameMouseEvents = function() {
-        var topMostCanvas = $('#scrollingCanvas');
+        var topMostCanvas = FiercePlanet.GeneralUI.getTopMostCanvas();
 
         topMostCanvas.unbind('click');
     //    agentCanvas.unbind('click', FiercePlanet.handleNoticeEvents);
@@ -198,6 +198,15 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
 //        topMostCanvas.unmousewheel();
         topMostCanvas.unbind("contextmenu");
     };
+
+    /**
+     *  Does all the necessary binding for in-game mouse events
+     */
+    this.getTopMostCanvas = function() {
+        return $('#noticeCanvas');
+    };
+
+
 
     /**
      *  Register mouse down event
@@ -700,28 +709,6 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
     this.changeDifficulty = function () {
         var difficulty = $("input[@name=difficultyInput]:checked").val();
         FiercePlanet.levelOfDifficulty = FiercePlanet.Utils.checkInteger(difficulty);
-    };
-
-    /**
-     * Make full screen
-     */
-    this.makeFullScreen = function () {
-        var sw = $("body").width();
-        var sh = $("body").height();
-
-        // Clear canvases
-    //    $('#content-pane').offset({left: 0, top: -110, width: sw, height: sh});
-        $('#content-pane').css({left: 0, top: -110, width: sw, height: sh});
-//        $('#map_canvas, #baseCanvas, #resourceCanvas, #scrollingCanvas, #noticeCanvas, #agentCanvas').css({left: 0, top: 0, width: sw, height: sh});
-    //    $('#map_canvas').css({left: 0, top: 0, width: sw, height: sh});
-    //    $('#baseCanvas, #resourceCanvas, #scrollingCanvas, #noticeCanvas, #agentCanvas').width(600);
-    //    $('#baseCanvas').css({left: 0, top: 0, width: sw, height: sh});
-    //    $('#baseCanvas').width(sw / 2);
-        $('#controls').css({left: 0, top: 210, zIndex: 1});
-        $('#swatch').css({left: sw - 160, top: sh - 400, zIndex: 1});
-
-        FiercePlanet.Drawing.drawGame();
-
     };
 
 }).apply(FiercePlanet.GeneralUI);

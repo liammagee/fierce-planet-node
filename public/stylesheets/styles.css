@@ -77,10 +77,11 @@ body {
 #imageCanvas        { z-index: 1 }
 #map_canvas         { z-index: 2 }
 #baseCanvas         { z-index: 3 }
-#noticeCanvas       { z-index: 4 }
+#guideCanvas        { z-index: 4 }
 #agentCanvas        { z-index: 5 }
 #resourceCanvas     { z-index: 6 }
 #scrollingCanvas    { z-index: 7 }
+#noticeCanvas       { z-index: 8 }
 
 #level-name {
 	font-size:18px;

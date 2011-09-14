@@ -756,32 +756,41 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
      * @param resource
      */
     this.clearResource = function(resource) {
-        var canvas = $('#resourceCanvas')[0];
-        var ctx = canvas.getContext('2d');
-
-        // Rotation logic here - TODO: Refactor out
-        var midTilePosX = (FiercePlanet.Orientation.worldWidth) / 2;
-        var midTilePosY = (FiercePlanet.Orientation.worldHeight) / 2;
-        ctx.save();
-        ctx.translate(midTilePosX, midTilePosY);
-        ctx.rotate(FiercePlanet.Orientation.rotationAngle);
-
-        var x = resource.x * FiercePlanet.Orientation.cellWidth;
-        var y = resource.y * FiercePlanet.Orientation.cellHeight;
-
         if ((World.settings.skewTiles || FiercePlanet.currentLevel.isometric)) {
-            var newOrigin = FiercePlanet.Isometric.doIsometricOffset(resource.x, resource.y);
-            x = newOrigin.x + FiercePlanet.Orientation.cellWidth / 2;
-            y = newOrigin.y + FiercePlanet.Orientation.cellHeight;
+//            var newOrigin = FiercePlanet.Isometric.doIsometricOffset(resource.x, resource.y);
+//            var originXp = newOrigin.x + FiercePlanet.Orientation.cellWidth / 2;
+//            var originYp = newOrigin.y + FiercePlanet.Orientation.cellHeight;
+//
+//            // Rotation logic here - TODO: Refactor out
+//            originXp = originXp - (FiercePlanet.Orientation.worldWidth) / 2;
+//            originYp = originYp - (FiercePlanet.Orientation.worldHeight) / 2;
+//
+//            x = originXp;
+//            y = originYp;
+//            FiercePlanet.Isometric.draw3DTile(ctx, [originXp, originYp], FiercePlanet.Orientation.cellHeight);
+            FiercePlanet.Drawing.drawResources();
+        }
+        else {
+            var canvas = $('#resourceCanvas')[0];
+            var ctx = canvas.getContext('2d');
+
+            // Rotation logic here - TODO: Refactor out
+            var midTilePosX = (FiercePlanet.Orientation.worldWidth) / 2;
+            var midTilePosY = (FiercePlanet.Orientation.worldHeight) / 2;
+
+            var x = resource.x * FiercePlanet.Orientation.cellWidth;
+            var y = resource.y * FiercePlanet.Orientation.cellHeight;
+
+            ctx.save();
+            ctx.translate(midTilePosX, midTilePosY);
+            ctx.rotate(FiercePlanet.Orientation.rotationAngle);
+            // Rotation logic here - TODO: Refactor out
+            x = x - (FiercePlanet.Orientation.worldWidth) / 2;
+            y = y - (FiercePlanet.Orientation.worldHeight) / 2;
+            ctx.clearRect(x, y, FiercePlanet.Orientation.cellWidth, FiercePlanet.Orientation.cellHeight);
+            ctx.restore();
         }
 
-        // Rotation logic here - TODO: Refactor out
-        x = x - (FiercePlanet.Orientation.worldWidth) / 2;
-        y = y - (FiercePlanet.Orientation.worldHeight) / 2;
-
-        ctx.clearRect(x, y, FiercePlanet.Orientation.cellWidth, FiercePlanet.Orientation.cellHeight);
-
-        ctx.restore();
     };
     
     /**
@@ -1575,54 +1584,62 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
     /**
      *  Process mouse moves
      */
-    this.highlightCell = function(e) {
+    this.drawGuideCell = function(e) {
 		var x = e.pageX - FiercePlanet.Dialogs.calculateWorldLeft();
 		var y = e.pageY - FiercePlanet.Dialogs.calculateWorldTop();
 
-            // var __ret = FiercePlanet.GeneralUI.getCurrentPosition(e);
-			var __ret = FiercePlanet.GeneralUI.getCurrentPositionByCoordinates(x, y);
-            var xPos = __ret.posX;
-            var yPos = __ret.posY;
-            this.clearCanvas('#noticeCanvas');
+        // var __ret = FiercePlanet.GeneralUI.getCurrentPosition(e);
+        var __ret = FiercePlanet.GeneralUI.getCurrentPositionByCoordinates(x, y);
+        var xPos = __ret.posX;
+        var yPos = __ret.posY;
+        this.clearGuide();
 
-            if (xPos < 0 || xPos >= FiercePlanet.Orientation.cellsAcross || yPos < 0 || yPos >= FiercePlanet.Orientation.cellsDown)
-                return;
+        if (xPos < 0 || xPos >= FiercePlanet.Orientation.cellsAcross || yPos < 0 || yPos >= FiercePlanet.Orientation.cellsDown)
+            return;
 
-			if (FiercePlanet.currentLevel.isInPath(xPos, yPos) > -1)
-				return;
+        if (FiercePlanet.currentLevel.isInPath(xPos, yPos) > -1)
+            return;
 
-            var scrollingCanvas = $('#noticeCanvas')[0];
-            var ctx = scrollingCanvas.getContext('2d');
+        var scrollingCanvas = $('#guideCanvas')[0];
+        var ctx = scrollingCanvas.getContext('2d');
 
-            ctx.save();
-            ctx.translate(FiercePlanet.Orientation.halfWorldWidth, FiercePlanet.Orientation.halfWorldHeight);
-            ctx.rotate(FiercePlanet.Orientation.rotationAngle);
+        ctx.save();
+        ctx.translate(FiercePlanet.Orientation.halfWorldWidth, FiercePlanet.Orientation.halfWorldHeight);
+        ctx.rotate(FiercePlanet.Orientation.rotationAngle);
 
-            var x = xPos * FiercePlanet.Orientation.cellWidth;
-            var y = yPos * FiercePlanet.Orientation.cellHeight;
+        var x = xPos * FiercePlanet.Orientation.cellWidth;
+        var y = yPos * FiercePlanet.Orientation.cellHeight;
 
-            if ((World.settings.skewTiles || FiercePlanet.currentLevel.isometric)) {
-                var newOrigin = FiercePlanet.Isometric.doIsometricOffset(xPos, yPos);
-                var originXp = newOrigin.x + FiercePlanet.Orientation.cellWidth / 2;
-                var originYp = newOrigin.y + FiercePlanet.Orientation.cellHeight;
-                originXp = originXp - (FiercePlanet.Orientation.worldWidth) / 2;
-                originYp = originYp - (FiercePlanet.Orientation.worldHeight) / 2;
-                FiercePlanet.Isometric.draw3DTile(ctx, [originXp, originYp], FiercePlanet.Orientation.cellHeight);
+        if ((World.settings.skewTiles || FiercePlanet.currentLevel.isometric)) {
+            var newOrigin = FiercePlanet.Isometric.doIsometricOffset(xPos, yPos);
+            var originXp = newOrigin.x + FiercePlanet.Orientation.cellWidth / 2;
+            var originYp = newOrigin.y + FiercePlanet.Orientation.cellHeight;
+            originXp = originXp - (FiercePlanet.Orientation.worldWidth) / 2;
+            originYp = originYp - (FiercePlanet.Orientation.worldHeight) / 2;
+            FiercePlanet.Isometric.draw3DTile(ctx, [originXp, originYp], FiercePlanet.Orientation.cellHeight);
 
-                ctx.lineWidth = 4;
-                ctx.strokeStyle = '#f00'; //pathColor;
-                ctx.stroke();
-            }
-            else {
-                // Rotation logic here - TODO: Refactor out
-                x = x - FiercePlanet.Orientation.halfWorldWidth;
-                y = y - FiercePlanet.Orientation.halfWorldHeight;
-                ctx.lineWidth = 4;
-                ctx.strokeStyle = '#f00'; //pathColor;
-                ctx.strokeRect(x, y, FiercePlanet.Orientation.cellWidth, FiercePlanet.Orientation.cellHeight);
-            }
+            ctx.lineWidth = 4;
+            ctx.strokeStyle = '#f00'; //pathColor;
+            ctx.stroke();
+        }
+        else {
+            // Rotation logic here - TODO: Refactor out
+            x = x - FiercePlanet.Orientation.halfWorldWidth;
+            y = y - FiercePlanet.Orientation.halfWorldHeight;
+            ctx.lineWidth = 4;
+            ctx.strokeStyle = '#f00'; //pathColor;
+            ctx.strokeRect(x, y, FiercePlanet.Orientation.cellWidth, FiercePlanet.Orientation.cellHeight);
+        }
 
-            ctx.restore();
+        ctx.restore();
     };
-    
+
+
+    /**
+     *  Process mouse moves
+     */
+    this.clearGuide = function(e) {
+        FiercePlanet.Drawing.clearCanvas('#guideCanvas');
+    };
+
 }).apply(FiercePlanet.Drawing);

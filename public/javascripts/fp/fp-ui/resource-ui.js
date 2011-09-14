@@ -22,7 +22,7 @@ FiercePlanet.ResourceUI = FiercePlanet.ResourceUI || {};
      * Handle various resource-related interactions
      */
     this.setupResourceInteraction = function () {
-        var topMostCanvas = $('#scrollingCanvas');
+        var topMostCanvas = $('#noticeCanvas');
             var links = $('.swatch-draggable'), el = null;
             for (var i = 0; i < links.length; i++) {
                 el = links[i];
@@ -38,10 +38,10 @@ FiercePlanet.ResourceUI = FiercePlanet.ResourceUI || {};
                             FiercePlanet.currentResourceId = this.id;
                         },
 	                    drag: function(event, ui) {
-	                        FiercePlanet.Drawing.highlightCell(event);
+	                        FiercePlanet.Drawing.drawGuideCell(event);
 	                    },
 						stop: function(event, ui) {
-							FiercePlanet.Drawing.clearCanvas('#noticeCanvas');
+							FiercePlanet.Drawing.clearGuide();
 						}
                     });
                     $('#' + el.id).click(function() {
