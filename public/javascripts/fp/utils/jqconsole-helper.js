@@ -52,20 +52,14 @@ $(function() {
 
   // Abort prompt on Ctrl+Z.
   jqconsole.RegisterShortcut('Z', function() {
-    jqconsole.AbortPrompt();
-      jqconsole.prompt_label_main = 'Ask me: ';
+      jqconsole.AbortPrompt();
       if (jqconsole.zone.name) {
-          jqconsole.Write('Bye - you\'re leaving the ');
-          jqconsole.Write(jqconsole.zone.name, 'quote');
-          jqconsole.Write(' zone.\n');
-          jqconsole.zone = {};
+          exitZone();
       }
-    handler();
   });
 
   // Toggle size on ~.
   jqconsole.RegisterShortcut('`', function() {
-      console.log('got here');
       $('#console').css({height: 30});
       jqconsole.Reset();
     handler();
@@ -91,7 +85,18 @@ $(function() {
       jqconsole.Write(" - enter Tutorial zone.\n");
       jqconsole.Write("zone", 'code');
       jqconsole.Write(" - tells you what zone you're in!\n");
+      jqconsole.Write("exit", 'code');
+      jqconsole.Write(" - gets you of the zone...\n");
       //jqconsole.Write("Type help:\n");
+  }
+
+  var exitZone = function() {
+      jqconsole.prompt_label_main = 'Ask me: ';
+      jqconsole.Write('Bye - you\'re leaving the ');
+      jqconsole.Write(jqconsole.zone.name, 'quote');
+      jqconsole.Write(' zone.\n');
+      jqconsole.zone = {};
+      handler();
   }
 
   var showConsoleTutorial = function() {
@@ -128,7 +133,13 @@ $(function() {
   var handler = function(command) {
 //      jqconsole.SetPromptText('hello')
     if (command) {
-      if (jqconsole.zone.js) {
+      if (command == 'zone') {
+          showCurrentZone();
+      }
+      else if (command == 'exit') {
+          exitZone();
+      }
+      else if (jqconsole.zone.js) {
           jsHandler(command);
       }
       else if (jqconsole.zone.fp) {
@@ -169,6 +180,7 @@ $(function() {
               showZone();
               jqconsole.Write('Now you can play with Fierce Planet settings!\n\n');
               jqconsole.Write('For example, try the following: \n\n');
+              jqconsole.Write('reset \n\n', 'code');
           }
           else if (command == 'chat') {
               jqconsole.prompt_label_main = 'chat: ';
@@ -242,7 +254,7 @@ $(function() {
       else if (command == 'logout' || command == 'lo') {
           FiercePlanet.ProfileUI.logout();
       }
-      else if (command == 'play' || command == 'p') {
+      else if (command == 'play' || command == 'pause' || command == 'p') {
           FiercePlanet.Lifecycle.playGame();
       }
       else if (command == 'draw' || command == 'd') {
@@ -363,8 +375,8 @@ $(function() {
       }
       else if (command == 'help') {
           jqconsole.Write('settings || s\n');
-          jqconsole.Write('play || p\n');
-          jqconsole.Write('draw || p\n');
+          jqconsole.Write('play || pause || p\n');
+          jqconsole.Write('draw || d\n');
           jqconsole.Write('login || li\n');
           jqconsole.Write('logout || lo\n');
           jqconsole.Write('speed-up || su\n');
@@ -439,11 +451,21 @@ $(function() {
             jqconsole.Write("Please enter your login details:\n");
         }
         else {
+            // Add encoded password
             jqconsole.userCredentials['password'] = command;
+//            jqconsole.userCredentials['password'] = Base64.encode(command);
             // Authenticate
             $.post('/login', { email: jqconsole.userCredentials['email'], password: jqconsole.userCredentials['password'] }, function(res) {
-                jqconsole.Write(res);
-                jqconsole.zone.password = false;
+                // Simple check to see if standard login was successful
+                if (res.match(/canvas/)) {
+                    jqconsole.Write("Login successful!\n");
+                    jqconsole.zone.password = false;
+                }
+                else {
+                    jqconsole.Write("Login failed!\n");
+                    jqconsole.zone.password = false;
+                    jqconsole.zone.login = true;
+                }
             });
         }
     }
@@ -514,5 +536,4 @@ $(function() {
   // Initiate the first prompt.
   handler();
 });
-
 

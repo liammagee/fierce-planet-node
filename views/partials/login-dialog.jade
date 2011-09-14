@@ -9,7 +9,7 @@
         label(for=everyauth.password.passwordFormFieldName) Password
         input(type='password', name=everyauth.password.passwordFormFieldName)
       #submit
-        input(type='submit') Login
+        input(type='submit', value='Login')
   div#remoteSignIn
     div Sign in with:
       div
@@ -21,6 +21,9 @@
           img(src='/images/intridea-authbuttons/png/google_32.png', alt='Google')
           span Google
     div
-      a(href='/register') Register
+  h2 Register
+  div Not registered?
+  div
+    a(href='/register') Click here to register
     //div Forget your password?
 

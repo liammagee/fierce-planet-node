@@ -97,11 +97,10 @@ everyauth
       return usersByFbId[fbUserMetadata.id] ||
         (usersByFbId[fbUserMetadata.id] = addUser('facebook', fbUserMetadata));
     })
-//    .redirectPath('http://cold-autumn-453.heroku.com/');
     .redirectPath('/');
 everyauth.google
 //  .myHostname('http://cold-autumn-453.heroku.com/')
-  .myHostname('http://localhost:3000')
+  .myHostname('http://www.fierce-planet.com/')
   .appId(conf.google.clientId)
   .appSecret(conf.google.clientSecret)
   .scope('https://www.google.com/m8/feeds/')
