@@ -1080,6 +1080,7 @@ FiercePlanet.PresetLevels.level19.setup = function() {
 };
 
 
+
 /* Level 20 Definition */
 
 FiercePlanet.PresetLevels.level20 = new Level(20);
