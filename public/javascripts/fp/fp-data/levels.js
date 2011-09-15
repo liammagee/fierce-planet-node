@@ -1079,6 +1079,7 @@ FiercePlanet.PresetLevels.level19.setup = function() {
     this.addTerrainToPath(new Terrain('#C5C3C6', 0.9));
 };
 
+
 /* Level 20 Definition */
 
 FiercePlanet.PresetLevels.level20 = new Level(20);
