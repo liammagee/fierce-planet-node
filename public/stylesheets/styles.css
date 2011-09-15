@@ -171,7 +171,7 @@ body {
 	top:225px;
 	width:61px;
 	padding:50px 10px 0;
-	z-index:1;
+	z-index: 100;
     background: #1F62C1;
 	background: -webkit-gradient(linear, 0% 0%, 100% 0%, from(#1F62C1), to(#203275));
 	background: -moz-linear-gradient(0% 100% 0deg,#1F62C1, #203275);
@@ -184,7 +184,7 @@ body {
 	top: 292px;
     width:165px;
 	font-size:10px;
-    z-index: 10;
+    z-index: 100;
 }
 
 #level-editor {

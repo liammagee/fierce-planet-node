@@ -343,6 +343,9 @@ $(function() {
       else if (command == 'storyboard' || command == 'sb') {
           FiercePlanet.Dev.showStoryboard();
       }
+      else if (command == 'fullscreen' || command == 'fs') {
+          FiercePlanet.Orientation.makeFullScreen();
+      }
       else if (/set/.test(command)) {
           try {
               var t = command.split('=').reverse();
