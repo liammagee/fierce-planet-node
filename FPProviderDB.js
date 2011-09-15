@@ -20,6 +20,11 @@ var username, password;
 FPProvider = function(name, host, port, username, password, callback){
   this.db = new Db(name, new Server(host, port, {auto_reconnect: true}, {}));
   this.db.open(function(err, db){
+      if (err) {
+          console.log(err)
+          callback(err);
+      }
+
       // Authenticate
       if (username && password) {
           db.authenticate(username, password, function(error, res) {
