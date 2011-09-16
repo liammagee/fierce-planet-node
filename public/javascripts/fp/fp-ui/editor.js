@@ -76,8 +76,9 @@ FiercePlanet.Editor = FiercePlanet.Editor || {};
 //    $('#swatch').hide();
         $('#level-editor').show();
 
-        // Set up user interaction
-        var canvas = $('#scrollingCanvas');
+
+        var canvas = FiercePlanet.GeneralUI.getTopMostCanvas();
+        //var canvas = $('#scrollingCanvas');
         canvas.unbind('click');
         canvas.unbind('mousedown');
         canvas.unbind('mousemove');
@@ -183,7 +184,8 @@ FiercePlanet.Editor = FiercePlanet.Editor || {};
     this.cancelLevelEditor = function() {
         FiercePlanet.inDesignMode = false;
         FiercePlanet.Editor.closeMap();
-        var canvas = $('#scrollingCanvas');
+        var canvas = FiercePlanet.GeneralUI.getTopMostCanvas();
+        //var canvas = $('#scrollingCanvas');
         canvas.unbind('mousedown', FiercePlanet.Editor.handleEditorMouseDown);
         canvas.unbind('mousemove', FiercePlanet.Editor.handleEditorMouseMove);
         canvas.unbind('mouseup', FiercePlanet.Editor.handleEditorMouseUp);
