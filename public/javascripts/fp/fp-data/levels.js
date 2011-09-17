@@ -978,7 +978,7 @@ FiercePlanet.PresetLevels.level16 = new Level(16);
 FiercePlanet.PresetLevels.level16.isometric = false;
 FiercePlanet.PresetLevels.level16.allowOffscreenCycling = true;
 FiercePlanet.PresetLevels.level16.allowResourcesOnPath = false;
-FiercePlanet.PresetLevels.level16.initialResourceStore = 150;
+FiercePlanet.PresetLevels.level16.initialResourceStore = 200;
 FiercePlanet.PresetLevels.level16.isPresetLevel = true;
 FiercePlanet.PresetLevels.level16.addEntryPoint(0, 14);
 FiercePlanet.PresetLevels.level16.addEntryPoint(9, 0);
