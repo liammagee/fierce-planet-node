@@ -1108,26 +1108,32 @@ FiercePlanet.PresetLevels.level20.setup = function() {
 
 /* Level 21 Definition */
 
-FiercePlanet.PresetLevels.level21 = new Level(20);
-FiercePlanet.PresetLevels.level21.isometric = true;
+FiercePlanet.PresetLevels.level21 = new Level(21);
+FiercePlanet.PresetLevels.level21.isometric = false;
 FiercePlanet.PresetLevels.level21.allowResourcesOnPath = true;
-FiercePlanet.PresetLevels.level21.initialResourceStore = 1000;
+FiercePlanet.PresetLevels.level21.allowOffscreenCycling = true;
+FiercePlanet.PresetLevels.level21.initialResourceStore = 0;
 FiercePlanet.PresetLevels.level21.isPresetLevel = true;
-FiercePlanet.PresetLevels.level21.addEntryPoint(19, 0);
-FiercePlanet.PresetLevels.level21.addExitPoint(0, 19);
-FiercePlanet.PresetLevels.level21.cellsAcross = 20;
-FiercePlanet.PresetLevels.level21.cellsDown = 20;
-FiercePlanet.PresetLevels.level21.initialAgentNumber = 1;
-FiercePlanet.PresetLevels.level21.waveNumber = 5;
-FiercePlanet.PresetLevels.level21.expiryLimit = 20;
-FiercePlanet.PresetLevels.level21.name = ("Spaced Out!");
+FiercePlanet.PresetLevels.level21.randomiseAgents = true;
+FiercePlanet.PresetLevels.level21.randomiseResources = true;
+//FiercePlanet.PresetLevels.level21.addEntryPoint(19, 0);
+FiercePlanet.PresetLevels.level21.addExitPoint(10, 10);
+FiercePlanet.PresetLevels.level21.cellsAcross = 21;
+FiercePlanet.PresetLevels.level21.cellsDown = 21;
+FiercePlanet.PresetLevels.level21.initialAgentNumber = 40;
+FiercePlanet.PresetLevels.level21.waveNumber = 1;
+FiercePlanet.PresetLevels.level21.expiryLimit = 10;
+FiercePlanet.PresetLevels.level21.initialResourceNumber = 100;
+FiercePlanet.PresetLevels.level21.name = ("The Mini-Sims");
 FiercePlanet.PresetLevels.level21.isTerminalLevel = true;
 FiercePlanet.PresetLevels.level21.introduction = (""
-        + "<p>Somewhere out there in space there is a...</p>"
+        + "<p>How very simulating...</p>"
         );
 FiercePlanet.PresetLevels.level21.conclusion = ("Well done.");
 
 FiercePlanet.PresetLevels.level21.setup = function() {
+    this.generatePath();
+    this.generateLevelResources();
 };
 
 

@@ -1368,9 +1368,9 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         var rw = rwl + Math.floor(Math.random() * ww);
         var rh = rwt + Math.floor(Math.random() * wh);
         world.css({'width': 0, 'height' : 0, 'left': rw, 'top': rh});
-        world.animate({'width': ww, 'height': wh, 'left': rwl, 'top': rwt}, 1000);
+        world.animate({'width': ww, 'height': wh, 'left': rwl, 'top': rwt}, 1500);
         canvases.css({'width': 0, 'height' : 0});
-        canvases.animate({'width': ww, 'height': wh}, 1000);
+        canvases.animate({'width': ww, 'height': wh}, 1500);
     };
 
     /**

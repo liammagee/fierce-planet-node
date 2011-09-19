@@ -694,7 +694,7 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
      */
     this.highlightGalleryItem =  function(level) {
         $('.thumbnail').css({color: 'inherit', backgroundColor: 'inherit' });
-        if (level > 0 && level <= 20) {
+        if (level > 0 && level <= 1000) {
             $('#levelSelect' + level).animate({
                 color: "#000",
                 backgroundColor: "#ffffaa"

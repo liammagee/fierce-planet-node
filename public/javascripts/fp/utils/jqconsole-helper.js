@@ -48,6 +48,7 @@ $(function() {
   //window.jqconsole = $('#notifications').jqconsole(header, 'JS> ');
 
   jqconsole.zone = {};
+  jqconsole.zone.fp = true;
   jqconsole.JSMode = false;
 
   // Abort prompt on Ctrl+Z.

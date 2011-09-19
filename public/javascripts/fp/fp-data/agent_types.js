@@ -427,50 +427,41 @@ function AgentStickFigure(x, _y, _figureWidth, _figureHeight) {
 
     AgentTypes.RIVAL_AGENT_TYPE = new AgentType("Rival", "3be5fb", World.resourceCategories);
     AgentTypes.RIVAL_AGENT_TYPE.drawFunction = (function(ctx, agent, intX, intY, pieceWidth, pieceHeight, newColor, counter, direction) {
-        var radius = (pieceWidth / 4);
-        var bodyLength = (pieceWidth / 2);
 
-        ctx.beginPath();
-        ctx.arc(intX, intY, radius, 0, Math.PI * 2, false);
-        ctx.closePath();
-        ctx.strokeStyle = "#ccc";
-        ctx.stroke();
-        ctx.fillStyle = "#" + newColor;
-        ctx.fill();
+        if (pieceWidth < 8 || pieceHeight < 8) {
+            var radius = (pieceWidth / 4);
 
-        ctx.beginPath();
-        ctx.moveTo(intX, intY + radius);
-        ctx.lineTo(intX, intY + radius + bodyLength / 2);
-        if (counter % 2 == 0) {
-            // Legs
-            var xOffset = Math.sin(30 * Math.PI/180) * bodyLength / 2;
-            var yOffset = Math.cos(30 * Math.PI/180) * bodyLength / 2;
-            ctx.moveTo(intX, intY + radius + bodyLength / 2);
-            ctx.lineTo(intX - xOffset, intY + radius + bodyLength / 2 + yOffset);
-            ctx.moveTo(intX, intY + radius + bodyLength / 2);
-            ctx.lineTo(intX + xOffset, intY + radius + bodyLength / 2 + yOffset);
-            // Arms - 90 degrees
-            ctx.moveTo(intX - bodyLength / 2, intY + radius + bodyLength / 6);
-            ctx.lineTo(intX + bodyLength / 2, intY + radius + bodyLength / 6);
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.arc(x + radius, y + radius, radius, 0, Math.PI * 2, false);
+            ctx.closePath();
+            ctx.strokeStyle = "#ccc";
+            ctx.stroke();
+            ctx.fillStyle = "#" + newColor;
+            ctx.fill();
         }
         else {
-            // Legs - straight
-            ctx.moveTo(intX, intY + radius + bodyLength / 2);
-            ctx.lineTo(intX, intY + radius + bodyLength);
-            // Arms - 45 degrees
-            var xOffset = Math.sin(45 * Math.PI/180) * bodyLength / 2;
-            var yOffset = Math.cos(45 * Math.PI/180) * bodyLength / 2;
-            ctx.moveTo(intX - xOffset, intY + radius + bodyLength / 6 + yOffset);
-            ctx.lineTo(intX, intY + radius + bodyLength / 6);
-            ctx.moveTo(intX + xOffset, intY + radius + bodyLength / 6 + yOffset);
-            ctx.lineTo(intX, intY + radius + bodyLength / 6);
+            // Define agent elements here
+            var frames = 3;
+            var speed = agent.speed;
+            var countdown = agent.countdownToMove;
+            var frame = Math.floor((countdown / (speed + 1)) * frames);
 
+            var sf = new AgentStickFigure(x, y, pieceWidth, pieceHeight);
+            if (speed > 5)
+                sf.defaultAction = sf.walk;
+            else
+                sf.defaultAction = sf.run;
+            sf.defaultAction(frame, direction);
+            sf.drawFigure(ctx);
+
+
+            // Now draw the figure
+            ctx.lineWidth = 0.5;
+            ctx.strokeStyle = "#" + newColor;
+            ctx.lineCap = "round";
+            ctx.stroke();
         }
-        ctx.closePath();
-        ctx.strokeStyle = "#" + newColor;
-        ctx.lineWidth = 2;
-        ctx.stroke();
-
     });
 
     World.registerAgentTypes([AgentTypes.CITIZEN_AGENT_TYPE, AgentTypes.PREDATOR_AGENT_TYPE, AgentTypes.RIVAL_AGENT_TYPE]);

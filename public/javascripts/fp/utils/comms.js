@@ -62,10 +62,16 @@ FiercePlanet.Comms = FiercePlanet.Comms || {};
 //                FiercePlanet.currentLevel.setCurrentAgents(agents);
 //                FiercePlanet.Drawing.clearCanvas('#agentCanvas');
 //                FiercePlanet.Drawing.drawAgents();
-            FiercePlanet.Drawing.clearCanvas('#alt_agentCanvas');
-            FiercePlanet.Drawing.drawAgents('#alt_agentCanvas', agents);
+            // Comp mode
+//            FiercePlanet.Drawing.clearCanvas('#alt_agentCanvas');
+//            FiercePlanet.Drawing.drawAgents('#alt_agentCanvas', agents);
+
+            // Same screen
+            for (var i in agents) {
+                FiercePlanet.currentLevel.currentAgents.push(agents[i]);
+            }
             if (World.settings.spectate) {
-                FiercePlanet.Lifecycle.processAgents();
+                FiercePlanet.Game.processAgents();
                 FiercePlanet.Lifecycle._stopAgents();
             }
         }
@@ -78,7 +84,7 @@ FiercePlanet.Comms = FiercePlanet.Comms || {};
             FiercePlanet.Drawing.clearCanvas('#alt_agentCanvas');
             FiercePlanet.Drawing.drawAgents('#alt_agentCanvas', duelingAgents);
             if (World.settings.spectate) {
-                FiercePlanet.Lifecycle.processAgents();
+                FiercePlanet.Game.processAgents();
                 FiercePlanet.Lifecycle._stopAgents();
             }
         }
