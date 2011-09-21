@@ -75,6 +75,7 @@ function Level(id) {
 
     
     // Google map, image and sound options
+    this.backgroundTerrain = null;
     this.mapOptions = null;
     this.mapURL = null;
     this.image = null;
@@ -279,6 +280,12 @@ Level.prototype.addTerrainToPath = function(terrain) {
         var path = this.pathway[i];
         this.terrainMap[path] = terrain;
     }
+};
+/**
+ * Adds a particular terrain to the background
+ */
+Level.prototype.addTerrainToBackground = function(terrain) {
+    this.backgroundTerrain = terrain;
 };
 
 

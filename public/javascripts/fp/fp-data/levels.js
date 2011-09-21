@@ -877,7 +877,7 @@ FiercePlanet.PresetLevels.level11.teardown = function() {
 
 FiercePlanet.PresetLevels.level12 = new Level(12);
 FiercePlanet.PresetLevels.level12.allowResourcesOnPath = false;
-FiercePlanet.PresetLevels.level12.initialResourceStore = 100;
+FiercePlanet.PresetLevels.level12.initialResourceStore = 50;
 FiercePlanet.PresetLevels.level12.isPresetLevel = true;
 FiercePlanet.PresetLevels.level12.allowOffscreenCycling = true;
 FiercePlanet.PresetLevels.level12.addEntryPoint(0, 10);
@@ -886,7 +886,7 @@ FiercePlanet.PresetLevels.level12.cellsAcross = 12;
 FiercePlanet.PresetLevels.level12.cellsDown = 12;
 FiercePlanet.PresetLevels.level12.initialAgentNumber = 1;
 FiercePlanet.PresetLevels.level12.waveNumber = 10;
-FiercePlanet.PresetLevels.level12.expiryLimit = 20;
+FiercePlanet.PresetLevels.level12.expiryLimit = 5;
 FiercePlanet.PresetLevels.level12.name = ("New York, New York...");
 FiercePlanet.PresetLevels.level12.introduction = (""
         + "<p>The world is in peril. But for now the citizens just want to get across Times Square...</p>"
@@ -902,17 +902,17 @@ FiercePlanet.PresetLevels.level12.setup = function() {
 
 FiercePlanet.PresetLevels.level13 = new Level(13);
 FiercePlanet.PresetLevels.level13.allowResourcesOnPath = false;
-FiercePlanet.PresetLevels.level13.initialResourceStore = 100;
+FiercePlanet.PresetLevels.level13.initialResourceStore = 10;
 FiercePlanet.PresetLevels.level13.isPresetLevel = true;
 FiercePlanet.PresetLevels.level13.addEntryPoint(0, 6);
 FiercePlanet.PresetLevels.level13.addEntryPoint(9, 6);
-FiercePlanet.PresetLevels.level13.addExitPoint(3, 6);
-FiercePlanet.PresetLevels.level13.addExitPoint(12, 6);
+FiercePlanet.PresetLevels.level13.addExitPoint(6, 10);
+FiercePlanet.PresetLevels.level13.addExitPoint(6, 12);
 FiercePlanet.PresetLevels.level13.cellsAcross = 13;
 FiercePlanet.PresetLevels.level13.cellsDown = 13;
 FiercePlanet.PresetLevels.level13.initialAgentNumber = 1;
 FiercePlanet.PresetLevels.level13.waveNumber = 10;
-FiercePlanet.PresetLevels.level13.expiryLimit = 10;
+FiercePlanet.PresetLevels.level13.expiryLimit = 5;
 FiercePlanet.PresetLevels.level13.name = ("Welcome to Baghdad...");
 FiercePlanet.PresetLevels.level13.introduction = (""
         + "<p>New threats have emerged....</p>"
@@ -1053,6 +1053,7 @@ FiercePlanet.PresetLevels.level18.setup = function() {
     this.addTerrainToPath(new Terrain('#E3E1D5', 0.8));
 };
 
+
 /* Level 19 Definition */
 
 FiercePlanet.PresetLevels.level19 = new Level(19);
@@ -1135,6 +1136,51 @@ FiercePlanet.PresetLevels.level21.setup = function() {
     this.generatePath();
     this.generateLevelResources();
 };
+
+
+/* Level 22 Definition */
+
+FiercePlanet.PresetLevels.level22 = new Level(22);
+(function() {
+    this.isometric = false;
+    this.allowResourcesOnPath = true;
+    this.allowOffscreenCycling = true;
+    this.initialResourceStore = 0;
+    this.isPresetLevel = true;
+    this.randomiseAgents = true;
+    this.randomiseResources = true;
+//this.addEntryPoint(19, 0);
+    this.addExitPoint(10, 10);
+    this.scaleFactor = 2;
+    this.cellsAcross = 101;
+    this.cellsDown = 101;
+    this.initialAgentNumber = 1;
+    this.waveNumber = 1;
+    this.expiryLimit = 10;
+    this.initialResourceNumber = 100;
+    this.name = ("Totally experimental...");
+    this.isTerminalLevel = true;
+    this.introduction = (""
+            + "<p>This will never work.</p>"
+            );
+    this.conclusion = ("Well done.");
+
+    this.setup = function() {
+        World.settings.firstPerson = true;
+        var bg = new Terrain('#ABBB2A', 0.9);
+        this.addTerrainToBackground(bg);
+        this.generatePath();
+        this.terrainMap[[10, 10]] = bg;
+        FiercePlanet.Drawing.zoom(1);
+        FiercePlanet.Drawing.zoom(1);
+        FiercePlanet.Drawing.zoom(1);
+        FiercePlanet.Drawing.zoom(1);
+        FiercePlanet.Drawing.zoom(1);
+        FiercePlanet.Drawing.tilt(-0.35);
+        this.generateLevelResources();
+    };
+
+}).apply(FiercePlanet.PresetLevels.level22);
 
 
 // Checked and authorised

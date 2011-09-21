@@ -245,7 +245,8 @@ function AgentStickFigure(x, _y, _figureWidth, _figureHeight) {
     AgentTypes.CITIZEN_AGENT_TYPE.isHitable = (true);
     AgentTypes.CITIZEN_AGENT_TYPE.drawFunction = (function(ctx, agent, x, y, pieceWidth, pieceHeight, newColor, counter, direction) {
 
-        if (pieceWidth < 8 || pieceHeight < 8) {
+        if (pieceWidth < (8 ) || pieceHeight < (8 )) {
+//        if (false) {
             var radius = (pieceWidth / 4);
 
             ctx.lineWidth = 1.5;
@@ -428,7 +429,7 @@ function AgentStickFigure(x, _y, _figureWidth, _figureHeight) {
     AgentTypes.RIVAL_AGENT_TYPE = new AgentType("Rival", "3be5fb", World.resourceCategories);
     AgentTypes.RIVAL_AGENT_TYPE.drawFunction = (function(ctx, agent, intX, intY, pieceWidth, pieceHeight, newColor, counter, direction) {
 
-        if (pieceWidth < 8 || pieceHeight < 8) {
+        if (pieceWidth < (8 / FiercePlanet.Orientation.zoomMagnificationFactor) || pieceHeight < (8 / FiercePlanet.Orientation.zoomMagnificationFactor)) {
             var radius = (pieceWidth / 4);
 
             ctx.lineWidth = 1.5;

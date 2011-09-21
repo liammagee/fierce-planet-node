@@ -301,28 +301,42 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
 
 
         if (World.settings.firstPerson) {
-//            console.log(e.which);
             var myAgent = FiercePlanet.currentLevel.currentAgents[0];
             if (myAgent) {
                 switch (e.which) {
                     // +, -, 0: Zoom functions
                     case 37:
                     case 65:
-                        myAgent.x = myAgent.x - 1;
+                        if (myAgent.x > 0) {
+                            myAgent.x = myAgent.x - 1;
+                            FiercePlanet.Drawing.panByDrag(FiercePlanet.Orientation.cellWidth, 0);
+                        }
                         break;
                     case 39:
                     case 68:
-                        myAgent.x = myAgent.x + 1;
+                        if (myAgent.x  < FiercePlanet.Orientation.cellsAcross) {
+                            myAgent.x = myAgent.x + 1;
+                            FiercePlanet.Drawing.panByDrag(-FiercePlanet.Orientation.cellWidth, 0);
+                        }
                         break;
                     case 38:
                     case 87:
-                        myAgent.y = myAgent.y - 1;
+                        if (myAgent.y > 0) {
+                            myAgent.y = myAgent.y - 1;
+                            FiercePlanet.Drawing.panByDrag(0, FiercePlanet.Orientation.cellWidth);
+                        }
                         break;
                     case 40:
                     case 83:
-                        myAgent.y = myAgent.y + 1;
+                        if (myAgent.y  < FiercePlanet.Orientation.cellsDown) {
+                            myAgent.y = myAgent.y + 1;
+                            FiercePlanet.Drawing.panByDrag(0, -FiercePlanet.Orientation.cellWidth);
+                        }
                         break;
                 }
+//                FiercePlanet.Drawing.panByDrag(- FiercePlanet.Orientation.offsetX / FiercePlanet.Orientation.zoomLevel, - FiercePlanet.Orientation.offsetY / FiercePlanet.Orientation.zoomLevel);
+
+//                FiercePlanet.Drawing.panByDrag(myAgent.x - FiercePlanet.Orientation.cellsAcross / 2, myAgent.y - FiercePlanet.Orientation.cellsDown / 2);
                 myAgent.lastMemory.x = myAgent.x;
                 myAgent.lastMemory.y = myAgent.y;
 

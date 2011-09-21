@@ -44,8 +44,14 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
 //        FiercePlanet.drawPath();
 //    }
 //        if (World.settings.drawMap)
-        this.drawMap();
-        this.drawPath();
+        if (FiercePlanet.currentLevel.backgroundTerrain) {
+            this.drawBackgroundTerrain();
+            this.drawPath();
+        }
+        else {
+            this.drawMap();
+            this.drawPath();
+        }
 
         this.drawEntryPoints();
         this.drawExitPoints();
@@ -98,15 +104,35 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
     //        this.drawPath();
     //    }
 
+        if (FiercePlanet.currentLevel.backgroundTerrain) {
+            this.drawBackgroundTerrain();
+            this.drawPath();
+        }
+        else {
+            this.drawPath();
+        }
 
-        this.drawPath();
-    
         this.drawEntryPoints();
         this.drawExitPoints();
         this.drawResources();
         this.drawAgents();
     };
     
+    /**
+     * Draws all the tiles on the map
+     */
+    this.drawBackgroundTerrain = function(altCanvasName) {
+        var canvasName = altCanvasName || '#baseCanvas';
+        var canvas = $(canvasName)[0];
+        var ctx = canvas.getContext('2d');
+        var terrain = FiercePlanet.currentLevel.backgroundTerrain;
+        var pathColor = terrain ? this.insertAlpha(terrain.color, terrain.alpha) : "#fff";
+
+        ctx.fillStyle = pathColor;
+        ctx.fillRect(0, 0, FiercePlanet.Orientation.worldWidth, FiercePlanet.Orientation.worldHeight);
+
+    };
+
     /**
      * Draws all the tiles on the map
      */
@@ -117,7 +143,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
                 this.drawTile(tiles[i]);
         }
     };
-    
+
     /**
      * Draws a tile
      * @param tile
@@ -153,12 +179,14 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
 //        this.clearCanvas('baseCanvas');
 //        ctx.clearRect(0, 0, FiercePlanet.Orientation.worldWidth, FiercePlanet.Orientation.worldHeight );
         var pathTiles = FiercePlanet.currentLevel.pathway;
+//        var scaleFactor = FiercePlanet.currentLevel.scaleFactor || 1;
 
 
         // Rotation logic here - TODO: Refactor out
         var midTilePosX = FiercePlanet.Orientation.halfWorldWidth;
         var midTilePosY = FiercePlanet.Orientation.halfWorldHeight;
         ctx.save();
+//        ctx.scale(scaleFactor, scaleFactor);
         ctx.translate(midTilePosX, midTilePosY);
         ctx.rotate(FiercePlanet.Orientation.rotationAngle);
 
@@ -192,7 +220,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
                     ctx.fill();
                 }
                 if (!World.settings.hidePathBorder) {
-                    ctx.lineWidth = 1;
+                    ctx.lineWidth = 1 / FiercePlanet.Orientation.zoomLevel;
                     ctx.strokeStyle = '#ccc'; //pathColor;
                     ctx.stroke();
                 }
@@ -216,7 +244,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
                 }
                 if (!World.settings.hidePathBorder) {
 //                        ctx.border = "2px #eee solid";
-                    ctx.lineWidth = 1;
+                    ctx.lineWidth = 1 / FiercePlanet.Orientation.zoomLevel;
                     ctx.strokeStyle = '#ccc'; //pathColor;
                     ctx.strokeRect(x, y, FiercePlanet.Orientation.cellWidth, FiercePlanet.Orientation.cellHeight);
                 }
@@ -587,7 +615,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
                 ctx.fill();
 
                 var boxHeight = 0;
-                ctx.lineWidth = 1;
+                ctx.lineWidth = 1 / FiercePlanet.Orientation.zoomLevel;
                 // Use box style - computationally expensive
                 if (World.settings.showResourcesAsBoxes) {
                     boxHeight = (s / 100) * 20;
@@ -632,7 +660,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
                 ctx.strokeStyle = "#333";
                 ctx.fillRect(x, y + yOffset, FiercePlanet.Orientation.cellWidth, (FiercePlanet.Orientation.cellHeight - yOffset));
 
-                ctx.lineWidth = 4;
+                ctx.lineWidth = 4 / FiercePlanet.Orientation.zoomLevel;
                 ctx.strokeStyle = "#" + newColor;
 
                 // Draw resource-specific representation here
