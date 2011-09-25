@@ -1033,7 +1033,7 @@ FiercePlanet.PresetLevels.level17.setup = function() {
 FiercePlanet.PresetLevels.level18 = new Level(18);
 FiercePlanet.PresetLevels.level18.isometric = true;
 FiercePlanet.PresetLevels.level18.allowResourcesOnPath = false;
-FiercePlanet.PresetLevels.level18.initialResourceStore = 150;
+FiercePlanet.PresetLevels.level18.initialResourceStore = 180;
 FiercePlanet.PresetLevels.level18.isPresetLevel = true;
 FiercePlanet.PresetLevels.level18.addEntryPoint(14, 1);
 FiercePlanet.PresetLevels.level18.addExitPoint(15, 2);
