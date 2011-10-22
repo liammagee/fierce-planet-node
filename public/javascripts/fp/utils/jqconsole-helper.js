@@ -403,6 +403,10 @@ $(function() {
           jqconsole.Write('storyboard || sb\n');
           jqconsole.Write('set [parameter = value]\n');
           jqconsole.Write('resize [width, height]\n');
+          jqconsole.Write('webgl\n');
+      }
+      else if (command == 'webgl') {
+          jqconsole.Write('WebGL\n')
       }
       else {
 //          socket.emit('user message', command);

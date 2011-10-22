@@ -485,6 +485,8 @@ FiercePlanet.PresetLevels.level7.tip = (new Notice("You can add resources to the
 FiercePlanet.PresetLevels.level7.conclusion = ("Spaced out! Time to move back to the (apparent) comforts of the city.");
 FiercePlanet.PresetLevels.level7.soundSrc = ("http://db.tt/7SRv0qP");
 
+World.settings.resourcesOwnTilesExclusively = true;
+
 FiercePlanet.PresetLevels.level7.setup = function() {
     this.fillWithTiles();
     this.removeTiles(280, 1);

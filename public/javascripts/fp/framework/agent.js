@@ -786,7 +786,14 @@ Agent.prototype.findPosition = function(level, withNoRepeat, withNoCollision, wi
 
                 for (var j in this.memoriesOfPathsUntried) {
                     var unvisited = this.memoriesOfPathsUntried[j];
+
                     if (unvisited != undefined) {
+
+                        // Fixes bug with endless back-and-forth cycle, due to proximity of unvisited (and unvisitable) resource cells
+                        if (World.settings.resourcesOwnTilesExclusively && level.isPositionOccupiedByResource(unvisited.x, unvisited.y))
+//                        if (unvisited.age == this.age)
+                            continue;
+
                         var inOtherAgentsMemory = false;
                         if (this.canCommunicateWithOtherAgents) {
                             for (var agentID in this.memoriesOfPlacesVisitedByOtherAgents) {
@@ -824,6 +831,11 @@ Agent.prototype.findPosition = function(level, withNoRepeat, withNoCollision, wi
 
                         for (var j in agentMemoryOfPathsUntried) {
                             var agentUnvisitedMemory = agentMemoryOfPathsUntried[j];
+
+                            // Fixes bug with endless back-and-forth cycle, due to proximity of unvisited (and unvisitable) resource cells
+                            if (World.settings.resourcesOwnTilesExclusively && level.isPositionOccupiedByResource(agentUnvisitedMemory.x, agentUnvisitedMemory.y))
+                                continue;
+
                             if (allPlacesVisited[j] == undefined) {
                                 var unvisitedAge = agentUnvisitedMemory.age;
                                 var diff = Math.abs(ageOfOtherAgentMemory - unvisitedAge);
@@ -853,6 +865,9 @@ Agent.prototype.findPosition = function(level, withNoRepeat, withNoCollision, wi
             if (shortestAgeDifferenceToCandidate > -1 && (shortestAgeDifference == -1 || shortestAgeDifferenceToCandidate < shortestAgeDifference)) {
                 shortestAgeDifference = shortestAgeDifferenceToCandidate;
                 bestCandidate = candidate;
+            }
+            if (bestCandidate == undefined && bestCandidateForThisAgent != undefined) {
+                bestCandidate = bestCandidateForThisAgent;
             }
         }
 
