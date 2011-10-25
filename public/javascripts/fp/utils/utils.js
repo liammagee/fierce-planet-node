@@ -89,6 +89,8 @@ FiercePlanet.Utils = FiercePlanet.Utils || {};
         World.settings.soundsPlayable = World.settings.soundsPlayable || false;
         World.settings.useInlineResourceSwatch = World.settings.useInlineResourceSwatch || false;
         World.settings.agentTracing = World.settings.agentTracing || false;
+        World.settings.agentGoToNearestExit = World.settings.agentGoToNearestExit || false;
+
         World.settings.hidePath = World.settings.hidePath || false;
         World.settings.hidePathBorder = World.settings.hidePathBorder || false;
         World.settings.hideLevelInfo = World.settings.hideLevelInfo || false;

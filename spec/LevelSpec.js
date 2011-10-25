@@ -712,6 +712,49 @@ describe("level-related classes", function() {
 
     });
 
+
+    describe("handling critical path", function() {
+        var resource;
+        beforeEach(function() {
+            level.cellsAcross = 3;
+            level.cellsDown = 3;
+            level.allowOffscreenCycling = false;
+            level.addExitPoint(2, 2);
+//            resource = new Resource(World.resourceTypes[0], 3, 1);
+//            var resource2 = new Resource(World.resourceTypes[0], 2, 1);
+//            level.setResources([resource, resource2]);
+            World.settings.resourcesOwnTilesExclusively = true;
+        });
+
+        it("should have 1 resource", function() {
+          expect(level.resources.length).toEqual(0);
+        });
+
+        it("should have an exit point", function() {
+          expect(level.exitPoints.length).toEqual(1);
+        });
+
+        it("should have 100 cells", function() {
+          expect(level.cellsAcross).toEqual(3);
+          expect(level.cellsDown).toEqual(3);
+        });
+
+        it("should have have a critical path", function() {
+            var a = level.criticalPath(0, 1)
+//            var b = level.criticalPath(1, 1)
+//            var c = level.criticalPath(2, 0)
+//            var d = level.criticalPath(2, 2)
+//            var e = level.criticalPath(3, 0)
+          console.log(a);
+//            console.log(b);
+//          console.log(c);
+//          console.log(d);
+//          console.log(e);
+//          expect(level.criticalPath(0, 0)).toEqual(10);
+        });
+
+    });
+
     describe("serialization", function() {
         beforeEach(function() {
 

@@ -19,6 +19,8 @@ FiercePlanet.GoogleMapUtils = FiercePlanet.GoogleMapUtils || {};
  */
 //var GoogleMapUtils = GoogleMapUtils || {};
 
+// Rotate
+// http://code.google.com/apis/maps/documentation/javascript/examples/aerial-rotation.html
 
 (function() {
 

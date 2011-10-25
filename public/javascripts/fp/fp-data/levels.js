@@ -477,7 +477,9 @@ FiercePlanet.PresetLevels.level7.initialAgentNumber = 1;
 FiercePlanet.PresetLevels.level7.waveNumber = 10;
 FiercePlanet.PresetLevels.level7.expiryLimit = 10;
 FiercePlanet.PresetLevels.level7.allowResourcesOnPath = (true);
-FiercePlanet.PresetLevels.level7.initialResourceStore =200 ;
+// TODO: Testing - remove for production deployment
+FiercePlanet.PresetLevels.level7.initialResourceStore = 200;
+FiercePlanet.PresetLevels.level7.agentGoToNearestExit = true;
 FiercePlanet.PresetLevels.level7.name = ("Level 7: Like, Totally Random...");
 FiercePlanet.PresetLevels.level7.introduction = (
         "<p>Ahead lies a vast and empty expanse. Your citizens are understandably nervous. Left unaided, they will try not to backtrack, but could find themselves hopelessly lost.</p>");

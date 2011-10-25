@@ -926,5 +926,135 @@ Level.prototype.processNeighbouringAgents = function(agent) {
 };
 
 
+
+/**
+ * Find the critical path to the nearest exit point
+ */
+Level.prototype.criticalPath = function(x, y, h) {
+    var horizontal = h || true;
+
+    var shortestDistance = -1;
+    for (var i in this.exitPoints) {
+        var ep = this.exitPoints[i];
+        var tx = ep[0], ty = ep[1];
+        var distance = this.criticalPathToExitPoint(x, y, tx, ty, []);
+        console.log("----------");
+        console.log(x+ ":" + y + ":" + distance);
+        console.log("----------");
+
+        if (shortestDistance == -1 ||  distance < shortestDistance)
+            shortestDistance = distance;
+    }
+    return shortestDistance;
+};
+
+var COUNTER = 0;
+
+/**
+ * Find the critical path to the nearest exit point
+ */
+Level.prototype.criticalPathToExitPoint = function(x, y, ex, ey, trail) {
+    console.log(COUNTER++);
+//    console.log(x+ ":" + y + ":" + ex+ ":" + ey + ":" + trail.length);
+//    console.log('got here ' +trail.join('|'));
+
+    if (ex == x && ey == y)
+        return 0;
+    else if (Math.abs(ex - x) == 1 && ey - y == 0) {
+        return 1;
+    }
+    else if (ex - x == 0 && Math.abs(ey - y) == 1) {
+        return 1;
+    }
+    // Add conditions for offscreen cycling
+    else {
+        var distance;
+        for (var i = 0; i < 4; i++) {
+            var td = -1;
+            var nx = x, ny = y;
+            switch (i) {
+                case 0:
+                    nx = x + 1;
+                    break;
+                case 1:
+                    nx = x - 1;
+                    break;
+                case 2:
+                    ny = y + 1;
+                    break;
+                case 3:
+                    ny = y - 1;
+                    break;
+            }
+            if (nx != x && nx >= this.cellsAcross) {
+                if (this.allowOffscreenCycling)
+                    nx = 0;
+                else
+                    continue;
+            }
+            if (nx != x && nx < 0) {
+                if (this.allowOffscreenCycling)
+                    nx = this.cellsAcross - 1;
+                else
+                    continue;
+            }
+            if (ny != y && ny >= this.cellsDown) {
+                if (this.allowOffscreenCycling)
+                    ny = 0;
+                else
+                    continue;
+            }
+            if (ny != y && ny < 0) {
+                if (this.allowOffscreenCycling)
+                    ny = this.cellsDown - 1;
+                else
+                    continue;
+            }
+            if (World.settings.resourcesOwnTilesExclusively && this.isPositionOccupiedByResource(nx, ny))
+                continue;
+
+            if (this.getCell(nx, ny) != undefined)
+                continue;
+
+            if (x==2 && y == 0) {
+//                console.log('got here ' +i);
+            }
+            var inPath = false;
+            var newTrail = [];
+            for (j in trail) {
+                var tc = trail[j];
+                if (tc[0] == nx && tc[1] == ny) {
+                    inPath = true;
+                    break;
+                }
+                else {
+                    newTrail.push(tc);
+                }
+            }
+            if (inPath)
+                continue;
+
+            newTrail.push([x, y]);
+
+            var res = this.criticalPathToExitPoint(nx, ny, ex, ey, newTrail);
+            if (res != undefined) {
+                var td = res + 1;
+                if (distance == undefined || td < distance) {
+                    distance = td;
+                }
+                    console.log(distance + ":" + td + ":" + res + ":" + x+ ":" + y + ":" + nx+ ":" + ny + ":" + trail.length);
+
+            }
+        }
+        return distance;
+
+    }
+};
+
+
+
+
+
+
 if (typeof(exports) != "undefined")
     exports.Level = Level;

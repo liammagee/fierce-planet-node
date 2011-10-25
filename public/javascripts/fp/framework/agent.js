@@ -601,6 +601,135 @@ Agent.prototype.evaluateMove = function(level, options) {
     this.moveTo(position[0], position[1]);
 };
 
+/**
+ *
+ * @param level
+ * @param withNoRepeat
+ * @param withNoCollision
+ * @param withOffscreenCycling
+ */
+Agent.prototype.findPosition = function(level, withNoRepeat, withNoCollision, withOffscreenCycling) {
+    if (level.agentGoToNearestExit || World.settings.agentGoToNearestExit) {
+        return this.findPositionForNearestExit(level, withNoRepeat, withNoCollision, withOffscreenCycling)
+    }
+    else {
+        return this.findPositionWithFreeNavigation(level, withNoRepeat, withNoCollision, withOffscreenCycling)
+    }
+}
+
+/**
+ *
+ * @param level
+ * @param withNoRepeat
+ * @param withNoCollision
+ * @param withOffscreenCycling
+ */
+Agent.prototype.findPositionForNearestExit = function(level, withNoRepeat, withNoCollision, withOffscreenCycling) {
+    var x = this.x;
+    var y = this.y;
+    var newX = x;
+    var newY = y;
+    var lastX = this.lastMemory.x;
+    var lastY = this.lastMemory.y;
+    var candidateCells = [];
+    var bestCandidate = null;
+    var directions = this.randomDirectionOrder();
+    var waitOnCurrentCell = false;
+    for (var i = 0; i < directions.length; i++) {
+        newX = x;
+        newY = y;
+        var dir = directions[i];
+
+        var offScreen1 = 0;
+        var offScreenWidth = level.cellsAcross - 1;
+        var offScreenHeight = level.cellsDown - 1;
+        var offset = 1;
+        var toContinue = false;
+        switch (dir) {
+            case 0:
+                (x == offScreen1 ? (withOffscreenCycling ? newX = offScreenWidth : toContinue = true) : newX = newX - offset);
+                break;
+            case 1:
+                (x == offScreenWidth ? (withOffscreenCycling ? newX = offScreen1 : toContinue = true) : newX = newX + offset);
+                break;
+            case 2:
+                (y == offScreen1 ? (withOffscreenCycling ? newY = offScreenHeight : toContinue = true) : newY = newY - offset);
+                break;
+            case 3:
+                (y == offScreenHeight ? (withOffscreenCycling ? newY = offScreen1 : toContinue = true) : newY = newY + offset);
+                break;
+        }
+        // If we can't repeat and the candidate cell is the last visited cell, continue
+        if (level.isExitPoint(newX, newY))
+            return [newX, newY];
+
+        // If the cell is occupied by another agent, don't allow this agent to move there
+        if (World.settings.agentsOwnTilesExclusively && level.isPositionOccupiedByAgent(newX, newY)) {
+            // Wait till the other agent has moved - don't backtrack if no other cells are available
+            waitOnCurrentCell = true;
+            continue;
+        }
+        // If the cell is occupied by a resource, don't allow the agent to move there
+        if (World.settings.resourcesOwnTilesExclusively && level.isPositionOccupiedByResource(newX, newY)) {
+            continue;
+        }
+
+        // If the candidate cell is valid (part of the path), add it
+        if (level.getCell(newX, newY) == undefined) {
+            candidateCells.push([newX, newY]);
+        }
+    }
+
+    // Find the first candidate which is either the goal, or not in the history.
+    var candidatesNotInHistory = [];
+    for (var i = 0; i < candidateCells.length; i++) {
+        var candidate = candidateCells[i];
+
+        if (this.memoriesOfPlacesVisited[candidate] == undefined) {
+            var placeVisitedByOtherAgents = false;
+            if (this.canCommunicateWithOtherAgents) {
+                for (var agentID in this.memoriesOfPlacesVisitedByOtherAgents) {
+                    var agentMemoryOfPlacesVisited = this.memoriesOfPlacesVisitedByOtherAgents[agentID];
+                    if (agentMemoryOfPlacesVisited[candidate] != undefined) {
+                        placeVisitedByOtherAgents = true;
+                    }
+                }
+            }
+            if (!placeVisitedByOtherAgents) {
+                candidatesNotInHistory.push(candidate);
+            }
+        }
+    }
+
+    var shortestDirectPath = -1;
+    for (var i = 0; i < candidatesNotInHistory.length; i++) {
+        var candidate = candidatesNotInHistory[i];
+        for (var j in level.exitPoints) {
+            var ep = level.exitPoints[j];
+            var d = Math.sqrt(Math.pow(ep[0] - candidate[0], 2) +  Math.pow(ep[1] - candidate[1], 2));
+            if (shortestDirectPath === -1 || shortestDirectPath > d) {
+                shortestDirectPath = d;
+                bestCandidate = candidate;
+            }
+        }
+    }
+    if (!bestCandidate) {
+        shortestDirectPath = -1;
+        for (var i = 0; i < candidateCells.length; i++) {
+            var candidate = candidateCells[i];
+            for (var j in level.exitPoints) {
+                var ep = level.exitPoints[j];
+                var d = Math.sqrt(Math.pow(ep[0] - candidate[0], 2) +  Math.pow(ep[1] - candidate[1], 2));
+                if (shortestDirectPath === -1 || shortestDirectPath > d) {
+                    shortestDirectPath = d;
+                    this.memoriesOfPlacesVisited[candidate] = null;
+                    bestCandidate = candidate;
+                }
+            }
+        }
+    }
+    return (bestCandidate ? bestCandidate : candidateCells[0]);
+}
 
 /**
 <div>
@@ -638,7 +767,7 @@ the first candidate cell is selected.</li>
  * @param withNoCollision
  * @param withOffscreenCycling
  */
-Agent.prototype.findPosition = function(level, withNoRepeat, withNoCollision, withOffscreenCycling) {
+Agent.prototype.findPositionWithFreeNavigation = function(level, withNoRepeat, withNoCollision, withOffscreenCycling) {
     var x = this.x;
     var y = this.y;
     var newX = x;
@@ -694,6 +823,7 @@ Agent.prototype.findPosition = function(level, withNoRepeat, withNoCollision, wi
             candidateCells.push([newX, newY]);
         }
     }
+
     // Allow for back-tracking, if there is no way forward
     if (candidateCells.length == 0) {
         if (waitOnCurrentCell)
@@ -726,7 +856,6 @@ Agent.prototype.findPosition = function(level, withNoRepeat, withNoCollision, wi
                 candidatesNotInHistory.push(candidate);
             }
         }
-
     }
 
     // Try to find a neighbouring resource, if it exists
@@ -791,7 +920,6 @@ Agent.prototype.findPosition = function(level, withNoRepeat, withNoCollision, wi
 
                         // Fixes bug with endless back-and-forth cycle, due to proximity of unvisited (and unvisitable) resource cells
                         if (World.settings.resourcesOwnTilesExclusively && level.isPositionOccupiedByResource(unvisited.x, unvisited.y))
-//                        if (unvisited.age == this.age)
                             continue;
 
                         var inOtherAgentsMemory = false;
