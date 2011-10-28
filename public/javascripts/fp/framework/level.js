@@ -933,54 +933,151 @@ Level.prototype.processNeighbouringAgents = function(agent) {
 Level.prototype.criticalPath = function(x, y, h) {
     var horizontal = h || true;
 
-    var shortestDistance = -1;
+    var shortestDistance = -1, shortistTrail;
     for (var i in this.exitPoints) {
         var ep = this.exitPoints[i];
         var tx = ep[0], ty = ep[1];
-        var distance = this.criticalPathToExitPoint(x, y, tx, ty, []);
+        var result = this.criticalPathToExitPoint(x, y, tx, ty, [], true, 0);
+        var distance = result.res;
         console.log("----------");
         console.log(x+ ":" + y + ":" + distance);
+        console.log(result.trail);
+        console.log(COUNTER);
+        console.log(COUNTER_PATHS);
         console.log("----------");
 
-        if (shortestDistance == -1 ||  distance < shortestDistance)
+        if (shortestDistance == -1 ||  distance < shortestDistance) {
             shortestDistance = distance;
+            shortistTrail = result.trail;
+        }
     }
-    return shortestDistance;
+    return { res: shortestDistance, trail: shortistTrail};
 };
 
 var COUNTER = 0;
+var COUNTER_PATHS = 0;
 
 /**
  * Find the critical path to the nearest exit point
  */
-Level.prototype.criticalPathToExitPoint = function(x, y, ex, ey, trail) {
-    console.log(COUNTER++);
-//    console.log(x+ ":" + y + ":" + ex+ ":" + ey + ":" + trail.length);
-//    console.log('got here ' +trail.join('|'));
+Level.prototype.old_criticalPathToExitPoint = function(x, y, ex, ey, trail, topLevel, depth, globalShortistDistance, bpi) {
+    // Optimisation, to ignore further searches when the current trail is already longer than the known shortest distance
+    if (globalShortistDistance && !topLevel && trail.length >= globalShortistDistance) {
+//        console.log(globalShortistDistance)
+        return undefined;
+    }
 
-    if (ex == x && ey == y)
-        return 0;
+    bpi = bpi || 0;
+    // Optimisation of directions to reduce search space
+    var dx = ex - x;
+    var dy = ey - y;
+    // Best path
+    var bestpath = Math.abs(dx) + Math.abs(dy) + bpi;
+
+//    console.log(bestpath+":"+depth+":"+trail.length);
+    /*
+    if (trail.length == bestpath) {
+        return {res: trail.length, trail: trail};
+    }
+    */
+
+    COUNTER++
+
+
+    if (ex == x && ey == y) {
+        COUNTER_PATHS++;
+        trail.push([x,y]);
+        return {res: 0, trail: trail, bpi: bpi};
+    }
+    /*
     else if (Math.abs(ex - x) == 1 && ey - y == 0) {
-        return 1;
+        trail.push([x,y]);
+        COUNTER_PATHS++;
+        return {res: 1, trail: trail};
     }
     else if (ex - x == 0 && Math.abs(ey - y) == 1) {
-        return 1;
+        trail.push([x,y]);
+        COUNTER_PATHS++;
+        return {res: 1, trail: trail};
     }
+    */
     // Add conditions for offscreen cycling
     else {
-        var distance;
-        for (var i = 0; i < 4; i++) {
+        var distance, currentTrail, currentBpi;
+
+        // Default directions: right, down, up, left
+        var directions = [0, 1, 3, 2];
+
+        var mv_x = (dx >= dy);
+        var mv_x_right = (dx > 0);
+        var mv_y_down = (dy > 0);
+
+
+//        console.log('got here ' +trail.join('|'));
+//        console.log(mv_y_down);
+
+        if (mv_x) {
+            if (mv_x_right) {
+                if (mv_y_down) {
+                    // New directions: right, down, up, left
+                    directions = [0, 1, 3, 2];
+                }
+                else {
+                    // New directions: right, up, down, left
+                    directions = [0, 3, 1, 2];
+                }
+            }
+            else {
+                if (mv_y_down) {
+                    // New directions: left, down, up, right
+                    directions = [2, 1, 3, 0];
+                }
+                else {
+                    // New directions: left, up, down, right
+                    directions = [2, 3, 1, 0];
+                }
+            }
+        }
+        else {
+            if (mv_y_down) {
+                if (mv_x_right) {
+                    // New directions: down, right, left, up
+                    directions = [1, 0, 2, 3];
+                }
+                else {
+                    // New directions: down, left, right, up
+                    directions = [1, 2, 0, 3];
+                }
+            }
+            else {
+                if (mv_x_right) {
+                    // New directions: up, right, left, down
+                    directions = [3, 0, 2, 1];
+                }
+                else {
+                    // New directions: up, left, right, down
+                    directions = [3, 2, 0, 1];
+                }
+            }
+        }
+
+        // End optimisation
+
+        for (var i = 0; i < directions.length; i++) {
+            var dir = directions[i];
             var td = -1;
             var nx = x, ny = y;
-            switch (i) {
+
+
+            switch (dir) {
                 case 0:
                     nx = x + 1;
                     break;
                 case 1:
-                    nx = x - 1;
+                    ny = y + 1;
                     break;
                 case 2:
-                    ny = y + 1;
+                    nx = x - 1;
                     break;
                 case 3:
                     ny = y - 1;
@@ -1010,15 +1107,7 @@ Level.prototype.criticalPathToExitPoint = function(x, y, ex, ey, trail) {
                 else
                     continue;
             }
-            if (World.settings.resourcesOwnTilesExclusively && this.isPositionOccupiedByResource(nx, ny))
-                continue;
 
-            if (this.getCell(nx, ny) != undefined)
-                continue;
-
-            if (x==2 && y == 0) {
-//                console.log('got here ' +i);
-            }
             var inPath = false;
             var newTrail = [];
             for (j in trail) {
@@ -1031,27 +1120,282 @@ Level.prototype.criticalPathToExitPoint = function(x, y, ex, ey, trail) {
                     newTrail.push(tc);
                 }
             }
-            if (inPath)
+            if (inPath) {
+//                console.log('not backtracking')
                 continue;
+            }
+
+            if (World.settings.resourcesOwnTilesExclusively && this.isPositionOccupiedByResource(nx, ny)) {
+                bpi += 2;
+                bestpath += 2;
+                continue;
+            }
+
+            if (this.getCell(nx, ny) != undefined)
+                continue;
+
 
             newTrail.push([x, y]);
 
-            var res = this.criticalPathToExitPoint(nx, ny, ex, ey, newTrail);
-            if (res != undefined) {
-                var td = res + 1;
-                if (distance == undefined || td < distance) {
-                    distance = td;
-                }
-                    console.log(distance + ":" + td + ":" + res + ":" + x+ ":" + y + ":" + nx+ ":" + ny + ":" + trail.length);
+            var result = this.criticalPathToExitPoint(nx, ny, ex, ey, newTrail, false, depth + 1, globalShortistDistance, bpi);
+            if (result != undefined) {
+                var td = result.res + 1;
 
+                if (result.trail && result.trail.length > 0) {
+                    var lastTrailCell = result.trail[result.trail.length - 1];
+                    var lx = lastTrailCell[0], ly = lastTrailCell[1];
+                    if ((Math.abs(lx - ex) <= 1 && ly - ey == 0) || (lx - ex == 0 && Math.abs(ly - ey) <= 1)) {
+//                        console.log(lx + ":" + ly + ":" + ex+ ":" + ey);
+                        // This is the shortist possible path, so return it
+                        // Note: placement of resources can disrupt this optimisation
+                        console.log('blah ' + bestpath + ":" + td + ":" + result.bpi + ":" + bpi + ":" + x + ":" + y + ":" + COUNTER);
+                        if (td <= bestpath + result.bpi && result.bpi <= bpi) {
+                            return {res: td, trail: result.trail, bpi: result.bpi};
+                        }
+                        else {
+                            console.log('ah ' + bestpath + ":" + td + ":" + result.bpi + ":" + x + ":" + y + ":" + COUNTER);
+                        }
+
+                        if (globalShortistDistance == undefined && topLevel) {
+                            globalShortistDistance = result.trail.length;
+                        }
+                    }
+                }
+                if (distance == undefined || td < distance) {
+                    currentTrail = result.trail;
+                    distance = td;
+                    currentBpi = result.bpi;
+                }
             }
         }
-        return distance;
+        if (currentTrail != undefined) {
+            trail = currentTrail;
+        }
+        return {res: distance, trail: trail, bpi: currentBpi};
+
+    }
+};
+
+/**
+ * Find the critical path to the nearest exit point
+ */
+Level.prototype.criticalPathToExitPoint = function(x, y, ex, ey, trail, topLevel, depth, globalShortistDistance, existingDistances) {
+    // Optimisation, to ignore further searches when the current trail is already longer than the known shortest distance
+    if (globalShortistDistance && !topLevel && trail.length >= globalShortistDistance) {
+//        console.log(globalShortistDistance)
+        return undefined;
+    }
+
+    bpi = 0;
+    existingDistances = existingDistances || [];
+    var dx = ex - x;
+    var dy = ey - y;
+    var sameX = (dx == 0);
+    var sameY = (dy == 0);
+    var moveXbeforeY = (dx >= dy);
+    var moveXright = (dx > 0);
+    var moveYdown = (dy > 0);
+    // Best path
+    var bestpath = this.pointDistance(x, y, ex, ey) + bpi;
+
+    COUNTER++
+    if (sameX && sameY) {
+        COUNTER_PATHS++;
+        trail.push([x,y]);
+        return {res: 0, trail: trail, bpi: bpi};
+    }
+    // Add conditions for offscreen cycling
+    else {
+        var distance, currentTrail, currentBpi;
+
+        // Default directions: right, down, up, left
+        var directions = [0, 1, 3, 2];
+        if (moveXbeforeY) {
+            if (moveXright) {
+                // New directions: right, down, up, left OR right, up, down, left
+                directions = (moveYdown) ? [0, 1, 3, 2] : [0, 3, 1, 2];
+            }
+            else {
+                // New directions: left, down, up, right OR left, up, down, right
+                directions = (moveYdown) ? [2, 1, 3, 0] : [2, 3, 1, 0];
+            }
+        }
+        else {
+            if (moveYdown) {
+                // New directions: down, right, left, up OR down, left, right, up
+                directions = moveXright ? [1, 0, 2, 3] : [1, 2, 0, 3];
+            }
+            else {
+                // New directions: up, right, left, down OR up, left, right, down
+                directions = moveXright ? [3, 0, 2, 1] : [3, 2, 0, 1];
+            }
+        }
+
+        // Preliminary loop: calculate candidates and distances from target
+        var candidates = [];
+        var distances = [];
+        for (var i = 0; i < directions.length; i++) {
+            var dir = directions[i];
+            var nx = x, ny = y;
+            switch (dir) {
+                case 0:
+                    nx = x + 1;
+                    break;
+                case 1:
+                    ny = y + 1;
+                    break;
+                case 2:
+                    nx = x - 1;
+                    break;
+                case 3:
+                    ny = y - 1;
+                    break;
+            }
+            // Exclude out of path options
+            if (nx != x && nx >= this.cellsAcross) {
+                if (this.allowOffscreenCycling)
+                    nx = 0;
+                else
+                    continue;
+            }
+            if (nx != x && nx < 0) {
+                if (this.allowOffscreenCycling)
+                    nx = this.cellsAcross - 1;
+                else
+                    continue;
+            }
+            if (ny != y && ny >= this.cellsDown) {
+                if (this.allowOffscreenCycling)
+                    ny = 0;
+                else
+                    continue;
+            }
+            if (ny != y && ny < 0) {
+                if (this.allowOffscreenCycling)
+                    ny = this.cellsDown - 1;
+                else
+                    continue;
+            }
+            // Exclude out of path options
+            if (this.getCell(nx, ny) != undefined) {
+                continue;
+            }
+            // Exclude cells occupied exclusively by resources
+            if (World.settings.resourcesOwnTilesExclusively && this.isPositionOccupiedByResource(nx, ny)) {
+                continue;
+            }
+
+            // Exclude options already in our history
+            var inPath = false;
+            var newTrail = [];
+            for (j in trail) {
+                var tc = trail[j];
+                if (tc[0] == nx && tc[1] == ny) {
+                    inPath = true;
+                    break;
+                }
+                else {
+                    newTrail.push(tc);
+                }
+            }
+            if (inPath) {
+//                console.log('not backtracking')
+                continue;
+            }
+
+            candidates.push([nx, ny]);
+            distances.push(this.pointDistance(nx, ny, ex, ey));
+        }
+
+        // Return if no good candidates
+        if (candidates.length == 0)
+            return undefined;
+
+        // Main loop: evaluate candidates
+        var currentDistances = [];
+        var currentTrails = [];
+        while (true) {
+            // Sort candidates by relative distances
+            for (var i = 0; i < candidates.length; i++) {
+                var c = candidates[i];
+                var nx = c[0], ny = c[1];
+                var newTrail = [];
+                var distance = distances[i];
+                for (j in trail) {
+                    var tc = trail[j];
+                    if (tc[0] == nx && tc[1] == ny) {
+                        inPath = true;
+                        break;
+                    }
+                    else {
+                        newTrail.push(tc);
+                    }
+                }
+                newTrail.push([x, y]);
+                var result = this.criticalPathToExitPoint(nx, ny, ex, ey, newTrail, false, depth + 1, globalShortistDistance, distances);
+                if (result != undefined) {
+                    var td = result.res + 1;
+                    distances[i] = td;
+                    for (var j = i + 1; j < candidates.length; j++) {
+                        var cd = distances[j];
+                    }
+                }
+            }
+        }
+        for (var i = 0; i < candidates.length; i++) {
+            var c = candidates[i];
+            var nx = c[0], ny = c[1];
+            var distance = distances[i];
+            var td = -1;
+
+            newTrail.push([x, y]);
+
+            var result = this.criticalPathToExitPoint(nx, ny, ex, ey, newTrail, false, depth + 1, globalShortistDistance, bpi);
+            if (result != undefined) {
+                var td = result.res + 1;
+
+                if (result.trail && result.trail.length > 0) {
+                    var lastTrailCell = result.trail[result.trail.length - 1];
+                    var lx = lastTrailCell[0], ly = lastTrailCell[1];
+                    if ((Math.abs(lx - ex) <= 1 && ly - ey == 0) || (lx - ex == 0 && Math.abs(ly - ey) <= 1)) {
+//                        console.log(lx + ":" + ly + ":" + ex+ ":" + ey);
+                        // This is the shortist possible path, so return it
+                        // Note: placement of resources can disrupt this optimisation
+                        console.log('blah ' + bestpath + ":" + td + ":" + result.bpi + ":" + bpi + ":" + x + ":" + y + ":" + COUNTER);
+                        if (td <= bestpath + result.bpi && result.bpi <= bpi) {
+                            return {res: td, trail: result.trail, bpi: result.bpi};
+                        }
+                        else {
+                            console.log('ah ' + bestpath + ":" + td + ":" + result.bpi + ":" + x + ":" + y + ":" + COUNTER);
+                        }
+
+                        if (globalShortistDistance == undefined && topLevel) {
+                            globalShortistDistance = result.trail.length;
+                        }
+                    }
+                }
+                if (distance == undefined || td < distance) {
+                    currentTrail = result.trail;
+                    distance = td;
+                    currentBpi = result.bpi;
+                }
+            }
+        }
+        if (currentTrail != undefined) {
+            trail = currentTrail;
+        }
+        return {res: distance, trail: trail, bpi: currentBpi};
 
     }
 };
 
 
+/**
+ * Find the critical path to the nearest exit point
+ */
+Level.prototype.pointDistance = function(x, y, ex, ey) {
+    return Math.abs(ex - x) + Math.abs(ey - y);
+};
 
 
 

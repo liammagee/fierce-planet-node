@@ -610,7 +610,12 @@ Agent.prototype.evaluateMove = function(level, options) {
  */
 Agent.prototype.findPosition = function(level, withNoRepeat, withNoCollision, withOffscreenCycling) {
     if (level.agentGoToNearestExit || World.settings.agentGoToNearestExit) {
-        return this.findPositionForNearestExit(level, withNoRepeat, withNoCollision, withOffscreenCycling)
+        try {
+            return this.findPositionForNearestExit(level, withNoRepeat, withNoCollision, withOffscreenCycling)
+        }
+        catch (e) {
+            return this.findPositionWithFreeNavigation(level, withNoRepeat, withNoCollision, withOffscreenCycling)
+        }
     }
     else {
         return this.findPositionWithFreeNavigation(level, withNoRepeat, withNoCollision, withOffscreenCycling)
@@ -618,12 +623,25 @@ Agent.prototype.findPosition = function(level, withNoRepeat, withNoCollision, wi
 }
 
 /**
- *
  * @param level
  * @param withNoRepeat
  * @param withNoCollision
  * @param withOffscreenCycling
  */
+Agent.prototype.findPositionForNearestExit = function(level, withNoRepeat, withNoCollision, withOffscreenCycling) {
+    var ret = level.criticalPath(this.x, this.y);
+    var trail = ret.trail;
+    return (trail.length > 1 ? trail[1] : trail[0]);
+}
+
+/**
+ * Brute force approach
+ *
+ * @deprecated
+ * @param level
+ * @param withNoRepeat
+ * @param withNoCollision
+ * @param withOffscreenCycling
 Agent.prototype.findPositionForNearestExit = function(level, withNoRepeat, withNoCollision, withOffscreenCycling) {
     var x = this.x;
     var y = this.y;
@@ -730,6 +748,8 @@ Agent.prototype.findPositionForNearestExit = function(level, withNoRepeat, withN
     }
     return (bestCandidate ? bestCandidate : candidateCells[0]);
 }
+ */
+
 
 /**
 <div>
