@@ -42,6 +42,7 @@ var gx = 2, gy = 2
 var goal = [gx, gy]
 
 var history = []
+var trails = {};
 
 function meanDistance(cell){
     var x = cell[0], y = cell[1];
@@ -84,7 +85,8 @@ function getDirections(cell){
     }
     return directions;
 }
-function evalCell(cell, existingDistances, trail, depth, place){
+
+function evalCell2(cell, existingDistances, trail, depth, place){
     COUNTER++;
     existingDistances = existingDistances || [];
     trail = trail || [];
@@ -127,6 +129,16 @@ function evalCell(cell, existingDistances, trail, depth, place){
     }
 //    console.log("candidates for: " + [x, y] +" - "+candidates)
     var keepLooping = true;
+    for (var i in candidates) {
+        var candidate = candidates[i]
+        var distance = distances[i]
+        if (isSameCell(candidate, goal)) {
+            trail.push(ret);
+            console.log('found goal at depth: ' + depth);
+            return ret;
+        }
+
+    }
     while(keepLooping) {
         keepLooping = false;
         for (var i in candidates) {
@@ -167,8 +179,75 @@ function evalCell(cell, existingDistances, trail, depth, place){
     }
     return undefined;
 }
+
+MAX_DEPTH = 1000
+function evalCell(cell){
+    var depth = depth || 0;
+    history.push(cell);
+    var trails = {};
+    trails[cell[1] * WS + cell[0]] = [cell];
+    var candidates = [];
+    candidates.push(cell);
+    while (depth++ < MAX_DEPTH) {
+        console.log(depth);
+        var newCandidates = [];
+        for (var i in candidates) {
+            var candidate = candidates[i];
+            var x = candidate[0], y = candidate[1];
+            if (isSameCell(candidate, goal)) {
+                return trails[y * WS + x];
+            }
+            var directions = getDirections(candidate);
+            for (var j = 0; j < directions.length; j++) {
+                var nx = x, ny = y;
+                switch(directions[j]) {
+                    case 0:
+                        nx++;
+                        break;
+                    case 1:
+                        ny++;
+                        break;
+                    case 2:
+                        nx--;
+                        break;
+                    case 3:
+                        ny--;
+                        break;
+                }
+                var newCell = [nx, ny]
+                if (nx < 0 || nx >= WS || ny < 0 || ny >= WS)
+                    continue;
+                if (!isCell(newCell))
+                    continue;
+                if (isInHistory(newCell))
+                    continue;
+//        console.log("nc: "+newCell + ":" + isCell(newCell))
+                newCandidates.push(newCell);
+                history.push(newCell)
+
+                var candidateKey = y * WS + x;
+                var candidateTrail = trails[candidateKey]
+                var newCandidateKey = ny * WS + nx;
+                var newCandidateTrail = []
+                for (var k in candidateTrail) {
+                    newCandidateTrail.push(candidateTrail[k]);
+                }
+                newCandidateTrail.push(newCell);
+                trails[newCandidateKey] = newCandidateTrail;
+                console.log(newCell +":"+trails[newCandidateKey]);
+            }
+        }
+        candidates = [];
+        for (var i in newCandidates) {
+            candidates.push(newCandidates[i]);
+        }
+    }
+    return undefined;
+}
+
 var res = evalCell(start);
 console.log('===============')
-console.log(history)
+//console.log(history)
 console.log(res)
-console.log(COUNTER)
+console.log(res.length)
+

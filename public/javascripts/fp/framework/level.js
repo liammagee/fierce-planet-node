@@ -937,21 +937,15 @@ Level.prototype.criticalPath = function(x, y, h) {
     for (var i in this.exitPoints) {
         var ep = this.exitPoints[i];
         var tx = ep[0], ty = ep[1];
-        var result = this.criticalPathToExitPoint(x, y, tx, ty, [], true, 0);
-        var distance = result.res;
-        console.log("----------");
-        console.log(x+ ":" + y + ":" + distance);
-        console.log(result.trail);
-        console.log(COUNTER);
-        console.log(COUNTER_PATHS);
-        console.log("----------");
-
+        var result = this.criticalPathToExitPoint(x, y, tx, ty);
+        console.log(result)
+        var distance = result.length;
         if (shortestDistance == -1 ||  distance < shortestDistance) {
             shortestDistance = distance;
-            shortistTrail = result.trail;
+            shortistTrail = result;
         }
     }
-    return { res: shortestDistance, trail: shortistTrail};
+    return { res: shortistTrail.length, trail: shortistTrail};
 };
 
 var COUNTER = 0;
@@ -1179,7 +1173,7 @@ Level.prototype.old_criticalPathToExitPoint = function(x, y, ex, ey, trail, topL
 /**
  * Find the critical path to the nearest exit point
  */
-Level.prototype.criticalPathToExitPoint = function(x, y, ex, ey, trail, topLevel, depth, globalShortistDistance, existingDistances) {
+Level.prototype.old2_criticalPathToExitPoint = function(x, y, ex, ey, trail, topLevel, depth, globalShortistDistance, existingDistances) {
     // Optimisation, to ignore further searches when the current trail is already longer than the known shortest distance
     if (globalShortistDistance && !topLevel && trail.length >= globalShortistDistance) {
 //        console.log(globalShortistDistance)
@@ -1389,6 +1383,73 @@ Level.prototype.criticalPathToExitPoint = function(x, y, ex, ey, trail, topLevel
     }
 };
 
+var MAX_DEPTH = 1000;
+Level.prototype.criticalPathToExitPoint = function(sx, sy, ex, ey) {
+    var cell = [sx, sy], goal = [ex, ey];
+    var history = [];
+    var trails = {};
+    var depth = 0;
+    history.push(cell);
+    trails[sy * this.cellsAcross + sx] = [cell];
+    var candidates = [];
+    candidates.push(cell);
+    while (depth++ < MAX_DEPTH) {
+        var newCandidates = [];
+        for (var i in candidates) {
+            var candidate = candidates[i];
+            var x = candidate[0], y = candidate[1];
+            if (this.isSameCell(candidate, goal)) {
+                return trails[y * this.cellsAcross + x];
+            }
+            var directions = this.getDirections(candidate, goal);
+            for (var j = 0; j < directions.length; j++) {
+                var nx = x, ny = y;
+                switch(directions[j]) {
+                    case 0:
+                        nx++;
+                        break;
+                    case 1:
+                        ny++;
+                        break;
+                    case 2:
+                        nx--;
+                        break;
+                    case 3:
+                        ny--;
+                        break;
+                }
+                var newCell = [nx, ny];
+                if (nx < 0 || nx >= this.cellsAcross || ny < 0 || ny >= this.cellsDown)
+                    continue;
+                if (!this.isCell(newCell))
+                    continue;
+                if (this.isInHistory(newCell, history))
+                    continue;
+                // Exclude cells occupied exclusively by resources
+                if (World.settings.resourcesOwnTilesExclusively && this.isPositionOccupiedByResource(nx, ny))
+                    continue;
+
+                newCandidates.push(newCell);
+                history.push(newCell)
+
+                var candidateKey = y * this.cellsAcross + x;
+                var candidateTrail = trails[candidateKey]
+                var newCandidateKey = ny * this.cellsAcross + nx;
+                var newCandidateTrail = []
+                for (var k in candidateTrail) {
+                    newCandidateTrail.push(candidateTrail[k]);
+                }
+                newCandidateTrail.push(newCell);
+                trails[newCandidateKey] = newCandidateTrail;
+            }
+        }
+        candidates = [];
+        for (var i in newCandidates) {
+            candidates.push(newCandidates[i]);
+        }
+    }
+
+};
 
 /**
  * Find the critical path to the nearest exit point
@@ -1397,6 +1458,46 @@ Level.prototype.pointDistance = function(x, y, ex, ey) {
     return Math.abs(ex - x) + Math.abs(ey - y);
 };
 
+
+Level.prototype.meanDistance = function (cell, goal){
+    var x = cell[0], y = cell[1];
+    var gx = goal[0], gy = goal[1];
+    return Math.abs(gx - x) + Math.abs(gy - y);
+};
+Level.prototype.isSameCell = function (c1, c2){
+    return (c1 && c2 && c1[0] == c2[0] && c1[1] == c2[1])
+};
+Level.prototype.isCell = function (cell){
+    var x = cell[0], y = cell[1];
+    return (this.getCell(x, y) == undefined);
+};
+Level.prototype.isInHistory = function (cell, history){
+    for (var i in history) {
+        var testCell = history[i]
+        if (this.isSameCell(cell, testCell))
+            return true;
+    }
+    return false;
+};
+Level.prototype.getDirections = function (cell, goal){
+    var x = cell[0], y = cell[1];
+    var gx = goal[0], gy = goal[1];
+    var dx = gx - x, dy = gy - y;
+    var directions = [];
+    if (Math.abs(dx) < Math.abs(dy)) {
+        if (dx < 0)
+            directions = (dy < 0) ? [2, 3, 1, 0] : [2, 1, 3, 0];
+        else
+            directions = (dy < 0) ? [0, 3, 1, 2] : [0, 1, 3, 2];
+    }
+    else {
+        if (dy < 0)
+            directions = (dx < 0) ? [3, 2, 0, 1] : [3, 0, 2, 1];
+        else
+            directions = (dx < 0) ? [1, 2, 0, 3] : [1, 0, 2, 3];
+    }
+    return directions;
+};
 
 
 
