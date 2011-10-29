@@ -18,7 +18,7 @@ var COUNTER = 0;
 var cells = [];
 for (var i = 0; i < WS; i++) {
     for (var j = 0; j < WS; j++) {
-        cells.push([i, j]);
+        cells.push([j, i]);
 
     }
 }
@@ -29,6 +29,7 @@ delete cells[63];
 delete cells[53];
 delete cells[48];
 delete cells[47];
+delete cells[46];
 delete cells[43];
 delete cells[36];
 delete cells[35];
@@ -83,10 +84,12 @@ function getDirections(cell){
     }
     return directions;
 }
-function evalCell(cell, existingDistances, trail){
+function evalCell(cell, existingDistances, trail, depth, place){
     COUNTER++;
-    distances = distances || [];
+    existingDistances = existingDistances || [];
     trail = trail || [];
+    depth = depth || 0;
+    place = place || 0;
     history.push(cell)
     if (isSameCell(cell, goal)) {
         trail.push(cell);
@@ -118,20 +121,54 @@ function evalCell(cell, existingDistances, trail){
             continue;
         if (isInHistory(newCell))
             continue;
+//        console.log("nc: "+newCell + ":" + isCell(newCell))
         candidates.push(newCell);
         distances.push(meanDistance(newCell));
     }
-    for (var i in candidates) {
-        var candidate = candidates[i]
-        console.log(distances[i]+":"+candidate)
-        var ret = evalCell(candidate, distances, trail)
-        if (isSameCell(ret, goal)) {
-            trail.push(ret);
-            return ret;
+//    console.log("candidates for: " + [x, y] +" - "+candidates)
+    var keepLooping = true;
+    while(keepLooping) {
+        keepLooping = false;
+        for (var i in candidates) {
+            var candidate = candidates[i]
+            var distance = distances[i]
+            var tooLong = true
+            for (var j in existingDistances) {
+                var ed = existingDistances[j]
+                if (distance <= ed)
+                    tooLong = false
+            }
+
+            existingDistances[i] = (distance)
+            console.log('----')
+            console.log(i)
+            console.log(COUNTER+":"+candidate+":"+distance+":"+tooLong+":"+depth)
+            console.log(existingDistances)
+            if (tooLong) {
+                continue;
+            }
+            var ret = evalCell(candidate, existingDistances, trail, ++depth, i)
+//            console.log('ret '+ ret )
+            if (isSameCell(ret, goal)) {
+                trail.push(ret);
+                return ret;
+            }
+            else if (ret) {
+                existingDistances[i] = meanDistance(ret);
+                console.log('----')
+                console.log(meanDistance(ret))
+                console.log(existingDistances)
+                console.log('----')
+                keepLooping = true;
+    //            return ret;
+            }
         }
+
     }
     return undefined;
 }
 var res = evalCell(start);
+console.log('===============')
+console.log(history)
 console.log(res)
 console.log(COUNTER)
