@@ -45,75 +45,12 @@ script(src='/socket.io/socket.io.js')
 
 script(src='http://maps.googleapis.com/maps/api/js?sensor=true')
 
-script(src='/javascripts/fp/framework/world.js')
-script(src='/javascripts/fp/framework/agent.js')
-script(src='/javascripts/fp/framework/catastrophe.js')
-script(src='/javascripts/fp/framework/culture.js')
-script(src='/javascripts/fp/framework/level.js')
-script(src='/javascripts/fp/framework/resource.js')
-script(src='/javascripts/fp/framework/species.js')
-script(src='/javascripts/fp/framework/terrain.js')
-script(src='/javascripts/fp/framework/tile.js')
-
-script(src='/javascripts/fp/fp-models/profile.js')
-script(src='/javascripts/fp/fp-models/profile_class.js')
-script(src='/javascripts/fp/fp-models/notice.js')
-script(src='/javascripts/fp/fp-models/event.js')
-
-script(src='/javascripts/fp/fp-data/resource_types.js')
-<!-- Change this to load other resource categories -->
-script(src='/javascripts/fp/fp-data/resourceset/tbl.js')
-script(src='/javascripts/fp/fp-data/resourceset/cos.js')
-script(src='/javascripts/fp/fp-data/player_classes.js')
-script(src='/javascripts/fp/fp-data/agent_types.js')
-
-script(src='/javascripts/fp/fp-db/fp-db.js')
-
-script(src='/javascripts/fp/fp-ui/dialogs.js')
-script(src='/javascripts/fp/fp-ui/drawing.js')
-script(src='/javascripts/fp/fp-ui/editor.js')
-script(src='/javascripts/fp/fp-ui/general-ui.js')
-script(src='/javascripts/fp/fp-ui/level-ui.js')
-script(src='/javascripts/fp/fp-ui/orientation.js')
-script(src='/javascripts/fp/fp-ui/profile-ui.js')
-script(src='/javascripts/fp/fp-ui/resource-ui.js')
-script(src='/javascripts/fp/fp-ui/google-map.js')
-script(src='/javascripts/fp/fp-ui/isometric.js')
-
-script(src='/javascripts/fp/lifecycle.js')
-script(src='/javascripts/fp/params.js')
-script(src='/javascripts/fp/recording.js')
-script(src='/javascripts/fp/utils/utils.js')
-script(src='/javascripts/fp/utils/comms.js')
-script(src='/javascripts/fp/utils/log.js')
-script(src='/javascripts/fp/game.js')
-
-// Last to load - has strong dependencies on all other classes
-script(src='/javascripts/fp/fp-data/levels.js')
-script(src='/javascripts/fp/dev.js')
 
 
-//script(src='/javascripts/fp/utils/jquery-terminal-helper.js')
-//script(src='/javascripts/jcubic-jquery.terminal-b904cec/js/dterm.js')
-//script(src='/javascripts/jcubic-jquery.terminal-b904cec/js/jquery.terminal-0.3.6.js')
-//script(src='/javascripts/jcubic-jquery.terminal-b904cec/js/code.js')
+script(data-main='/javascripts/fp/main.js', src='/javascripts/requirejs/require.js')
+
 
 script(type='text/javascript')
-  $(document).ready(function() {
-
-    $('.thumbnail, .customLevel').click(FiercePlanet.GeneralUI.changePresetLevelDirectly);
-    FiercePlanet.GeneralUI.highlightGalleryItem(FiercePlanet.currentLevelNumber);
-    $('#difficulty-input-' + FiercePlanet.levelOfDifficulty).attr('checked', 'checked');
-    $(".difficultyInput").click(FiercePlanet.GeneralUI.changeDifficulty);
-    // Remove text selection - TODO: needs to be more granular
-    // document.onselectstart = function() {return false;} // ie
-    // document.onmousedown = function() {return false;} // mozilla
-
-    // Default to 3d
-    World.settings.skewTiles = true;
-    $('#3d')[0].innerHTML = 'View 2D';
-    FiercePlanet.Drawing.drawGame();
-  });
 - if (typeof(serverLevel) !== 'undefined')
   script
     $(document).ready(function() {

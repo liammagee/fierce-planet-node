@@ -937,8 +937,7 @@ Level.prototype.criticalPath = function(x, y, h) {
     for (var i in this.exitPoints) {
         var ep = this.exitPoints[i];
         var tx = ep[0], ty = ep[1];
-        var result = this.criticalPathToExitPoint(x, y, tx, ty);
-        console.log(result)
+        var result = FiercePlanet.Framework.MazeStrategies.criticalPathToExitPoint(x, y, tx, ty);
         var distance = result.length;
         if (shortestDistance == -1 ||  distance < shortestDistance) {
             shortestDistance = distance;
@@ -957,7 +956,6 @@ var COUNTER_PATHS = 0;
 Level.prototype.old_criticalPathToExitPoint = function(x, y, ex, ey, trail, topLevel, depth, globalShortistDistance, bpi) {
     // Optimisation, to ignore further searches when the current trail is already longer than the known shortest distance
     if (globalShortistDistance && !topLevel && trail.length >= globalShortistDistance) {
-//        console.log(globalShortistDistance)
         return undefined;
     }
 
@@ -968,7 +966,6 @@ Level.prototype.old_criticalPathToExitPoint = function(x, y, ex, ey, trail, topL
     // Best path
     var bestpath = Math.abs(dx) + Math.abs(dy) + bpi;
 
-//    console.log(bestpath+":"+depth+":"+trail.length);
     /*
     if (trail.length == bestpath) {
         return {res: trail.length, trail: trail};
@@ -1006,9 +1003,6 @@ Level.prototype.old_criticalPathToExitPoint = function(x, y, ex, ey, trail, topL
         var mv_x_right = (dx > 0);
         var mv_y_down = (dy > 0);
 
-
-//        console.log('got here ' +trail.join('|'));
-//        console.log(mv_y_down);
 
         if (mv_x) {
             if (mv_x_right) {
@@ -1115,7 +1109,6 @@ Level.prototype.old_criticalPathToExitPoint = function(x, y, ex, ey, trail, topL
                 }
             }
             if (inPath) {
-//                console.log('not backtracking')
                 continue;
             }
 
@@ -1139,15 +1132,10 @@ Level.prototype.old_criticalPathToExitPoint = function(x, y, ex, ey, trail, topL
                     var lastTrailCell = result.trail[result.trail.length - 1];
                     var lx = lastTrailCell[0], ly = lastTrailCell[1];
                     if ((Math.abs(lx - ex) <= 1 && ly - ey == 0) || (lx - ex == 0 && Math.abs(ly - ey) <= 1)) {
-//                        console.log(lx + ":" + ly + ":" + ex+ ":" + ey);
                         // This is the shortist possible path, so return it
                         // Note: placement of resources can disrupt this optimisation
-                        console.log('blah ' + bestpath + ":" + td + ":" + result.bpi + ":" + bpi + ":" + x + ":" + y + ":" + COUNTER);
                         if (td <= bestpath + result.bpi && result.bpi <= bpi) {
                             return {res: td, trail: result.trail, bpi: result.bpi};
-                        }
-                        else {
-                            console.log('ah ' + bestpath + ":" + td + ":" + result.bpi + ":" + x + ":" + y + ":" + COUNTER);
                         }
 
                         if (globalShortistDistance == undefined && topLevel) {
@@ -1176,7 +1164,6 @@ Level.prototype.old_criticalPathToExitPoint = function(x, y, ex, ey, trail, topL
 Level.prototype.old2_criticalPathToExitPoint = function(x, y, ex, ey, trail, topLevel, depth, globalShortistDistance, existingDistances) {
     // Optimisation, to ignore further searches when the current trail is already longer than the known shortest distance
     if (globalShortistDistance && !topLevel && trail.length >= globalShortistDistance) {
-//        console.log(globalShortistDistance)
         return undefined;
     }
 
@@ -1293,7 +1280,6 @@ Level.prototype.old2_criticalPathToExitPoint = function(x, y, ex, ey, trail, top
                 }
             }
             if (inPath) {
-//                console.log('not backtracking')
                 continue;
             }
 
@@ -1352,15 +1338,10 @@ Level.prototype.old2_criticalPathToExitPoint = function(x, y, ex, ey, trail, top
                     var lastTrailCell = result.trail[result.trail.length - 1];
                     var lx = lastTrailCell[0], ly = lastTrailCell[1];
                     if ((Math.abs(lx - ex) <= 1 && ly - ey == 0) || (lx - ex == 0 && Math.abs(ly - ey) <= 1)) {
-//                        console.log(lx + ":" + ly + ":" + ex+ ":" + ey);
                         // This is the shortist possible path, so return it
                         // Note: placement of resources can disrupt this optimisation
-                        console.log('blah ' + bestpath + ":" + td + ":" + result.bpi + ":" + bpi + ":" + x + ":" + y + ":" + COUNTER);
                         if (td <= bestpath + result.bpi && result.bpi <= bpi) {
                             return {res: td, trail: result.trail, bpi: result.bpi};
-                        }
-                        else {
-                            console.log('ah ' + bestpath + ":" + td + ":" + result.bpi + ":" + x + ":" + y + ":" + COUNTER);
                         }
 
                         if (globalShortistDistance == undefined && topLevel) {

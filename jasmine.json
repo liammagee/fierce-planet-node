@@ -10,6 +10,7 @@
      , "/public/javascripts/fp/framework/resource.js"
      , "/public/javascripts/fp/framework/level.js"
      , "/public/javascripts/fp/framework/agent.js"
+     , "/public/javascripts/fp/framework/maze-strategies.js"
      , "/public/javascripts/fp/framework/culture.js"
      , "/public/javascripts/fp/framework/tile.js"
      , "/public/javascripts/fp/framework/terrain.js"

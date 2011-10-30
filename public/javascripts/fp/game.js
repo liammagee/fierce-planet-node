@@ -17,15 +17,6 @@ var $fp = $fp || FiercePlanet;
 FiercePlanet.Game = FiercePlanet.Game || {};
 
 
-/* Initialisation code: start game and dialog boxes */
-
-$(document).ready(function() {
-    FiercePlanet.Lifecycle.loadGame();
-
-    FiercePlanet.Utils.bindVariables();
-
-});
-
 (function() {
 
     /**
