@@ -153,7 +153,7 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
 
 
         // Finally, focus on the console. Good idea?
-        jqconsole.Focus();
+//        jqconsole.Focus();
     };
 
     /**

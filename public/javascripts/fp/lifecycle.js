@@ -61,6 +61,7 @@ FiercePlanet.Lifecycle = FiercePlanet.Lifecycle || {};
 
         // Draw the game
         FiercePlanet.Lifecycle.newLevel();
+
     };
 
 

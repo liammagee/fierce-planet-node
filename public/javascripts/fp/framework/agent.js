@@ -614,6 +614,7 @@ Agent.prototype.findPosition = function(level, withNoRepeat, withNoCollision, wi
             return this.findPositionForNearestExit(level, withNoRepeat, withNoCollision, withOffscreenCycling)
         }
         catch (e) {
+            console.log(e)
             return this.findPositionWithFreeNavigation(level, withNoRepeat, withNoCollision, withOffscreenCycling)
         }
     }
@@ -629,7 +630,7 @@ Agent.prototype.findPosition = function(level, withNoRepeat, withNoCollision, wi
  * @param withOffscreenCycling
  */
 Agent.prototype.findPositionForNearestExit = function(level, withNoRepeat, withNoCollision, withOffscreenCycling) {
-    var ret = level.criticalPath(this.x, this.y);
+    var ret = FiercePlanet.Framework.MazeStrategies.criticalPath(level, this.x, this.y);
     var trail = ret.trail;
     return (trail.length > 1 ? trail[1] : trail[0]);
 }
