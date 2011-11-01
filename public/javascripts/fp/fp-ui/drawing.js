@@ -663,6 +663,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
                 ctx.lineWidth = 4 / FiercePlanet.Orientation.zoomLevel;
                 ctx.strokeStyle = "#" + newColor;
 
+
                 // Draw resource-specific representation here
                 if (resource.kind.image) {
                     var resImage = new Image();

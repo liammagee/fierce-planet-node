@@ -90,38 +90,34 @@ $LAB
        , '/javascripts/fp/utils/comms.js'
        , '/javascripts/fp/utils/log.js'
        , '/javascripts/fp/game.js'
+       , '/javascripts/fp/dev.js'
    ])
     .wait()
     .script([
-     '/javascripts/fp/dev.js'
-
-    , '/javascripts/fp/fp-data/levels.js'
+        '/javascripts/fp/fp-modules/basic.js'
+        , '/javascripts/fp/fp-modules/additional.js'
+        , '/javascripts/fp/fp-modules/experimental.js'
     ])
     .wait(function() {
-        $(document).ready(function() {
-            //This function is called when all the scripts are loaded
-                $('.thumbnail, .customLevel').click(FiercePlanet.GeneralUI.changePresetLevelDirectly);
-                FiercePlanet.GeneralUI.highlightGalleryItem(FiercePlanet.currentLevelNumber);
-                $('#difficulty-input-' + FiercePlanet.levelOfDifficulty).attr('checked', 'checked');
-                $(".difficultyInput").click(FiercePlanet.GeneralUI.changeDifficulty);
+        FiercePlanet.Modules.Basic.init();
+        FiercePlanet.Modules.Additional.init();
+        FiercePlanet.Modules.Experimental.init();
+    })
+    .wait(function() {
 
-                FiercePlanet.PresetLevels.init();
+        $('.thumbnail, .customLevel').click(FiercePlanet.GeneralUI.changePresetLevelDirectly);
+        $('#difficulty-input-' + FiercePlanet.levelOfDifficulty).attr('checked', 'checked');
+        $(".difficultyInput").click(FiercePlanet.GeneralUI.changeDifficulty);
+        $('#3d')[0].innerHTML = 'View 2D';
 
-                FiercePlanet.Lifecycle.loadGame();
+        World.settings.skewTiles = true;
 
-                FiercePlanet.Utils.bindVariables();
+        FiercePlanet.GeneralUI.highlightGalleryItem(FiercePlanet.currentLevelNumber);
 
+        FiercePlanet.Lifecycle.loadGame();
 
-                  // Remove text selection - TODO: needs to be more granular
-                  // document.onselectstart = function() {return false;} // ie
-                  // document.onmousedown = function() {return false;} // mozilla
+        FiercePlanet.Utils.bindVariables();
 
-                  // Default to 3d
-                  World.settings.skewTiles = true;
-                  $('#3d')[0].innerHTML = 'View 2D';
-                  FiercePlanet.Drawing.drawGame();
-    //              FiercePlanet.LevelUI.makeLevelFromJSON(!{JSON.stringify(serverLevel)});
-        });
     });
 
 
@@ -182,9 +178,6 @@ require([
         $('#difficulty-input-' + FiercePlanet.levelOfDifficulty).attr('checked', 'checked');
         $(".difficultyInput").click(FiercePlanet.GeneralUI.changeDifficulty);
 
-        console.log('a');
-        FiercePlanet.PresetLevels.init();
-        console.log('b  ');
 
         FiercePlanet.Lifecycle.loadGame();
 

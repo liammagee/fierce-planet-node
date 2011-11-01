@@ -95,7 +95,7 @@ FiercePlanet.Lifecycle = FiercePlanet.Lifecycle || {};
         FiercePlanet.Lifecycle._initialiseGame();
 
         FiercePlanet.currentNotice = FiercePlanet.currentLevel.tip;
-        $("#notifications").toggle(World.settings.statusBarVisible);
+//        $("#notifications").toggle(World.settings.statusBarVisible);
         FiercePlanet.GeneralUI.notify("Starting level " + FiercePlanet.currentLevel.id + "...");
         if (World.settings.sendEventsToServer)
             FiercePlanet.Comms.notifyServerOfEvent("level", FiercePlanet.currentLevel.id);
@@ -295,14 +295,14 @@ FiercePlanet.Lifecycle = FiercePlanet.Lifecycle || {};
             FiercePlanet.currentLevelNumber = 1;
         if (FiercePlanet.currentLevelPreset) {
             try {
-                FiercePlanet.currentLevel = eval("FiercePlanet.PresetLevels.level" + FiercePlanet.currentLevelNumber.toString());
+                FiercePlanet.currentLevel = eval("FiercePlanet.Modules.Basic.level" + FiercePlanet.currentLevelNumber.toString());
             }
             catch(err) {
-                FiercePlanet.currentLevel = eval("FiercePlanet.PresetLevels.level1");
+                FiercePlanet.currentLevel = eval("FiercePlanet.Modules.Basic.level1");
             }
         }
         else if (FiercePlanet.currentLevel == undefined) {
-            FiercePlanet.currentLevel = eval("FiercePlanet.PresetLevels.level1");
+            FiercePlanet.currentLevel = eval("FiercePlanet.Modules.Basic.level1");
         }
 
         if (FiercePlanet.waveOverride > 0) {
