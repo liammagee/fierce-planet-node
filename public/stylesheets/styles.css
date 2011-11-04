@@ -327,7 +327,13 @@ background-position: -101px -101px;
 }
 #expand{
 	background-image:url(../layout/buttons.png);
-	background-position: -35px -175px;
+	background-position: -25px -175px;
+	width: 20px; height:20px;
+	float:left;
+}
+#fullscreen{
+	background-image:url(../layout/buttons.png);
+	background-position: -46px -175px;
 	width: 20px; height:20px;
 	float:left;
 }

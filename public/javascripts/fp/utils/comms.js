@@ -21,8 +21,8 @@ FiercePlanet.Comms = FiercePlanet.Comms || {};
         if (eventType == 'level') {
             var levelNumber = obj;
             if (World.settings.spectate) {
-                FiercePlanet.currentLevelNumber = levelNumber;
-                FiercePlanet.currentLevelPreset = true;
+                FiercePlanet.Game.currentLevelNumber = levelNumber;
+                FiercePlanet.Game.currentLevelPreset = true;
                 FiercePlanet.Lifecycle.newLevel();
 //                FiercePlanet.Lifecycle.startLevel();
             }
@@ -52,14 +52,14 @@ FiercePlanet.Comms = FiercePlanet.Comms || {};
                 for (var i in resources) {
                     FiercePlanet.Utils.makeFromJSONObject(resources[i], Resource.prototype);
                 }
-//                FiercePlanet.currentLevel.addResource(resource);
+//                FiercePlanet.Game.currentLevel.addResource(resource);
                 FiercePlanet.Drawing.drawResources('#alt_resourceCanvas', resources);
 //            }
         }
         else if (eventType == 'agents') {
             var agents = obj;
             // Co-op mode
-//                FiercePlanet.currentLevel.setCurrentAgents(agents);
+//                FiercePlanet.Game.currentLevel.setCurrentAgents(agents);
 //                FiercePlanet.Drawing.clearCanvas('#agentCanvas');
 //                FiercePlanet.Drawing.drawAgents();
             // Comp mode
@@ -68,23 +68,23 @@ FiercePlanet.Comms = FiercePlanet.Comms || {};
 
             // Same screen
             for (var i in agents) {
-                FiercePlanet.currentLevel.currentAgents.push(agents[i]);
+                FiercePlanet.Game.currentLevel.currentAgents.push(agents[i]);
             }
             if (World.settings.spectate) {
-                FiercePlanet.Game.processAgents();
+                FiercePlanet.Lifecycle.processAgents();
                 FiercePlanet.Lifecycle._stopAgents();
             }
         }
         else if (eventType == 'agent') {
             duelingAgents.push(obj);
             // Co-op mode
-//                FiercePlanet.currentLevel.setCurrentAgents(agents);
+//                FiercePlanet.Game.currentLevel.setCurrentAgents(agents);
 //                FiercePlanet.Drawing.clearCanvas('#agentCanvas');
 //                FiercePlanet.Drawing.drawAgents();
             FiercePlanet.Drawing.clearCanvas('#alt_agentCanvas');
             FiercePlanet.Drawing.drawAgents('#alt_agentCanvas', duelingAgents);
             if (World.settings.spectate) {
-                FiercePlanet.Game.processAgents();
+                FiercePlanet.Lifecycle.processAgents();
                 FiercePlanet.Lifecycle._stopAgents();
             }
         }
@@ -113,7 +113,7 @@ FiercePlanet.Comms = FiercePlanet.Comms || {};
 var socket = io.connect();
 
 socket.on('connect', function () {
-    var nickname = FiercePlanet.currentProfile.nickname || 'anonymous';
+    var nickname = FiercePlanet.Game.currentProfile.nickname || 'anonymous';
     socket.emit('nickname', nickname, function (alreadySet) {
       if (!alreadySet) {
           FiercePlanet.Comms.message('');

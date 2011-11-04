@@ -19,203 +19,127 @@ FiercePlanet.Game = FiercePlanet.Game || {};
 
 (function() {
 
+    /** @constant The time to wait before starting the first wave */
+    this.NEW_LEVEL_DELAY = 3000;
+    /** @constant The time to wait between waves */
+    this.NEW_WAVE_DELAY = 200;
+
+    this.resourceRecoveryCycle = 5;
+    this.interval = 40;
+
+    /** @constant The default width of notices */
+    this.WAVE_NOTICE_WIDTH = 200;
+    /** @constant The default height of notices */
+    this.WAVE_NOTICE_HEIGHT = 150;
+
+    // Start with medium difficulty - TODO: Revise
+    this.levelOfDifficulty = 2;
+
+    this.agentTimerId = 0;
+
+    // Current state variables
+    this.currentProfile = new Profile();
+    this.currentLevelSetID = 'FP-Basic';
+    this.currentLevelNumber = 1;
+    this.currentWave = 1;
+    this.currentLevelPreset = true;
+    this.currentLevel = null;
+    this.existingCurrentLevel = null;
+    this.currentResourceId = null;
+    this.currentResource = null;
+    this.currentNotice = null;
+    // Viewport variables
+    this.currentX = null;
+    this.currentY = null;
+
+
+    // Boolean state variables
+    this.inDesignMode = false;
+    this.inPlay = false;
+    this.isMouseDown = false;
+    this.isMouseMoving = false;
+
+
+
+    // Timer variables
+    this.eventTarget = new EventTarget();
+    this.recordedLevels = [];
+
+
+    // Game play variables
+    this.waveOverride = 0;
+    this.maxWaveMoves = 0;
+    this.maxLevelMoves = 0;
+
+
+    this.numAgents = 1;
+
+    this.levelDelayCounter = 0;
+    this.waveDelayCounter = 0;
+    this.waveCounter = 0;
+    this.levelCounter = 0;
+    this.gameCounter = 0;
+    this.globalRecordingCounter = 0;
+
+
+
+    // General visual and audio variables
+    this.scrollingImage = new Image(); // City image
+    this.scrollingImageX = 0;
+    this.scrollingImageOffset = 1;
+
+    this.audio = null;
+    this.googleMap = null;
+
+
+
+
+
+
     /**
-     * Core logic loop: processes agents.
+     * Called when a game is loaded
      */
-    this.processAgents = function() {
+    this.loadGame = function() {
+        // Load required scripts dynamically
+        FiercePlanet.Utils.loadScripts();
 
-        var recordableChangeMade = false;
+        // Load relevant settings, if available
+        FiercePlanet.Orientation.adjustParameters(FiercePlanet.Orientation.DEFAULT_WORLD_WIDTH, FiercePlanet.Orientation.DEFAULT_WORLD_HEIGHT);
 
-        // Draw the scrolling layer
-        FiercePlanet.Drawing.drawScrollingLayer();
+        // Load relevant settings, if available
+        FiercePlanet.ProfileUI.loadProfileSettingsFromStorage();
 
-        // Draw any notices
-        if (World.settings.noticesVisible && FiercePlanet.currentNotice != undefined) {
-            FiercePlanet.Drawing.drawNotice(FiercePlanet.currentNotice);
-        }
+        // Initialise World settings
+        FiercePlanet.Utils.initialiseWorldSettings();
 
-        // Delay, until we are ready for the first wave
-        if (FiercePlanet.levelDelayCounter < FiercePlanet.NEW_LEVEL_DELAY / FiercePlanet.interval) {
-            FiercePlanet.levelDelayCounter++;
-            return;
-        }
+        // Retrieve properties
+        World.settings.load();
 
-        // Delay, until we are ready for a new wave
-        if (FiercePlanet.waveDelayCounter < FiercePlanet.NEW_WAVE_DELAY / FiercePlanet.interval) {
-            FiercePlanet.waveDelayCounter++;
-            return;
-        }
+        // Set up dialogs
+        FiercePlanet.Dialogs.setupDialogs();
 
-        // Increment counters
-        FiercePlanet.waveCounter++;
-        FiercePlanet.levelCounter++;
-        FiercePlanet.gameCounter++;
+        // Handle resource drag and drop and click interactions
+        FiercePlanet.ResourceUI.initialiseAndLoadResources();
 
+        // Handle resource drag and drop and click interactions
+        FiercePlanet.ResourceUI.setupResourceInteraction();
 
-        if (FiercePlanet.nullifiedAgents)
-            FiercePlanet.Drawing.clearAgentGroup(FiercePlanet.nullifiedAgents);
-        FiercePlanet.nullifiedAgents = [];
-        FiercePlanet.Drawing.clearAgents();
-        var nullifiedAgents = [];
-        var citizenCount = 0;
-        var agents = FiercePlanet.currentLevel.currentAgents;
+        // Load profile and refresh capabilities
+        FiercePlanet.ProfileUI.getProfile();
 
-        // Pre-movement processing - DO NOTHING FOR NOW
-        for (var i = 0; i < agents.length; i++) {
-            var agent = agents[i];
-            var speed = agent.speed;
-            var countDown = (agent.countdownToMove) % speed;
-            if (FiercePlanet.waveCounter >= agent.delay && countDown % speed == 0) {
-                agent.memorise(FiercePlanet.currentLevel);
-            }
-        }
+        // Add UI event listeners
+        FiercePlanet.GeneralUI.hookUpUIEventListeners();
 
-        // Move agents
-        var options = {"withNoRepeat": true, "withNoCollision": false};
-        for (var i = 0; i < agents.length; i++) {
-            var agent = agents[i];
+        // Process settings
+        FiercePlanet.Utils.processSettings();
 
-            // Don't process agents we want to block
-            if (! World.settings.rivalsVisible && agent.agentType == AgentTypes.RIVAL_AGENT_TYPE)
-                continue;
-            if (! World.settings.predatorsVisible && agent.agentType == AgentTypes.PREDATOR_AGENT_TYPE)
-                continue;
+        // Add custom event listeners
+        FiercePlanet.Event.hookUpCustomEventListeners();
 
-            var speed = agent.speed;
-            if (agent.agentType == AgentTypes.CITIZEN_AGENT_TYPE)
-                citizenCount++;
-//        if (FiercePlanet.waveCounter >= agent.getDelay() && (FiercePlanet.waveCounter - agent.getDelay()) % speed == 0) {
-            if (FiercePlanet.waveCounter >= agent.delay) {
-                var countDownTest = (FiercePlanet.waveCounter - agent.delay) % speed;
-                var countDown = (agent.countdownToMove) % speed;
-
-                if (countDown == 0) {
-                    recordableChangeMade = true;
-                    // TODO: move this logic elsewhere
-                    if (agent.agentType == AgentTypes.CITIZEN_AGENT_TYPE) {
-                        if (FiercePlanet.currentLevel.isExitPoint(agent.x, agent.y)) {
-                            FiercePlanet.currentProfile.processSavedAgent(FiercePlanet.currentWave);
-                            nullifiedAgents.push(i);
-
-                            FiercePlanet.Drawing.drawScore();
-                            FiercePlanet.Drawing.drawResourcesInStore();
-                            FiercePlanet.Drawing.drawSaved();
-                        }
-                    }
-
-                    // Do for all agents
-                    agent.evaluateMove(FiercePlanet.currentLevel, options);
-
-                    if (agent.agentType == AgentTypes.CITIZEN_AGENT_TYPE) {
-                        agent.resetCountdownToMove();
-                        if (!FiercePlanet.currentLevel.noSpeedChange && World.settings.agentsCanAdjustSpeed)
-                            agent.adjustSpeed();
-                        if (!FiercePlanet.currentLevel.noWander && World.settings.agentsCanAdjustWander) {
-                            // Make sure agents don't wander over boxes in 3D view
-                            if (World.settings.showResourcesAsBoxes && World.settings.skewTiles) {
-                                agent.adjustWander(FiercePlanet.Orientation.cellWidth, 0);
-                                agent.wanderX = Math.abs(agent.wanderX);
-                                agent.wanderY = Math.abs(agent.wanderY);
-                            }
-                            else {
-                                agent.adjustWander(FiercePlanet.Orientation.cellWidth, FiercePlanet.Orientation.pieceWidth);
-                            }
-                        }
-
-                    }
-
-                    if (agent.age > FiercePlanet.maxWaveMoves)
-                        FiercePlanet.maxWaveMoves = agent.age;
-
-                    // TODO: should be in-lined?
-                    if (agent.agentType == AgentTypes.CITIZEN_AGENT_TYPE || agent.agentType == AgentTypes.RIVAL_AGENT_TYPE) {
-                        if (!World.settings.godMode || World.settings.showHealthReductionInGodMode)
-                            agent.adjustGeneralHealth(World.settings.agentCostPerMove);
-                        if (agent.health <= 0 && !World.settings.godMode) {
-                            nullifiedAgents.push(i);
-                            FiercePlanet.nullifiedAgents.push(agent);
-                            FiercePlanet.Drawing.drawExpiredAgent(agent);
-                            if (agent.agentType == AgentTypes.CITIZEN_AGENT_TYPE)
-                                FiercePlanet.currentProfile.currentLevelExpired++;
-                           FiercePlanet.Drawing.drawExpired();
-                        }
-                        else {
-                            // Hook for detecting 'active' resources
-//                        FiercePlanet.processNeighbouringResources(agent);
-                            FiercePlanet.currentLevel.processNeighbouringResources(agent);
-
-                            // Hook for detecting other agents
-//                        FiercePlanet.processNeighbouringAgents(agent);
-                            FiercePlanet.currentLevel.processNeighbouringAgents(agent);
-                        }
-                    }
-                }
-                if (agent.agentType == AgentTypes.CITIZEN_AGENT_TYPE) {
-                    agent.incrementCountdownToMove();
-                }
-            }
-
-
-        }
-        if (World.settings.sendEventsToServer) {
-//    if (World.settings.sendEventsToServer && !World.settings.spectate) {
-            var simpleAgents = [];
-            agents.forEach(function(agent) {
-                var simpleAgent = new SimpleAgent(AgentTypes.RIVAL_AGENT_TYPE, agent.x, agent.y, agent.color, agent.speed, agent.health, agent.wanderX, agent.wanderY, agent.lastMemory, agent.delay, agent.countdownToMove, agent.healthCategoryStats);
-//            var simpleAgent = $.extend(true, {}, agent);
-//            simpleAgent.wipeMemory();
-                simpleAgents.push(simpleAgent);
-            });
-            FiercePlanet.Comms.notifyServerOfEvent('agents', simpleAgents);
-        }
-
-
-
-        if (FiercePlanet.currentProfile.currentLevelExpired >= FiercePlanet.currentLevel.expiryLimit) {
-            return FiercePlanet.Lifecycle.gameOver();
-        }
-
-        // Check whether we have too many
-        for (var i = nullifiedAgents.length - 1; i >= 0; i-= 1) {
-            FiercePlanet.currentLevel.currentAgents.splice(nullifiedAgents[i], 1);
-        }
-
-        // No agents left? End of wave
-        if (citizenCount == 0) {
-            // Start a new wave
-            if (FiercePlanet.currentWave < FiercePlanet.currentLevel.waveNumber) {
-                FiercePlanet.Lifecycle.completeWave();
-                FiercePlanet.Lifecycle.newWave();
-            }
-            else if (FiercePlanet.currentLevel.isPresetLevel && ! FiercePlanet.currentLevel.isTerminalLevel) {
-                FiercePlanet.Lifecycle.completeLevel();
-                FiercePlanet.levelDelayCounter = 0;
-            }
-            else {
-                return FiercePlanet.Lifecycle.completeGame();
-            }
-        }
-        else {
-            if (FiercePlanet.waveCounter % FiercePlanet.resourceRecoveryCycle == 0) {
-                // Since resources can overwrite eachother in 2.5d, force redraw of all resources here
-                if ((World.settings.skewTiles || FiercePlanet.currentLevel.isometric) && World.settings.showResourcesAsBoxes) {
-                    FiercePlanet.currentLevel.recoverResources();
-                    FiercePlanet.Drawing.drawResources();
-                }
-                else {
-                    FiercePlanet.currentLevel.recoverResources().forEach(function(resource) {
-                        FiercePlanet.Drawing.drawResource(resource);
-                    });
-                }
-
-            }
-            FiercePlanet.Drawing.drawAgents();
-        }
-
-        // Post-move processing
-        if (World.settings.recording)
-            FiercePlanet.Recording.recordWorld();
+        // Draw the game
+        FiercePlanet.Lifecycle.newLevel();
 
     };
+
 
 }).apply(FiercePlanet.Game);

@@ -6,14 +6,14 @@
      , "/public/javascripts/jstat-1.0.0/js/jstat-0.1.0.min.js"
      , "/public/javascripts/sylvester/sylvester.js"
      , "/public/javascripts/fp/utils/log.js"
-     , "/public/javascripts/fp/framework/world.js"
-     , "/public/javascripts/fp/framework/resource.js"
-     , "/public/javascripts/fp/framework/level.js"
-     , "/public/javascripts/fp/framework/agent.js"
-     , "/public/javascripts/fp/framework/maze-strategies.js"
-     , "/public/javascripts/fp/framework/culture.js"
-     , "/public/javascripts/fp/framework/tile.js"
-     , "/public/javascripts/fp/framework/terrain.js"
+     , "/public/javascripts/fp/core/world.js"
+     , "/public/javascripts/fp/core/resource.js"
+     , "/public/javascripts/fp/core/level.js"
+     , "/public/javascripts/fp/core/agent.js"
+     , "/public/javascripts/fp/core/maze-strategies.js"
+     , "/public/javascripts/fp/core/culture.js"
+     , "/public/javascripts/fp/core/tile.js"
+     , "/public/javascripts/fp/core/terrain.js"
  ],
  "spec_dir" : "/spec/",
 

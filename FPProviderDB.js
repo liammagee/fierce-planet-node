@@ -1,10 +1,10 @@
 var levelCounter = 1;
 
-World = require('./public/javascripts/fp/framework/world.js').World;
-Level = require('./public/javascripts/fp/framework/level.js').Level;
-require('./public/javascripts/fp/framework/agent.js');
-require('./public/javascripts/fp/framework/resource.js');
-require('./public/javascripts/fp/framework/tile.js');
+World = require('./public/javascripts/fp/core/world.js').World;
+Level = require('./public/javascripts/fp/core/level.js').Level;
+require('./public/javascripts/fp/core/agent.js');
+require('./public/javascripts/fp/core/resource.js');
+require('./public/javascripts/fp/core/tile.js');
 
 var Profile = require('./public/javascripts/fp/fp-models/profile.js').Profile;
 

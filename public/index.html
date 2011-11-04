@@ -83,15 +83,15 @@
 
     </script>
 
-    <script src="/javascripts/fp/framework/world.js?1312283734" type="text/javascript"></script>
-    <script src="/javascripts/fp/framework/agent.js?1312285592" type="text/javascript"></script>
-    <script src="/javascripts/fp/framework/catastrophe.js?1312280463" type="text/javascript"></script>
-    <script src="/javascripts/fp/framework/culture.js?1312103942" type="text/javascript"></script>
-    <script src="/javascripts/fp/framework/level.js?1312295810" type="text/javascript"></script>
-    <script src="/javascripts/fp/framework/resource.js?1312285115" type="text/javascript"></script>
-    <script src="/javascripts/fp/framework/species.js?1312155450" type="text/javascript"></script>
-    <script src="/javascripts/fp/framework/terrain.js?1312155440" type="text/javascript"></script>
-    <script src="/javascripts/fp/framework/tile.js?1312120751" type="text/javascript"></script>
+    <script src="/javascripts/fp/core/world.js?1312283734" type="text/javascript"></script>
+    <script src="/javascripts/fp/core/agent.js?1312285592" type="text/javascript"></script>
+    <script src="/javascripts/fp/core/catastrophe.js?1312280463" type="text/javascript"></script>
+    <script src="/javascripts/fp/core/culture.js?1312103942" type="text/javascript"></script>
+    <script src="/javascripts/fp/core/level.js?1312295810" type="text/javascript"></script>
+    <script src="/javascripts/fp/core/resource.js?1312285115" type="text/javascript"></script>
+    <script src="/javascripts/fp/core/species.js?1312155450" type="text/javascript"></script>
+    <script src="/javascripts/fp/core/terrain.js?1312155440" type="text/javascript"></script>
+    <script src="/javascripts/fp/core/tile.js?1312120751" type="text/javascript"></script>
 
     <script src="/javascripts/fp/fp-models/profile.js?1312117027" type="text/javascript"></script>
     <script src="/javascripts/fp/fp-models/profile_class.js?1312113863" type="text/javascript"></script>
@@ -444,7 +444,7 @@
     $(document).ready(function() {
         $('.thumbnail').click(FiercePlanet.GeneralUI.changePresetLevelDirectly);
         FiercePlanet.GeneralUI.highlightGalleryItem(FiercePlanet.currentLevelNumber);
-        $('#difficulty-input-' + FiercePlanet.levelOfDifficulty).attr('checked', 'checked');
+        $('#difficulty-input-' + FiercePlanet.Game.levelOfDifficulty).attr('checked', 'checked');
         $(".difficultyInput").click(FiercePlanet.GeneralUI.changeDifficulty);
     });
 
