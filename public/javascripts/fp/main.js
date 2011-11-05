@@ -83,6 +83,7 @@ $LAB
        , 'fp/ui/dialogs.js'
        , 'fp/ui/editor.js'
        , 'fp/ui/general-ui.js'
+        , 'fp/ui/level-gallery.js'
        , 'fp/ui/level-ui.js'
        , 'fp/ui/notice.js'
        , 'fp/ui/profile-ui.js'
@@ -110,22 +111,15 @@ $LAB
        , 'fp/modules/default/agents/agent_types.js'
     ])
     .wait(function() {
-        FiercePlanet.DefaultModule.init();
-    })
+            FiercePlanet.DefaultModule.init();
+        })
     .wait(function() {
-
-        $('#difficulty-input-' + FiercePlanet.Game.levelOfDifficulty).attr('checked', 'checked');
-        $(".difficultyInput").click(FiercePlanet.GeneralUI.changeDifficulty);
-        $('#3d')[0].innerHTML = 'View 2D';
-
-        World.settings.skewTiles = true;
-
-        FiercePlanet.GeneralUI.highlightGalleryItem(FiercePlanet.Game.currentLevelNumber);
+//        $('#3d')[0].innerHTML = 'View 2D';
+//        World.settings.skewTiles = true;
 
         FiercePlanet.Game.loadGame();
 
         FiercePlanet.Utils.bindVariables();
-
     });
 
 

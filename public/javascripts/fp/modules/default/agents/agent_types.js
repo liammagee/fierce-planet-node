@@ -467,8 +467,6 @@ function AgentStickFigure(x, _y, _figureWidth, _figureHeight) {
         }
     });
 
-    World.registerAgentTypes([AgentTypes.CITIZEN_AGENT_TYPE, AgentTypes.PREDATOR_AGENT_TYPE, AgentTypes.RIVAL_AGENT_TYPE]);
-
     this.id = 'FP-Agents';
     this.agentTypes = [AgentTypes.CITIZEN_AGENT_TYPE, AgentTypes.PREDATOR_AGENT_TYPE, AgentTypes.RIVAL_AGENT_TYPE];
 

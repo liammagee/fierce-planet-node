@@ -259,8 +259,8 @@ FiercePlanet.ResourceUI = FiercePlanet.ResourceUI || {};
      * Draw swatches
      */
     this.initialiseAndLoadResources = function () {
-        if (World.resourceTypeNamespace.doSetup)
-            World.resourceTypeNamespace.doSetup();
+//        if (World.resourceTypeNamespace.doSetup)
+//            World.resourceTypeNamespace.doSetup();
 
         for (var i = 0; i < World.resourceCategories.length; i++) {
             var category = World.resourceCategories[i];

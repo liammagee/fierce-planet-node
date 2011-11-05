@@ -5,7 +5,7 @@
  * MIT Licensed
  */
 
-var FiercePlanet = FiercePlanet || {};
+FiercePlanet.DefaultModule = FiercePlanet.DefaultModule || {};
 
 
 // Economic resources

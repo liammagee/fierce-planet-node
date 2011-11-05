@@ -19,6 +19,7 @@ function Level(id) {
     this.isPresetLevel = false;
     this.isTerminalLevel = false;
     this.name = id;
+    this.thumbnail;
     this.entryPoints = [];
     this.exitPoints = [];
 

@@ -100,7 +100,6 @@ FiercePlanet.Game = FiercePlanet.Game || {};
      * Called when a game is loaded
      */
     this.loadGame = function() {
-        // Load required scripts dynamically
         FiercePlanet.Utils.loadScripts();
 
         // Load relevant settings, if available
@@ -108,6 +107,9 @@ FiercePlanet.Game = FiercePlanet.Game || {};
 
         // Load relevant settings, if available
         FiercePlanet.ProfileUI.loadProfileSettingsFromStorage();
+
+        // Set up the level gallery
+        FiercePlanet.LevelGallery.init();
 
         // Initialise World settings
         FiercePlanet.Utils.initialiseWorldSettings();

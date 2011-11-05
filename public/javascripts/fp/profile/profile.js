@@ -9,21 +9,22 @@
 /**
  * @namespace Holds functionality related to FiercePlanet
  */
-var FP_Profile = FP_Profile || {};
+var FiercePlanet = FiercePlanet || {};
+FiercePlanet.Profile = FiercePlanet.Profile || {};
 
 /** @constant The list of available profile classes */
-FP_Profile.PROFILE_CLASSES = ["Novice", "Planner", "Expert", "Visionary", "Genius"];
+FiercePlanet.Profile.PROFILE_CLASSES = ["Novice", "Planner", "Expert", "Visionary", "Genius"];
 /** @constant The scores at which the profile class is incremented */
-FP_Profile.PROFILE_UPGRADE_SCORES = [500, 1000, 2500, 5000, 0];
+FiercePlanet.Profile.PROFILE_UPGRADE_SCORES = [500, 1000, 2500, 5000, 0];
 /** @constant The costs of obtaining capabilities related to each profile class */
-FP_Profile.CAPABILITY_COSTS = [0, 100, 200, 300, 500];
+FiercePlanet.Profile.CAPABILITY_COSTS = [0, 100, 200, 300, 500];
 
-FP_Profile.NOVICE_CAPABILITIES = ["farm", "water", "clinic"];
-FP_Profile.PLANNER_CAPABILITIES = FP_Profile.NOVICE_CAPABILITIES.concat(["shop", "park", "school"]);
-FP_Profile.EXPERT_CAPABILITIES = FP_Profile.PLANNER_CAPABILITIES.concat(["bank", "air", "legal"]);
-FP_Profile.VISIONARY_CAPABILITIES = FP_Profile.EXPERT_CAPABILITIES.concat(["factory", "energy", "democracy"]);
-FP_Profile.GENIUS_CAPABILITIES = FP_Profile.VISIONARY_CAPABILITIES.concat(["stockmarket", "biodiversity", "festival"]);
-FP_Profile.STARTING_STORE = 0;
+FiercePlanet.Profile.NOVICE_CAPABILITIES = ["farm", "water", "clinic"];
+FiercePlanet.Profile.PLANNER_CAPABILITIES = FiercePlanet.Profile.NOVICE_CAPABILITIES.concat(["shop", "park", "school"]);
+FiercePlanet.Profile.EXPERT_CAPABILITIES = FiercePlanet.Profile.PLANNER_CAPABILITIES.concat(["bank", "air", "legal"]);
+FiercePlanet.Profile.VISIONARY_CAPABILITIES = FiercePlanet.Profile.EXPERT_CAPABILITIES.concat(["factory", "energy", "democracy"]);
+FiercePlanet.Profile.GENIUS_CAPABILITIES = FiercePlanet.Profile.VISIONARY_CAPABILITIES.concat(["stockmarket", "biodiversity", "festival"]);
+FiercePlanet.Profile.STARTING_STORE = 0;
 
 /**
  * Defines a user Profile.
@@ -34,8 +35,8 @@ function Profile() {
     // Profile-level properties, defining current class, capabilities and credits
     this.saved = false;
     this.id = -1;
-    this.profileClass = FP_Profile.PROFILE_CLASSES[0];
-    this.capabilities = FP_Profile.NOVICE_CAPABILITIES;
+    this.profileClass = FiercePlanet.Profile.PROFILE_CLASSES[0];
+    this.capabilities = FiercePlanet.Profile.NOVICE_CAPABILITIES;
     this.progressTowardsNextClass = 0;
     this.status = '';
     this.credits = 0;
@@ -78,7 +79,7 @@ function Profile() {
 
     this.currentLevelSaved = 0;
     this.currentLevelExpired = 0;
-    this.currentLevelResourcesInStore = FP_Profile.STARTING_STORE;
+    this.currentLevelResourcesInStore = FiercePlanet.Profile.STARTING_STORE;
     this.currentLevelResourcesSpent = 0;
     this.currentLevelResourcesSpentByCategory = {};
 }
@@ -90,7 +91,7 @@ function Profile() {
 Profile.prototype._initialise = function() {
     this.currentLevelSaved = this.currentLevelSaved || 0;
     // TODO: These reference the FiercePlanet namespace
-    this.currentLevelResourcesInStore = this.currentLevelResourcesInStore || FP_Profile.Game.STARTING_STORE;
+    this.currentLevelResourcesInStore = this.currentLevelResourcesInStore || FiercePlanet.Profile.Game.STARTING_STORE;
 };
 
 
@@ -101,7 +102,7 @@ Profile.prototype.resetCurrentStats = function(initialStore) {
     this.currentLevelSaved = 0;
     this.currentLevelExpired = 0;
 
-    this.currentLevelResourcesInStore = FiercePlanet.Game.currentLevel.initialResourceStore || FP_Profile.STARTING_STORE;
+    this.currentLevelResourcesInStore = FiercePlanet.Game.currentLevel.initialResourceStore || FiercePlanet.Profile.STARTING_STORE;
     this.currentLevelResourcesSpent = 0;
     this.currentLevelResourcesSpentByCategory = {};
     for (var i = 0; i < World.resourceCategories.length; i++) {
@@ -115,7 +116,7 @@ Profile.prototype.resetCurrentStats = function(initialStore) {
  * Initialises the Profile's non-persistent properties
  */
 Profile.prototype.initialiseResourceStore = function(initialStore) {
-    this.currentLevelResourcesInStore = initialStore || FP_Profile.STARTING_STORE;
+    this.currentLevelResourcesInStore = initialStore || FiercePlanet.Profile.STARTING_STORE;
 };
 
 
@@ -237,24 +238,24 @@ Profile.prototype.spendResource = function(resource) {
  * Adjust the profile class, based on the total number of agents saved
  */
 Profile.prototype.evaluateProfileClass = function() {
-    if (this.totalSaved > FP_Profile.PROFILE_UPGRADE_SCORES[3]) {
-        this.profileClass = FP_Profile.PROFILE_CLASSES[4];
-        this.progressTowardsNextClass = FP_Profile.PROFILE_UPGRADE_SCORES[0];
+    if (this.totalSaved > FiercePlanet.Profile.PROFILE_UPGRADE_SCORES[3]) {
+        this.profileClass = FiercePlanet.Profile.PROFILE_CLASSES[4];
+        this.progressTowardsNextClass = FiercePlanet.Profile.PROFILE_UPGRADE_SCORES[0];
     }
-    else if (this.totalSaved > FP_Profile.PROFILE_UPGRADE_SCORES[2]) {
-        this.profileClass = FP_Profile.PROFILE_CLASSES[3];
-        this.progressTowardsNextClass = FP_Profile.PROFILE_UPGRADE_SCORES[3] - this.totalSaved;
+    else if (this.totalSaved > FiercePlanet.Profile.PROFILE_UPGRADE_SCORES[2]) {
+        this.profileClass = FiercePlanet.Profile.PROFILE_CLASSES[3];
+        this.progressTowardsNextClass = FiercePlanet.Profile.PROFILE_UPGRADE_SCORES[3] - this.totalSaved;
     }
-    else if (this.totalSaved > FP_Profile.PROFILE_UPGRADE_SCORES[1]) {
-        this.profileClass = FP_Profile.PROFILE_CLASSES[2];
-        this.progressTowardsNextClass = FP_Profile.PROFILE_UPGRADE_SCORES[2] - this.totalSaved;
+    else if (this.totalSaved > FiercePlanet.Profile.PROFILE_UPGRADE_SCORES[1]) {
+        this.profileClass = FiercePlanet.Profile.PROFILE_CLASSES[2];
+        this.progressTowardsNextClass = FiercePlanet.Profile.PROFILE_UPGRADE_SCORES[2] - this.totalSaved;
     }
-    else if (this.totalSaved > FP_Profile.PROFILE_UPGRADE_SCORES[0]) {
-        this.profileClass = FP_Profile.PROFILE_CLASSES[1];
-        this.progressTowardsNextClass = FP_Profile.PROFILE_UPGRADE_SCORES[1] - this.totalSaved;
+    else if (this.totalSaved > FiercePlanet.Profile.PROFILE_UPGRADE_SCORES[0]) {
+        this.profileClass = FiercePlanet.Profile.PROFILE_CLASSES[1];
+        this.progressTowardsNextClass = FiercePlanet.Profile.PROFILE_UPGRADE_SCORES[1] - this.totalSaved;
     }
     else {
-        this.progressTowardsNextClass = FP_Profile.PROFILE_UPGRADE_SCORES[0] - this.totalSaved;
+        this.progressTowardsNextClass = FiercePlanet.Profile.PROFILE_UPGRADE_SCORES[0] - this.totalSaved;
     }
 };
 

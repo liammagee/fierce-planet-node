@@ -442,10 +442,10 @@
 <script>
     // Add event handlers when dialog is loaded
     $(document).ready(function() {
-        $('.thumbnail').click(FiercePlanet.GeneralUI.changePresetLevelDirectly);
-        FiercePlanet.GeneralUI.highlightGalleryItem(FiercePlanet.currentLevelNumber);
+        $('.thumbnail').click(FiercePlanet.LevelGallery.changePresetLevelDirectly);
+        FiercePlanet.LevelGallery.highlightGalleryItem(FiercePlanet.currentLevelNumber);
         $('#difficulty-input-' + FiercePlanet.Game.levelOfDifficulty).attr('checked', 'checked');
-        $(".difficultyInput").click(FiercePlanet.GeneralUI.changeDifficulty);
+        $(".difficultyInput").click(FiercePlanet.LevelGallery.changeDifficulty);
     });
 
 </script>

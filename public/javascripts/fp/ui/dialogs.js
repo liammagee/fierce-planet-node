@@ -214,7 +214,7 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
                     }
             });
 
-        FiercePlanet.Dialogs.renderModules();
+        FiercePlanet.LevelGallery.renderModules();
         this.levelGalleryDialog = $('#level-gallery-dialog')
             .dialog({
               position: [dialogX, dialogY],
@@ -579,19 +579,19 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
         var accessibleCapabilities = [];
         var purchasableItems = [];
 
-        if (FiercePlanet.profileClass == FP_Profile.PROFILE_CLASSES[0]) {
+        if (FiercePlanet.profileClass == FiercePlanet.Profile.PROFILE_CLASSES[0]) {
             accessibleCapabilities = FiercePlanet.NOVICE_CAPABILITIES;
         }
-        else if (FiercePlanet.profileClass == FP_Profile.PROFILE_CLASSES[1]) {
+        else if (FiercePlanet.profileClass == FiercePlanet.Profile.PROFILE_CLASSES[1]) {
             accessibleCapabilities = FiercePlanet.PLANNER_CAPABILITIES;
         }
-        else if (FiercePlanet.profileClass == FP_Profile.PROFILE_CLASSES[2]) {
+        else if (FiercePlanet.profileClass == FiercePlanet.Profile.PROFILE_CLASSES[2]) {
             accessibleCapabilities = FiercePlanet.EXPERT_CAPABILITIES;
         }
-        else if (FiercePlanet.profileClass == FP_Profile.PROFILE_CLASSES[3]) {
+        else if (FiercePlanet.profileClass == FiercePlanet.Profile.PROFILE_CLASSES[3]) {
             accessibleCapabilities = FiercePlanet.VISIONARY_CAPABILITIES;
         }
-        else if (FiercePlanet.profileClass == FP_Profile.PROFILE_CLASSES[4]) {
+        else if (FiercePlanet.profileClass == FiercePlanet.Profile.PROFILE_CLASSES[4]) {
             accessibleCapabilities = FiercePlanet.GENIUS_CAPABILITIES;
         }
         // TODO: Temporarily enable all capabilities
@@ -606,16 +606,16 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
             var itemName = id.split("-purchase")[0];
             var cost = 0;
             if ($.inArray(itemName, FiercePlanet.PLANNER_CAPABILITIES) > -1) {
-                cost = FP_Profile.CAPABILITY_COSTS [1];
+                cost = FiercePlanet.Profile.CAPABILITY_COSTS [1];
             }
             else if ($.inArray(itemName, FiercePlanet.EXPERT_CAPABILITIES) > -1) {
-                cost = FP_Profile.CAPABILITY_COSTS [2];
+                cost = FiercePlanet.Profile.CAPABILITY_COSTS [2];
             }
             else if ($.inArray(itemName, FiercePlanet.VISIONARY_CAPABILITIES) > -1) {
-                cost = FP_Profile.CAPABILITY_COSTS [3];
+                cost = FiercePlanet.Profile.CAPABILITY_COSTS [3];
             }
             else if ($.inArray(itemName, FiercePlanet.GENIUS_CAPABILITIES) > -1) {
-                cost = FP_Profile.CAPABILITY_COSTS [4];
+                cost = FiercePlanet.Profile.CAPABILITY_COSTS [4];
             }
             // Make item available for purchase if: (1) the player's level permits it; (2) it is not among existing capabilities and (3) there is enough money
             if ($.inArray(itemName, accessibleCapabilities) > -1 && $.inArray(itemName, FiercePlanet.Game.currentProfile.capabilities) == -1 && cost < FiercePlanet.Game.currentProfile.credits) {
@@ -632,16 +632,16 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
             var itemName = id.split("-purchase")[0];
             var cost = 0;
             if ($.inArray(itemName, FiercePlanet.PLANNER_CAPABILITIES)) {
-                cost = FP_Profile.CAPABILITY_COSTS [1];
+                cost = FiercePlanet.Profile.CAPABILITY_COSTS [1];
             }
             else if ($.inArray(itemName, FiercePlanet.EXPERT_CAPABILITIES)) {
-                cost = FP_Profile.CAPABILITY_COSTS [2];
+                cost = FiercePlanet.Profile.CAPABILITY_COSTS [2];
             }
             else if ($.inArray(itemName, FiercePlanet.VISIONARY_CAPABILITIES)) {
-                cost = FP_Profile.CAPABILITY_COSTS [3];
+                cost = FiercePlanet.Profile.CAPABILITY_COSTS [3];
             }
             else if ($.inArray(itemName, FiercePlanet.GENIUS_CAPABILITIES)) {
-                cost = FP_Profile.CAPABILITY_COSTS [4];
+                cost = FiercePlanet.Profile.CAPABILITY_COSTS [4];
             }
 
             purchasableItem.addEventListener('click', function(e) {
@@ -701,46 +701,6 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
     this.showLogin = function() {
         FiercePlanet.Lifecycle.pauseGame();
         FiercePlanet.Dialogs.loginDialog.dialog('open');
-    };
-
-    /**
-     * Renders modules and levels in the level gallery
-     */
-    this.renderModules = function() {
-        var modules = FiercePlanet.ModuleManager.currentModule.allLevelSets();
-        for (var i in modules)  {
-            var module = modules[i];
-            $('#level-gallery-tabs>ul').prepend('<li><a href="#' + i + '"> ' + module.name + '</a></li>');
-            var modHTML = $('<div class="quests" id="' + i + '"></div>');
-            var tnHTML = $('<div class="thumbnails"></div>');
-            $('#level-gallery-tabs').append(modHTML);
-            modHTML.append(tnHTML);
-            for (var j in module.levels)  {
-                var level = module.levels[j];
-                tnHTML.append('<div class="thumbnail" id="levelSelect'
-                    + j
-                    + '">'
-                    + '<img src="/images/levels/level-thumbnail-'
-                    + j
-                    + '.png"/>'
-                    + '<div><strong>Level ' + j + ':</strong>'
-                    + '</div>'
-                    + '<div>'
-                    + level.name
-                    + '</div>'
-                    + '</div>'
-                );
-            }
-
-//                    div.thumbnail#levelSelect5
-//          img(src='/images/levels/level-thumbnail-5.png')
-//          div
-//            div
-//              strong Level 5:
-//            div Welcome to Fierce Planet!
-
-        }
-        $('.thumbnail, .customLevel').click(FiercePlanet.GeneralUI.changePresetLevelDirectly);
     };
 
 }).apply(FiercePlanet.Dialogs);
