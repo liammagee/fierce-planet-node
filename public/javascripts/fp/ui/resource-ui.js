@@ -262,6 +262,8 @@ FiercePlanet.ResourceUI = FiercePlanet.ResourceUI || {};
 //        if (World.resourceTypeNamespace.doSetup)
 //            World.resourceTypeNamespace.doSetup();
 
+        $('#swatch').empty();
+        $('#gallery-items').empty();
         for (var i = 0; i < World.resourceCategories.length; i++) {
             var category = World.resourceCategories[i];
 

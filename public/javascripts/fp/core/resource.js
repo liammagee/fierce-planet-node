@@ -23,6 +23,10 @@ ResourceCategory.prototype.addType = function(type) {
     this.types.push(type.clone());
     type.category = this;
 };
+ResourceCategory.prototype.clearTypes = function() {
+    // To by-pass circular references, clone the type added to the collection
+    this.types = [];
+};
 ResourceCategory.prototype.setEvaluateOtherCategoryImpact = function(f) {this.evaluateOtherCategoryImpact = f;};
 ResourceCategory.prototype.doEvaluateOtherCategoryImpact = function(otherCategory) {return this.evaluateOtherCategoryImpact(otherCategory); };
 
@@ -49,6 +53,9 @@ function ResourceType(name, code, image, cost, upgradeCost, totalYield, perAgent
     this.upgradeCost = upgradeCost;
     this.totalYield = totalYield;
     this.perAgentYield = perAgentYield;
+
+    this.actualImage = new Image();
+    this.actualImage.src = image;
 }
 /**
  * Returns clone of this resource type

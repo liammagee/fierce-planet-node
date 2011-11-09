@@ -69,6 +69,11 @@ FiercePlanet.DefaultModule.TBL.doSetup = function() {
     FiercePlanet.DefaultModule.TBL.ENVIRONMENTAL_RESOURCE_TYPES = [FiercePlanet.FRESH_WATER_RESOURCE_TYPE, FiercePlanet.WILDLIFE_PARK_RESOURCE_TYPE, FiercePlanet.CLEAN_AIR_RESOURCE_TYPE, FiercePlanet.GREEN_ENERGY_RESOURCE_TYPE, FiercePlanet.BIODIVERSITY_RESOURCE_TYPE];
     FiercePlanet.DefaultModule.TBL.SOCIAL_RESOURCE_TYPES = [FiercePlanet.CLINIC_RESOURCE_TYPE, FiercePlanet.SCHOOL_RESOURCE_TYPE, FiercePlanet.LEGAL_SYSTEM_RESOURCE_TYPE, FiercePlanet.DEMOCRACY_RESOURCE_TYPE, FiercePlanet.FESTIVAL_RESOURCE_TYPE];
 
+    // Clear types
+    FiercePlanet.DefaultModule.TBL.ECO_CATEGORY.clearTypes();
+    FiercePlanet.DefaultModule.TBL.ENV_CATEGORY.clearTypes();
+    FiercePlanet.DefaultModule.TBL.SOC_CATEGORY.clearTypes();
+
 // Economic resources
     FiercePlanet.DefaultModule.TBL.ECO_CATEGORY.addType(FiercePlanet.FARM_RESOURCE_TYPE);
     FiercePlanet.DefaultModule.TBL.ECO_CATEGORY.addType(FiercePlanet.SHOP_RESOURCE_TYPE);

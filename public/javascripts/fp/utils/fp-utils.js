@@ -84,7 +84,7 @@ FiercePlanet.Utils = FiercePlanet.Utils || {};
         World.settings.scrollingImageVisible = World.settings.scrollingImageVisible || true;
         World.settings.catastrophesVisible = World.settings.catastrophesVisible || true;
         World.settings.disableKeyboardShortcuts = World.settings.disableKeyboardShortcuts || true;
-        World.settings.allowInlinePanning = World.settings.allowInlinePanning || true;
+        World.settings.allowInlinePanning = World.settings.allowInlinePanning || false;
 
         World.settings.soundsPlayable = World.settings.soundsPlayable || false;
         World.settings.useInlineResourceSwatch = World.settings.useInlineResourceSwatch || false;

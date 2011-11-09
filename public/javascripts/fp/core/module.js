@@ -53,7 +53,18 @@ function Module() {};
      * Retrieves  a level set
      */
     Module.prototype.allLevelSets = function() {
-        return this._levelSets;
+        var levelSetArray = [];
+        for (var i in this._levelSets) {
+            if (this._levelSets.hasOwnProperty(i)) {
+                levelSetArray.push(this._levelSets[i]);
+            }
+        }
+        // Sort in reverse
+        return levelSetArray.sort(function(a, b) {
+            if (! a.position || ! b.position)
+                return 0;
+            return ((a.position > b.position) ? -1 : ((a.position < b.position) ? 1 : 0))
+        });
     };
 
 
@@ -74,8 +85,12 @@ function Module() {};
     Module.prototype.registerResourceSet = function(resourceSet) {
         this._resourceSets = this._resourceSets || {};
 
-        if (typeof(resourceSet) != "undefined" && resourceSet.id)
+        if (typeof(resourceSet) != "undefined" && resourceSet.id) {
+//            if (resourceSet.doSetup)
+//                resourceSet.doSetup();
+
             this._resourceSets[resourceSet.id] = resourceSet;
+        }
 
     };
 

@@ -6,7 +6,7 @@ require('./public/javascripts/fp/core/agent.js');
 require('./public/javascripts/fp/core/resource.js');
 require('./public/javascripts/fp/core/tile.js');
 
-var Profile = require('./public/javascripts/fp/fp-models/profile.js').Profile;
+var Profile = require('./public/javascripts/fp/profile/profile.js').Profile;
 
 
 

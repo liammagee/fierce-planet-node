@@ -60,6 +60,7 @@ FiercePlanet.PresetLevels.MAX_DEFAULT_LEVELS = 1000;
         /* Level 1 Definition */
 
         this.level1 = new Level(1);
+        this.level1.thumbnail = '/images/levels/level-thumbnail-1.png';
         this.level1.isPresetLevel = true;
         this.level1.addEntryPoint(0, 9);
         this.level1.addExitPoint(10, 1);
@@ -104,6 +105,7 @@ FiercePlanet.PresetLevels.MAX_DEFAULT_LEVELS = 1000;
         /* Level 2 Definition */
 
         this.level2 = new Level(2);
+        this.level2.thumbnail = '/images/levels/level-thumbnail-2.png';
         this.level2.isPresetLevel = true;
         this.level2.addEntryPoint(0, 0);
         this.level2.addExitPoint(11, 1);
@@ -156,6 +158,7 @@ FiercePlanet.PresetLevels.MAX_DEFAULT_LEVELS = 1000;
         /* Level 3 Definition */
 
         this.level3 = new Level(3);
+        this.level3.thumbnail = '/images/levels/level-thumbnail-3.png';
         this.level3.isPresetLevel = true;
         this.level3.addEntryPoint(5, 12);
         this.level3.addExitPoint(3, 3);
@@ -223,6 +226,7 @@ FiercePlanet.PresetLevels.MAX_DEFAULT_LEVELS = 1000;
         /* Level 4 Definition */
 
         this.level4 = new Level(4);
+        this.level4.thumbnail = '/images/levels/level-thumbnail-4.png';
         this.level4.isPresetLevel = true;
         this.level4.addEntryPoint(6, 6);
         this.level4.addExitPoint(0, 0);
@@ -322,6 +326,7 @@ FiercePlanet.PresetLevels.MAX_DEFAULT_LEVELS = 1000;
         /* Level 5 Definition */
 
         this.level5 = new Level(5);
+        this.level5.thumbnail = '/images/levels/level-thumbnail-5.png';
         this.level5.isPresetLevel = true;
         this.level5.addEntryPoint(13, 0);
         this.level5.addExitPoint(0, 1);
@@ -422,6 +427,7 @@ FiercePlanet.PresetLevels.MAX_DEFAULT_LEVELS = 1000;
         /* Level 6 Definition */
 
         this.level6 = new Level(6);
+        this.level6.thumbnail = '/images/levels/level-thumbnail-6.png';
         this.level6.isPresetLevel = true;
         this.level6.addEntryPoint(0, 1);
         this.level6.addExitPoint(2, 14);
@@ -472,6 +478,7 @@ FiercePlanet.PresetLevels.MAX_DEFAULT_LEVELS = 1000;
         /* Level 7 Definition */
 
         this.level7 = new Level(7);
+        this.level7.thumbnail = '/images/levels/level-thumbnail-7.png';
         this.level7.isPresetLevel = true;
         this.level7.cellsAcross = 17;
         this.level7.cellsDown = 17;
@@ -525,6 +532,7 @@ FiercePlanet.PresetLevels.MAX_DEFAULT_LEVELS = 1000;
         /* Level 8 Definition */
 
         this.level8 = new Level(8);
+        this.level8.thumbnail = '/images/levels/level-thumbnail-8.png';
         this.level8.isPresetLevel = true;
         this.level8.addEntryPoint(0, 0);
         this.level8.addExitPoint(17, 17);
@@ -624,6 +632,7 @@ FiercePlanet.PresetLevels.MAX_DEFAULT_LEVELS = 1000;
         /* Level 9 Definition */
 
         this.level9 = new Level(9);
+        this.level9.thumbnail = '/images/levels/level-thumbnail-9.png';
         this.level9.isPresetLevel = true;
         this.level9.addEntryPoint(9, 0);
         this.level9.addExitPoint(9, 18);
@@ -702,6 +711,7 @@ FiercePlanet.PresetLevels.MAX_DEFAULT_LEVELS = 1000;
         /* Level 10 Definition */
 
         this.level10 = new Level(10);
+        this.level10.thumbnail = '/images/levels/level-thumbnail-10.png';
         this.level10.isPresetLevel = true;
         this.level10.addEntryPoint(18, 19);
         this.level10.addExitPoint(16, 19);
@@ -806,6 +816,7 @@ FiercePlanet.PresetLevels.MAX_DEFAULT_LEVELS = 1000;
         /* Level 11 Definition */
 
         this.level11 = new Level(11);
+        this.level11.thumbnail = '/images/levels/level-thumbnail-11.png';
         this.level11.isPresetLevel = true;
         this.level11.addEntryPoint(11, 12);
         this.level11.addEntryPoint(18, 12);
@@ -884,7 +895,6 @@ FiercePlanet.PresetLevels.MAX_DEFAULT_LEVELS = 1000;
         // Checked and authorised
         this.level1.image =( "/images/levels/level-1-art.jpg");
         this.level1.imageAttribution = ('<a tabindex="-1" target="_blank" href="http://nuclearsyndrom.deviantart.com/"><em>Nuclear Winter</em></a>. Kindly reproduced courtesy of NuclearSyndrom.');
-        this.level1.thumbnail = ('<a tabindex="-1" target="_blank" href="http://nuclearsyndrom.deviantart.com/"><em>Nuclear Winter</em></a>. Kindly reproduced courtesy of NuclearSyndrom.');
         this.level2.image =( "/images/levels/level-2-art.jpg");
         this.level2.imageAttribution = ('<a tabindex="-1" target="_blank" href="http://www.slv.vic.gov.au/pictoria/b/2/8/doc/b28555.shtml"><em>Canvas Town, between Princess Bridge and South Melbourne in 1850\'s</em></a>. De Gruchy & Leigh, 1850-1860.');
         this.level3.image =( "/images/levels/level-3-art.jpg");
@@ -926,8 +936,8 @@ FiercePlanet.PresetLevels.MAX_DEFAULT_LEVELS = 1000;
         // Prepare as a module
         this.id = "FP-Basic";
         this.name = "Basic";
+        this.position = 1;
         this.levels = [this.level0, this.level1, this.level2, this.level3, this.level4, this.level5, this.level6, this.level7, this.level8, this.level9, this.level10, this.level11 ];
-//        FiercePlanet.ModuleManager.registerModule(this);
     };
 
     this.init();

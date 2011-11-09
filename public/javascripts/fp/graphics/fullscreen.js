@@ -26,8 +26,7 @@
             }
         }
     }
-    console.log('got here')
- 
+
     // update methods to do something useful
     if (fullScreenApi.supportsFullScreen) {
         fullScreenApi.fullScreenEventName = fullScreenApi.prefix + 'fullscreenchange';

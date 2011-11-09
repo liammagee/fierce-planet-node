@@ -143,6 +143,8 @@ FiercePlanet.Lifecycle = FiercePlanet.Lifecycle || {};
                             // Hook for detecting 'active' resources
 //                        FiercePlanet.processNeighbouringResources(agent);
                             FiercePlanet.Game.currentLevel.processNeighbouringResources(agent);
+                            // TODO: Implement resource to agent interaction
+//                            FiercePlanet.Game.currentLevel.processNeighbouringResources(agent, FiercePlanet.Drawing.drawResourceAgentInteraction);
 
                             // Hook for detecting other agents
 //                        FiercePlanet.processNeighbouringAgents(agent);

@@ -28,6 +28,7 @@ FiercePlanet.DefaultModule = FiercePlanet.DefaultModule || {};
         World.resourceTypeNamespace = FiercePlanet.DefaultModule.TBL;
         if (World.resourceTypeNamespace.doSetup)
             World.resourceTypeNamespace.doSetup();
+
         //TBL
         World.registerResourceCategories([FiercePlanet.DefaultModule.TBL.ECO_CATEGORY, FiercePlanet.DefaultModule.TBL.ENV_CATEGORY, FiercePlanet.DefaultModule.TBL.SOC_CATEGORY]);
         World.registerResourceTypes(FiercePlanet.DefaultModule.TBL.ECONOMIC_RESOURCE_TYPES.concat(FiercePlanet.DefaultModule.TBL.ENVIRONMENTAL_RESOURCE_TYPES.concat(FiercePlanet.DefaultModule.TBL.SOCIAL_RESOURCE_TYPES)));
@@ -38,6 +39,7 @@ FiercePlanet.DefaultModule = FiercePlanet.DefaultModule || {};
         World.registerResourceTypes(FiercePlanet.DefaultModule.CoS.ECONOMIC_RESOURCE_TYPES.concat(FiercePlanet.DefaultModule.CoS.ECOLOGICAL_RESOURCE_TYPES.concat(FiercePlanet.DefaultModule.CoS.POLITICAL_RESOURCE_TYPES.concat(FiercePlanet.DefaultModule.CoS.CULTURAL_RESOURCE_TYPES))));
         FiercePlanet.Game.currentProfile.capabilities = ["farm", "water", "clinic", "legal"];
         */
+        FiercePlanet.DefaultModule.AgentTypes.init();
         World.registerAgentTypes(FiercePlanet.DefaultModule.AgentTypes.agentTypes);
 
 

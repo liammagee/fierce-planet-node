@@ -41,12 +41,13 @@ FiercePlanet.LevelGallery = FiercePlanet.LevelGallery || {};
             modHTML.append(tnHTML);
             for (var j in module.levels) {
                 var level = module.levels[j];
+                var img = (level.thumbnail ? level.thumbnail : '/images/levels/level-thumbnail-default.png');
                 var thumbnail = $('<div class="thumbnail" id="'
                     + 'tn-' + i + '-' + j
                     + '">'
-                    + '<img src="/images/levels/level-thumbnail-'
-                    + j
-                    + '.png"/>'
+                    + '<img src="'
+                    + img
+                    + '"/>'
                     + '<div><strong>Level ' + j + ':</strong>'
                     + '</div>'
                     + '<div>'

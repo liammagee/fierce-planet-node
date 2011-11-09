@@ -71,7 +71,7 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
         // Admin functions
         $('#debug').click(FiercePlanet.Lifecycle.processAgents);
         $('#replay').click(FiercePlanet.Recording.replayWorld);
-        $('#story-board').click(FiercePlanet.Dev.showStoryboard);
+        $('#story-board').click(FiercePlanet.Storyboard.showStoryboard);
         $('#high-scores').click(FiercePlanet.ProfileUI.showHighScores);
 
 

@@ -68,6 +68,7 @@ FiercePlanet.DefaultModule.Experimental = FiercePlanet.DefaultModule.Experimenta
         // Prepare as a module
         this.id = "FP-Experimental";
         this.name = "Experimental";
+        this.position = 3;
         this.levels = [this.level22 ];
     }
 

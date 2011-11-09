@@ -18,16 +18,21 @@ FiercePlanet.DefaultModule.CoS.ENV_CATEGORY = new ResourceCategory("Ecology", "e
 FiercePlanet.DefaultModule.CoS.POL_CATEGORY = new ResourceCategory("Political", "pol", "DE1F2A");
 FiercePlanet.DefaultModule.CoS.CUL_CATEGORY = new ResourceCategory("Cultural", "cul", "2ADBCB");
 
-// Arrays of resource kinds
-FiercePlanet.DefaultModule.CoS.ECONOMIC_RESOURCE_TYPES = [FiercePlanet.FARM_RESOURCE_TYPE, FiercePlanet.SHOP_RESOURCE_TYPE, FiercePlanet.BANK_RESOURCE_TYPE, FiercePlanet.FACTORY_RESOURCE_TYPE, FiercePlanet.STOCKMARKET_RESOURCE_TYPE];
-FiercePlanet.DefaultModule.CoS.ECOLOGICAL_RESOURCE_TYPES = [FiercePlanet.FRESH_WATER_RESOURCE_TYPE, FiercePlanet.WILDLIFE_PARK_RESOURCE_TYPE, FiercePlanet.CLEAN_AIR_RESOURCE_TYPE, FiercePlanet.GREEN_ENERGY_RESOURCE_TYPE, FiercePlanet.BIODIVERSITY_RESOURCE_TYPE];
-FiercePlanet.DefaultModule.CoS.POLITICAL_RESOURCE_TYPES = [FiercePlanet.LEGAL_SYSTEM_RESOURCE_TYPE, FiercePlanet.DEMOCRACY_RESOURCE_TYPE];
-FiercePlanet.DefaultModule.CoS.CULTURAL_RESOURCE_TYPES = [FiercePlanet.CLINIC_RESOURCE_TYPE, FiercePlanet.SCHOOL_RESOURCE_TYPE, FiercePlanet];
-
 /**
  * Do setup of this resource set
  */
 FiercePlanet.DefaultModule.CoS.doSetup = function() {
+
+    FiercePlanet.DefaultModule.CoS.ECONOMIC_RESOURCE_TYPES = [FiercePlanet.FARM_RESOURCE_TYPE, FiercePlanet.SHOP_RESOURCE_TYPE, FiercePlanet.BANK_RESOURCE_TYPE, FiercePlanet.FACTORY_RESOURCE_TYPE, FiercePlanet.STOCKMARKET_RESOURCE_TYPE];
+    FiercePlanet.DefaultModule.CoS.ECOLOGICAL_RESOURCE_TYPES = [FiercePlanet.FRESH_WATER_RESOURCE_TYPE, FiercePlanet.WILDLIFE_PARK_RESOURCE_TYPE, FiercePlanet.CLEAN_AIR_RESOURCE_TYPE, FiercePlanet.GREEN_ENERGY_RESOURCE_TYPE, FiercePlanet.BIODIVERSITY_RESOURCE_TYPE];
+    FiercePlanet.DefaultModule.CoS.POLITICAL_RESOURCE_TYPES = [FiercePlanet.LEGAL_SYSTEM_RESOURCE_TYPE, FiercePlanet.DEMOCRACY_RESOURCE_TYPE];
+    FiercePlanet.DefaultModule.CoS.CULTURAL_RESOURCE_TYPES = [FiercePlanet.CLINIC_RESOURCE_TYPE, FiercePlanet.SCHOOL_RESOURCE_TYPE, FiercePlanet.FESTIVAL_RESOURCE_TYPE];
+
+        // Clear types
+        FiercePlanet.DefaultModule.CoS.ECO_CATEGORY.clearTypes();
+        FiercePlanet.DefaultModule.CoS.ENV_CATEGORY.clearTypes();
+        FiercePlanet.DefaultModule.CoS.POL_CATEGORY.clearTypes();
+        FiercePlanet.DefaultModule.CoS.CUL_CATEGORY.clearTypes();
 
 // Economic resources
     FiercePlanet.DefaultModule.CoS.ECO_CATEGORY.addType(FiercePlanet.FARM_RESOURCE_TYPE);

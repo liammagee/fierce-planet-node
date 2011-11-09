@@ -14,7 +14,7 @@ var FiercePlanet = FiercePlanet || {};
 /**
  * @namespace Contains development functions
  */
-FiercePlanet.Dev = FiercePlanet.Dev || {};
+FiercePlanet.Storyboard = FiercePlanet.Storyboard || {};
 
 (function() {
 
@@ -105,4 +105,4 @@ FiercePlanet.Dev = FiercePlanet.Dev || {};
         return levelStoryboard;
     };
 
-}).apply(FiercePlanet.Dev);
+}).apply(FiercePlanet.Storyboard);

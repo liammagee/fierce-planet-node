@@ -574,7 +574,6 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         // Inlined version
         var canvas = $(canvasName)[0];
         var ctx = canvas.getContext('2d');
-
         ctx.save();
         ctx.translate(FiercePlanet.Orientation.halfWorldWidth, FiercePlanet.Orientation.halfWorldHeight);
         ctx.rotate(FiercePlanet.Orientation.rotationAngle);
@@ -639,9 +638,10 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
                 if (resource.kind.image) {
                     var imgOffsetX = originXp - tileOffset.x / 2;
                     var imgOffsetY = originYp + tileOffset.y / 2 - boxHeight;
-                    var resImage = new Image();
-                    resImage.src = resource.kind.image;
-                    ctx.drawImage(resImage, imgOffsetX, imgOffsetY, tileOffset.x, tileOffset.y);
+//                    var resImage = new Image();
+//                    resImage.src = resource.kind.image;
+//                    ctx.drawImage(resImage, imgOffsetX, imgOffsetY, tileOffset.x, tileOffset.y);
+                    ctx.drawImage(resource.kind.actualImage, imgOffsetX, imgOffsetY, tileOffset.x, tileOffset.y);
                 }
             }
             else {
@@ -666,18 +666,18 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
 
                 // Draw resource-specific representation here
                 if (resource.kind.image) {
-                    var resImage = new Image();
-                    resImage.src = resource.kind.image;
-                    ctx.drawImage(resImage, x + 4, y + 4, FiercePlanet.Orientation.cellWidth - 8, FiercePlanet.Orientation.cellHeight - 8);
+//                    var resImage = new Image();
+//                    resImage.src = resource.kind.image;
+//                    ctx.drawImage(resImage, x + 4, y + 4, FiercePlanet.Orientation.cellWidth - 8, FiercePlanet.Orientation.cellHeight - 8);
+                    ctx.drawImage(resource.kind.actualImage, x + 4, y + 4, FiercePlanet.Orientation.cellWidth - 8, FiercePlanet.Orientation.cellHeight - 8);
                 }
             }
         }
 
         ctx.restore();
 
-
     };
-    
+
     /**
      * Draw an individual resource
      * @param resource
@@ -748,6 +748,10 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
             if (resource.kind.image) {
                 var imgOffsetX = originXp - tileOffset.x / 2;
                 var imgOffsetY = originYp + tileOffset.y / 2 - boxHeight;
+//                    var resImage = new Image();
+//                    resImage.src = resource.kind.image;
+//                    ctx.drawImage(resImage, imgOffsetX, imgOffsetY, tileOffset.x, tileOffset.y);
+                ctx.drawImage(resource.kind.actualImage, imgOffsetX, imgOffsetY, tileOffset.x, tileOffset.y);
             }
         }
         else {
@@ -771,14 +775,86 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
 
             // Draw resource-specific representation here
             if (resource.kind.image) {
-                var resImage = new Image();
-                resImage.src = resource.kind.image;
-                ctx.drawImage(resImage, x + 4, y + 4, FiercePlanet.Orientation.cellWidth - 8, FiercePlanet.Orientation.cellHeight - 8);
+//                var resImage = new Image();
+//                resImage.src = resource.kind.image;
+//                ctx.drawImage(resImage, x + 4, y + 4, FiercePlanet.Orientation.cellWidth - 8, FiercePlanet.Orientation.cellHeight - 8);
+                ctx.drawImage(resource.kind.actualImage, x + 4, y + 4, FiercePlanet.Orientation.cellWidth - 8, FiercePlanet.Orientation.cellHeight - 8);
             }
         }
         ctx.restore();
     };
-    
+
+    /**
+     * Draw an individual resource
+     * @param resource
+     */
+    this.drawResourceAgentInteraction = function(resource, agent) {
+        var canvasName = '#resourceCanvas';
+        var canvas = $(canvasName)[0];
+        var ctx = canvas.getContext('2d');
+
+        ctx.save();
+        ctx.translate(FiercePlanet.Orientation.halfWorldWidth, FiercePlanet.Orientation.halfWorldHeight);
+        ctx.rotate(FiercePlanet.Orientation.rotationAngle);
+
+        // Variables
+        var x = resource.x * FiercePlanet.Orientation.cellWidth;
+        var y = resource.y * FiercePlanet.Orientation.cellHeight;
+        var ax = agent.x * FiercePlanet.Orientation.cellWidth;
+        var ay = agent.y * FiercePlanet.Orientation.cellHeight;
+        var s = (resource.totalYield / resource.initialTotalYield) * 100;
+        var c = resource.color;
+        // Determine drawing colours and offsets
+//        var newColor = this.diluteColour(s, s, s, c);
+
+        if ((World.settings.skewTiles || FiercePlanet.Game.currentLevel.isometric)) {
+            var tileOffset = FiercePlanet.Isometric.offsets3DPoint([FiercePlanet.Orientation.cellHeight, 0, 0]);
+            var newOrigin = FiercePlanet.Isometric.doIsometricOffset(resource.x, resource.y);
+            var newAgentOrigin = FiercePlanet.Isometric.doIsometricOffset(agent.x, agent.y);
+            var originXp = newOrigin.x + FiercePlanet.Orientation.cellWidth / 2;
+            var originYp = newOrigin.y + FiercePlanet.Orientation.cellHeight;
+            var agentOriginXp = newAgentOrigin.x + FiercePlanet.Orientation.cellWidth / 2;
+            var agentOriginYp = newAgentOrigin.y + FiercePlanet.Orientation.cellHeight;
+
+            // Rotation logic here - TODO: Refactor out
+            originXp = originXp - (FiercePlanet.Orientation.worldWidth) / 2;
+            originYp = originYp - (FiercePlanet.Orientation.worldHeight) / 2;
+            agentOriginXp = agentOriginXp - (FiercePlanet.Orientation.worldWidth) / 2;
+            agentOriginYp = agentOriginYp - (FiercePlanet.Orientation.worldHeight) / 2;
+
+            ctx.fillStyle = "#fff";
+
+            var boxHeight = 0;
+            ctx.lineWidth = 1;
+            // Use box style - computationally expensive
+            boxHeight = (s / 100) * 20;
+            ctx.fillStyle = "#" + c;
+            ctx.strokeStyle = "#eee";
+            FiercePlanet.Isometric.plot(ctx, originXp, originYp, 0, 0, 0);
+            FiercePlanet.Isometric.draw(ctx, agentOriginXp, agentOriginXp, 0, 0, 0);
+            ctx.stroke();
+        }
+        else {
+
+            // Rotation logic here - TODO: Refactor out
+            x = x - (FiercePlanet.Orientation.worldWidth) / 2;
+            y = y - (FiercePlanet.Orientation.worldHeight) / 2;
+            ax = ax - (FiercePlanet.Orientation.worldWidth) / 2;
+            ay = ay - (FiercePlanet.Orientation.worldHeight) / 2;
+
+
+            // Clear and fill the resource tile with a white background
+
+            ctx.strokeStyle = "#333";
+            ctx.moveTo(x, y);
+            ctx.lineTo(ax, ay);
+
+            ctx.stroke();
+
+        }
+        ctx.restore();
+    };
+
     
     /**
      * Clears an individual resource

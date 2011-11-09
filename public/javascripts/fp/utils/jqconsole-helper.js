@@ -377,6 +377,44 @@ $(function() {
               jqconsole.Write(e + '\n')
           }
       }
+      else if (/rs/.test(command) || /resourcesets/.test(command)) {
+          try {
+              var params = command.split(' ');
+              var rs = params[1];
+              jqconsole.Write(rs + '\n')
+              if (rs == 'tbl') {
+                  World.resourceTypeNamespace = FiercePlanet.DefaultModule.TBL;
+                  if (World.resourceTypeNamespace.doSetup)
+                      World.resourceTypeNamespace.doSetup();
+
+                  //TBL
+                  World.registerResourceCategories([FiercePlanet.DefaultModule.TBL.ECO_CATEGORY, FiercePlanet.DefaultModule.TBL.ENV_CATEGORY, FiercePlanet.DefaultModule.TBL.SOC_CATEGORY]);
+                  World.registerResourceTypes(FiercePlanet.DefaultModule.TBL.ECONOMIC_RESOURCE_TYPES.concat(FiercePlanet.DefaultModule.TBL.ENVIRONMENTAL_RESOURCE_TYPES.concat(FiercePlanet.DefaultModule.TBL.SOCIAL_RESOURCE_TYPES)));
+                  FiercePlanet.Game.currentProfile.capabilities = ["farm", "water", "clinic"];
+              }
+              else if (rs == 'cos') {
+                  World.resourceTypeNamespace = FiercePlanet.DefaultModule.CoS;
+                  if (World.resourceTypeNamespace.doSetup)
+                      World.resourceTypeNamespace.doSetup();
+
+                  //CoS
+                  World.registerResourceCategories([FiercePlanet.DefaultModule.CoS.ECO_CATEGORY, FiercePlanet.DefaultModule.CoS.ENV_CATEGORY, FiercePlanet.DefaultModule.CoS.POL_CATEGORY, FiercePlanet.DefaultModule.CoS.CUL_CATEGORY]);
+                  World.registerResourceTypes(FiercePlanet.DefaultModule.CoS.ECONOMIC_RESOURCE_TYPES.concat(FiercePlanet.DefaultModule.CoS.ECOLOGICAL_RESOURCE_TYPES.concat(FiercePlanet.DefaultModule.CoS.POLITICAL_RESOURCE_TYPES.concat(FiercePlanet.DefaultModule.CoS.CULTURAL_RESOURCE_TYPES))));
+                  FiercePlanet.Game.currentProfile.capabilities = ["farm", "water", "clinic", "legal"];
+              }
+
+                      // Handle resource drag and drop and click interactions
+                      FiercePlanet.ResourceUI.initialiseAndLoadResources();
+
+                      // Handle resource drag and drop and click interactions
+                      FiercePlanet.ResourceUI.setupResourceInteraction();
+
+              FiercePlanet.Lifecycle.newLevel();
+          }
+          catch (e) {
+              jqconsole.Write(e + '\n')
+          }
+      }
       else if (command == 'help') {
           jqconsole.Write('settings || s\n');
           jqconsole.Write('play || pause || p\n');
@@ -524,7 +562,7 @@ $(function() {
         }
         else {
             if (command == 'new') {
-                FiercePlanet.Game.currentLevel = new Level(-1);
+                FiercePlanet.Game.currentLevel = new Level();
                 FiercePlanet.Game.currentLevel.randomiseAgents = true;
                 FiercePlanet.Game.currentLevel.randomiseResources = true;
                 FiercePlanet.Game.currentLevel.waveNumber = 1;

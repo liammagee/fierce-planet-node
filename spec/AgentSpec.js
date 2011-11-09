@@ -91,6 +91,7 @@ describe("agent-related classes", function() {
         describe("adjusting speed directions", function() {
             var level;
 
+            var defaultSpeed;
 
             beforeEach(function() {
                 level = new Level(1);
@@ -101,20 +102,21 @@ describe("agent-related classes", function() {
 
                 // Place the agent at a co-ordinate on the path
                 agent = new Agent(World.agentTypes[0], 4, 5);
+                defaultSpeed = agent.speed;
             });
 
 
 
             it("should have a default speed", function() {
-                expect(agent.speed).toEqual(5);
+                expect(agent.speed).toEqual(defaultSpeed);
             });
 
 
             it("should have a speed range", function() {
                 agent.adjustSpeed();
 
-                expect(agent.speed).toBeLessThan(7);
-                expect(agent.speed).toBeGreaterThan(3);
+                expect(agent.speed).toBeLessThan(defaultSpeed + 2);
+                expect(agent.speed).toBeGreaterThan(defaultSpeed - 2);
             });
 
 
@@ -159,7 +161,7 @@ describe("agent-related classes", function() {
 
             it("should change speed some of the time", function() {
                 var speeds = calculateSpeeds(1000);
-                expect(speeds.averageSpeed).toEqual(5);
+                expect(speeds.averageSpeed).toEqual(defaultSpeed);
 
                 // Allow for reasonable margins of error - some probability these will fail
                 expect(speeds.aboveCurrent).toBeGreaterThan(300);
@@ -206,7 +208,7 @@ describe("agent-related classes", function() {
                 });
 
                 it("should have a default speed", function() {
-                    expect(agent.speed).toEqual(5);
+                    expect(agent.speed).toEqual(defaultSpeed);
                 });
 
                 it("should have a new speed when it meets a resource", function() {
@@ -217,7 +219,7 @@ describe("agent-related classes", function() {
                 it("should not have a new speed when it meets a resource and has full health", function() {
                     agent.adjustGeneralHealth(100);
                     level.processNeighbouringResources(agent);
-                    expect(agent.speed).toEqual(5);
+                    expect(agent.speed).toEqual(defaultSpeed);
                 });
             });
         });

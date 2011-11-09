@@ -16,10 +16,11 @@ function Level(id) {
     // Sets the id, if passed in; otherwise default to 1001
     this.id = id || 1001;
 
+    this.name;
+    this.thumbnail;
+
     this.isPresetLevel = false;
     this.isTerminalLevel = false;
-    this.name = id;
-    this.thumbnail;
     this.entryPoints = [];
     this.exitPoints = [];
 
@@ -884,7 +885,7 @@ Level.prototype.recoverResources = function () {
  *
  * TODO: Add tests
  */
-Level.prototype.processNeighbouringResources = function(agent) {
+Level.prototype.processNeighbouringResources = function(agent, callback) {
     var x = agent.x;
     var y = agent.y;
     for (var j = 0; j < this.resources.length; j++) {
@@ -894,6 +895,8 @@ Level.prototype.processNeighbouringResources = function(agent) {
         if (Math.abs(rx - x) <= 1 && Math.abs(ry - y) <= 1) {
             var resourceEffect = this.calculateResourceEffect(resource);
             resource.provideYield(agent, resourceEffect, !this.noSpeedChange);
+            if (callback)
+                callback(resource, agent);
         }
     }
 };

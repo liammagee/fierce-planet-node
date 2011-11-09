@@ -300,6 +300,7 @@ FiercePlanet.DefaultModule.Additional = FiercePlanet.DefaultModule.Additional ||
         // Prepare as a module
         this.id = "FP-Additional";
         this.name = "Additional";
+        this.position = 2;
         this.levels = [this.level12, this.level13, this.level14, this.level15, this.level16, this.level17, this.level18, this.level19, this.level20, this.level21 ];
     }
 
