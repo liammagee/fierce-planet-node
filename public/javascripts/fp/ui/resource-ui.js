@@ -111,6 +111,7 @@ FiercePlanet.ResourceUI = FiercePlanet.ResourceUI || {};
 
             }
         }
+        FiercePlanet.Game.isMouseDown = false;
 
     };
 

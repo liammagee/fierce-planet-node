@@ -114,8 +114,8 @@ FiercePlanet.Lifecycle = FiercePlanet.Lifecycle || {};
                             // Make sure agents don't wander over boxes in 3D view
                             if (World.settings.showResourcesAsBoxes && World.settings.skewTiles) {
                                 agent.adjustWander(FiercePlanet.Orientation.cellWidth, 0);
-                                agent.wanderX = Math.abs(agent.wanderX);
-                                agent.wanderY = Math.abs(agent.wanderY);
+//                                agent.wanderX = Math.abs(agent.wanderX);
+//                                agent.wanderY = Math.abs(agent.wanderY);
                             }
                             else {
                                 agent.adjustWander(FiercePlanet.Orientation.cellWidth, FiercePlanet.Orientation.pieceWidth);
@@ -142,9 +142,9 @@ FiercePlanet.Lifecycle = FiercePlanet.Lifecycle || {};
                         else {
                             // Hook for detecting 'active' resources
 //                        FiercePlanet.processNeighbouringResources(agent);
-                            FiercePlanet.Game.currentLevel.processNeighbouringResources(agent);
+//                            FiercePlanet.Game.currentLevel.processNeighbouringResources(agent);
                             // TODO: Implement resource to agent interaction
-//                            FiercePlanet.Game.currentLevel.processNeighbouringResources(agent, FiercePlanet.Drawing.drawResourceAgentInteraction);
+                            FiercePlanet.Game.currentLevel.processNeighbouringResources(agent, FiercePlanet.Drawing.drawResourceAgentInteraction);
 
                             // Hook for detecting other agents
 //                        FiercePlanet.processNeighbouringAgents(agent);
@@ -198,6 +198,7 @@ FiercePlanet.Lifecycle = FiercePlanet.Lifecycle || {};
             }
         }
         else {
+            /*
             if (FiercePlanet.Game.waveCounter % FiercePlanet.Game.resourceRecoveryCycle == 0) {
                 // Since resources can overwrite eachother in 2.5d, force redraw of all resources here
                 if ((World.settings.skewTiles || FiercePlanet.Game.currentLevel.isometric) && World.settings.showResourcesAsBoxes) {
@@ -212,6 +213,9 @@ FiercePlanet.Lifecycle = FiercePlanet.Lifecycle || {};
 
             }
             FiercePlanet.Drawing.drawAgents();
+            */
+            FiercePlanet.Game.currentLevel.recoverResources();
+            FiercePlanet.Drawing.drawResourceAndAgents();
         }
 
         // Post-move processing

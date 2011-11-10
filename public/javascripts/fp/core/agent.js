@@ -321,6 +321,7 @@ Agent.prototype.getHealthForResourceCategory = function(category) {
 Agent.prototype.adjustWander = function(cellWidth, pieceWidth) {
     var wx = this.wanderX;
     var wy = this.wanderY;
+//    var limit = cellWidth - pieceWidth;
     var limit = cellWidth / 2 - pieceWidth / 2;
     var rx = Math.floor(Math.random() * 3 - 1);
     var ry = Math.floor(Math.random() * 3 - 1);

@@ -554,6 +554,78 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
     /**
      * Draw all of the resources
      */
+    this.drawResourceAndAgents = function(altCanvasName, altResources) {
+        var canvasName = altCanvasName || '#resourceCanvas';
+
+        var resources = FiercePlanet.Game.currentLevel.resources;
+        var agents = FiercePlanet.Game.currentLevel.currentAgents;
+        var entities = [];
+        for (var i in resources) {
+            entities.push(resources[i]);
+        }
+        for (var i in agents) {
+            entities.push(agents[i]);
+        }
+
+        this.clearCanvas(canvasName);
+        var len = FiercePlanet.Orientation.cellsAcross;
+        entities.sort(function(a, b) {
+            return (((a.y * len) - a.x > (b.y * len) - b.x) ? 1 : ((a.y * len) - a.x < (b.y * len) - b.x) ? -1 : 0);
+        });
+
+//        for (var i = 0; i < resources.length; i += 1) {
+//            this.drawResource(resources[i]);
+//        }
+
+        // Inlined version
+        var canvas = $(canvasName)[0];
+        var ctx = canvas.getContext('2d');
+        ctx.save();
+        ctx.translate(FiercePlanet.Orientation.halfWorldWidth, FiercePlanet.Orientation.halfWorldHeight);
+        ctx.rotate(FiercePlanet.Orientation.rotationAngle);
+
+        for (var i in agents) {
+            var agent = agents[i];
+            var x = agent.x, y = agent.y;
+            for (var j = 0; j < resources.length; j++) {
+                var resource = resources[j];
+                var rx = resource.x;
+                var ry = resource.y;
+                if (Math.abs(rx - x) <= 1 && Math.abs(ry - y) <= 1) {
+                    FiercePlanet.Drawing.drawResourceAgentInteraction(ctx, resource, agent);
+                }
+            }
+        }
+
+        for (var i = 0; i < entities.length; i += 1) {
+            var entity = entities[i];
+
+            if (/(\w+)\(/.exec(entity.constructor.toString())[1] == 'Resource') {
+                FiercePlanet.Drawing.drawJustResource(ctx, entity);
+            }
+            else {
+                var x = entity.x, y = entity.y;
+                FiercePlanet.Drawing.drawAgent(ctx, entity);
+                for (var j = 0; j < resources.length; j++) {
+                    var resource = resources[j];
+                    var rx = resource.x;
+                    var ry = resource.y;
+                    if (Math.abs(rx - x) <= 1 && Math.abs(ry - y) <= 1) {
+                        FiercePlanet.Drawing.drawResourceAgentInteraction(ctx, resource, entity);
+                    }
+                }
+            }
+
+        }
+
+        ctx.restore();
+
+    };
+
+
+    /**
+     * Draw all of the resources
+     */
     this.drawResources = function(altCanvasName, altResources) {
         var canvasName = altCanvasName || '#resourceCanvas';
 
@@ -788,29 +860,161 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
      * Draw an individual resource
      * @param resource
      */
-    this.drawResourceAgentInteraction = function(resource, agent) {
-        var canvasName = '#resourceCanvas';
-        var canvas = $(canvasName)[0];
-        var ctx = canvas.getContext('2d');
-
-        ctx.save();
-        ctx.translate(FiercePlanet.Orientation.halfWorldWidth, FiercePlanet.Orientation.halfWorldHeight);
-        ctx.rotate(FiercePlanet.Orientation.rotationAngle);
+    this.drawJustResource = function(ctx, resource) {
 
         // Variables
         var x = resource.x * FiercePlanet.Orientation.cellWidth;
         var y = resource.y * FiercePlanet.Orientation.cellHeight;
-        var ax = agent.x * FiercePlanet.Orientation.cellWidth;
-        var ay = agent.y * FiercePlanet.Orientation.cellHeight;
         var s = (resource.totalYield / resource.initialTotalYield) * 100;
         var c = resource.color;
         // Determine drawing colours and offsets
-//        var newColor = this.diluteColour(s, s, s, c);
+        var newColor = this.diluteColour(s, s, s, c);
+
+        // Create a gradient to fill the cell from the bottom up
+        var yOffset = (((FiercePlanet.Orientation.cellHeight) * (1.0 - (s / 100))) / 1.2) | 0;
+        var rgx =  - FiercePlanet.Orientation.halfWorldWidth + x;
+        var rgys = - FiercePlanet.Orientation.halfWorldHeight + y + yOffset;
+        var rgye = - FiercePlanet.Orientation.halfWorldHeight + y + FiercePlanet.Orientation.cellHeight;
+        var resourceGradient = ctx.createLinearGradient(rgx, rgys, rgx, rgye);
+        resourceGradient.addColorStop(0, "#fff");
+        resourceGradient.addColorStop(0.5, "#" + c);
+        resourceGradient.addColorStop(1, "#" + c);
 
         if ((World.settings.skewTiles || FiercePlanet.Game.currentLevel.isometric)) {
             var tileOffset = FiercePlanet.Isometric.offsets3DPoint([FiercePlanet.Orientation.cellHeight, 0, 0]);
             var newOrigin = FiercePlanet.Isometric.doIsometricOffset(resource.x, resource.y);
-            var newAgentOrigin = FiercePlanet.Isometric.doIsometricOffset(agent.x, agent.y);
+            var originXp = newOrigin.x + FiercePlanet.Orientation.cellWidth / 2;
+            var originYp = newOrigin.y + FiercePlanet.Orientation.cellHeight;
+
+            // Rotation logic here - TODO: Refactor out
+            originXp = originXp - (FiercePlanet.Orientation.worldWidth) / 2;
+            originYp = originYp - (FiercePlanet.Orientation.worldHeight) / 2;
+
+            ctx.fillStyle = "#fff";
+            FiercePlanet.Isometric.draw3DTile(ctx, [originXp, originYp], FiercePlanet.Orientation.cellHeight);
+            ctx.fill();
+
+            var boxHeight = 0;
+            ctx.lineWidth = 1;
+            // Use box style - computationally expensive
+            if (World.settings.showResourcesAsBoxes) {
+                boxHeight = (s / 100) * 20;
+                ctx.fillStyle = "#" + c;
+                ctx.strokeStyle = "#eee";
+                FiercePlanet.Isometric.box(ctx, originXp, originYp, 0, 0, 0, FiercePlanet.Orientation.cellHeight, boxHeight, FiercePlanet.Orientation.cellHeight);
+                ctx.fill();
+                ctx.stroke();
+            }
+            else {
+                resourceGradient = ctx.createLinearGradient(originXp, originYp - FiercePlanet.Orientation.cellHeight + yOffset, originXp, originYp);
+                resourceGradient.addColorStop(0, "#fff");
+                resourceGradient.addColorStop(0.5, "#" + c);
+                resourceGradient.addColorStop(1, "#" + c);
+                ctx.fillStyle = resourceGradient;
+                FiercePlanet.Isometric.draw3DTile(ctx, [originXp, originYp], FiercePlanet.Orientation.cellHeight);
+                ctx.fill();
+            }
+
+            // Draw resource-specific representation here
+            if (resource.kind.image) {
+                var imgOffsetX = originXp - tileOffset.x / 2;
+                var imgOffsetY = originYp + tileOffset.y / 2 - boxHeight;
+//                    var resImage = new Image();
+//                    resImage.src = resource.kind.image;
+//                    ctx.drawImage(resImage, imgOffsetX, imgOffsetY, tileOffset.x, tileOffset.y);
+                ctx.drawImage(resource.kind.actualImage, imgOffsetX, imgOffsetY, tileOffset.x, tileOffset.y);
+            }
+        }
+        else {
+
+            // Rotation logic here - TODO: Refactor out
+            x = x - (FiercePlanet.Orientation.worldWidth) / 2;
+            y = y - (FiercePlanet.Orientation.worldHeight) / 2;
+
+
+            // Clear and fill the resource tile with a white background
+            ctx.clearRect(x, y, FiercePlanet.Orientation.cellWidth, FiercePlanet.Orientation.cellHeight);
+            ctx.fillStyle = "#fff";
+            ctx.fillRect(x, y, FiercePlanet.Orientation.cellWidth, FiercePlanet.Orientation.cellHeight);
+
+            ctx.fillStyle = resourceGradient;
+            ctx.strokeStyle = "#333";
+            ctx.fillRect(x, y + yOffset, FiercePlanet.Orientation.cellWidth, (FiercePlanet.Orientation.cellHeight - yOffset));
+
+            ctx.lineWidth = 4;
+            ctx.strokeStyle = "#" + newColor;
+
+            // Draw resource-specific representation here
+            if (resource.kind.image) {
+//                var resImage = new Image();
+//                resImage.src = resource.kind.image;
+//                ctx.drawImage(resImage, x + 4, y + 4, FiercePlanet.Orientation.cellWidth - 8, FiercePlanet.Orientation.cellHeight - 8);
+                ctx.drawImage(resource.kind.actualImage, x + 4, y + 4, FiercePlanet.Orientation.cellWidth - 8, FiercePlanet.Orientation.cellHeight - 8);
+            }
+        }
+    };
+
+    /**
+     * Draw an individual resource
+     * @param resource
+     */
+    this.drawResourceAgentInteraction = function(ctx, resource, agent) {
+
+        // Variables
+        var x = resource.x * FiercePlanet.Orientation.cellWidth + FiercePlanet.Orientation.cellWidth / 2;
+        var y = resource.y * FiercePlanet.Orientation.cellHeight + FiercePlanet.Orientation.cellHeight / 2;
+
+
+        // Get co-ordinates
+        var wx = agent.wanderX;
+        var wy = agent.wanderY;
+        var __ret = this.getDrawingPosition(agent, FiercePlanet.Game.waveCounter);
+        var xPos = __ret.intX;
+        var yPos = __ret.intY;
+
+        var ax = xPos * FiercePlanet.Orientation.cellWidth + wx + FiercePlanet.Orientation.cellWidth / 2;
+        var ay = yPos * FiercePlanet.Orientation.cellHeight + wy + FiercePlanet.Orientation.cellHeight / 4;
+
+        if ((World.settings.skewTiles || FiercePlanet.Game.currentLevel.isometric)) {
+            var newOrigin = FiercePlanet.Isometric.doIsometricOffset(resource.x, resource.y);
+            x = newOrigin.x + FiercePlanet.Orientation.cellWidth / 2;
+            y = newOrigin.y + FiercePlanet.Orientation.cellHeight / 2;
+
+            var newAOrigin = FiercePlanet.Isometric.doIsometricOffset(xPos, yPos);
+            ax = newAOrigin.x + wx + FiercePlanet.Orientation.cellWidth / 2;
+            ay = newAOrigin.y + wy + FiercePlanet.Orientation.cellHeight / 4;
+        }
+        x = x - (FiercePlanet.Orientation.worldWidth) / 2;
+        y = y - (FiercePlanet.Orientation.worldHeight) / 2;
+        ax = ax - (FiercePlanet.Orientation.worldWidth) / 2;
+        ay = ay - (FiercePlanet.Orientation.worldHeight) / 2;
+
+        var s = (resource.totalYield / resource.initialTotalYield) * 100;
+        var c = resource.color;
+        ctx.strokeStyle = "#" + c;
+        ctx.lineWidth = 5;
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.lineTo(ax, ay);
+        ctx.closePath();
+
+        ctx.stroke();
+
+        ctx.strokeStyle = "#666";
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        /*
+        var s = (resource.totalYield / resource.initialTotalYield) * 100;
+        var c = resource.color;
+        // Determine drawing colours and offsets
+//        var newColor = this.diluteColour(s, s, s, c);
+        var origStyle = ctx.strokeStyle;
+
+        if ((World.settings.skewTiles || FiercePlanet.Game.currentLevel.isometric)) {
+            var tileOffset = FiercePlanet.Isometric.offsets3DPoint([FiercePlanet.Orientation.cellHeight, 0, 0]);
+            var newOrigin = FiercePlanet.Isometric.doIsometricOffset(x, y);
+            var newAgentOrigin = FiercePlanet.Isometric.doIsometricOffset(ax, ay);
             var originXp = newOrigin.x + FiercePlanet.Orientation.cellWidth / 2;
             var originYp = newOrigin.y + FiercePlanet.Orientation.cellHeight;
             var agentOriginXp = newAgentOrigin.x + FiercePlanet.Orientation.cellWidth / 2;
@@ -825,15 +1029,16 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
             ctx.fillStyle = "#fff";
 
             var boxHeight = 0;
-            ctx.lineWidth = 1;
+            ctx.lineWidth = 2;
             // Use box style - computationally expensive
             boxHeight = (s / 100) * 20;
             ctx.fillStyle = "#" + c;
-            ctx.strokeStyle = "#eee";
+            ctx.strokeStyle = "#" + c;
+            ctx.beginPath();
             FiercePlanet.Isometric.plot(ctx, originXp, originYp, 0, 0, 0);
             FiercePlanet.Isometric.draw(ctx, agentOriginXp, agentOriginXp, 0, 0, 0);
-            ctx.stroke();
-        }
+            ctx.closePath();
+            ctx.stroke(); }
         else {
 
             // Rotation logic here - TODO: Refactor out
@@ -845,14 +1050,18 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
 
             // Clear and fill the resource tile with a white background
 
-            ctx.strokeStyle = "#333";
+            ctx.strokeStyle = "#" + c;
+            ctx.lineWidth = 2;
+            ctx.beginPath();
             ctx.moveTo(x, y);
             ctx.lineTo(ax, ay);
+            ctx.closePath();
 
             ctx.stroke();
 
         }
-        ctx.restore();
+        ctx.strokeStyle = origStyle;
+        */
     };
 
     
@@ -1158,7 +1367,50 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
 
         ctx.restore();
     };
-    
+
+    /**
+     * Draw agents on the agent canvas
+     */
+    this.drawAgent = function(ctx, agent) {
+
+        // Get co-ordinates
+        var wx = agent.wanderX;
+        var wy = agent.wanderY;
+        var __ret = this.getDrawingPosition(agent, FiercePlanet.Game.waveCounter);
+        var xPos = __ret.intX;
+        var yPos = __ret.intY;
+
+        var x = xPos * FiercePlanet.Orientation.cellWidth + wx + FiercePlanet.Orientation.cellWidth / 2;
+        var y = yPos * FiercePlanet.Orientation.cellHeight + wy + FiercePlanet.Orientation.cellHeight / 4;
+
+        if ((World.settings.skewTiles || FiercePlanet.Game.currentLevel.isometric)) {
+            var newOrigin = FiercePlanet.Isometric.doIsometricOffset(xPos, yPos);
+            x = newOrigin.x + wx + FiercePlanet.Orientation.cellWidth / 2;
+            y = newOrigin.y + wy + FiercePlanet.Orientation.cellHeight / 4;
+        }
+
+        // Rotation logic here - TODO: Refactor out
+        x = x - (FiercePlanet.Orientation.worldWidth) / 2;
+        y = y - (FiercePlanet.Orientation.worldHeight) / 2;
+
+        var direction = this.getAgentDirection(agent);
+
+
+        var blueH = agent.healthCategoryStats[World.resourceCategories[0].code];
+        var greenH = agent.healthCategoryStats[World.resourceCategories[1].code];
+        var redH = agent.healthCategoryStats[World.resourceCategories[2].code];
+        var c = agent.color.toString();
+        var newColor = this.diluteColour(redH, greenH, blueH, c);
+        if (agent.isHit)
+            newColor = "f00";
+
+        try {
+            eval(agent.agentType.drawFunction)(ctx, agent, x, y, FiercePlanet.Orientation.pieceWidth, FiercePlanet.Orientation.pieceHeight, newColor, FiercePlanet.Game.waveCounter, direction);
+        } catch(e) {
+            eval(AgentTypes.CITIZEN_AGENT_TYPE.drawFunction)(ctx, agent, x, y, FiercePlanet.Orientation.pieceWidth, FiercePlanet.Orientation.pieceHeight, newColor, FiercePlanet.Game.waveCounter, direction);
+        }
+    };
+
     /**
      * Draw agents on the agent canvas
      */

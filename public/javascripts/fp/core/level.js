@@ -895,8 +895,6 @@ Level.prototype.processNeighbouringResources = function(agent, callback) {
         if (Math.abs(rx - x) <= 1 && Math.abs(ry - y) <= 1) {
             var resourceEffect = this.calculateResourceEffect(resource);
             resource.provideYield(agent, resourceEffect, !this.noSpeedChange);
-            if (callback)
-                callback(resource, agent);
         }
     }
 };
