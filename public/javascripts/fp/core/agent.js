@@ -26,7 +26,7 @@ var PROBABILITY_STRATEGY_TO_DEVIATE = UNLIKELY;
  * @param name
  * @param color
  */
-function AgentType(name, color, healthCategories, speed, health, drawFunction) {
+function AgentType(name, color, healthCategories, speed, health, drawFunction, updateFunction) {
     this.name = name;
     this.color = color;
     this.healthCategories = healthCategories || [];
@@ -34,7 +34,62 @@ function AgentType(name, color, healthCategories, speed, health, drawFunction) {
     this.health = health || INITIAL_HEALTH;
     this.isHitable = false;
     this.canHit = false;
+    this.generateEachWave = true;
     this.drawFunction = drawFunction || function(){};
+    this.updateFunction = updateFunction || function(agent, level){
+        // Hook for detecting 'active' resources
+        this.processNeighbouringResources(agent, level);
+
+        // Hook for detecting other agents
+        this.processNeighbouringAgents(agent, level);
+    };
+
+    /**
+     * Processes neighbouring resources
+     *
+     * TODO: Add tests
+     */
+    this.processNeighbouringResources = function(agent, level) {
+        var x = agent.x;
+        var y = agent.y;
+        for (var j = 0; j < level.resources.length; j++) {
+            var resource = level.resources[j];
+            var rx = resource.x;
+            var ry = resource.y;
+            if (Math.abs(rx - x) <= 1 && Math.abs(ry - y) <= 1) {
+                var resourceEffect = level.calculateResourceEffect(resource);
+                resource.provideYield(agent, resourceEffect, !level.noSpeedChange);
+            }
+        }
+    };
+
+
+    /**
+     * Processes neighbouring agents
+     *
+     * TODO: Add tests
+     */
+    this.processNeighbouringAgents = function(agent, level) {
+        if (World.settings.godMode || !World.settings.predatorsVisible)
+            return;
+
+        var x = agent.x;
+        var y = agent.y;
+        agent.isHit = false;
+        var agents = level.currentAgents;
+        for (var j = 0; j < agents.length; j++) {
+            var a = agents[j];
+            var ax = a.x;
+            var ay = a.y;
+            if (Math.abs(ax - x) <= 1 && Math.abs(ay - y) <= 1) {
+                if (!World.settings.godMode && World.settings.predatorsVisible && agent.agentType.isHitable && a.agentType.canHit) {
+                    agent.isHit = true;
+                }
+            }
+        }
+        if (agent.isHit)
+            agent.adjustGeneralHealth(-10);
+    };
 }
 
 
@@ -231,6 +286,14 @@ function Agent(agentType, x, y) {
         overallHealth = hasZeroHealth ? 0 : overallHealth / len;
 
         this.health = overallHealth;
+    };
+
+    /**
+     * Recalibrates overall health based on specific statistics.
+     */
+    this.update = function(level) {
+        if (this.agentType.updateFunction)
+            this.agentType.updateFunction(this, level);
     };
 }
 
@@ -490,7 +553,6 @@ Agent.prototype.memorise = function(level) {
     // Add to ordered memory
     this.chronologicalMemory[this.age] = memory;
 
-
     if (level != undefined) {
         var resources = level.resources;
         // Add neighbouring resources to memory
@@ -615,7 +677,6 @@ Agent.prototype.findPosition = function(level, withNoRepeat, withNoCollision, wi
             return this.findPositionForNearestExit(level, withNoRepeat, withNoCollision, withOffscreenCycling)
         }
         catch (e) {
-            console.log(e)
             return this.findPositionWithFreeNavigation(level, withNoRepeat, withNoCollision, withOffscreenCycling)
         }
     }

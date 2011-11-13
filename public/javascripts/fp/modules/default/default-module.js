@@ -7,6 +7,11 @@
 
 
 FiercePlanet.DefaultModule = FiercePlanet.DefaultModule || {};
+FiercePlanet.PresetLevels = FiercePlanet.PresetLevels || {};
+/**
+ * @constant The number of preset levels
+ */
+FiercePlanet.PresetLevels.MAX_DEFAULT_LEVELS = 1000;
 
 (function() {
 
@@ -19,7 +24,14 @@ FiercePlanet.DefaultModule = FiercePlanet.DefaultModule || {};
         module.registerLevelSet(FiercePlanet.DefaultModule.Additional);
         module.registerLevelSet(FiercePlanet.DefaultModule.Experimental);
 
-        module.registerAgentSet(FiercePlanet.DefaultModule.AgentTypes);
+        FiercePlanet.DefaultModule.AgentTypes.init();
+//        module.registerAgentSet(FiercePlanet.DefaultModule.AgentTypes);
+        module.registerAgentSet(AgentTypes.CITIZEN_AGENT_TYPE);
+//        module.registerAgentSet(AgentTypes.PREDATOR_AGENT_TYPE);
+//        module.registerAgentSet(AgentTypes.RIVAL_AGENT_TYPE);
+
+        World.registerAgentTypes(module.allAgentSets());
+//        World.registerAgentTypes(FiercePlanet.DefaultModule.AgentTypes.agentTypes);
 
         module.registerResourceSet(FiercePlanet.DefaultModule.TBL);
         module.registerResourceSet(FiercePlanet.DefaultModule.CoS);
@@ -39,8 +51,7 @@ FiercePlanet.DefaultModule = FiercePlanet.DefaultModule || {};
         World.registerResourceTypes(FiercePlanet.DefaultModule.CoS.ECONOMIC_RESOURCE_TYPES.concat(FiercePlanet.DefaultModule.CoS.ECOLOGICAL_RESOURCE_TYPES.concat(FiercePlanet.DefaultModule.CoS.POLITICAL_RESOURCE_TYPES.concat(FiercePlanet.DefaultModule.CoS.CULTURAL_RESOURCE_TYPES))));
         FiercePlanet.Game.currentProfile.capabilities = ["farm", "water", "clinic", "legal"];
         */
-        FiercePlanet.DefaultModule.AgentTypes.init();
-        World.registerAgentTypes(FiercePlanet.DefaultModule.AgentTypes.agentTypes);
+
 
 
         module.register();

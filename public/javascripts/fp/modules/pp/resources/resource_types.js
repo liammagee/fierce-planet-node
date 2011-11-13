@@ -5,7 +5,7 @@
  * MIT Licensed
  */
 
-FiercePlanet.DefaultModule = FiercePlanet.DefaultModule || {};
+FiercePlanet.PredatorPreyModule = FiercePlanet.PredatorPreyModule || {};
 
 
 // Economic resources

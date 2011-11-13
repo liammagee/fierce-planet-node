@@ -590,12 +590,12 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
      */
     this.makeElementsMovable = function() {
         if (World.settings.makeElementsMovable) {
-            $('#extended-area, #controls').draggable({cursor: "pointer"});
+            $('#graph-area, #controls').draggable({cursor: "pointer"});
             $('#gameworld').resizable().draggable({handler: '#handle', cancel: '#world, #console'});
             $('#global-info-panel').draggable({cancel: '#swatch', cursor: "pointer"});
         }
         else {
-            $('#extended-area, #controls').draggable('destroy');
+            $('#graph-area, #controls').draggable('destroy');
             $('#gameworld').draggable('destroy');
             $('#global-info-panel').draggable('destroy');
         }

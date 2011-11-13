@@ -34,7 +34,7 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
     // Level editor dialogs
     this.designFeaturesDialog = null;
     this.editPropertiesDialog = null;
-    this.extendedAreaDialog = null;
+    this.graphDialog = null;
 
     /**
      * Calculates the left position of the 'world' element
@@ -365,14 +365,14 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
 
 
 
-        this.extendedAreaDialog = $('#extended-area-dialog')
+        this.graphDialog = $('#graph-dialog')
             .dialog({
                position: [1100, 35],
                width: 550,
                height: 560,
                 autoOpen: false,
                 modal: false,
-                title: 'Extended Panel',
+                title: 'Fierce Planet Graph',
                 buttons: {
                     "Cancel": function() {
                         $( this ).dialog( "close" );
@@ -485,7 +485,7 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
 
 
         // Set up tabs here
-        $("#extended-area").tabs();
+        $("#graph-area").tabs();
 
     };
 

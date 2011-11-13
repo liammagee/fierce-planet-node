@@ -198,11 +198,11 @@ FiercePlanet.Utils = FiercePlanet.Utils || {};
 
         // Open extended area if we are showing the graph
         if (World.settings.showGraph) {
-            FiercePlanet.Dialogs.extendedAreaDialog.dialog('open');
-            FiercePlanet.Drawing.drawGraph();
+            FiercePlanet.Dialogs.graphDialog.dialog('open');
+            FiercePlanet.Graph.drawGraph();
         }
         else {
-            FiercePlanet.Drawing.clearGraph();
+            FiercePlanet.Graph.clearGraph();
         }
 
 

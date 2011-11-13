@@ -39,7 +39,7 @@ FiercePlanet.Game = FiercePlanet.Game || {};
 
     // Current state variables
     this.currentProfile = new Profile();
-    this.currentLevelSetID = 'FP-Basic';
+    this.currentLevelSetID = 'Default';
     this.currentLevelNumber = 1;
     this.currentWave = 1;
     this.currentLevelPreset = true;
@@ -137,6 +137,9 @@ FiercePlanet.Game = FiercePlanet.Game || {};
 
         // Add custom event listeners
         FiercePlanet.Event.hookUpCustomEventListeners();
+
+        // Bind variables
+        FiercePlanet.Utils.bindVariables();
 
         // Draw the game
         FiercePlanet.Lifecycle.newLevel();

@@ -34,8 +34,8 @@ FiercePlanet.LevelGallery = FiercePlanet.LevelGallery || {};
         var modules = FiercePlanet.ModuleManager.currentModule.allLevelSets();
         for (var i in modules) {
             var module = modules[i];
-            $('#level-gallery-tabs>ul').prepend('<li><a href="#' + i + '"> ' + module.name + '</a></li>');
-            var modHTML = $('<div class="quests" id="' + i + '"></div>');
+            $('#level-gallery-tabs>ul').prepend('<li><a href="#' + module.id + '"> ' + module.name + '</a></li>');
+            var modHTML = $('<div class="quests" id="' + module.id + '"></div>');
             var tnHTML = $('<div class="thumbnails"></div>');
             $('#level-gallery-tabs').append(modHTML);
             modHTML.append(tnHTML);
@@ -54,7 +54,7 @@ FiercePlanet.LevelGallery = FiercePlanet.LevelGallery || {};
                     + level.name
                     + '</div>'
                     + '</div>');
-                thumbnail.data('set', i);
+                thumbnail.data('set', module.id);
                 thumbnail.data('level', j);
                 tnHTML.append(thumbnail);
             }

@@ -78,6 +78,7 @@ $LAB
     , 'fp/graphics/google-map.js'
     , 'fp/graphics/isometric.js'
     , 'fp/graphics/fullscreen.js'
+    , 'fp/graphics/stick-figure.js'
 
 
        , 'fp/ui/dialogs.js'
@@ -88,6 +89,7 @@ $LAB
        , 'fp/ui/notice.js'
        , 'fp/ui/profile-ui.js'
        , 'fp/ui/resource-ui.js'
+       , 'fp/ui/graph.js'
 
        , 'fp/utils/jqconsole-helper.js'
        , 'fp/utils/fp-utils.js'
@@ -100,6 +102,7 @@ $LAB
        , 'fp/game.js'
    ])
     .wait()
+/*
     .script([
         'fp/modules/default/default-module.js'
         , 'fp/modules/default/levels/basic.js'
@@ -113,13 +116,20 @@ $LAB
     .wait(function() {
             FiercePlanet.DefaultModule.init();
         })
+        */
+    .script([
+        'fp/modules/pp/default-module.js'
+        , 'fp/modules/pp/levels/pp.js'
+        , 'fp/modules/pp/resources/tbl.js'
+       , 'fp/modules/pp/resources/resource_types.js'
+       , 'fp/modules/pp/agents/agent_types.js'
+    ])
     .wait(function() {
-//        $('#3d')[0].innerHTML = 'View 2D';
-//        World.settings.skewTiles = true;
+            FiercePlanet.PredatorPreyModule.init();
+        })
 
+    .wait(function() {
         FiercePlanet.Game.loadGame();
-
-        FiercePlanet.Utils.bindVariables();
     });
 
 

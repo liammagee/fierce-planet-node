@@ -28,7 +28,6 @@ FiercePlanet.Comms = FiercePlanet.Comms || {};
             }
             // TODO: Fix - causes problems with main Google screen
 //            FiercePlanet.Drawing.drawMirrorGame();
-            $('#alt_gameworld').show();
         }
         else if (eventType == 'start') {
             if (World.settings.spectate) {

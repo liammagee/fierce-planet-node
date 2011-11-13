@@ -16,9 +16,6 @@ var FiercePlanet = FiercePlanet || {};
 FiercePlanet.Drawing = FiercePlanet.Drawing || {};
 
 (function() {
-    var plot;
-    var plotUpdateInterval;
-    var plotIntervalId;
 
     /**
      * Draws the game
@@ -584,6 +581,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         ctx.translate(FiercePlanet.Orientation.halfWorldWidth, FiercePlanet.Orientation.halfWorldHeight);
         ctx.rotate(FiercePlanet.Orientation.rotationAngle);
 
+        /*
         for (var i in agents) {
             var agent = agents[i];
             var x = agent.x, y = agent.y;
@@ -596,6 +594,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
                 }
             }
         }
+        */
 
         for (var i = 0; i < entities.length; i += 1) {
             var entity = entities[i];
@@ -605,7 +604,6 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
             }
             else {
                 var x = entity.x, y = entity.y;
-                FiercePlanet.Drawing.drawAgent(ctx, entity);
                 for (var j = 0; j < resources.length; j++) {
                     var resource = resources[j];
                     var rx = resource.x;
@@ -614,6 +612,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
                         FiercePlanet.Drawing.drawResourceAgentInteraction(ctx, resource, entity);
                     }
                 }
+                FiercePlanet.Drawing.drawAgent(ctx, entity);
             }
 
         }
@@ -972,6 +971,9 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         var xPos = __ret.intX;
         var yPos = __ret.intY;
 
+        if (Math.abs(xPos - resource.x) > 1 || Math.abs(yPos - resource.y) > 1)
+            return;
+
         var ax = xPos * FiercePlanet.Orientation.cellWidth + wx + FiercePlanet.Orientation.cellWidth / 2;
         var ay = yPos * FiercePlanet.Orientation.cellHeight + wy + FiercePlanet.Orientation.cellHeight / 4;
 
@@ -992,7 +994,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         var s = (resource.totalYield / resource.initialTotalYield) * 100;
         var c = resource.color;
         ctx.strokeStyle = "#" + c;
-        ctx.lineWidth = 5;
+        ctx.lineWidth = 2;
         ctx.beginPath();
         ctx.moveTo(x, y);
         ctx.lineTo(ax, ay);
@@ -1004,64 +1006,6 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         ctx.lineWidth = 1;
         ctx.stroke();
 
-        /*
-        var s = (resource.totalYield / resource.initialTotalYield) * 100;
-        var c = resource.color;
-        // Determine drawing colours and offsets
-//        var newColor = this.diluteColour(s, s, s, c);
-        var origStyle = ctx.strokeStyle;
-
-        if ((World.settings.skewTiles || FiercePlanet.Game.currentLevel.isometric)) {
-            var tileOffset = FiercePlanet.Isometric.offsets3DPoint([FiercePlanet.Orientation.cellHeight, 0, 0]);
-            var newOrigin = FiercePlanet.Isometric.doIsometricOffset(x, y);
-            var newAgentOrigin = FiercePlanet.Isometric.doIsometricOffset(ax, ay);
-            var originXp = newOrigin.x + FiercePlanet.Orientation.cellWidth / 2;
-            var originYp = newOrigin.y + FiercePlanet.Orientation.cellHeight;
-            var agentOriginXp = newAgentOrigin.x + FiercePlanet.Orientation.cellWidth / 2;
-            var agentOriginYp = newAgentOrigin.y + FiercePlanet.Orientation.cellHeight;
-
-            // Rotation logic here - TODO: Refactor out
-            originXp = originXp - (FiercePlanet.Orientation.worldWidth) / 2;
-            originYp = originYp - (FiercePlanet.Orientation.worldHeight) / 2;
-            agentOriginXp = agentOriginXp - (FiercePlanet.Orientation.worldWidth) / 2;
-            agentOriginYp = agentOriginYp - (FiercePlanet.Orientation.worldHeight) / 2;
-
-            ctx.fillStyle = "#fff";
-
-            var boxHeight = 0;
-            ctx.lineWidth = 2;
-            // Use box style - computationally expensive
-            boxHeight = (s / 100) * 20;
-            ctx.fillStyle = "#" + c;
-            ctx.strokeStyle = "#" + c;
-            ctx.beginPath();
-            FiercePlanet.Isometric.plot(ctx, originXp, originYp, 0, 0, 0);
-            FiercePlanet.Isometric.draw(ctx, agentOriginXp, agentOriginXp, 0, 0, 0);
-            ctx.closePath();
-            ctx.stroke(); }
-        else {
-
-            // Rotation logic here - TODO: Refactor out
-            x = x - (FiercePlanet.Orientation.worldWidth) / 2;
-            y = y - (FiercePlanet.Orientation.worldHeight) / 2;
-            ax = ax - (FiercePlanet.Orientation.worldWidth) / 2;
-            ay = ay - (FiercePlanet.Orientation.worldHeight) / 2;
-
-
-            // Clear and fill the resource tile with a white background
-
-            ctx.strokeStyle = "#" + c;
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.moveTo(x, y);
-            ctx.lineTo(ax, ay);
-            ctx.closePath();
-
-            ctx.stroke();
-
-        }
-        ctx.strokeStyle = origStyle;
-        */
     };
 
     
@@ -1321,10 +1265,12 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
             var agent = agents[i];
     
             // Don't process agents we want to block
+            /*
             if (! World.settings.rivalsVisible && agent.agentType.name == AgentTypes.RIVAL_AGENT_TYPE.name)
                 continue;
             if (! World.settings.predatorsVisible && agent.agentType.name == AgentTypes.PREDATOR_AGENT_TYPE.name)
                 continue;
+                */
     
             // Get co-ordinates
             var wx = agent.wanderX;
@@ -1824,97 +1770,6 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
     };
 
 
-    /**
-     * Resets the flot graph
-     */
-    this.drawGraph = function () {
-        if ($("#world-graph")[0]) {
-            $("#world-graph").show();
-            this.refreshGraph();
-//        var options = {
-//            series: { shadowSize: 0 }, // drawing is faster without shadows
-//            yaxis: { min: 0, max: FiercePlanet.Game.currentLevel.getTotalSaveableAgents() }
-//        };
-//        plot = $.plot($("#world-graph"),
-//                [ { data: [[0, 0]], lines: { show: true } }, {data: [[0, 0]], lines: { show: true }} ],
-//                options);
-            plotUpdateInterval = 100;
-            this.updateGraph();
-        }
-    };
-
-    /**
-     * Resets the flot graph
-     */
-    this.refreshGraph = function () {
-        if ($("#world-graph")[0]) {
-//            var totalSaveable = FiercePlanet.Game.currentLevel ? FiercePlanet.Game.currentLevel.getTotalSaveableAgents() : 55;
-            var totalSaveable = 100;
-            var options = {
-                series: { shadowSize: 0 }, // drawing is faster without shadows
-                yaxis: { min: 0, max: totalSaveable }
-            };
-			var seedData = [];
-			for (var i in World.resourceCategories) {
-                var cat = World.resourceCategories[i];
-				seedData.push({ color: cat.color, data: [[0, 100]], lines: { show: true } });
-			}
-			seedData.push({ color: '#333', data: [[0, 100]], lines: { show: true } });
-
-            plot = $.plot($("#world-graph"),
-                    seedData,
-                    options);
-        }
-    };
-
-    /**
-     * Closes the flot graph
-     */
-    this.clearGraph = function () {
-        if ($("#world-graph")[0]) {
-            $("#world-graph").hide();
-            plot = null;
-            plotUpdateInterval = 250;
-            clearTimeout(plotIntervalId);
-        }
-    };
-    
-    /**
-     * Updates the flot graph
-     */
-    this.updateGraph = function() {
-        if ($("#world-graph")[0] && World.settings.showGraph) {
-            if (FiercePlanet.inPlay) {
-//                var savedData = plot.getData()[0].data;
-//                var expiredData = plot.getData()[1].data;
-				var data = plot.getData();
-                if (FiercePlanet.levelCounter > 0) {
-					//data = [];
-					var stats = FiercePlanet.Game.currentLevel.currentAgentHealthStats();
-					var j = 0;
-					for (var i in stats) {
-						var d = [FiercePlanet.levelCounter, stats[i]];
-						data[j].data.push(d);
-						j++;
-					}
-					//data[j].data.push([FiercePlanet.levelCounter, stats.total])
-                    //savedData.push([FiercePlanet.levelCounter, FiercePlanet.Game.currentProfile.currentLevelSaved]);
-                    //expiredData.push([FiercePlanet.levelCounter, FiercePlanet.Game.currentProfile.currentLevelExpired]);
-                }
-				plot.setData(data);
-/*
-                plot.setData([
-                    { data: savedData, lines: { show: true } },
-                    {data: expiredData, lines: { show: true }}
-                ]);
-*/
-                plot.setupGrid();
-                plot.draw();
-            }
-            plotIntervalId = setTimeout(FiercePlanet.Drawing.updateGraph, plotUpdateInterval);
-        }
-    };
-    
     
     /**
      * Tries to draw all of the canvases as a consolidated thumbnail

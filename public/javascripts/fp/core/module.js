@@ -19,7 +19,7 @@ function Module() {};
     Module.prototype.id;
     Module.prototype._levelSets = {};
     Module.prototype._resourceSets = {};
-    Module.prototype._agentSets = {};
+    Module.prototype._agentSets = [];
 
     /**
      * Registers a module
@@ -105,7 +105,13 @@ function Module() {};
      * Retrieves  a resource set
      */
     Module.prototype.allResourceSets = function() {
-        return this._resourceSets;
+        var resourceSets = [];
+        for (var i in this._resourceSets) {
+            if (this._resourceSets.hasOwnProperty(i)) {
+                resourceSets.push(this._resourceSets[i]);
+            }
+        }
+        return resourceSets;
     };
 
 
@@ -115,10 +121,11 @@ function Module() {};
      * Registers a agent set
      */
     Module.prototype.registerAgentSet = function(agentSet) {
-        this._agentSets = this._agentSets || {};
+        this._agentSets = this._agentSets || [];
+        this._agentSets.push(agentSet);
 
-        if (typeof(agentSet) != "undefined" && agentSet.id)
-            this._agentSets[agentSet.id] = agentSet;
+//        if (typeof(agentSet) != "undefined" && agentSet.id)
+//            this._agentSets[agentSet.id] = agentSet;
 
     };
 
@@ -133,6 +140,14 @@ function Module() {};
      * Retrieves  a agent set
      */
     Module.prototype.allAgentSets = function() {
+        /*
+        var agentTypes = [];
+        for (var i in this._agentSets) {
+            if (this._agentSets.hasOwnProperty(i)) {
+                agentTypes.push(this._agentSets[i]);
+            }
+        }
+        */
         return this._agentSets;
     };
 

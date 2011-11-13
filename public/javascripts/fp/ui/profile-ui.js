@@ -77,7 +77,10 @@ FiercePlanet.ProfileUI = FiercePlanet.ProfileUI || {};
      */
     this.storeProfileData = function() {
         localStorage.currentLevelNumber = FiercePlanet.Game.currentLevelNumber;
-        localStorage.currentLevelPreset = FiercePlanet.Game.currentLevel.isPresetLevel;
+        if (FiercePlanet.Game.currentLevelSetID)
+            localStorage.currentLevelSetID = FiercePlanet.Game.currentLevelSetID;
+        if (FiercePlanet.Game.currentLevel)
+            localStorage.currentLevelPreset = FiercePlanet.Game.currentLevel.isPresetLevel;
         localStorage.currentProfile = JSON.stringify(FiercePlanet.Game.currentProfile);
     };
 

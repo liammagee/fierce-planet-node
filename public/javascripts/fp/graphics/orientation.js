@@ -114,7 +114,7 @@ FiercePlanet.Orientation = FiercePlanet.Orientation || {};
             //$('#world').css({left: 480 - this.worldWidth});
 			//$('#notifications').css({left: 480 - this.worldWidth, top: 117 + this.worldHeight, width: this.worldWidth});
             //$('#level-editor').css({left: 480 - this.worldWidth, top: 190 + this.worldHeight, width: this.worldWidth});
-    //        $('#extended-area').css({left: 480 - this.worldWidth, top: 190 + this.worldHeight, width: this.worldWidth});
+    //        $('#graph-area').css({left: 480 - this.worldWidth, top: 190 + this.worldHeight, width: this.worldWidth});
         }
         catch (e) {}
     };

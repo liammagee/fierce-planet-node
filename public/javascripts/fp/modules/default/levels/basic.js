@@ -12,14 +12,9 @@ var FiercePlanet = FiercePlanet || {};
 /**
  * @namespace The namespace for preset levels
  */
-FiercePlanet.PresetLevels = FiercePlanet.PresetLevels || {};
 FiercePlanet.DefaultModule = FiercePlanet.DefaultModule || {};
 FiercePlanet.DefaultModule.Basic = FiercePlanet.DefaultModule.Basic || {};
 
-/**
- * @constant The number of preset levels
- */
-FiercePlanet.PresetLevels.MAX_DEFAULT_LEVELS = 1000;
 
 (function() {
 
@@ -97,8 +92,8 @@ FiercePlanet.PresetLevels.MAX_DEFAULT_LEVELS = 1000;
             this.addTerrainToPath(new Terrain('#aaa', 0.8));
 
             // Add predators and rivals
-            this.levelAgents = ([new Agent(AgentTypes.PREDATOR_AGENT_TYPE, 0, 9)]);
-            this.waveAgents = ([new Agent(AgentTypes.RIVAL_AGENT_TYPE, 10, 1)]);
+//            this.levelAgents = ([new Agent(AgentTypes.PREDATOR_AGENT_TYPE, 0, 9)]);
+//            this.waveAgents = ([new Agent(AgentTypes.RIVAL_AGENT_TYPE, 10, 1)]);
         };
 
 
@@ -934,8 +929,8 @@ FiercePlanet.PresetLevels.MAX_DEFAULT_LEVELS = 1000;
 
 
         // Prepare as a module
-        this.id = "FP-Basic";
-        this.name = "Basic";
+        this.id = "Default";
+        this.name = "Default";
         this.position = 1;
         this.levels = [this.level0, this.level1, this.level2, this.level3, this.level4, this.level5, this.level6, this.level7, this.level8, this.level9, this.level10, this.level11 ];
     };
