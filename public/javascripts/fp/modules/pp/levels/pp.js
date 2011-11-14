@@ -33,13 +33,13 @@ FiercePlanet.PredatorPreyModule.Experimental = FiercePlanet.PredatorPreyModule.E
                 this.randomiseResources = true;
 //            this.addEntryPoint(19, 0);
 //                this.addExitPoint(10, 10);
-                this.scaleFactor = 2;
+                this.scaleFactor = 1;
                 this.cellsAcross = 20;
                 this.cellsDown = 20;
-                this.initialAgentNumber = 10;
-                this.waveNumber = 2;
+                this.initialAgentNumber = 40;
+                this.waveNumber = 1;
                 this.expiryLimit = 1000;
-                this.initialResourceNumber = 50;
+                this.initialResourceNumber = 100;
                 this.name = ("Totally experimental...");
                 this.isTerminalLevel = true;
                 this.introduction = (""

@@ -84,8 +84,6 @@ FiercePlanet.LevelUI = FiercePlanet.LevelUI || {};
      * Opens a level
      */
     this.deleteLevel = function() {
-        console.log($(this).parent())
-        console.log($(this).parent().attr('id'))
         if ($(this).parent().attr('id')) {
             $.get('/levels/destroy/' + $(this).parent().attr('id'), function(res) {
                 if (res) {

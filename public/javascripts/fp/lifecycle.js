@@ -83,7 +83,7 @@ FiercePlanet.Lifecycle = FiercePlanet.Lifecycle || {};
                 continue;
             */
 
-            if (agent.agentType == AgentTypes.CITIZEN_AGENT_TYPE)
+//            if (agent.agentType == AgentTypes.CITIZEN_AGENT_TYPE)
                 citizenCount++;
 
             if (FiercePlanet.Game.waveCounter < agent.delay)

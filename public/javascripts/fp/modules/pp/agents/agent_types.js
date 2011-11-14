@@ -182,7 +182,7 @@ FiercePlanet.PredatorPreyModule.AgentTypes = FiercePlanet.PredatorPreyModule.Age
         };
 
         AgentTypes.PREDATOR_AGENT_TYPE = new AgentType("Predator", "fbe53b", World.resourceCategories);
-        AgentTypes.PREDATOR_AGENT_TYPE.canHit = (true);
+//        AgentTypes.PREDATOR_AGENT_TYPE.canHit = (true);
         AgentTypes.PREDATOR_AGENT_TYPE.drawFunction = (function(ctx, agent, intX, intY, pieceWidth, pieceHeight, newColor, counter, direction) {
             if (pieceWidth < (8 ) || pieceHeight < (8 )) {
     //        if (false) {

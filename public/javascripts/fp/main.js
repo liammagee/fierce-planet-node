@@ -75,13 +75,15 @@ $LAB
 
     , 'fp/graphics/drawing.js'
     , 'fp/graphics/orientation.js'
-    , 'fp/graphics/google-map.js'
     , 'fp/graphics/isometric.js'
     , 'fp/graphics/fullscreen.js'
     , 'fp/graphics/stick-figure.js'
 
 
        , 'fp/ui/dialogs.js'
+       , 'fp/ui/controls.js'
+       , 'fp/ui/keyboard.js'
+       , 'fp/ui/mouse.js'
        , 'fp/ui/editor.js'
        , 'fp/ui/general-ui.js'
         , 'fp/ui/level-gallery.js'
@@ -90,12 +92,13 @@ $LAB
        , 'fp/ui/profile-ui.js'
        , 'fp/ui/resource-ui.js'
        , 'fp/ui/graph.js'
+       , 'fp/ui/console.js'
+       , 'fp/ui/storyboard.js'
+    , 'fp/ui/google-map.js'
 
-       , 'fp/utils/jqconsole-helper.js'
        , 'fp/utils/fp-utils.js'
        , 'fp/utils/comms.js'
        , 'fp/utils/log.js'
-        , 'fp/utils/storyboard.js'
     , 'fp/utils/recording.js'
 
         , 'fp/lifecycle.js'

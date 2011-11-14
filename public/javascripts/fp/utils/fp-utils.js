@@ -210,12 +210,12 @@ FiercePlanet.Utils = FiercePlanet.Utils || {};
             $(document).unbind('keydown');
         else {
             $(document).unbind('keydown');
-            $(document).keydown(FiercePlanet.GeneralUI.handleKeyboardShortcuts);
+            $(document).keydown(FiercePlanet.Keyboard.handleKeyboardShortcuts);
         }
 
         // Update based on allowInlinePanning property
-        FiercePlanet.GeneralUI.unbindGameMouseEvents();
-        FiercePlanet.GeneralUI.bindGameMouseEvents();
+        FiercePlanet.Mouse.unbindGameMouseEvents();
+        FiercePlanet.Mouse.bindGameMouseEvents();
 
         // Makes elements movable
         FiercePlanet.GeneralUI.makeElementsMovable();

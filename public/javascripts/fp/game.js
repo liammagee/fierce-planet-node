@@ -49,15 +49,17 @@ FiercePlanet.Game = FiercePlanet.Game || {};
     this.currentResource = null;
     this.currentNotice = null;
     // Viewport variables
-    this.currentX = null;
-    this.currentY = null;
 
 
     // Boolean state variables
     this.inDesignMode = false;
     this.inPlay = false;
+
+
     this.isMouseDown = false;
     this.isMouseMoving = false;
+    this.currentX = null;
+    this.currentY = null;
 
 
 
@@ -130,7 +132,7 @@ FiercePlanet.Game = FiercePlanet.Game || {};
         FiercePlanet.ProfileUI.getProfile();
 
         // Add UI event listeners
-        FiercePlanet.GeneralUI.hookUpUIEventListeners();
+        FiercePlanet.Controls.hookUpUIEventListeners();
 
         // Process settings
         FiercePlanet.Utils.processSettings();

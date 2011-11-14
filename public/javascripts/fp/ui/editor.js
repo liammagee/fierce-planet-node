@@ -189,7 +189,7 @@ FiercePlanet.Editor = FiercePlanet.Editor || {};
         canvas.unbind('mousedown', FiercePlanet.Editor.handleEditorMouseDown);
         canvas.unbind('mousemove', FiercePlanet.Editor.handleEditorMouseMove);
         canvas.unbind('mouseup', FiercePlanet.Editor.handleEditorMouseUp);
-        FiercePlanet.GeneralUI.bindGameMouseEvents();
+        FiercePlanet.Mouse.bindGameMouseEvents();
         FiercePlanet.Console.maximise();
         $('#level-editor').hide();
         $('#swatch').show();
