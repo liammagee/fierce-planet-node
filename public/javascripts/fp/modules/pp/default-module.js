@@ -20,7 +20,7 @@ FiercePlanet.PresetLevels.MAX_DEFAULT_LEVELS = 1000;
         var module = new Module();
         module.id = 'PredatorPrey';
 
-        module.registerLevelSet(FiercePlanet.PredatorPreyModule.Experimental);
+        module.registerCampaign(FiercePlanet.PredatorPreyModule.Experimental);
 
         FiercePlanet.PredatorPreyModule.AgentTypes.init();
         module.registerAgentSet(AgentTypes.CITIZEN_AGENT_TYPE);

@@ -111,8 +111,9 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
 
         this.drawEntryPoints();
         this.drawExitPoints();
-        this.drawResources();
-        this.drawAgents();
+        this.drawResourceAndAgents();
+//        this.drawResources();
+//        this.drawAgents();
     };
     
     /**
@@ -420,7 +421,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
             var text = FiercePlanet.Game.currentNotice.text;
             var start = FiercePlanet.Game.currentNotice.start;
             var duration = FiercePlanet.Game.currentNotice.duration;
-            var strengthOfNotice = (duration - (FiercePlanet.Game.levelCounter - start)) / duration;
+            var strengthOfNotice = (duration - (Lifecycle.levelCounter - start)) / duration;
             var startingTransparency = 0.1;
             var alphaLevel = Math.pow(strengthOfNotice - startingTransparency, 0.5);
     
@@ -446,7 +447,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
             ctx.clearRect(x - 1, y - 1, width + 2, height + 2);
     
             // Don't draw any more, if the notice is expired
-            if (start > FiercePlanet.Game.levelCounter || start + duration < FiercePlanet.Game.levelCounter)
+            if (start > Lifecycle.levelCounter || start + duration < Lifecycle.levelCounter)
                 return;
     
             ctx.beginPath();
@@ -712,7 +713,12 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
 //                    var resImage = new Image();
 //                    resImage.src = resource.kind.image;
 //                    ctx.drawImage(resImage, imgOffsetX, imgOffsetY, tileOffset.x, tileOffset.y);
-                    ctx.drawImage(resource.kind.actualImage, imgOffsetX, imgOffsetY, tileOffset.x, tileOffset.y);
+                    try {
+                        ctx.drawImage(resource.kind.actualImage, imgOffsetX, imgOffsetY, tileOffset.x, tileOffset.y);
+                    }
+                    catch (e) {
+//                        ctx.drawImage(resource.kind.actualImage, imgOffsetX, imgOffsetY, 27, 27);
+                    }
                 }
             }
             else {
@@ -740,7 +746,12 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
 //                    var resImage = new Image();
 //                    resImage.src = resource.kind.image;
 //                    ctx.drawImage(resImage, x + 4, y + 4, FiercePlanet.Orientation.cellWidth - 8, FiercePlanet.Orientation.cellHeight - 8);
-                    ctx.drawImage(resource.kind.actualImage, x + 4, y + 4, FiercePlanet.Orientation.cellWidth - 8, FiercePlanet.Orientation.cellHeight - 8);
+                    try {
+                        ctx.drawImage(resource.kind.actualImage, x + 4, y + 4, FiercePlanet.Orientation.cellWidth - 8, FiercePlanet.Orientation.cellHeight - 8);
+                    }
+                    catch (e) {
+//                        ctx.drawImage(resource.kind.actualImage, x + 4, y + 4, 27, 27);
+                    }
                 }
             }
         }
@@ -921,7 +932,10 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
 //                    var resImage = new Image();
 //                    resImage.src = resource.kind.image;
 //                    ctx.drawImage(resImage, imgOffsetX, imgOffsetY, tileOffset.x, tileOffset.y);
-                ctx.drawImage(resource.kind.actualImage, imgOffsetX, imgOffsetY, tileOffset.x, tileOffset.y);
+                try {
+                    ctx.drawImage(resource.kind.actualImage, imgOffsetX, imgOffsetY, tileOffset.x, tileOffset.y);
+                }
+                catch (e){}
             }
         }
         else {
@@ -948,7 +962,10 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
 //                var resImage = new Image();
 //                resImage.src = resource.kind.image;
 //                ctx.drawImage(resImage, x + 4, y + 4, FiercePlanet.Orientation.cellWidth - 8, FiercePlanet.Orientation.cellHeight - 8);
+                try {
                 ctx.drawImage(resource.kind.actualImage, x + 4, y + 4, FiercePlanet.Orientation.cellWidth - 8, FiercePlanet.Orientation.cellHeight - 8);
+                }
+                catch (e){}
             }
         }
     };
@@ -967,7 +984,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         // Get co-ordinates
         var wx = agent.wanderX;
         var wy = agent.wanderY;
-        var __ret = this.getDrawingPosition(agent, FiercePlanet.Game.waveCounter);
+        var __ret = this.getDrawingPosition(agent, Lifecycle.waveCounter);
         var xPos = __ret.intX;
         var yPos = __ret.intY;
 
@@ -1088,12 +1105,12 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         ctx.translate(midTilePosX, midTilePosY);
         ctx.rotate(FiercePlanet.Orientation.rotationAngle);
 
-        if (FiercePlanet.Game.waveCounter > 0) {
+        if (Lifecycle.waveCounter > 0) {
             for (var i = 0; i < agents.length; i += 1) {
                 var agent = agents[i];
                 var wx = agent.wanderX;
                 var wy = agent.wanderY;
-                var __ret = this.getDrawingPosition(agent, FiercePlanet.Game.waveCounter - 1);
+                var __ret = this.getDrawingPosition(agent, Lifecycle.waveCounter - 1);
                 var xPos = __ret.intX;
                 var yPos = __ret.intY;
                 var x = xPos * FiercePlanet.Orientation.cellWidth + wx + 1;
@@ -1275,7 +1292,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
             // Get co-ordinates
             var wx = agent.wanderX;
             var wy = agent.wanderY;
-            var __ret = this.getDrawingPosition(agent, FiercePlanet.Game.waveCounter);
+            var __ret = this.getDrawingPosition(agent, Lifecycle.waveCounter);
             var xPos = __ret.intX;
             var yPos = __ret.intY;
 
@@ -1304,9 +1321,9 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
                 newColor = "f00";
     
             try {
-                eval(agent.agentType.drawFunction)(ctx, agent, x, y, FiercePlanet.Orientation.pieceWidth, FiercePlanet.Orientation.pieceHeight, newColor, FiercePlanet.Game.waveCounter, direction);
+                eval(agent.agentType.drawFunction)(ctx, agent, x, y, FiercePlanet.Orientation.pieceWidth, FiercePlanet.Orientation.pieceHeight, newColor, Lifecycle.waveCounter, direction);
             } catch(e) {
-                eval(AgentTypes.CITIZEN_AGENT_TYPE.drawFunction)(ctx, agent, x, y, FiercePlanet.Orientation.pieceWidth, FiercePlanet.Orientation.pieceHeight, newColor, FiercePlanet.Game.waveCounter, direction);
+                eval(AgentTypes.CITIZEN_AGENT_TYPE.drawFunction)(ctx, agent, x, y, FiercePlanet.Orientation.pieceWidth, FiercePlanet.Orientation.pieceHeight, newColor, Lifecycle.waveCounter, direction);
             }
     
         }
@@ -1322,7 +1339,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         // Get co-ordinates
         var wx = agent.wanderX;
         var wy = agent.wanderY;
-        var __ret = this.getDrawingPosition(agent, FiercePlanet.Game.waveCounter);
+        var __ret = this.getDrawingPosition(agent, Lifecycle.waveCounter);
         var xPos = __ret.intX;
         var yPos = __ret.intY;
 
@@ -1351,9 +1368,9 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
             newColor = "f00";
 
         try {
-            eval(agent.agentType.drawFunction)(ctx, agent, x, y, FiercePlanet.Orientation.pieceWidth, FiercePlanet.Orientation.pieceHeight, newColor, FiercePlanet.Game.waveCounter, direction);
+            eval(agent.agentType.drawFunction)(ctx, agent, x, y, FiercePlanet.Orientation.pieceWidth, FiercePlanet.Orientation.pieceHeight, newColor, Lifecycle.waveCounter, direction);
         } catch(e) {
-            eval(AgentTypes.CITIZEN_AGENT_TYPE.drawFunction)(ctx, agent, x, y, FiercePlanet.Orientation.pieceWidth, FiercePlanet.Orientation.pieceHeight, newColor, FiercePlanet.Game.waveCounter, direction);
+            eval(AgentTypes.CITIZEN_AGENT_TYPE.drawFunction)(ctx, agent, x, y, FiercePlanet.Orientation.pieceWidth, FiercePlanet.Orientation.pieceHeight, newColor, Lifecycle.waveCounter, direction);
         }
     };
 
@@ -1377,7 +1394,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         // Get co-ordinates
         var wx = agent.wanderX;
         var wy = agent.wanderY;
-        var __ret = this.getDrawingPosition(agent, FiercePlanet.Game.waveCounter);
+        var __ret = this.getDrawingPosition(agent, Lifecycle.waveCounter);
         var xPos = __ret.intX;
         var yPos = __ret.intY;
 
@@ -1398,7 +1415,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         var newColor = "f00";
 
         if (agent.agentType.drawExpired)
-            agent.agentType.drawExpired(ctx, agent, x, y, FiercePlanet.Orientation.pieceWidth, FiercePlanet.Orientation.pieceHeight, newColor, FiercePlanet.Game.waveCounter, direction);
+            agent.agentType.drawExpired(ctx, agent, x, y, FiercePlanet.Orientation.pieceWidth, FiercePlanet.Orientation.pieceHeight, newColor, Lifecycle.waveCounter, direction);
 
         ctx.restore();
     };
@@ -1417,10 +1434,10 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
     
             if (World.settings.catastrophesVisible && FiercePlanet.Game.currentLevel.catastrophe != undefined) {
                 var catastrophe = FiercePlanet.Game.currentLevel.catastrophe;
-                if (catastrophe.notice.start <= FiercePlanet.Game.levelCounter && (catastrophe.start + catastrophe.duration) >= FiercePlanet.Game.levelCounter) {
+                if (catastrophe.notice.start <= Lifecycle.levelCounter && (catastrophe.start + catastrophe.duration) >= Lifecycle.levelCounter) {
                     FiercePlanet.Game.currentNotice = catastrophe.notice;
                 }
-                if (catastrophe.start <= FiercePlanet.levelCounter && (catastrophe.start + catastrophe.duration) >= FiercePlanet.Game.levelCounter) {
+                if (catastrophe.start <= FiercePlanet.levelCounter && (catastrophe.start + catastrophe.duration) >= Lifecycle.levelCounter) {
                     // Apply catastrophe effects
                     if (FiercePlanet.levelCounter >= (catastrophe.start + catastrophe.duration / 2)) {
                         catastrophe.strike();
@@ -1428,8 +1445,8 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
     
                     // Get effect dimensions
                     var increments = catastrophe.duration / FiercePlanet.Orientation.worldWidth;
-                    var leadIncrement = (FiercePlanet.Game.levelCounter - catastrophe.start) / increments * 2;
-                    var trailIncrement = ((catastrophe.start + catastrophe.duration) - FiercePlanet.Game.levelCounter) / increments * 2;
+                    var leadIncrement = (Lifecycle.levelCounter - catastrophe.start) / increments * 2;
+                    var trailIncrement = ((catastrophe.start + catastrophe.duration) - Lifecycle.levelCounter) / increments * 2;
                     var x = FiercePlanet.Orientation.worldWidth - leadIncrement;
                     var y = 0;
                     var w = trailIncrement;

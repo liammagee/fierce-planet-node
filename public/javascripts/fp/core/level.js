@@ -57,6 +57,7 @@ function Level(id) {
     this.waveAgents = [];
     this.currentAgents = [];
     this.currentAgentsMap = {};
+    this.expiredAgents = [];
 
     // Resource variables
     this.levelResources = [];
@@ -484,6 +485,15 @@ Level.prototype.addAgent = function(agent) {
     this.currentAgentsMap[agent.id] = agent;
 };
 
+/**
+ * Add agent
+ */
+Level.prototype.addExpiredAgent = function(agent, time) {
+    agent.alive = false;
+    agent.diedAt = time;
+    this.expiredAgents.push(agent);
+};
+
 
 /**
  *
@@ -534,6 +544,7 @@ Level.prototype.generateAgentAtPoint = function(agentType, x, y) {
 //            agent.setColor(colorScheme);
     agent.delay = parseInt(Math.random() * DEFAULT_SPEED * 5);
     agent.canCommunicateWithOtherAgents = (World.settings.agentsCanCommunicate);
+    agent.bornAt = (Lifecycle.levelCounter);
 
     // Reduce health of a random category
     if (World.settings.agentsHaveRandomInitialHealth) {

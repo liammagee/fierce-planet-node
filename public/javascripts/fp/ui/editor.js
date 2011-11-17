@@ -96,7 +96,7 @@ FiercePlanet.Editor = FiercePlanet.Editor || {};
         FiercePlanet.Console.minimise();
 
         // Initialise the game
-        FiercePlanet.Lifecycle._initialiseGame();
+        Lifecycle._initialiseGame();
     };
 
     /**

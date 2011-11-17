@@ -256,22 +256,22 @@ $(function() {
           FiercePlanet.ProfileUI.logout();
       }
       else if (command == 'play' || command == 'pause' || command == 'p') {
-          FiercePlanet.Lifecycle.playGame();
+          Lifecycle.playGame();
       }
       else if (command == 'draw' || command == 'd') {
           FiercePlanet.Drawing.drawGame();
       }
       else if (command == 'speed-up' || command == 'su') {
-          FiercePlanet.Lifecycle.speedUp();
+          Lifecycle.speedUp();
       }
       else if (command == 'slow-down' || command == 'sd') {
-          FiercePlanet.Lifecycle.slowDown();
+          Lifecycle.slowDown();
       }
       else if (command == 'new-game' || command == 'ng') {
-          FiercePlanet.Lifecycle.newGame();
+          Lifecycle.newGame();
       }
       else if (command == 'restart-level' || command == 'rl') {
-          FiercePlanet.Lifecycle.restartLevel();
+          Lifecycle.restartLevel();
       }
       else if (command == 'show-resources' || command == 'srg') {
           FiercePlanet.Dialogs.showResourceGallery();
@@ -339,7 +339,7 @@ $(function() {
           FiercePlanet.Drawing.resetView();
       }
       else if (command == 'debug' || command == 'd') {
-          FiercePlanet.Lifecycle.processAgents();
+          Lifecycle.processAgents();
       }
       else if (command == 'storyboard' || command == 'sb') {
           FiercePlanet.Storyboard.showStoryboard();
@@ -409,7 +409,7 @@ $(function() {
                       // Handle resource drag and drop and click interactions
                       FiercePlanet.ResourceUI.setupResourceInteraction();
 
-              FiercePlanet.Lifecycle.newLevel();
+              Lifecycle.newLevel();
           }
           catch (e) {
               jqconsole.Write(e + '\n')
@@ -571,7 +571,7 @@ $(function() {
                 jqconsole.zone.agentSetup = 1;
             }
             else if (command == 'start') {
-                FiercePlanet.Lifecycle.newWave();
+                Lifecycle.newWave();
             }
             else if (command == 'help') {
                 showAgentHelp();

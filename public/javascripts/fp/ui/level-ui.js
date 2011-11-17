@@ -22,7 +22,7 @@ FiercePlanet.LevelUI = FiercePlanet.LevelUI || {};
      * Show level editor
      */
     this.listLevels = function() {
-        FiercePlanet.Lifecycle.pauseGame();
+        Lifecycle.pauseGame();
         $('#level-list-tabs').tabs();
         $('#new-level').click(FiercePlanet.LevelUI.newLevel);
         FiercePlanet.LevelUI.ajaxListLevels();
@@ -32,7 +32,7 @@ FiercePlanet.LevelUI = FiercePlanet.LevelUI || {};
      * Prepare to create a new level
      */
     this.newLevel = function() {
-        FiercePlanet.Lifecycle.pauseGame();
+        Lifecycle.pauseGame();
         FiercePlanet.Dialogs.levelEditorDialog.dialog('close');
 
         // Create new level
@@ -58,7 +58,7 @@ FiercePlanet.LevelUI = FiercePlanet.LevelUI || {};
      * Shows the level properties dialog
      */
     this.showLevelProperties = function() {
-        FiercePlanet.Lifecycle.pauseGame();
+        Lifecycle.pauseGame();
         FiercePlanet.LevelUI.prepareLevelPropertiesForm();
         FiercePlanet.Dialogs.editPropertiesDialog.dialog('open');
     };
@@ -236,7 +236,7 @@ FiercePlanet.LevelUI = FiercePlanet.LevelUI || {};
                 // Remember this level, along with other data
                 FiercePlanet.ProfileUI.storeProfileData();
                 FiercePlanet.Dialogs.levelGalleryDialog.dialog('close');
-                FiercePlanet.Lifecycle.newLevel();
+                Lifecycle.newLevel();
             }
         });
     };
@@ -259,7 +259,7 @@ FiercePlanet.LevelUI = FiercePlanet.LevelUI || {};
         // Remember this level, along with other data
         FiercePlanet.ProfileUI.storeProfileData();
         FiercePlanet.Dialogs.levelGalleryDialog.dialog('close');
-        FiercePlanet.Lifecycle.newLevel();
+        Lifecycle.newLevel();
     };
 
 }).apply(FiercePlanet.LevelUI);

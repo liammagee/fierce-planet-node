@@ -50,7 +50,7 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
             var notice = FiercePlanet.Game.currentNotice;
             var s = notice.start;
             var d = notice.duration;
-            if (s > FiercePlanet.Game.levelCounter || (s + d) < FiercePlanet.Game.levelCounter)
+            if (s > Lifecycle.levelCounter || (s + d) < Lifecycle.levelCounter)
                 return;
             var x = notice.x;
             var y = notice.y;
@@ -229,26 +229,28 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
             }
         }
         // Make the current profile's capabilities active
-        for (var i = 0; i < FiercePlanet.Game.currentProfile.capabilities.length; i++) {
-            var capability = $.trim(FiercePlanet.Game.currentProfile.capabilities[i]);
-            try {
-                var el = $('#' + capability);
-                el.removeClass("inactive");
-                $('#' + el.id).draggable({
-    //                    appendTo: agentCanvas,
-    //                    containment: agentCanvas,
-    //                    grid: [FiercePlanet.Orientation.cellWidth, FiercePlanet.Orientation.cellHeight],
-                    cursor: "pointer",
-                    helper: "clone",
-                    start: function(event, ui) {
+        if (FiercePlanet.Game.currentProfile.capabilities) {
+            for (var i = 0; i < FiercePlanet.Game.currentProfile.capabilities.length; i++) {
+                var capability = $.trim(FiercePlanet.Game.currentProfile.capabilities[i]);
+                try {
+                    var el = $('#' + capability);
+                    el.removeClass("inactive");
+                    $('#' + el.id).draggable({
+        //                    appendTo: agentCanvas,
+        //                    containment: agentCanvas,
+        //                    grid: [FiercePlanet.Orientation.cellWidth, FiercePlanet.Orientation.cellHeight],
+                        cursor: "pointer",
+                        helper: "clone",
+                        start: function(event, ui) {
+                            FiercePlanet.Game.currentResourceId = this.id;
+                        }
+                    });
+                    $('#' + el.id).click(function() {
                         FiercePlanet.Game.currentResourceId = this.id;
-                    }
-                });
-                $('#' + el.id).click(function() {
-                    FiercePlanet.Game.currentResourceId = this.id;
-                });
-            }
-            catch (err) {
+                    });
+                }
+                catch (err) {
+                }
             }
         }
     };

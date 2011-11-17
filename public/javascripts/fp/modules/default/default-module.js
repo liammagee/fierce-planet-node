@@ -20,9 +20,9 @@ FiercePlanet.PresetLevels.MAX_DEFAULT_LEVELS = 1000;
         var module = new Module();
         module.id = 'Default';
 
-        module.registerLevelSet(FiercePlanet.DefaultModule.Basic);
-        module.registerLevelSet(FiercePlanet.DefaultModule.Additional);
-        module.registerLevelSet(FiercePlanet.DefaultModule.Experimental);
+        module.registerCampaign(FiercePlanet.DefaultModule.Basic);
+        module.registerCampaign(FiercePlanet.DefaultModule.Additional);
+        module.registerCampaign(FiercePlanet.DefaultModule.Experimental);
 
         FiercePlanet.DefaultModule.AgentTypes.init();
 //        module.registerAgentSet(FiercePlanet.DefaultModule.AgentTypes);

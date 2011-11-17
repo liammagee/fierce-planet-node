@@ -117,19 +117,6 @@ Memory.prototype.addVisit = function(agentID, age) {
     this.mostRecentVisit = age;
     this.visits++;
 };
-//Memory.prototype.getAgentID = function() { return this.agentID; };
-//Memory.prototype.getAge = function() { return this.age; };
-//Memory.prototype.setAge = function(age) { this.age = age; };
-//Memory.prototype.getX = function() { return this.x; };
-//Memory.prototype.setX = function(x) { this.x = x; };
-//Memory.prototype.getY = function() { return this.y; };
-//Memory.prototype.setY = function(y) { this.y = y; };
-//Memory.prototype.getVisits = function() { return this.visits; };
-//Memory.prototype.setVisits = function(visits) { this.visits = visits; };
-//Memory.prototype.getMostRecentVisit = function() { return this.mostRecentVisit; };
-//Memory.prototype.setMostRecentVisit = function(mostRecentVisit) { this.mostRecentVisit = mostRecentVisit; };
-//Memory.prototype.getDistanceFromLastUntriedPath = function() { return this.distanceFromLastUntriedPath;  };
-//Memory.prototype.setDistanceFromLastUntriedPath = function(distanceFromLastUntriedPath) { this.distanceFromLastUntriedPath = distanceFromLastUntriedPath;  };
 
 
 MemoryOfAgent.prototype = new Memory();
@@ -199,6 +186,9 @@ function Agent(agentType, x, y) {
 
     // Current age of the agent
     this.age = 0;
+    this.bornAt = 0;
+    this.diedAt = 0;
+    this.alive = true;
 
     // Position-related
     this.x = x;

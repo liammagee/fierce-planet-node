@@ -23,19 +23,22 @@ FiercePlanet.ProfileUI = FiercePlanet.ProfileUI || {};
      * Logs out the current user
      */
     this.getProfile = function() {
-        $.get('/profile/get', function(res) {
-            if (res) {
-                FiercePlanet.Game.currentProfile = FiercePlanet.Utils.makeFromJSONObject(res.profile, Profile.prototype);
-                FiercePlanet.Game.currentProfile.saved = true;
+        try {
+            $.get('/profile/get', function(res) {
+                if (res && res.currentScore) {
+                    FiercePlanet.Game.currentProfile = FiercePlanet.Utils.makeFromJSONObject(res.profile, Profile.prototype);
+                    FiercePlanet.Game.currentProfile.saved = true;
 
-                // Refresh the capabilities list
-                FiercePlanet.GeneralUI.refreshSwatch();
+                    // Refresh the capabilities list
+                    FiercePlanet.GeneralUI.refreshSwatch();
 
-                // Handle resource drag and drop and click interactions
-                FiercePlanet.ResourceUI.setupResourceInteraction();
+                    // Handle resource drag and drop and click interactions
+                    FiercePlanet.ResourceUI.setupResourceInteraction();
 
-            }
-        });
+                }
+            });
+        }
+        catch (e) {}
     };
     
     /**

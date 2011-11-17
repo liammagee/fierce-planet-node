@@ -34,7 +34,6 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
     // Level editor dialogs
     this.designFeaturesDialog = null;
     this.editPropertiesDialog = null;
-    this.graphDialog = null;
 
     /**
      * Calculates the left position of the 'world' element
@@ -97,7 +96,7 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
                         // Animation effect
                         // For spinning, try: http://www.zachstronaut.com/posts/2009/08/07/jquery-animate-css-rotate-scale.html
                         $( this ).dialog( "close" );
-                        FiercePlanet.Lifecycle.startLevel();
+                        Lifecycle.startLevel();
                     },
                     "Cancel": function() {
                         $( this ).dialog( "close" );
@@ -119,7 +118,7 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
                 title: 'Level Complete!',
                 buttons: {
                     "Next Level": function() {
-                        FiercePlanet.Lifecycle.newLevel();
+                        Lifecycle.newLevel();
                         $( this ).dialog( "close" );
                     },
                     "Cancel": function() {
@@ -139,11 +138,11 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
                 title: 'Fierce Planet Complete!',
                 buttons: {
                     "Bonus Level": function() {
-                        FiercePlanet.Lifecycle.newLevel();
+                        Lifecycle.newLevel();
                         $( this ).dialog( "close" );
                     },
                     "New Game": function() {
-                        FiercePlanet.Lifecycle.newGame();
+                        Lifecycle.newGame();
                         $( this ).dialog( "close" );
                     },
                     "Cancel": function() {
@@ -164,11 +163,11 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
                 title: 'Game Over!',
                 buttons: {
                     "Restart Level": function() {
-                        FiercePlanet.Lifecycle.restartLevel();
+                        Lifecycle.restartLevel();
                         $( this ).dialog( "close" );
                     },
                     "New Game": function() {
-                        FiercePlanet.Lifecycle.newGame();
+                        Lifecycle.newGame();
                         $( this ).dialog( "close" );
                     }
                 }
@@ -225,7 +224,7 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
                 title: 'Level Gallery',
                 buttons: {
                     "Open level": function() {
-                        FiercePlanet.Lifecycle.newLevel();
+                        Lifecycle.newLevel();
                         $( this ).dialog( "close" );
                     },
                     "Cancel": function() {
@@ -300,7 +299,7 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
                 buttons: {
                     "Login": function() {
                         $( this ).dialog( "close" );
-                        FiercePlanet.Lifecycle.startLevel();
+                        Lifecycle.startLevel();
                     },
                     "Cancel": function() {
                         $( this ).dialog( "close" );
@@ -365,21 +364,6 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
 
 
 
-        this.graphDialog = $('#graph-dialog')
-            .dialog({
-               position: [1100, 35],
-               width: 550,
-               height: 560,
-                autoOpen: false,
-                modal: false,
-                title: 'Fierce Planet Graph',
-                buttons: {
-                    "Cancel": function() {
-                        $( this ).dialog( "close" );
-                    }
-                }
-
-            });
 
         this.designFeaturesDialog = $('#level-features')
             .dialog({
@@ -479,13 +463,10 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
             if (confirm("Stop current game and begin the tutorial?")) {
                 FiercePlanet.Game.currentLevelNumber = 0;
                 FiercePlanet.Game.currentLevelPreset = true;
-                FiercePlanet.Lifecycle.restartLevel();
+                Lifecycle.restartLevel();
             }
         });
 
-
-        // Set up tabs here
-        $("#graph-area").tabs();
 
     };
 
@@ -570,7 +551,7 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
      * Show the resource gallery, and allow the user to pick from a range of capabilities
      */
     this.showResourceGallery = function() {
-        FiercePlanet.Lifecycle.pauseGame();
+        Lifecycle.pauseGame();
 
         $('#current-profile-class')[0].innerHTML = FiercePlanet.Game.currentProfile.profileClass;
         $('#current-credits')[0].innerHTML = FiercePlanet.Game.currentProfile.credits;
@@ -674,7 +655,7 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
      * Shows the Fierce Planet settings
      */
     this.showSettings = function() {
-        FiercePlanet.Lifecycle.pauseGame();
+        Lifecycle.pauseGame();
         FiercePlanet.Dialogs.settingsDialog.dialog('open');
     };
 
@@ -682,7 +663,7 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
      * Shows the Fierce Planet level gallery
      */
     this.showLevelGallery = function() {
-        FiercePlanet.Lifecycle.pauseGame();
+        Lifecycle.pauseGame();
         FiercePlanet.Dialogs.levelGalleryDialog.dialog('open');
     };
 
@@ -691,7 +672,7 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
      * Shows the Fierce Planet credits
      */
     this.showCredits = function() {
-        FiercePlanet.Lifecycle.pauseGame();
+        Lifecycle.pauseGame();
         FiercePlanet.Dialogs.creditsDialog.dialog('open');
     };
 
@@ -699,7 +680,7 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
      * Shows the Fierce Planet login
      */
     this.showLogin = function() {
-        FiercePlanet.Lifecycle.pauseGame();
+        Lifecycle.pauseGame();
         FiercePlanet.Dialogs.loginDialog.dialog('open');
     };
 

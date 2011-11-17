@@ -51,11 +51,11 @@ FiercePlanet.Recording = FiercePlanet.Recording || {};
      * Replay the game
      */
     this.replayWorld = function() {
-            FiercePlanet.Lifecycle._stopAgents();
+            Lifecycle._stopAgents();
             FiercePlanet.Game.existingCurrentLevel = FiercePlanet.Game.currentLevel;
-            clearInterval(FiercePlanet.Game.agentTimerId);
+            clearInterval(Lifecycle.agentTimerId);
             FiercePlanet.Game.globalRecordingCounter = 0;
-            FiercePlanet.Game.waveCounter = 0;
+            Lifecycle.waveCounter = 0;
             FiercePlanet.Drawing.drawGame();
             FiercePlanet.Game.inPlay = true;
 
@@ -67,7 +67,7 @@ FiercePlanet.Recording = FiercePlanet.Recording || {};
      * Begin the replay of the game, by adding a new interval
      */
     this.replayStart = function() {
-            FiercePlanet.Game.agentTimerId = setInterval("FiercePlanet.Recording.replayStep()", FiercePlanet.Game.interval * 2);
+            Lifecycle.agentTimerId = setInterval("FiercePlanet.Recording.replayStep()", Lifecycle.interval * 2);
     };
 
     /**
@@ -88,7 +88,7 @@ FiercePlanet.Recording = FiercePlanet.Recording || {};
                     // Local option
 //                FiercePlanet.Game.currentLevel = level;
                     FiercePlanet.Game.globalRecordingCounter++;
-                    FiercePlanet.Game.waveCounter++;
+                    Lifecycle.waveCounter++;
                     FiercePlanet.Drawing.clearCanvas('#resourceCanvas');
                     FiercePlanet.Drawing.clearCanvas('#scrollingCanvas');
                     FiercePlanet.Drawing.clearCanvas('#noticeCanvas');
@@ -96,10 +96,11 @@ FiercePlanet.Recording = FiercePlanet.Recording || {};
 
                     FiercePlanet.Drawing.drawEntryPoints();
                     FiercePlanet.Drawing.drawExitPoints();
-                    FiercePlanet.Drawing.drawResources();
                     FiercePlanet.Drawing.drawScrollingLayer();
         //            FiercePlanet.drawScoreboard();
-                    FiercePlanet.Drawing.drawAgents();
+                    FiercePlanet.Drawing.drawResourceAndAgents();
+//                    FiercePlanet.Drawing.drawResources();
+//                    FiercePlanet.Drawing.drawAgents();
                 }
                 catch(err) {
 //                console.log(err);
@@ -112,7 +113,7 @@ FiercePlanet.Recording = FiercePlanet.Recording || {};
      * Stop the replay of a recorded game
      */
     this.replayStop = function () {
-            FiercePlanet.Game.agentTimerId = clearInterval(FiercePlanet.Game.agentTimerId);
+            Lifecycle.agentTimerId = clearInterval(Lifecycle.agentTimerId);
             FiercePlanet.Game.globalRecordingCounter = 0;
             FiercePlanet.Game.currentLevel = FiercePlanet.existingCurrentLevel;
             FiercePlanet.Game.inPlay = false;

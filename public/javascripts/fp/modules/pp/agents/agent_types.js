@@ -20,7 +20,7 @@ FiercePlanet.PredatorPreyModule.AgentTypes = FiercePlanet.PredatorPreyModule.Age
 (function() {
 
     this.init = function() {
-        AgentTypes.CITIZEN_AGENT_TYPE = new AgentType("Citizen", "000", World.resourceCategories);
+        AgentTypes.CITIZEN_AGENT_TYPE = new AgentType("Citizen", "#000", World.resourceCategories);
         AgentTypes.CITIZEN_AGENT_TYPE.isHitable = true;
         AgentTypes.CITIZEN_AGENT_TYPE.drawFunction = (function(ctx, agent, x, y, pieceWidth, pieceHeight, newColor, counter, direction) {
 
@@ -181,7 +181,7 @@ FiercePlanet.PredatorPreyModule.AgentTypes = FiercePlanet.PredatorPreyModule.Age
             }
         };
 
-        AgentTypes.PREDATOR_AGENT_TYPE = new AgentType("Predator", "fbe53b", World.resourceCategories);
+        AgentTypes.PREDATOR_AGENT_TYPE = new AgentType("Predator", "#fbe53b", World.resourceCategories);
 //        AgentTypes.PREDATOR_AGENT_TYPE.canHit = (true);
         AgentTypes.PREDATOR_AGENT_TYPE.drawFunction = (function(ctx, agent, intX, intY, pieceWidth, pieceHeight, newColor, counter, direction) {
             if (pieceWidth < (8 ) || pieceHeight < (8 )) {

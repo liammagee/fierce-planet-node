@@ -186,7 +186,7 @@ FiercePlanet.Utils = FiercePlanet.Utils || {};
 
         FiercePlanet.Utils.processSettings();
 
-        FiercePlanet.Lifecycle.restartLevel();
+        Lifecycle.restartLevel();
     };
 
 
@@ -198,7 +198,7 @@ FiercePlanet.Utils = FiercePlanet.Utils || {};
 
         // Open extended area if we are showing the graph
         if (World.settings.showGraph) {
-            FiercePlanet.Dialogs.graphDialog.dialog('open');
+            FiercePlanet.Graph.openDialog();
             FiercePlanet.Graph.drawGraph();
         }
         else {
@@ -254,6 +254,7 @@ FiercePlanet.Utils = FiercePlanet.Utils || {};
      * Makes a level from a JSON object
      */
     this.makeFromJSONObject = function(obj, prototype) {
+        var obj = {};
         for (var key in prototype) {
             if (typeof(prototype[key]) == "function") {
                 obj[key] = prototype[key];

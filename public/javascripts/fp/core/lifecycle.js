@@ -8,54 +8,69 @@
 
 
 
-var FiercePlanet = FiercePlanet || {};
-
 
 
 /**
  * @namespace Contains lifecycle functions
  */
-FiercePlanet.Lifecycle = FiercePlanet.Lifecycle || {};
+var Lifecycle = Lifecycle || {};
 
 
 (function() {
+    /** @constant The time to wait before starting the first wave */
+    this.NEW_LEVEL_DELAY = 3000;
+    /** @constant The time to wait between waves */
+    this.NEW_WAVE_DELAY = 200;
+    this.levelDelayCounter = 0;
+    this.waveDelayCounter = 0;
+
+    this.waveCounter = 0;
+    this.levelCounter = 0;
+    this.worldCounter = 0;
+
+    this.resourceRecoveryCycle = 5;
+    this.interval = 40;
+    this.agentTimerId = 0;
+
+    this.preProcessCallback = null;
+    this.postProcessCallback = null;
 
     /**
      * Core logic loop: processes agents.
      */
     this.processAgents = function() {
         var recordableChangeMade = false;
+//
+//        // Draw the scrolling layer
+//        FiercePlanet.Drawing.drawScrollingLayer();
+//
+//        // Draw any notices
+//        // Drawing
+//        if (World.settings.noticesVisible && FiercePlanet.Game.currentNotice != undefined) {
+//            FiercePlanet.Drawing.drawNotice(FiercePlanet.Game.currentNotice);
+//        }
 
-        // Draw the scrolling layer
-        FiercePlanet.Drawing.drawScrollingLayer();
-
-        // Draw any notices
-        if (World.settings.noticesVisible && FiercePlanet.Game.currentNotice != undefined) {
-            FiercePlanet.Drawing.drawNotice(FiercePlanet.Game.currentNotice);
-        }
+        // Invoke pre process callback
+        Lifecycle.preProcessCallback();
 
         // Delay, until we are ready for the first wave
-        if (FiercePlanet.Game.levelDelayCounter < FiercePlanet.Game.NEW_LEVEL_DELAY / FiercePlanet.Game.interval) {
-            FiercePlanet.Game.levelDelayCounter++;
+        if (Lifecycle.levelDelayCounter < Lifecycle.NEW_LEVEL_DELAY / Lifecycle.interval) {
+            Lifecycle.levelDelayCounter++;
             return;
         }
 
         // Delay, until we are ready for a new wave
-        if (FiercePlanet.Game.waveDelayCounter < FiercePlanet.Game.NEW_WAVE_DELAY / FiercePlanet.Game.interval) {
-            FiercePlanet.Game.waveDelayCounter++;
+        if (Lifecycle.waveDelayCounter < Lifecycle.NEW_WAVE_DELAY / Lifecycle.interval) {
+            Lifecycle.waveDelayCounter++;
             return;
         }
 
         // Increment counters
-        FiercePlanet.Game.waveCounter++;
-        FiercePlanet.Game.levelCounter++;
-        FiercePlanet.Game.gameCounter++;
+        Lifecycle.waveCounter++;
+        Lifecycle.levelCounter++;
+        Lifecycle.worldCounter++;
 
 
-        if (FiercePlanet.Game.nullifiedAgents)
-            FiercePlanet.Drawing.clearAgentGroup(FiercePlanet.Game.nullifiedAgents);
-        FiercePlanet.Game.nullifiedAgents = [];
-        FiercePlanet.Drawing.clearAgents();
         var nullifiedAgents = [];
         var citizenCount = 0;
         var agents = FiercePlanet.Game.currentLevel.currentAgents;
@@ -65,7 +80,7 @@ FiercePlanet.Lifecycle = FiercePlanet.Lifecycle || {};
             var agent = agents[i];
             var speed = agent.speed;
             var countDown = (agent.countdownToMove) % speed;
-            if (FiercePlanet.Game.waveCounter >= agent.delay && countDown % speed == 0) {
+            if (Lifecycle.waveCounter >= agent.delay && countDown % speed == 0) {
                 agent.memorise(FiercePlanet.Game.currentLevel);
             }
         }
@@ -74,23 +89,13 @@ FiercePlanet.Lifecycle = FiercePlanet.Lifecycle || {};
         var options = {"withNoRepeat": true, "withNoCollision": false};
         for (var i = 0; i < agents.length; i++) {
             var agent = agents[i];
+            citizenCount++;
 
-            // Don't process agents we want to block
-            /*
-            if (! World.settings.rivalsVisible && agent.agentType == AgentTypes.RIVAL_AGENT_TYPE)
-                continue;
-            if (! World.settings.predatorsVisible && agent.agentType == AgentTypes.PREDATOR_AGENT_TYPE)
-                continue;
-            */
-
-//            if (agent.agentType == AgentTypes.CITIZEN_AGENT_TYPE)
-                citizenCount++;
-
-            if (FiercePlanet.Game.waveCounter < agent.delay)
+            if (Lifecycle.waveCounter < agent.delay)
                 continue;
 
             var speed = agent.speed;
-            var countDownTest = (FiercePlanet.Game.waveCounter - agent.delay) % speed;
+            var countDownTest = (Lifecycle.waveCounter - agent.delay) % speed;
             var countDown = (agent.countdownToMove) % speed;
 
             if (countDown == 0) {
@@ -100,27 +105,24 @@ FiercePlanet.Lifecycle = FiercePlanet.Lifecycle || {};
                     if (FiercePlanet.Game.currentLevel.isExitPoint(agent.x, agent.y)) {
                         FiercePlanet.Game.currentProfile.processSavedAgent(FiercePlanet.Game.currentWave);
                         nullifiedAgents.push(i);
-
-                        FiercePlanet.Drawing.drawScore();
-                        FiercePlanet.Drawing.drawResourcesInStore();
-                        FiercePlanet.Drawing.drawSaved();
                     }
 //                    }
 
                 // Do for all agents
                 agent.evaluateMove(FiercePlanet.Game.currentLevel, options);
 
+                // Reset countdown
                 agent.resetCountdownToMove();
 
+                // Adjust speed
                 if (!FiercePlanet.Game.currentLevel.noSpeedChange && World.settings.agentsCanAdjustSpeed)
                     agent.adjustSpeed();
 
+                // Adjust wander
                 if (!FiercePlanet.Game.currentLevel.noWander && World.settings.agentsCanAdjustWander) {
                     // Make sure agents don't wander over boxes in 3D view
                     if (World.settings.showResourcesAsBoxes && World.settings.skewTiles) {
                         agent.adjustWander(FiercePlanet.Orientation.cellWidth, 0);
-//                                agent.wanderX = Math.abs(agent.wanderX);
-//                                agent.wanderY = Math.abs(agent.wanderY);
                     }
                     else {
                         agent.adjustWander(FiercePlanet.Orientation.cellWidth, FiercePlanet.Orientation.pieceWidth);
@@ -135,11 +137,9 @@ FiercePlanet.Lifecycle = FiercePlanet.Lifecycle || {};
                     agent.adjustGeneralHealth(World.settings.agentCostPerMove);
                 if (agent.health <= 0 && !World.settings.godMode) {
                     nullifiedAgents.push(i);
-                    FiercePlanet.Game.nullifiedAgents.push(agent);
-                    FiercePlanet.Drawing.drawExpiredAgent(agent);
+                    FiercePlanet.Game.currentLevel.addExpiredAgent(agent, Lifecycle.levelCounter);
                     if (agent.agentType == AgentTypes.CITIZEN_AGENT_TYPE)
                         FiercePlanet.Game.currentProfile.currentLevelExpired++;
-                   FiercePlanet.Drawing.drawExpired();
                 }
                 else {
                     agent.update(FiercePlanet.Game.currentLevel);
@@ -148,52 +148,17 @@ FiercePlanet.Lifecycle = FiercePlanet.Lifecycle || {};
             agent.incrementCountdownToMove();
         }
 
-        // Broadcast moves - TODO: Move elsewhere
-        if (World.settings.sendEventsToServer) {
-//    if (World.settings.sendEventsToServer && !World.settings.spectate) {
-            var simpleAgents = [];
-            agents.forEach(function(agent) {
-                var simpleAgent = new SimpleAgent(AgentTypes.RIVAL_AGENT_TYPE, agent.x, agent.y, agent.color, agent.speed, agent.health, agent.wanderX, agent.wanderY, agent.lastMemory, agent.delay, agent.countdownToMove, agent.healthCategoryStats);
-//            var simpleAgent = $.extend(true, {}, agent);
-//            simpleAgent.wipeMemory();
-                simpleAgents.push(simpleAgent);
-            });
-            FiercePlanet.Comms.notifyServerOfEvent('agents', simpleAgents);
-        }
-
-        //
-        if (FiercePlanet.Game.currentProfile.currentLevelExpired >= FiercePlanet.Game.currentLevel.expiryLimit) {
-            return FiercePlanet.Lifecycle.gameOver();
-        }
+        FiercePlanet.Game.currentLevel.recoverResources();
 
         // Check whether we have too many
         for (var i = nullifiedAgents.length - 1; i >= 0; i-= 1) {
-            FiercePlanet.Game.currentLevel.currentAgents.splice(nullifiedAgents[i], 1);
+            var nullIndex = nullifiedAgents[i];
+            var nullifiedAgent = FiercePlanet.Game.currentLevel.currentAgents[nullIndex];
+            FiercePlanet.Game.currentLevel.currentAgents.splice(nullIndex, 1);
         }
 
-        // No agents left? End of wave
-        if (citizenCount == 0) {
-            // Start a new wave
-            if (FiercePlanet.Game.currentWave < FiercePlanet.Game.currentLevel.waveNumber) {
-                FiercePlanet.Lifecycle.completeWave();
-                FiercePlanet.Lifecycle.newWave();
-            }
-            else if (FiercePlanet.Game.currentLevel.isPresetLevel && ! FiercePlanet.Game.currentLevel.isTerminalLevel) {
-                FiercePlanet.Lifecycle.completeLevel();
-                FiercePlanet.Game.levelDelayCounter = 0;
-            }
-            else {
-                return FiercePlanet.Lifecycle.completeGame();
-            }
-        }
-        else {
-            FiercePlanet.Game.currentLevel.recoverResources();
-            FiercePlanet.Drawing.drawResourceAndAgents();
-        }
-
-        // Post-move processing
-        if (World.settings.recording)
-            FiercePlanet.Recording.recordWorld();
+        // Invoke pre process callback
+        Lifecycle.postProcessCallback();
     };
 
 
@@ -204,8 +169,8 @@ FiercePlanet.Lifecycle = FiercePlanet.Lifecycle || {};
         if (FiercePlanet.Game.currentLevelPreset)
             FiercePlanet.Game.currentLevelNumber = 1;
         FiercePlanet.Game.currentProfile.resetScores();
-        FiercePlanet.Game.gameCounter = 0;
-        FiercePlanet.Lifecycle.newLevel();
+        Lifecycle.worldCounter = 0;
+        Lifecycle.newLevel();
     };
 
 
@@ -214,8 +179,8 @@ FiercePlanet.Lifecycle = FiercePlanet.Lifecycle || {};
      */
     this.newLevel = function() {
         FiercePlanet.Game.inDesignMode = false;
-        FiercePlanet.Game.levelDelayCounter = 0;
-        FiercePlanet.Game.levelCounter = 0;
+        Lifecycle.levelDelayCounter = 0;
+        Lifecycle.levelCounter = 0;
         FiercePlanet.Game.maxLevelMoves = 0;
         FiercePlanet.Game.currentProfile.updateScore();
 //    if (FiercePlanet.Game.currentLevel != undefined)
@@ -224,7 +189,7 @@ FiercePlanet.Lifecycle = FiercePlanet.Lifecycle || {};
         FiercePlanet.Game.recordedLevels = [];
         FiercePlanet.Utils.bindVariables();
 
-        FiercePlanet.Lifecycle._initialiseGame();
+        Lifecycle._initialiseGame();
 
         FiercePlanet.Game.currentNotice = FiercePlanet.Game.currentLevel.tip;
 //        $("#notifications").toggle(World.settings.statusBarVisible);
@@ -234,7 +199,7 @@ FiercePlanet.Lifecycle = FiercePlanet.Lifecycle || {};
         if (! World.settings.hideLevelInfo)
             FiercePlanet.GeneralUI.levelInfo();
         else
-            FiercePlanet.Lifecycle.startLevel();
+            Lifecycle.startLevel();
     };
 
 
@@ -246,7 +211,7 @@ FiercePlanet.Lifecycle = FiercePlanet.Lifecycle || {};
         FiercePlanet.Game.currentProfile.revertScore();
 
         // Start a new level
-        FiercePlanet.Lifecycle.newLevel();
+        Lifecycle.newLevel();
     };
 
 
@@ -261,7 +226,7 @@ FiercePlanet.Lifecycle = FiercePlanet.Lifecycle || {};
 
         FiercePlanet.Game.currentWave = 1;
         FiercePlanet.Game.numAgents = FiercePlanet.Game.currentLevel.initialAgentNumber;
-        FiercePlanet.Lifecycle._startAudio();
+        Lifecycle._startAudio();
         FiercePlanet.Drawing.animateLevel();
         // Start a new level
         if (World.settings.firstPerson) {
@@ -276,7 +241,7 @@ FiercePlanet.Lifecycle = FiercePlanet.Lifecycle || {};
         }
         else {
             console.log('starting level')
-            FiercePlanet.Lifecycle.newWave();
+            Lifecycle.newWave();
         }
     };
 
@@ -285,7 +250,7 @@ FiercePlanet.Lifecycle = FiercePlanet.Lifecycle || {};
      */
     this.newWave = function() {
         FiercePlanet.Game.maxWaveMoves = 0;
-        FiercePlanet.Game.waveCounter = 0;
+        Lifecycle.waveCounter = 0;
         FiercePlanet.Game.waveDelayCounter = 0;
         FiercePlanet.Game.currentProfile.currentLevelSavedThisWave = 0;
 
@@ -308,7 +273,7 @@ FiercePlanet.Lifecycle = FiercePlanet.Lifecycle || {};
         FiercePlanet.Drawing.drawExitPoints();
         FiercePlanet.Game.eventTarget.fire(new Event("game", this, "newWave", $fp.levelCounter, FiercePlanet.Game.currentLevel));
 
-        FiercePlanet.Lifecycle._startAgents();
+        Lifecycle._startAgents();
     };
 
 
@@ -318,7 +283,7 @@ FiercePlanet.Lifecycle = FiercePlanet.Lifecycle || {};
     this.completeWave = function() {
         FiercePlanet.Game.currentWave++;
         FiercePlanet.Game.numAgents++;
-        FiercePlanet.Lifecycle._finaliseGame();
+        Lifecycle._finaliseGame();
     };
 
 
@@ -331,8 +296,8 @@ FiercePlanet.Lifecycle = FiercePlanet.Lifecycle || {};
         FiercePlanet.Game.currentProfile.compileProfileStats(FiercePlanet.Game.currentLevel);
         if (FiercePlanet.Game.currentLevel.isPresetLevel)
             FiercePlanet.Game.currentLevelNumber++;
-        FiercePlanet.Lifecycle._stopAudio();
-        FiercePlanet.Lifecycle._finaliseGame();
+        Lifecycle._stopAudio();
+        Lifecycle._finaliseGame();
         FiercePlanet.Dialogs.showCompleteLevelDialog();
     };
 
@@ -344,8 +309,8 @@ FiercePlanet.Lifecycle = FiercePlanet.Lifecycle || {};
         if (FiercePlanet.Game.currentLevel.teardown)
             FiercePlanet.Game.currentLevel.teardown();
         FiercePlanet.Game.currentProfile.compileProfileStats(FiercePlanet.Game.currentLevel);
-        FiercePlanet.Lifecycle._stopAudio();
-        FiercePlanet.Lifecycle._finaliseGame();
+        Lifecycle._stopAudio();
+        Lifecycle._finaliseGame();
         FiercePlanet.Dialogs.showCompleteGameDialog();
     };
 
@@ -357,8 +322,8 @@ FiercePlanet.Lifecycle = FiercePlanet.Lifecycle || {};
         if (FiercePlanet.Game.currentLevel.teardown)
             FiercePlanet.Game.currentLevel.teardown();
         FiercePlanet.Game.currentProfile.revertScore();
-        FiercePlanet.Lifecycle._stopAudio();
-        FiercePlanet.Lifecycle._finaliseGame();
+        Lifecycle._stopAudio();
+        Lifecycle._finaliseGame();
         FiercePlanet.Dialogs.showGameOverDialog();
     };
 
@@ -368,19 +333,19 @@ FiercePlanet.Lifecycle = FiercePlanet.Lifecycle || {};
      */
     this.playGame = function() {
         if (FiercePlanet.Game.inPlay) {
-            FiercePlanet.Lifecycle.pauseGame();
+            Lifecycle.pauseGame();
         }
         else {
             if (World.settings.sendEventsToServer) {
                 FiercePlanet.Comms.notifyServerOfEvent("play", null);
             }
-            FiercePlanet.Lifecycle._startAudio();
+            Lifecycle._startAudio();
             $('#playAgents').removeClass('pausing');
             $('#playAgents').addClass('playing');
-            if (FiercePlanet.Game.waveCounter == 0)
-                FiercePlanet.Lifecycle.newWave();
+            if (Lifecycle.waveCounter == 0)
+                Lifecycle.newWave();
             else
-                FiercePlanet.Lifecycle._startAgents();
+                Lifecycle._startAgents();
         }
     };
 
@@ -395,8 +360,8 @@ FiercePlanet.Lifecycle = FiercePlanet.Lifecycle || {};
             FiercePlanet.Comms.notifyServerOfEvent("pause", null);
         }
 
-        FiercePlanet.Lifecycle._stopAudio();
-        FiercePlanet.Lifecycle._stopAgents();
+        Lifecycle._stopAudio();
+        Lifecycle._stopAgents();
     };
 
 
@@ -404,12 +369,12 @@ FiercePlanet.Lifecycle = FiercePlanet.Lifecycle || {};
      * Slows down the rate of processing agents
      */
     this.slowDown = function() {
-        if (FiercePlanet.Game.interval < 10)
-            FiercePlanet.Game.interval += 1;
-        else if (FiercePlanet.Game.interval < 100)
-            FiercePlanet.Game.interval += 10;
-        FiercePlanet.GeneralUI.notify("Now playing at: " + Math.round(1000 / FiercePlanet.Game.interval) + " frames per second.");
-        if (FiercePlanet.inPlay)
+        if (Lifecycle.interval < 10)
+            Lifecycle.interval += 1;
+        else if (Lifecycle.interval < 100)
+            Lifecycle.interval += 10;
+        FiercePlanet.GeneralUI.notify("Now playing at: " + Math.round(1000 / Lifecycle.interval) + " frames per second.");
+        if (FiercePlanet.Game.inPlay)
             FiercePlanet.Game.Lifecycle._startAgents();
     };
 
@@ -418,13 +383,13 @@ FiercePlanet.Lifecycle = FiercePlanet.Lifecycle || {};
      * Speeds up the rate of processing agents
      */
     this.speedUp = function() {
-        if (FiercePlanet.Game.interval > 10)
-            FiercePlanet.Game.interval -= 10;
-        else if (FiercePlanet.Game.interval > 1)
-            FiercePlanet.Game.interval -= 1;
-        FiercePlanet.GeneralUI.notify("Now playing at: " + Math.round(1000 / FiercePlanet.Game.interval) + " frames per second.");
+        if (Lifecycle.interval > 10)
+            Lifecycle.interval -= 10;
+        else if (Lifecycle.interval > 1)
+            Lifecycle.interval -= 1;
+        FiercePlanet.GeneralUI.notify("Now playing at: " + Math.round(1000 / Lifecycle.interval) + " frames per second.");
         if (FiercePlanet.Game.inPlay)
-            FiercePlanet.Lifecycle._startAgents();
+            Lifecycle._startAgents();
     };
 
 
@@ -436,7 +401,7 @@ FiercePlanet.Lifecycle = FiercePlanet.Lifecycle || {};
             console.log("Initialising world...");
 
         // Stop any existing timers
-        FiercePlanet.Lifecycle._stopAgents();
+        Lifecycle._stopAgents();
 
         if (FiercePlanet.Game.currentLevelPreset && (FiercePlanet.Game.currentLevelNumber < 0 || FiercePlanet.Game.currentLevelNumber > FiercePlanet.PresetLevels.MAX_DEFAULT_LEVELS))
             FiercePlanet.Game.currentLevelNumber = 1;
@@ -463,19 +428,20 @@ FiercePlanet.Lifecycle = FiercePlanet.Lifecycle || {};
         }
         FiercePlanet.Game.currentWave = 1;
         FiercePlanet.Game.currentLevel.setCurrentAgents([]);
+        FiercePlanet.Game.currentLevel.expiredAgents = [];
         FiercePlanet.Game.currentLevel.resetResources();
         if (FiercePlanet.Game.currentLevel.catastrophe != undefined)
             FiercePlanet.Game.currentLevel.catastrophe.struck = false;
 
         // Start the audio
-        FiercePlanet.Lifecycle._stopAudio();
+        Lifecycle._stopAudio();
 
 //    score = 0;
         FiercePlanet.Game.currentProfile.resetCurrentStats();
         FiercePlanet.Graph.refreshGraph();
 
 
-        FiercePlanet.Game.resourceRecoveryCycle = Math.pow(World.settings.rateOfResourceRecovery, FiercePlanet.Game.levelOfDifficulty - 1);
+        Lifecycle.resourceRecoveryCycle = Math.pow(World.settings.rateOfResourceRecovery, FiercePlanet.Game.levelOfDifficulty - 1);
 
         FiercePlanet.Game.numAgents = FiercePlanet.Game.currentLevel.initialAgentNumber;
         FiercePlanet.Orientation.cellsAcross = FiercePlanet.Game.currentLevel.cellsAcross;
@@ -499,7 +465,7 @@ FiercePlanet.Lifecycle = FiercePlanet.Lifecycle || {};
      * Finalises game
      */
     this._finaliseGame = function() {
-        FiercePlanet.Lifecycle._stopAgents();
+        Lifecycle._stopAgents();
         FiercePlanet.ProfileUI.storeProfileData();
         FiercePlanet.Drawing.drawScoreboard();
     };
@@ -513,8 +479,8 @@ FiercePlanet.Lifecycle = FiercePlanet.Lifecycle || {};
         if (typeof console != "undefined")
             console.log("Starting agents at " + (FiercePlanet.Game.startTime));
 
-        clearInterval(FiercePlanet.Game.agentTimerId);
-        FiercePlanet.Game.agentTimerId = setInterval("FiercePlanet.Lifecycle.processAgents()", FiercePlanet.Game.interval);
+        clearInterval(Lifecycle.agentTimerId);
+        Lifecycle.agentTimerId = setInterval("Lifecycle.processAgents()", Lifecycle.interval);
         FiercePlanet.Game.inPlay = true;
 
         // Make sure button is on pause
@@ -534,7 +500,7 @@ FiercePlanet.Lifecycle = FiercePlanet.Lifecycle || {};
         $('#playAgents').removeClass('playing');
         $('#playAgents').addClass('pausing');
 
-        clearInterval(FiercePlanet.Game.agentTimerId);
+        clearInterval(Lifecycle.agentTimerId);
         FiercePlanet.Game.inPlay = false;
     };
 
@@ -569,4 +535,4 @@ FiercePlanet.Lifecycle = FiercePlanet.Lifecycle || {};
         }
     };
 
-}).apply(FiercePlanet.Lifecycle);
+}).apply(Lifecycle);

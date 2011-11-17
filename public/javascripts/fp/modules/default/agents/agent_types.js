@@ -45,6 +45,38 @@ FiercePlanet.DefaultModule.AgentTypes = FiercePlanet.DefaultModule.AgentTypes ||
                 var countdown = agent.countdownToMove;
                 var frame = Math.floor((countdown / (speed + 1)) * frames);
 
+
+                // Category Health
+                var yHealthOffset = -5;
+                for (var j in agent.agentType.healthCategories) {
+                    var rc = agent.agentType.healthCategories[j];
+                    var h = agent.getHealthForResourceCategory(rc);
+                    ctx.beginPath();
+                    ctx.moveTo(x - pieceWidth / 4, y + yHealthOffset);
+                    var barLength = (h / INITIAL_HEALTH) * pieceWidth / 2;
+                    ctx.lineTo(x - pieceWidth / 4 + barLength, y + yHealthOffset);
+                    ctx.closePath(); yHealthOffset -= 3;
+                    ctx.lineWidth = 3;
+                    ctx.strokeStyle = "#" + rc.color;
+                    ctx.lineCap = "round";
+                    ctx.stroke();
+                }
+
+                // General Health
+                /*
+                ctx.beginPath();
+                ctx.moveTo(x - pieceWidth / 4, y - 5);
+                var barLength = (agent.health / INITIAL_HEALTH) * pieceWidth / 2;
+                ctx.lineTo(x - pieceWidth / 4 + barLength, y - 5);
+                ctx.closePath();
+                ctx.lineWidth = 3;
+//                ctx.strokeStyle = "#" + newColor;
+                ctx.strokeStyle = "#f00";
+                ctx.lineCap = "round";
+                ctx.stroke();
+                */
+
+
                 var sf = new FiercePlanet.StickFigure(x, y, pieceWidth, pieceHeight);
                 if (speed > 12)
                     sf.defaultAction = sf.walk;
@@ -56,10 +88,12 @@ FiercePlanet.DefaultModule.AgentTypes = FiercePlanet.DefaultModule.AgentTypes ||
 
                 // Now draw the figure
                 ctx.lineWidth = 1.5;
-                ctx.strokeStyle = "#" + newColor;
+//                ctx.strokeStyle = "#" + newColor;
+                ctx.strokeStyle = "#000";
                 ctx.lineCap = "round";
                 ctx.stroke();
-                ctx.fillStyle = "#" + newColor;
+//                ctx.fillStyle = "#" + newColor;
+                ctx.fillStyle = "#000";
                 ctx.fill();
             }
         });

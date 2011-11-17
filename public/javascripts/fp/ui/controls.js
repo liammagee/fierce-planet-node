@@ -32,11 +32,11 @@ FiercePlanet.Controls = FiercePlanet.Controls || {};
         $('#welcome-link').click(FiercePlanet.ProfileUI.editProfile);
 
         // Control panel functions
-        $('#playAgents').click(FiercePlanet.Lifecycle.playGame);
-        $('#slowDown').click(FiercePlanet.Lifecycle.slowDown);
-        $('#speedUp').click(FiercePlanet.Lifecycle.speedUp);
-        $('#newGame').click(FiercePlanet.Lifecycle.newGame);
-        $('#restartLevel').click(FiercePlanet.Lifecycle.restartLevel);
+        $('#playAgents').click(Lifecycle.playGame);
+        $('#slowDown').click(Lifecycle.slowDown);
+        $('#speedUp').click(Lifecycle.speedUp);
+        $('#newGame').click(Lifecycle.newGame);
+        $('#restartLevel').click(Lifecycle.restartLevel);
         $('#showResourceGallery').click(FiercePlanet.Dialogs.showResourceGallery);
 
         // Pan/zoomFunctions
@@ -69,7 +69,7 @@ FiercePlanet.Controls = FiercePlanet.Controls || {};
 
 
         // Admin functions
-        $('#debug').click(FiercePlanet.Lifecycle.processAgents);
+        $('#debug').click(Lifecycle.processAgents);
         $('#replay').click(FiercePlanet.Recording.replayWorld);
         $('#story-board').click(FiercePlanet.Storyboard.showStoryboard);
         $('#high-scores').click(FiercePlanet.ProfileUI.showHighScores);

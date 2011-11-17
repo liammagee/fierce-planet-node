@@ -422,7 +422,6 @@ io.sockets.on('connection', function (socket) {
       io.sockets.emit('nicknames', nicknames);
     }
   });
-
   socket.on('initiate duel', function(rival, data) {
     socket.broadcast.emit('event', socket.nickname, data);
   });
@@ -444,40 +443,5 @@ io.sockets.on('connection', function (socket) {
   });
 });
 
-
-//
-//io.sockets.on('connection', function(socket) {
-////  socket.emit('announcement', 'server', 'Welcome to Fierce Planet');
-//
-//    socket.on('user message', function (msg) {
-//      socket.broadcast.emit('user message', socket.nickname, msg);
-//    });
-//
-//    socket.on('nickname', function (nick, fn) {
-//      if (nicknames[nick]) {
-//        fn(true);
-//      } else {
-//        fn(false);
-//        nicknames[nick] = socket.nickname = nick;
-//        socket.broadcast.emit('announcement', nick + ' connected');
-//        io.sockets.emit('nicknames', nicknames);
-//      }
-//    });
-//
-//  socket.on('message', function(data) {
-//    socket.broadcast.emit('message', socket.nickname, data);
-//  });
-//  socket.on('event', function(data) {
-//    socket.broadcast.emit('event', socket.nickname, data);
-//  });
-//
-//    socket.on('disconnect', function () {
-//      if (!socket.nickname) return;
-//
-//      delete nicknames[socket.nickname];
-//      socket.broadcast.emit('announcement', socket.nickname + ' disconnected');
-//      socket.broadcast.emit('nicknames', nicknames);
-//    });
-//});
 
 console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);

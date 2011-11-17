@@ -72,8 +72,9 @@ FiercePlanet.Keyboard = FiercePlanet.Keyboard || {};
                 myAgent.lastMemory.x = myAgent.x;
                 myAgent.lastMemory.y = myAgent.y;
 
-                FiercePlanet.Drawing.clearCanvas('#agentCanvas');
-                FiercePlanet.Drawing.drawAgents();
+//                FiercePlanet.Drawing.clearCanvas('#agentCanvas');
+//                FiercePlanet.Drawing.drawAgents();
+                FiercePlanet.Drawing.drawResourceAndAgents();
             }
         }
         else {
@@ -124,23 +125,23 @@ FiercePlanet.Keyboard = FiercePlanet.Keyboard || {};
                     break;
                 // 'p': Play/pause game
                 case 80:
-                    FiercePlanet.Lifecycle.playGame();
+                    Lifecycle.playGame();
                     break;
                 // 'n': New game
                 case 78:
-                    FiercePlanet.Lifecycle.newGame();
+                    Lifecycle.newGame();
                     break;
                 // 'r': Restart game
                 case 82:
-                    FiercePlanet.Lifecycle.restartLevel();
+                    Lifecycle.restartLevel();
                     break;
                 // 'w': Rewind
                 case 87:
-                    FiercePlanet.Lifecycle.slowDown();
+                    Lifecycle.slowDown();
                     break;
                 // 'f': Fast forward
                 case 70:
-                    FiercePlanet.Lifecycle.speedUp();
+                    Lifecycle.speedUp();
                     break;
                 // 't': Tutorial
                 case 84:

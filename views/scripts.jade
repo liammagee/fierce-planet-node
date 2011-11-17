@@ -1,7 +1,6 @@
 script(src='http://maps.googleapis.com/maps/api/js?sensor=true')
 script(src='/javascripts/LABjs-2.0.3/LAB.js')
 script(src='/javascripts/fp/main.js')
-//script(data-main='/javascripts/fp/main.js', src='/javascripts/requirejs/require.js')
 
 
 script(type='text/javascript')
@@ -10,5 +9,4 @@ script(type='text/javascript')
     $(document).ready(function() {
       FiercePlanet.LevelUI.makeLevelFromJSON(!{JSON.stringify(serverLevel)});
     });
-- if (typeof(serverLevel) !== 'undefined')
-    World.resourceTypeNamespace =
+

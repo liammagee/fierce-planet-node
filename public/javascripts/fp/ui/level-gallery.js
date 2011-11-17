@@ -31,7 +31,7 @@ FiercePlanet.LevelGallery = FiercePlanet.LevelGallery || {};
      * Renders modules and levels in the level gallery
      */
     this.renderModules = function() {
-        var modules = FiercePlanet.ModuleManager.currentModule.allLevelSets();
+        var modules = FiercePlanet.ModuleManager.currentModule.allCampaigns();
         for (var i in modules) {
             var module = modules[i];
             $('#level-gallery-tabs>ul').prepend('<li><a href="#' + module.id + '"> ' + module.name + '</a></li>');

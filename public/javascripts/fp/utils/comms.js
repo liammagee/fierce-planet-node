@@ -23,8 +23,8 @@ FiercePlanet.Comms = FiercePlanet.Comms || {};
             if (World.settings.spectate) {
                 FiercePlanet.Game.currentLevelNumber = levelNumber;
                 FiercePlanet.Game.currentLevelPreset = true;
-                FiercePlanet.Lifecycle.newLevel();
-//                FiercePlanet.Lifecycle.startLevel();
+                Lifecycle.newLevel();
+//                Lifecycle.startLevel();
             }
             // TODO: Fix - causes problems with main Google screen
 //            FiercePlanet.Drawing.drawMirrorGame();
@@ -32,17 +32,17 @@ FiercePlanet.Comms = FiercePlanet.Comms || {};
         else if (eventType == 'start') {
             if (World.settings.spectate) {
                 FiercePlanet.Dialogs.newLevelDialog.dialog('close');
-//                FiercePlanet.Lifecycle.startLevel();
+//                Lifecycle.startLevel();
             }
         }
         else if (eventType == 'play') {
             if (World.settings.spectate) {
-//                FiercePlanet.Lifecycle.pauseGame();
+//                Lifecycle.pauseGame();
             }
         }
         else if (eventType == 'pause') {
             if (World.settings.spectate) {
-                FiercePlanet.Lifecycle.pauseGame();
+                Lifecycle.pauseGame();
             }
         }
         else if (eventType == 'resources') {
@@ -70,8 +70,8 @@ FiercePlanet.Comms = FiercePlanet.Comms || {};
                 FiercePlanet.Game.currentLevel.currentAgents.push(agents[i]);
             }
             if (World.settings.spectate) {
-                FiercePlanet.Lifecycle.processAgents();
-                FiercePlanet.Lifecycle._stopAgents();
+                Lifecycle.processAgents();
+                Lifecycle._stopAgents();
             }
         }
         else if (eventType == 'agent') {
@@ -83,8 +83,8 @@ FiercePlanet.Comms = FiercePlanet.Comms || {};
             FiercePlanet.Drawing.clearCanvas('#alt_agentCanvas');
             FiercePlanet.Drawing.drawAgents('#alt_agentCanvas', duelingAgents);
             if (World.settings.spectate) {
-                FiercePlanet.Lifecycle.processAgents();
-                FiercePlanet.Lifecycle._stopAgents();
+                Lifecycle.processAgents();
+                Lifecycle._stopAgents();
             }
         }
     }

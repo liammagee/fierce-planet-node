@@ -20,7 +20,7 @@
  */
 function Notice(text, x, y, start, duration, width, height, backgroundColor, foregroundColor, lineWidth, font) {
     this.text = text || "";
-    this.start = start || FiercePlanet.Game.gameCounter;
+    this.start = start || Lifecycle.worldCounter;
     this.duration = duration || 150;
     this.x = x || (Math.random() * (FiercePlanet.Orientation.worldWidth - FiercePlanet.Game.WAVE_NOTICE_WIDTH));
     this.y = y || Math.random() * (FiercePlanet.Orientation.worldHeight - FiercePlanet.Game.WAVE_NOTICE_HEIGHT);

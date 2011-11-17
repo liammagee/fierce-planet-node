@@ -197,6 +197,7 @@ FiercePlanet.StickFigure = function(x, _y, _figureWidth, _figureHeight) {
     };
 
     this.drawFigure = function(context) {
+
         context.beginPath();
 
         // Head

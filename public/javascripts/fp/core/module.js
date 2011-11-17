@@ -17,7 +17,7 @@ function Module() {};
 
 
     Module.prototype.id;
-    Module.prototype._levelSets = {};
+    Module.prototype._campaigns = {};
     Module.prototype._resourceSets = {};
     Module.prototype._agentSets = [];
 
@@ -34,33 +34,33 @@ function Module() {};
     /**
      * Registers a module
      */
-    Module.prototype.registerLevelSet = function(levelSet) {
-        this._levelSets = this._levelSets || {};
+    Module.prototype.registerCampaign = function(campaign) {
+        this._campaigns = this._campaigns || {};
 
-        if (typeof(levelSet) != "undefined" && levelSet.id)
-            this._levelSets[levelSet.id] = levelSet;
+        if (typeof(campaign) != "undefined" && campaign.id)
+            this._campaigns[campaign.id] = campaign;
 
     };
 
     /**
      * Retrieves  a level set
      */
-    Module.prototype.getLevelSet = function(levelSetID) {
-        return this._levelSets[levelSetID];
+    Module.prototype.getCampaign = function(campaignID) {
+        return this._campaigns[campaignID];
     };
 
     /**
      * Retrieves  a level set
      */
-    Module.prototype.allLevelSets = function() {
-        var levelSetArray = [];
-        for (var i in this._levelSets) {
-            if (this._levelSets.hasOwnProperty(i)) {
-                levelSetArray.push(this._levelSets[i]);
+    Module.prototype.allCampaigns = function() {
+        var campaignArray = [];
+        for (var i in this._campaigns) {
+            if (this._campaigns.hasOwnProperty(i)) {
+                campaignArray.push(this._campaigns[i]);
             }
         }
         // Sort in reverse
-        return levelSetArray.sort(function(a, b) {
+        return campaignArray.sort(function(a, b) {
             if (! a.position || ! b.position)
                 return 0;
             return ((a.position > b.position) ? -1 : ((a.position < b.position) ? 1 : 0))
@@ -71,8 +71,8 @@ function Module() {};
     /**
      * Retrieves  a module
      */
-    Module.prototype.getLevel = function(levelSetID, level) {
-        return this.getLevelSet(levelSetID).levels[level]
+    Module.prototype.getLevel = function(campaignID, level) {
+        return this.getCampaign(campaignID).levels[level]
     };
 
 

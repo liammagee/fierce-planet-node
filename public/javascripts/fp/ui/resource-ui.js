@@ -242,7 +242,7 @@ FiercePlanet.ResourceUI = FiercePlanet.ResourceUI || {};
 //            FiercePlanet.Drawing.drawResource(resource);
             FiercePlanet.Drawing.drawResourcesInStore();
 
-            FiercePlanet.Game.eventTarget.fire(new Event("resource", resource, "added", FiercePlanet.Game.gameCounter, FiercePlanet.Game.currentLevel));
+            FiercePlanet.Game.eventTarget.fire(new Event("resource", resource, "added", Lifecycle.worldCounter, FiercePlanet.Game.currentLevel));
             if (World.settings.sendEventsToServer) {
                 FiercePlanet.Comms.notifyServerOfEvent('resources', FiercePlanet.Game.currentLevel.resources);
 //                notifyEvent('resource', resource);

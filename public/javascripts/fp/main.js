@@ -66,6 +66,7 @@ $LAB
        , 'fp/core/maze-strategies.js'
     , 'fp/core/module-manager.js'
     , 'fp/core/module.js'
+    , 'fp/core/lifecycle.js'
 
        , 'fp/profile/profile.js'
        , 'fp/profile/profile_class.js'
@@ -101,16 +102,13 @@ $LAB
        , 'fp/utils/log.js'
     , 'fp/utils/recording.js'
 
-        , 'fp/lifecycle.js'
        , 'fp/game.js'
    ])
     .wait()
-/*
     .script([
         'fp/modules/default/default-module.js'
         , 'fp/modules/default/levels/basic.js'
         , 'fp/modules/default/levels/additional.js'
-        , 'fp/modules/default/levels/experimental.js'
         , 'fp/modules/default/resources/tbl.js'
         , 'fp/modules/default/resources/cos.js'
        , 'fp/modules/default/resources/resource_types.js'
@@ -119,7 +117,7 @@ $LAB
     .wait(function() {
             FiercePlanet.DefaultModule.init();
         })
-        */
+/*
     .script([
         'fp/modules/pp/default-module.js'
         , 'fp/modules/pp/levels/pp.js'
@@ -130,6 +128,7 @@ $LAB
     .wait(function() {
             FiercePlanet.PredatorPreyModule.init();
         })
+*/
 
     .wait(function() {
         FiercePlanet.Game.loadGame();
@@ -194,7 +193,7 @@ require([
         $(".difficultyInput").click(FiercePlanet.GeneralUI.changeDifficulty);
 
 
-        FiercePlanet.Lifecycle.loadGame();
+        Lifecycle.loadGame();
 
         FiercePlanet.Utils.bindVariables();
 
