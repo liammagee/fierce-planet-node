@@ -166,11 +166,15 @@ var Lifecycle = Lifecycle || {};
      * Called when a new game is commenced
      */
     this.newGame = function() {
+        // Pre new game
         if (FiercePlanet.Game.currentLevelPreset)
             FiercePlanet.Game.currentLevelNumber = 1;
         FiercePlanet.Game.currentProfile.resetScores();
+
         Lifecycle.worldCounter = 0;
         Lifecycle.newLevel();
+
+        // Post new game
     };
 
 
@@ -178,19 +182,26 @@ var Lifecycle = Lifecycle || {};
      * Called when a new level is begun
      */
     this.newLevel = function() {
-        FiercePlanet.Game.inDesignMode = false;
-        Lifecycle.levelDelayCounter = 0;
-        Lifecycle.levelCounter = 0;
-        FiercePlanet.Game.maxLevelMoves = 0;
+        // Pre new level
         FiercePlanet.Game.currentProfile.updateScore();
-//    if (FiercePlanet.Game.currentLevel != undefined)
-//        FiercePlanet.Game.currentLevel.setResources([]);
         FiercePlanet.Game.currentNotice = null;
         FiercePlanet.Game.recordedLevels = [];
         FiercePlanet.Utils.bindVariables();
 
+
+
+        FiercePlanet.Game.inDesignMode = false;
+        Lifecycle.levelDelayCounter = 0;
+        Lifecycle.levelCounter = 0;
+        FiercePlanet.Game.maxLevelMoves = 0;
+//    if (FiercePlanet.Game.currentLevel != undefined)
+//        FiercePlanet.Game.currentLevel.setResources([]);
+
         Lifecycle._initialiseGame();
 
+
+
+        // Post new level
         FiercePlanet.Game.currentNotice = FiercePlanet.Game.currentLevel.tip;
 //        $("#notifications").toggle(World.settings.statusBarVisible);
         FiercePlanet.GeneralUI.notify("Starting level " + FiercePlanet.Game.currentLevel.id + "...");
@@ -373,9 +384,9 @@ var Lifecycle = Lifecycle || {};
             Lifecycle.interval += 1;
         else if (Lifecycle.interval < 100)
             Lifecycle.interval += 10;
-        FiercePlanet.GeneralUI.notify("Now playing at: " + Math.round(1000 / Lifecycle.interval) + " frames per second.");
+//        FiercePlanet.GeneralUI.notify("Now playing at: " + Math.round(1000 / Lifecycle.interval) + " frames per second.");
         if (FiercePlanet.Game.inPlay)
-            FiercePlanet.Game.Lifecycle._startAgents();
+            Lifecycle._startAgents();
     };
 
 
@@ -387,7 +398,7 @@ var Lifecycle = Lifecycle || {};
             Lifecycle.interval -= 10;
         else if (Lifecycle.interval > 1)
             Lifecycle.interval -= 1;
-        FiercePlanet.GeneralUI.notify("Now playing at: " + Math.round(1000 / Lifecycle.interval) + " frames per second.");
+//        FiercePlanet.GeneralUI.notify("Now playing at: " + Math.round(1000 / Lifecycle.interval) + " frames per second.");
         if (FiercePlanet.Game.inPlay)
             Lifecycle._startAgents();
     };

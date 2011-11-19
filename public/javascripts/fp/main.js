@@ -114,22 +114,16 @@ $LAB
        , 'fp/modules/default/resources/resource_types.js'
        , 'fp/modules/default/agents/agent_types.js'
     ])
-    .wait(function() {
-            FiercePlanet.DefaultModule.init();
-        })
-/*
+    .wait()
     .script([
-        'fp/modules/pp/default-module.js'
-        , 'fp/modules/pp/levels/pp.js'
-        , 'fp/modules/pp/resources/tbl.js'
-       , 'fp/modules/pp/resources/resource_types.js'
-       , 'fp/modules/pp/agents/agent_types.js'
+    , 'fp/modules/pp/predator-prey-module.js'
+    , 'fp/modules/pp/levels/pp.js'
+   , 'fp/modules/pp/agents/agent_types.js'
     ])
     .wait(function() {
-            FiercePlanet.PredatorPreyModule.init();
+            FiercePlanet.DefaultModule.init();
+//        FiercePlanet.PredatorPreyModule.init();
         })
-*/
-
     .wait(function() {
         FiercePlanet.Game.loadGame();
     });
