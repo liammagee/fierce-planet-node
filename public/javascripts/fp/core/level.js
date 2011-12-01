@@ -530,6 +530,7 @@ Level.prototype.generateAgents = function(culture, number) {
             // Generate a random tile position
             var tp = Math.floor(Math.random() * pl);
             var tile = this.pathway[tp];
+            console.log(tp)
             var agent = this.generateAgentAtPoint(culture, tile[0], tile[1]);
             agents.push(agent);
         }
@@ -998,7 +999,6 @@ Level.prototype.initialiseWaves = function(waveNumber) {
                 var culture = cultures[j];
                 if (culture.generateEachWave && this.generateWaveAgentsAutomatically) {
                     var thisWaveNumber = (culture.waveNumber ? culture.waveNumber : Lifecycle.currentLevel.initialAgentNumber);
-                    console.log(thisWaveNumber)
                     if (this.distributeAgentsNormally) {
                         var s = this.distributeAgentsSigma;
                         if (s == undefined)

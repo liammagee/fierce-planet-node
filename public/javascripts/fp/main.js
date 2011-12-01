@@ -97,6 +97,7 @@ $LAB
        , 'fp/ui/profile-ui.js'
        , 'fp/ui/resource-ui.js'
        , 'fp/ui/graph.js'
+       , 'fp/ui/parameters.js'
        , 'fp/ui/console.js'
        , 'fp/ui/storyboard.js'
     , 'fp/ui/google-map.js'
@@ -125,8 +126,11 @@ $LAB
    , 'fp/modules/pp/agents/agent_types.js'
     ])
     .wait(function() {
-            DefaultModule.init();
-//        PredatorPreyModule.init();
+//            DefaultModule.init();
+        AgentConstants.DEFAULT_SPEED = 1;
+        Lifecycle.interval = 100;
+        World.settings.agentsCanCommunicate = false;
+        PredatorPreyModule.init();
         })
     .wait(function() {
         FiercePlanet.Game.loadGame();

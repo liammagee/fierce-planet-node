@@ -64,15 +64,6 @@ var Lifecycle = Lifecycle || {};
      */
     this.processAgents = function() {
       var recordableChangeMade = false;
-//
-//        // Draw the scrolling layer
-//        FiercePlanet.Drawing.drawScrollingLayer();
-//
-//        // Draw any notices
-//        // Drawing
-//        if (World.settings.noticesVisible && FiercePlanet.Game.currentNotice != undefined) {
-//            FiercePlanet.Drawing.drawNotice(FiercePlanet.Game.currentNotice);
-//        }
 
         // Invoke pre process callback
 		if (Lifecycle.preProcessCallback)
@@ -109,8 +100,10 @@ var Lifecycle = Lifecycle || {};
             var speed = agent.speed;
             var countDown = (agent.countdownToMove) % speed;
 
-            if (countDown == 0)
-                agent.memorise(Lifecycle.currentLevel);
+            // TODO: Constrain memory usage - expensive for large simulations
+//            if (countDown == 0)
+//                agent.memorise(Lifecycle.currentLevel);
+//                agent.memorise(undefined);
         }
 
 
@@ -185,11 +178,6 @@ var Lifecycle = Lifecycle || {};
             Lifecycle.currentLevel.currentAgents.splice(nullIndex, 1);
         }
 
-		/*
-        if (FiercePlanet.Game.currentProfile.currentLevelExpired >= Lifecycle.currentLevel.expiryLimit) {
-            return Lifecycle.gameOver();
-        }
-		*/
         if (Lifecycle.currentLevel.expiredAgents.length >= Lifecycle.currentLevel.expiryLimit) {
             return Lifecycle.gameOver();
         }
@@ -242,15 +230,6 @@ var Lifecycle = Lifecycle || {};
 		if (this.preNewLevelCallback)
 			this.preNewLevelCallback();
 
-/*
-        FiercePlanet.Game.currentProfile.updateScore();
-        FiercePlanet.Game.currentNotice = null;
-        FiercePlanet.Game.recordedLevels = [];
-        FiercePlanet.Utils.bindVariables();
-
-        FiercePlanet.Game.inDesignMode = false;
-        FiercePlanet.Game.maxLevelMoves = 0;
-*/
         Lifecycle.levelDelayCounter = 0;
         Lifecycle.levelCounter = 0;
     	if (Lifecycle.currentLevel != undefined)
@@ -259,12 +238,6 @@ var Lifecycle = Lifecycle || {};
 
         Lifecycle._initialiseGame();
 
-/*
-        FiercePlanet.Game.currentNotice = Lifecycle.currentLevel.tip;
-        FiercePlanet.GeneralUI.notify("Starting level " + Lifecycle.currentLevel.id + "...");
-        if (World.settings.sendEventsToServer)
-            FiercePlanet.Comms.notifyServerOfEvent("level", Lifecycle.currentLevel.id);
-*/
 		if (this.doNewLevelCallback)
 			this.doNewLevelCallback();
 		else
@@ -283,9 +256,6 @@ var Lifecycle = Lifecycle || {};
 		if (this.preRestartLevelCallback)
 			this.preRestartLevelCallback();
 
-        // Reset the score
-        // FiercePlanet.Game.currentProfile.revertScore();
-
         // Start a new level
         Lifecycle.newLevel();
 
@@ -302,30 +272,7 @@ var Lifecycle = Lifecycle || {};
 		if (this.preStartLevelCallback)
 			this.preStartLevelCallback();
 
-	/*
-        if (World.settings.sendEventsToServer) {
-            FiercePlanet.Comms.notifyServerOfEvent("start", null);
-        }
 
-        Lifecycle._startAudio();
-        FiercePlanet.Drawing.animateLevel();
-        // Start a new level
-        if (World.settings.firstPerson) {
-//            Lifecycle.currentLevel.generateAgents(AgentTypes.CITIZEN_AGENT_TYPE, 1);
-            var agentSets = ModuleManager.currentModule.allAgentSets();
-            for (var i in agentSets) {
-                var agentType = agentSets[i];
-                if (agentType.generateEachWave) {
-                    Lifecycle.currentLevel.generateAgents(agentType, Lifecycle.numAgents);
-                }
-            }
-        }
-        else {
-            console.log('starting level')
-            Lifecycle.newWave();
-        }
-*/
-		
 		Lifecycle.currentWaveNumber = 0;
 		Lifecycle.numAgents = Lifecycle.currentLevel.initialAgentNumber;
 		
@@ -341,39 +288,13 @@ var Lifecycle = Lifecycle || {};
     this.newWave = function() {
 		if (this.preNewWaveCallback)
 			this.preNewWaveCallback();
-	/*
-        FiercePlanet.Game.currentProfile.currentLevelSavedThisWave = 0;
-
-        // Refresh the graph every wave?
-        if (World.settings.refreshGraphEveryWave)
-            FiercePlanet.Graph.refreshGraph();
-
-        FiercePlanet.GeneralUI.notify("New wave coming...");
-
-        FiercePlanet.Drawing.drawEntryPoints();
-        FiercePlanet.Drawing.drawExitPoints();
-        FiercePlanet.Game.eventTarget.fire(new Event("game", this, "newWave", $fp.levelCounter, Lifecycle.currentLevel));
-*/
 		Lifecycle.maxWaveMoves = 0;
 		Lifecycle.waveCounter = 0;
 		Lifecycle.waveDelayCounter = 0;
 
-		if (this.currentLevel.waves[this.currentWaveNumber]) {
+		if (this.currentLevel.waves[this.currentWaveNumber])
 			Lifecycle.currentLevel.currentAgents = this.currentLevel.waves[this.currentWaveNumber].agents;
-		}
-		else {
-			/*
-			        var agentSets = ModuleManager.currentModule.allAgentSets();
-			        for (var i in agentSets) {
-			            var agentType = agentSets[i];
-			            if (agentType.generateEachWave) {
-			                Lifecycle.currentLevel.generateAgents(agentType, Lifecycle.numAgents);
-			//                Lifecycle.currentLevel.generateAgents(AgentTypes.CITIZEN_AGENT_TYPE, Lifecycle.numAgents);
-			            }
-			        }
-			*/
-		}
-		
+
 		this._startAgents();
 
 		if (this.postNewWaveCallback)
@@ -404,11 +325,6 @@ var Lifecycle = Lifecycle || {};
     this.completeLevel = function() {
 		if (this.preCompleteLevelCallback)
 			this.preCompleteLevelCallback();
-		/*
-        FiercePlanet.Game.currentProfile.compileProfileStats(Lifecycle.currentLevel);
-        Lifecycle._stopAudio();
-        FiercePlanet.Dialogs.showCompleteLevelDialog();
-		*/
 
         if (Lifecycle.currentLevel.teardown)
             Lifecycle.currentLevel.teardown();
@@ -427,11 +343,6 @@ var Lifecycle = Lifecycle || {};
     this.completeGame = function() {
 		if (this.preCompleteGameCallback)
 			this.preCompleteGameCallback();
-			/*
-	        FiercePlanet.Game.currentProfile.compileProfileStats(Lifecycle.currentLevel);
-	        Lifecycle._stopAudio();
-	        FiercePlanet.Dialogs.showCompleteGameDialog();
-			*/
 
         if (Lifecycle.currentLevel.teardown)
             Lifecycle.currentLevel.teardown();
@@ -448,11 +359,6 @@ var Lifecycle = Lifecycle || {};
     this.gameOver = function() {
 		if (this.preGameOverCallback)
 			this.preGameOverCallback();
-			/*
-	        FiercePlanet.Game.currentProfile.revertScore();
-	        Lifecycle._stopAudio();
-	        FiercePlanet.Dialogs.showGameOverDialog();
-			*/
 
         if (Lifecycle.currentLevel.teardown)
             Lifecycle.currentLevel.teardown();
@@ -501,52 +407,13 @@ var Lifecycle = Lifecycle || {};
         Lifecycle.currentLevel.resetResources();
         if (Lifecycle.currentLevel.catastrophe != undefined)
             Lifecycle.currentLevel.catastrophe.struck = false;
-		Lifecycle.currentLevel.initialiseWaves(Lifecycle.currentLevel.waveNumber);
 
         // Set up level
         if (Lifecycle.currentLevel.setup)
             Lifecycle.currentLevel.setup();
 
-/*
+        Lifecycle.currentLevel.initialiseWaves(Lifecycle.currentLevel.waveNumber);
 
-
-        if (FiercePlanet.Game.waveOverride > 0) {
-            Lifecycle.currentLevel.waveNumber = (FiercePlanet.Game.waveOverride);
-            FiercePlanet.Game.waveOverride = 0;
-        }
-        FiercePlanet.Game.currentWave = 1;
-        Lifecycle.currentLevel.setCurrentAgents([]);
-        Lifecycle.currentLevel.expiredAgents = [];
-        Lifecycle.currentLevel.resetResources();
-        if (Lifecycle.currentLevel.catastrophe != undefined)
-            Lifecycle.currentLevel.catastrophe.struck = false;
-
-        // Start the audio
-        Lifecycle._stopAudio();
-
-//    score = 0;
-        FiercePlanet.Game.currentProfile.resetCurrentStats();
-        FiercePlanet.Graph.refreshGraph();
-
-
-        Lifecycle.resourceRecoveryCycle = Math.pow(World.settings.rateOfResourceRecovery, FiercePlanet.Game.levelOfDifficulty - 1);
-
-        Lifecycle.numAgents = Lifecycle.currentLevel.initialAgentNumber;
-        FiercePlanet.Orientation.cellsAcross = Lifecycle.currentLevel.cellsAcross;
-        FiercePlanet.Orientation.cellsDown = Lifecycle.currentLevel.cellsDown;
-        FiercePlanet.Orientation.cellWidth = Math.round(FiercePlanet.Orientation.worldWidth / FiercePlanet.Orientation.cellsAcross);
-        FiercePlanet.Orientation.cellHeight = Math.round(FiercePlanet.Orientation.worldHeight / FiercePlanet.Orientation.cellsDown);
-        FiercePlanet.Orientation.pieceWidth = Math.round(FiercePlanet.Orientation.cellWidth * 0.5);
-        FiercePlanet.Orientation.pieceHeight = Math.round(FiercePlanet.Orientation.cellHeight * 0.5);
-        FiercePlanet.Game.scrollingImage.src = "/images/yellow-rain.png";
-
-        // Set up level
-        if (Lifecycle.currentLevel.setup)
-            Lifecycle.currentLevel.setup();
-
-        // Draw the game
-        FiercePlanet.Drawing.drawGame();
-*/
 		if (this.postInitialiseGameCallback)
 			this.postInitialiseGameCallback();
     };
@@ -560,10 +427,6 @@ var Lifecycle = Lifecycle || {};
 			this.preFinaliseGameCallback();
 		
         Lifecycle._stopAgents();
-		/*
-        FiercePlanet.ProfileUI.storeProfileData();
-        FiercePlanet.Drawing.drawScoreboard();
-		*/
 
 		if (this.postFinaliseGameCallback)
 			this.postFinaliseGameCallback();

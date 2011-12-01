@@ -534,6 +534,15 @@ Agent.prototype.memorise = function(level) {
 //                if (agentX == x && agentY == y && (agent.lastPosition().x != this.lastPosition().x || agent.lastPosition().y != this.lastPosition().y)) {
                 // TODO: This is very slow - consider ways to optimise
                 if ((agent.lastMemory.x != this.lastMemory.x || agent.lastMemory.y != this.lastMemory.y) && (Math.abs(agentX - x) <= 1 && Math.abs(agentY - y) <= 1)) {
+
+                    // Premature optimisation...
+                    /*
+                    if (this.memoriesOfPlacesVisitedByOtherAgents.length > 10)
+                        this.memoriesOfPlacesVisitedByOtherAgents = [];
+                    if (this.memoriesOfPathsUntriedByOtherAgents.length > 10)
+                        this.memoriesOfPathsUntriedByOtherAgents = [];
+                        */
+
                     // Add agent to memory
                     this.memoriesOfAgents[agent.id] = new MemoryOfAgent(this.id, this.age, x, y, agent.id);
                     var mpv = [];
@@ -612,8 +621,8 @@ Agent.prototype.findPosition = function(level, withNoRepeat, withNoCollision, wi
     }
     else {
 //        return this.findPositionUp(level, withNoRepeat, withNoCollision, withOffscreenCycling)
-//        return this.findPositionRandomly(level, withNoRepeat, withNoCollision, withOffscreenCycling)
-        return this.findPositionWithFreeNavigation(level, withNoRepeat, withNoCollision, withOffscreenCycling)
+        return this.findPositionRandomly(level, withNoRepeat, withNoCollision, withOffscreenCycling)
+//        return this.findPositionWithFreeNavigation(level, withNoRepeat, withNoCollision, withOffscreenCycling)
     }
 }
 
