@@ -34,7 +34,7 @@ describe("resource-related classes", function() {
             var agent;
 
             beforeEach(function() {
-                agent = new Agent(World.agentTypes[0], 0, 0);
+                agent = new Agent(World.cultures[0], 0, 0);
             });
 
             it("should not yield anything to an agent in full health", function() {

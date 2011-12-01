@@ -76,8 +76,8 @@ FiercePlanet.ResourceUI = FiercePlanet.ResourceUI || {};
         var posX = __ret.posX;
         var posY = __ret.posY;
         var foundResource = false;
-        for (var i = 0; i < FiercePlanet.Game.currentLevel.resources.length; i++) {
-            var resource = FiercePlanet.Game.currentLevel.resources[i];
+        for (var i = 0; i < Lifecycle.currentLevel.resources.length; i++) {
+            var resource = Lifecycle.currentLevel.resources[i];
             if (resource.x == posX && resource.y == posY) {
                 FiercePlanet.Game.currentResource = resource;
                 if (confirm("Are you sure you want to delete this resource?")) {
@@ -88,17 +88,17 @@ FiercePlanet.ResourceUI = FiercePlanet.ResourceUI || {};
                 return;
             }
         }
-        var currentTile = FiercePlanet.Game.currentLevel.getTile(posX, posY);
+        var currentTile = Lifecycle.currentLevel.getTile(posX, posY);
         if (World.settings.tilesMutable) {
             if (currentTile == undefined) {
-                FiercePlanet.Game.currentLevel.addTile(new Tile(DEFAULT_TILE_COLOR, posX, posY));
+                Lifecycle.currentLevel.addTile(new Tile(DEFAULT_TILE_COLOR, posX, posY));
                 FiercePlanet.Drawing.drawCanvases();
             }
             else if (!foundResource && FiercePlanet.Game.currentResourceId != null) {
                 FiercePlanet.ResourceUI.dropItem(posX, posY);
             }
             else {
-                FiercePlanet.Game.currentLevel.removeTile(posX, posY);
+                Lifecycle.currentLevel.removeTile(posX, posY);
                 FiercePlanet.Drawing.drawCanvases();
             }
         }
@@ -122,9 +122,9 @@ FiercePlanet.ResourceUI = FiercePlanet.ResourceUI || {};
         var __ret = FiercePlanet.GeneralUI.getCurrentPosition(e);
         var posX = __ret.posX;
         var posY = __ret.posY;
-        if (FiercePlanet.Game.currentLevel.getCell(posX, posY) == undefined && ! FiercePlanet.Game.currentLevel.allowResourcesOnPath)
+        if (Lifecycle.currentLevel.getCell(posX, posY) == undefined && ! Lifecycle.currentLevel.allowResourcesOnPath)
             return;
-        if (FiercePlanet.Game.currentLevel.isPositionOccupiedByResource(posX, posY))
+        if (Lifecycle.currentLevel.isPositionOccupiedByResource(posX, posY))
             return;
 
         var dialogX = FiercePlanet.Dialogs.calculateWorldLeft();
@@ -162,9 +162,9 @@ FiercePlanet.ResourceUI = FiercePlanet.ResourceUI || {};
                     var __ret = FiercePlanet.GeneralUI.getCurrentPosition(e);
                     var posX = __ret.posX;
                     var posY = __ret.posY;
-                    if (FiercePlanet.Game.currentLevel.getCell(posX, posY) == undefined && ! FiercePlanet.Game.currentLevel.allowResourcesOnPath)
+                    if (Lifecycle.currentLevel.getCell(posX, posY) == undefined && ! Lifecycle.currentLevel.allowResourcesOnPath)
                         return;
-                    if (FiercePlanet.Game.currentLevel.isPositionOccupiedByResource(posX, posY))
+                    if (Lifecycle.currentLevel.isPositionOccupiedByResource(posX, posY))
                         return;
 
                     FiercePlanet.Game.currentResourceId = this.id;
@@ -183,12 +183,12 @@ FiercePlanet.ResourceUI = FiercePlanet.ResourceUI || {};
      * Delete the current resource
      */
     this.deleteCurrentResource = function () {
-        var foundResource = FiercePlanet.Game.currentLevel.getCurrentResourceIndex(FiercePlanet.Game.currentResource);
+        var foundResource = Lifecycle.currentLevel.getCurrentResourceIndex(FiercePlanet.Game.currentResource);
         if (foundResource > -1) {
             FiercePlanet.Game.currentProfile.currentLevelResourcesInStore += 5;
             FiercePlanet.Game.currentProfile.currentLevelResourcesSpent -= 5;
-//            FiercePlanet.Game.currentLevel.resources.splice(foundResource, 1);
-            FiercePlanet.Game.currentLevel.removeResource(FiercePlanet.Game.currentResource);
+//            Lifecycle.currentLevel.resources.splice(foundResource, 1);
+            Lifecycle.currentLevel.removeResource(FiercePlanet.Game.currentResource);
             FiercePlanet.Drawing.drawResourcesInStore();
             FiercePlanet.Drawing.clearResource(FiercePlanet.Game.currentResource);
         }
@@ -199,9 +199,9 @@ FiercePlanet.ResourceUI = FiercePlanet.ResourceUI || {};
      * Upgrade the current page (NOT E: SHOULD BE TIED TO PROFILE CAPABILITIES
      */
     this.upgradeCurrentResource = function () {
-            var foundResource = FiercePlanet.Game.currentLevel.getCurrentResourceIndex(FiercePlanet.Game.currentResource);
+            var foundResource = Lifecycle.currentLevel.getCurrentResourceIndex(FiercePlanet.Game.currentResource);
             if (foundResource > -1) {
-                var resource = FiercePlanet.Game.currentLevel.resources[foundResource];
+                var resource = Lifecycle.currentLevel.resources[foundResource];
                 if (resource.upgradeLevel <= 4 && FiercePlanet.Game.currentProfile.currentLevelResourcesInStore >= resource.upgradeCost) {
                     FiercePlanet.Game.currentProfile.currentLevelResourcesInStore -= resource.upgradeCost;
                     FiercePlanet.Game.currentProfile.currentLevelResourcesSpent += resource.upgradeCost;
@@ -218,9 +218,9 @@ FiercePlanet.ResourceUI = FiercePlanet.ResourceUI || {};
      * @param posY - the y coordinate to drop the resource on
      */
     this.dropItem = function(posX, posY) {
-        if (FiercePlanet.Game.currentLevel.getCell(posX, posY) == undefined && ! FiercePlanet.Game.currentLevel.allowResourcesOnPath)
+        if (Lifecycle.currentLevel.getCell(posX, posY) == undefined && ! Lifecycle.currentLevel.allowResourcesOnPath)
             return;
-        if (FiercePlanet.Game.currentLevel.isPositionOccupiedByResource(posX, posY))
+        if (Lifecycle.currentLevel.isPositionOccupiedByResource(posX, posY))
             return;
 
         var resourceCode = FiercePlanet.Game.currentResourceId;
@@ -236,15 +236,15 @@ FiercePlanet.ResourceUI = FiercePlanet.ResourceUI || {};
         }
         else {
             FiercePlanet.Game.currentProfile.spendResource(resource);
-            FiercePlanet.Game.currentLevel.addResource(resource);
+            Lifecycle.currentLevel.addResource(resource);
 
             FiercePlanet.Drawing.drawResources();
 //            FiercePlanet.Drawing.drawResource(resource);
             FiercePlanet.Drawing.drawResourcesInStore();
 
-            FiercePlanet.Game.eventTarget.fire(new Event("resource", resource, "added", Lifecycle.worldCounter, FiercePlanet.Game.currentLevel));
+            FiercePlanet.Game.eventTarget.fire(new Event("resource", resource, "added", Lifecycle.worldCounter, Lifecycle.currentLevel));
             if (World.settings.sendEventsToServer) {
-                FiercePlanet.Comms.notifyServerOfEvent('resources', FiercePlanet.Game.currentLevel.resources);
+                FiercePlanet.Comms.notifyServerOfEvent('resources', Lifecycle.currentLevel.resources);
 //                notifyEvent('resource', resource);
             }
         }

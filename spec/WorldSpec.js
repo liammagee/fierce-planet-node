@@ -14,7 +14,7 @@ if (typeof(global) != "undefined") {
     global.Agent = require('../public/javascripts/fp/core/agent').Agent;
     global.DEFAULT_SPEED = require('../public/javascripts/fp/core/agent').DEFAULT_SPEED;
     global.INITIAL_HEALTH = require('../public/javascripts/fp/core/agent').INITIAL_HEALTH;
-    global.Culture = require('../public/javascripts/fp/core/culture').Culture;
+    global.Culture = require('../public/javascripts/fp/core/cultures/culture.js').Culture;
     global.Tile = require('../public/javascripts/fp/core/tile').Tile;
     global.DEFAULT_TILE_COLOR = require('../public/javascripts/fp/core/terrain').DEFAULT_TILE_COLOR;
     global.Terrain = require('../public/javascripts/fp/core/terrain').Terrain;
@@ -63,7 +63,7 @@ if (typeof(global) != "undefined") {
 
     World.registerResourceCategories(resourceCategories);
     World.registerResourceTypes(resourceTypes);
-    World.registerAgentTypes(agentTypes);
+    World.registerCultures(agentTypes);
 })();
 
 
@@ -84,7 +84,7 @@ describe("world-related classes", function() {
         });
 
         it("should have 2 agent types", function() {
-            expect(World.agentTypes.length).toEqual(2);
+            expect(World.cultures.length).toEqual(2);
         });
 
         it("should resolve a type given its code", function() {

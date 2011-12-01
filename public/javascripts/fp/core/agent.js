@@ -8,89 +8,19 @@
 /**
  * Agent constants
  */
-var INITIAL_HEALTH = 100;
-var DEFAULT_SPEED = 10;
+var AgentConstants = AgentConstants || {};
+(function() {
+	this.INITIAL_HEALTH = 100;
+	this.DEFAULT_SPEED = 10;
 
-var VERY_UNLIKELY = 0;
-var UNLIKELY = 1;
-var MODERATELY_LIKELY = 2;
-var EVEN_CHANCE = 3;
-var PROBABILITY_STRATEGY_TO_DEVIATE = UNLIKELY;
+	this.VERY_UNLIKELY = 0;
+	this.UNLIKELY = 1;
+	this.MODERATELY_LIKELY = 2;
+	this.EVEN_CHANCE = 3;
+	this.PROBABILITY_STRATEGY_TO_DEVIATE = this.UNLIKELY;
+	
+}).apply(AgentConstants);
 
-
-/**
- * Defines the type of an agent.
- * The type includes the name, color, initial health, default speed and the drawing function of an agent. 
- *
- * @constructor
- * @param name
- * @param color
- */
-function AgentType(name, color, healthCategories, speed, health, drawFunction, updateFunction) {
-    this.name = name;
-    this.color = color;
-    this.healthCategories = healthCategories || [];
-    this.speed = speed || DEFAULT_SPEED;
-    this.health = health || INITIAL_HEALTH;
-    this.isHitable = false;
-    this.canHit = false;
-    this.generateEachWave = true;
-    this.drawFunction = drawFunction || function(){};
-    this.updateFunction = updateFunction || function(agent, level){
-        // Hook for detecting 'active' resources
-        this.processNeighbouringResources(agent, level);
-
-        // Hook for detecting other agents
-        this.processNeighbouringAgents(agent, level);
-    };
-
-    /**
-     * Processes neighbouring resources
-     *
-     * TODO: Add tests
-     */
-    this.processNeighbouringResources = function(agent, level) {
-        var x = agent.x;
-        var y = agent.y;
-        for (var j = 0; j < level.resources.length; j++) {
-            var resource = level.resources[j];
-            var rx = resource.x;
-            var ry = resource.y;
-            if (Math.abs(rx - x) <= 1 && Math.abs(ry - y) <= 1) {
-                var resourceEffect = level.calculateResourceEffect(resource);
-                resource.provideYield(agent, resourceEffect, !level.noSpeedChange);
-            }
-        }
-    };
-
-
-    /**
-     * Processes neighbouring agents
-     *
-     * TODO: Add tests
-     */
-    this.processNeighbouringAgents = function(agent, level) {
-        if (World.settings.godMode || !World.settings.predatorsVisible)
-            return;
-
-        var x = agent.x;
-        var y = agent.y;
-        agent.isHit = false;
-        var agents = level.currentAgents;
-        for (var j = 0; j < agents.length; j++) {
-            var a = agents[j];
-            var ax = a.x;
-            var ay = a.y;
-            if (Math.abs(ax - x) <= 1 && Math.abs(ay - y) <= 1) {
-                if (!World.settings.godMode && World.settings.predatorsVisible && agent.agentType.isHitable && a.agentType.canHit) {
-                    agent.isHit = true;
-                }
-            }
-        }
-        if (agent.isHit)
-            agent.adjustGeneralHealth(-10);
-    };
-}
 
 
 
@@ -163,11 +93,11 @@ function MemoryOfAgent(agentID, age, x, y, otherAgentID) {
 </div>
 
  * @constructor
- * @param agentType
+ * @param culture
  * @param x
  * @param y
  */
-function Agent(agentType, x, y) {
+function Agent(culture, x, y) {
     // Private field and methods
 
     /**
@@ -178,11 +108,10 @@ function Agent(agentType, x, y) {
     };
     
 
-
     // Privileged fields and methods
     this.id = generateID();
-    this.agentType = agentType;
-    this.color = agentType.color;
+    this.culture = culture;
+    this.color = culture.color;
 
     // Current age of the agent
     this.age = 0;
@@ -198,11 +127,11 @@ function Agent(agentType, x, y) {
     this.delay = 0;
     this.wanderX = 0;
     this.wanderY = 0;
-    this.speed = DEFAULT_SPEED;
+    this.speed = AgentConstants.DEFAULT_SPEED;
     this.countdownToMove = 0;
 
     // Health related
-    this.health = INITIAL_HEALTH;
+    this.health = AgentConstants.INITIAL_HEALTH;
     this.healthCategoryStats = {};
     this.registerHealthStats();
 
@@ -228,7 +157,6 @@ function Agent(agentType, x, y) {
     // IMPORTED ABM FEATURES - EXPERIMENTAL
     /* Gender: UNSPECIFIED: 0, MALE: -1; FEMALE:1 */
     this.gender = 0;
-    this.culture = null;
     this.dateOfBirth = null;
     this.dateOfDeath = null;
     this.children = [];
@@ -236,7 +164,6 @@ function Agent(agentType, x, y) {
     this.currentPartner = [];
     // Need alternative theories of mind
     this.desires = [];
-    this.cultures = [];
     this.capabilities = [];
 
 
@@ -250,10 +177,10 @@ function Agent(agentType, x, y) {
      */
     this.makeHealthAdjustment = function(existingHealthValue, adjustment) {
         var newHealth = existingHealthValue + adjustment;
-        if (newHealth > 0 && newHealth < INITIAL_HEALTH)
+        if (newHealth > 0 && newHealth < AgentConstants.INITIAL_HEALTH)
             return newHealth;
         else if (newHealth > 0)
-            return INITIAL_HEALTH;
+            return AgentConstants.INITIAL_HEALTH;
         else
             return 0;
     };
@@ -263,10 +190,10 @@ function Agent(agentType, x, y) {
      */
     this.recalibrateOverallHealth = function() {
         var overallHealth = 0;
-        var len = this.agentType.healthCategories.length;
+        var len = this.culture.healthCategories.length;
         var hasZeroHealth = false;
         for (var i = 0; i < len; i++) {
-            var category = this.agentType.healthCategories[i];
+            var category = this.culture.healthCategories[i];
             var categoryHealth = this.healthCategoryStats[category.code];
             if (categoryHealth == 0)
                 hasZeroHealth = true;
@@ -282,9 +209,20 @@ function Agent(agentType, x, y) {
      * Recalibrates overall health based on specific statistics.
      */
     this.update = function(level) {
-        if (this.agentType.updateFunction)
-            this.agentType.updateFunction(this, level);
+        if (this.culture.updateFunction)
+            this.culture.updateFunction(this, level);
     };
+
+    /**
+     * Calls the agent type initialise function
+     */
+    this.init = function(level) {
+        if (this.culture.initFunction)
+            this.culture.initFunction(this, level);
+    };
+
+    // Initialise the agent here, to handle custom type behaviour
+    this.init();
 }
 
 /**
@@ -304,12 +242,12 @@ Agent.prototype.moveTo = function(x, y) {
  * Initialises health statistics for an agent, based all resource categories.
  */
 Agent.prototype.registerHealthStats = function() {
-    for (var i = 0; i < this.agentType.healthCategories.length; i++) {
-        var category = this.agentType.healthCategories[i];
-        this.healthCategoryStats[category.code] = INITIAL_HEALTH;
+    for (var i = 0; i < this.culture.healthCategories.length; i++) {
+        var category = this.culture.healthCategories[i];
+        this.healthCategoryStats[category.code] = AgentConstants.INITIAL_HEALTH;
     }
     // Add length accessor here, to easily determine number of categories
-    this.healthCategoryStats.length = this.agentType.healthCategories.length;
+    this.healthCategoryStats.length = this.culture.healthCategories.length;
 };
 /**
  * Adjusts all categories of health by the adjustment amount.
@@ -317,9 +255,9 @@ Agent.prototype.registerHealthStats = function() {
  * @param adjustment
  */
 Agent.prototype.adjustGeneralHealth = function(adjustment) {
-    var len = this.agentType.healthCategories.length;
+    var len = this.culture.healthCategories.length;
     for (var i = 0; i < len; i++) {
-        var category = this.agentType.healthCategories[i];
+        var category = this.culture.healthCategories[i];
         var categoryHealth = this.healthCategoryStats[category.code];
         this.healthCategoryStats[category.code] = this.makeHealthAdjustment(categoryHealth, adjustment);
     }
@@ -452,24 +390,24 @@ One important consequence is that proximity to resources artificially deviates a
  */
 Agent.prototype.adjustSpeed = function() {
     var tmpSpeed = this.speed;
-    var variance = this.speed - DEFAULT_SPEED;
+    var variance = this.speed - AgentConstants.DEFAULT_SPEED;
 
     // Calculate probability of adjustment
     var prob = 0;
-    switch (PROBABILITY_STRATEGY_TO_DEVIATE) {
-        case VERY_UNLIKELY:
+    switch (AgentConstants.PROBABILITY_STRATEGY_TO_DEVIATE) {
+        case AgentConstants.VERY_UNLIKELY:
             // Makes movement away from MOVE_INCREMENTS very unlikely: EXP(N, N)
             prob = Math.pow(Math.abs(variance), Math.abs(variance)) + 2;
             break;
-        case UNLIKELY:
+        case AgentConstants.UNLIKELY:
             // Makes movement away from MOVE_INCREMENTS unlikely
             prob = Math.pow(Math.abs(variance) + 1, 2) + 2;
             break;
-        case MODERATELY_LIKELY:
+        case AgentConstants.MODERATELY_LIKELY:
             //    Makes movement away from MOVE_INCREMENTS moderately likely
             prob = Math.abs(variance) + 2;
             break;
-        case EVEN_CHANCE:
+        case AgentConstants.EVEN_CHANCE:
             // Makes movement away from MOVE_INCREMENTS an even chance
             prob = 1 + 1 + 1;
             break;
@@ -584,6 +522,7 @@ Agent.prototype.memorise = function(level) {
 
 
         // Add agents on this tile to memory
+
         if (this.canCommunicateWithOtherAgents) {
             var agents = level.currentAgents;
             for (var i = 0; i < agents.length; i++) {
@@ -650,6 +589,7 @@ Agent.prototype.evaluateMove = function(level, options) {
 
     var position = this.findPosition(level, withNoRepeat, withNoCollision, level.allowOffscreenCycling);
 
+    //console.log(this.x + ':' +this.y + ':' +position[0] + ':' +position[1])
     // Set the position and add the move to the agent's memory
     this.moveTo(position[0], position[1]);
 };
@@ -671,6 +611,8 @@ Agent.prototype.findPosition = function(level, withNoRepeat, withNoCollision, wi
         }
     }
     else {
+//        return this.findPositionUp(level, withNoRepeat, withNoCollision, withOffscreenCycling)
+//        return this.findPositionRandomly(level, withNoRepeat, withNoCollision, withOffscreenCycling)
         return this.findPositionWithFreeNavigation(level, withNoRepeat, withNoCollision, withOffscreenCycling)
     }
 }
@@ -685,6 +627,87 @@ Agent.prototype.findPositionForNearestExit = function(level, withNoRepeat, withN
     var ret = FiercePlanet.Framework.MazeStrategies.criticalPath(level, this.x, this.y);
     var trail = ret.trail;
     return (trail.length > 1 ? trail[1] : trail[0]);
+}
+
+/**
+ * @param level
+ * @param withNoRepeat
+ * @param withNoCollision
+ * @param withOffscreenCycling
+ */
+Agent.prototype.findPositionRandomly = function(level, withNoRepeat, withNoCollision, withOffscreenCycling) {
+    var x = this.x;
+    var y = this.y;
+    var newX = x;
+    var newY = y;
+    var lastX = this.lastMemory.x;
+    var lastY = this.lastMemory.y;
+    var candidateCells = [];
+    var directions = this.randomDirectionOrder();
+    var waitOnCurrentCell = false;
+    for (var i = 0; i < directions.length; i++) {
+        newX = x;
+        newY = y;
+        var dir = directions[i];
+
+        var offScreen1 = 0;
+        var offScreenWidth = level.cellsAcross - 1;
+        var offScreenHeight = level.cellsDown - 1;
+        var offset = 1;
+        var toContinue = false;
+        switch (dir) {
+            case 0:
+                (x == offScreen1 ? (withOffscreenCycling ? newX = offScreenWidth : toContinue = true) : newX = newX - offset);
+                break;
+            case 1:
+                (x == offScreenWidth ? (withOffscreenCycling ? newX = offScreen1 : toContinue = true) : newX = newX + offset);
+                break;
+            case 2:
+                (y == offScreen1 ? (withOffscreenCycling ? newY = offScreenHeight : toContinue = true) : newY = newY - offset);
+                break;
+            case 3:
+                (y == offScreenHeight ? (withOffscreenCycling ? newY = offScreen1 : toContinue = true) : newY = newY + offset);
+                break;
+        }
+        // If we can't repeat and the candidate cell is the last visited cell, continue
+        if (level.isExitPoint(newX, newY))
+            return [newX, newY];
+        // If we can't repeat and the candidate cell is the last visited cell, continue
+        if ((withNoRepeat && lastX == newX && lastY == newY) || toContinue) {
+            continue;
+        }
+        // If the cell is occupied by another agent, don't allow this agent to move there
+        if (World.settings.agentsOwnTilesExclusively && level.isPositionOccupiedByAgent(newX, newY)) {
+            // Wait till the other agent has moved - don't backtrack if no other cells are available
+            waitOnCurrentCell = true;
+            continue;
+        }
+        // If the cell is occupied by a resource, don't allow the agent to move there
+        if ((World.settings.resourcesOwnTilesExclusively || level.resourcesOwnTilesExclusively) && level.isPositionOccupiedByResource(newX, newY)) {
+            continue;
+        }
+        // If the candidate cell is valid (part of the path), add it
+        if (level.getCell(newX, newY) == undefined) {
+            return ([newX, newY]);
+        }
+    }
+    return [x, y];
+}
+
+
+/**
+ * @param level
+ * @param withNoRepeat
+ * @param withNoCollision
+ * @param withOffscreenCycling
+ */
+Agent.prototype.findPositionUp = function(level, withNoRepeat, withNoCollision, withOffscreenCycling) {
+    var x = this.x;
+    var y = this.y;
+    if (y < 0)
+        return [x, level.cellsDown];
+    else
+        return [x, y - 1];
 }
 
 
@@ -773,7 +796,7 @@ Agent.prototype.findPositionWithFreeNavigation = function(level, withNoRepeat, w
             continue;
         }
         // If the cell is occupied by a resource, don't allow the agent to move there
-        if (World.settings.resourcesOwnTilesExclusively && level.isPositionOccupiedByResource(newX, newY)) {
+        if ((World.settings.resourcesOwnTilesExclusively || level.resourcesOwnTilesExclusively) && level.isPositionOccupiedByResource(newX, newY)) {
             continue;
         }
         // If the candidate cell is valid (part of the path), add it
@@ -877,7 +900,7 @@ Agent.prototype.findPositionWithFreeNavigation = function(level, withNoRepeat, w
                     if (unvisited != undefined) {
 
                         // Fixes bug with endless back-and-forth cycle, due to proximity of unvisited (and unvisitable) resource cells
-                        if (World.settings.resourcesOwnTilesExclusively && level.isPositionOccupiedByResource(unvisited.x, unvisited.y))
+                        if ((World.settings.resourcesOwnTilesExclusively || level.resourcesOwnTilesExclusively) && level.isPositionOccupiedByResource(unvisited.x, unvisited.y))
                             continue;
 
                         var inOtherAgentsMemory = false;
@@ -919,7 +942,7 @@ Agent.prototype.findPositionWithFreeNavigation = function(level, withNoRepeat, w
                             var agentUnvisitedMemory = agentMemoryOfPathsUntried[j];
 
                             // Fixes bug with endless back-and-forth cycle, due to proximity of unvisited (and unvisitable) resource cells
-                            if (World.settings.resourcesOwnTilesExclusively && level.isPositionOccupiedByResource(agentUnvisitedMemory.x, agentUnvisitedMemory.y))
+                            if ((World.settings.resourcesOwnTilesExclusively || level.resourcesOwnTilesExclusively) && level.isPositionOccupiedByResource(agentUnvisitedMemory.x, agentUnvisitedMemory.y))
                                 continue;
 
                             if (allPlacesVisited[j] == undefined) {
@@ -1122,7 +1145,7 @@ Agent.prototype.wipeMemory = function() {
  * @param speed
  */
 function SimpleAgent(agentType, x, y, color, speed, health, wanderX, wanderY, lastMemory, delay, countdownToMove, healthCategoryStats) {
-    this.agentType = agentType;
+    this.culture = agentType;
     this.x = x;
     this.y = y;
     this.color = color;
@@ -1137,8 +1160,6 @@ function SimpleAgent(agentType, x, y, color, speed, health, wanderX, wanderY, la
 }
 
 if (typeof(exports) != "undefined") {
-    exports.AgentType = AgentType;
     exports.Agent = Agent;
-    exports.INITIAL_HEALTH = INITIAL_HEALTH;
-    exports.DEFAULT_SPEED = DEFAULT_SPEED;
+	exports.AgentConstants = AgentConstants;
 }

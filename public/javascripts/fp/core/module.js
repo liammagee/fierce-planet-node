@@ -19,13 +19,13 @@ function Module() {};
     Module.prototype.id;
     Module.prototype._campaigns = {};
     Module.prototype._resourceSets = {};
-    Module.prototype._agentSets = [];
+    Module.prototype._cultures = [];
 
     /**
      * Registers a module
      */
     Module.prototype.register = function() {
-        FiercePlanet.ModuleManager.registerModule(this);
+        ModuleManager.registerModule(this);
     };
 
 
@@ -86,8 +86,8 @@ function Module() {};
         this._resourceSets = this._resourceSets || {};
 
         if (typeof(resourceSet) != "undefined" && resourceSet.id) {
-//            if (resourceSet.doSetup)
-//                resourceSet.doSetup();
+            if (resourceSet.doSetup)
+                resourceSet.doSetup();
 
             this._resourceSets[resourceSet.id] = resourceSet;
         }
@@ -120,9 +120,9 @@ function Module() {};
     /**
      * Registers a agent set
      */
-    Module.prototype.registerAgentSet = function(agentSet) {
-        this._agentSets = this._agentSets || [];
-        this._agentSets.push(agentSet);
+    Module.prototype.registerCulture = function(culture) {
+        this._cultures = this._cultures || [];
+        this._cultures.push(culture);
 
 //        if (typeof(agentSet) != "undefined" && agentSet.id)
 //            this._agentSets[agentSet.id] = agentSet;
@@ -132,14 +132,14 @@ function Module() {};
     /**
      * Retrieves  a agent set
      */
-    Module.prototype.getAgentSet = function(agentSetID) {
-        return this._agentSets[agentSetID];
+    Module.prototype.getAgentSet = function(cultureID) {
+        return this._cultures[cultureID];
     };
 
     /**
      * Retrieves  a agent set
      */
-    Module.prototype.allAgentSets = function() {
+    Module.prototype.allCultures = function() {
         /*
         var agentTypes = [];
         for (var i in this._agentSets) {
@@ -148,7 +148,10 @@ function Module() {};
             }
         }
         */
-        return this._agentSets;
+        return this._cultures;
     };
 
+
+	if (typeof(exports) != "undefined")
+	    exports.Module = Module;
 

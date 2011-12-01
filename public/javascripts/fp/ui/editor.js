@@ -25,39 +25,39 @@ FiercePlanet.Editor = FiercePlanet.Editor || {};
     this.showDesignFeaturesDialog = function(e) {
         $("#make-tile").click(function(e) {
             var tile = new Tile(DEFAULT_TILE_COLOR, FiercePlanet.Game.currentX, FiercePlanet.Game.currentY);
-            FiercePlanet.Game.currentLevel.addTile(tile);
+            Lifecycle.currentLevel.addTile(tile);
             FiercePlanet.Dialogs.designFeaturesDialog.dialog('close');
             FiercePlanet.Drawing.drawGame();
         });
 
         $("#add-exit-point").click(function(e) {
-            FiercePlanet.Game.currentLevel.addExitPoint(FiercePlanet.Game.currentX, FiercePlanet.Game.currentY);
+            Lifecycle.currentLevel.addExitPoint(FiercePlanet.Game.currentX, FiercePlanet.Game.currentY);
             FiercePlanet.Dialogs.designFeaturesDialog.dialog('close');
             FiercePlanet.Drawing.drawGame();
         });
 
         $("#add-entry-point").click(function(e) {
-            FiercePlanet.Game.currentLevel.removeEntryPoint(0, 0);
-            FiercePlanet.Game.currentLevel.addEntryPoint(FiercePlanet.Game.currentX, FiercePlanet.Game.currentY);
+            Lifecycle.currentLevel.removeEntryPoint(0, 0);
+            Lifecycle.currentLevel.addEntryPoint(FiercePlanet.Game.currentX, FiercePlanet.Game.currentY);
             FiercePlanet.Dialogs.designFeaturesDialog.dialog('close');
             FiercePlanet.Drawing.drawGame();
         });
 
 
         $("#remove-entry-point").click(function(e) {
-            FiercePlanet.Game.currentLevel.removeEntryPoint(FiercePlanet.Game.currentX, FiercePlanet.Game.currentY);
+            Lifecycle.currentLevel.removeEntryPoint(FiercePlanet.Game.currentX, FiercePlanet.Game.currentY);
             FiercePlanet.Dialogs.designFeaturesDialog.dialog('close');
             FiercePlanet.Drawing.drawGame();
         });
 
         $("#remove-exit-point").click(function(e) {
-            FiercePlanet.Game.currentLevel.removeExitPoint(FiercePlanet.Game.currentX, FiercePlanet.Game.currentY);
+            Lifecycle.currentLevel.removeExitPoint(FiercePlanet.Game.currentX, FiercePlanet.Game.currentY);
             FiercePlanet.Dialogs.designFeaturesDialog.dialog('close');
             FiercePlanet.Drawing.drawGame();
         });
 
         $("#remove-resource").click(function(e) {
-            FiercePlanet.Game.currentLevel.removeResourceByPosition(FiercePlanet.Game.currentX, FiercePlanet.Game.currentY);
+            Lifecycle.currentLevel.removeResourceByPosition(FiercePlanet.Game.currentX, FiercePlanet.Game.currentY);
             FiercePlanet.Dialogs.designFeaturesDialog.dialog('close');
             FiercePlanet.Drawing.drawGame();
         });
@@ -104,7 +104,7 @@ FiercePlanet.Editor = FiercePlanet.Editor || {};
      * @param e
      */
     this.handleEditorMouseDown = function(e) {
-        FiercePlanet.Game.oldTiles = FiercePlanet.Game.currentLevel.tiles.slice();
+        FiercePlanet.Game.oldTiles = Lifecycle.currentLevel.tiles.slice();
         FiercePlanet.Game.isMouseDown = true;
         FiercePlanet.Game.isMouseMoving = false;
         return false;
@@ -121,19 +121,19 @@ FiercePlanet.Editor = FiercePlanet.Editor || {};
             var currentPoint = FiercePlanet.GeneralUI.getCurrentPosition(e);
 
             // Return if the co-ordinates are outside the level bounds
-            if (currentPoint.posX < 0 || currentPoint.posX >= FiercePlanet.Game.currentLevel.cellsAcross || currentPoint.posY < 0 || currentPoint.posY >= FiercePlanet.Game.currentLevel.cellsDown)
+            if (currentPoint.posX < 0 || currentPoint.posX >= Lifecycle.currentLevel.cellsAcross || currentPoint.posY < 0 || currentPoint.posY >= Lifecycle.currentLevel.cellsDown)
                 return;
 
             if (FiercePlanet.Editor.clearMode) {
-                var currentTile = FiercePlanet.Game.currentLevel.getTile(currentPoint.posX, currentPoint.posY);
+                var currentTile = Lifecycle.currentLevel.getTile(currentPoint.posX, currentPoint.posY);
                 if (currentTile == undefined ) {
                     var tile = new Tile(DEFAULT_TILE_COLOR, currentPoint.posX, currentPoint.posY);
-                    FiercePlanet.Game.currentLevel.addTile(tile);
+                    Lifecycle.currentLevel.addTile(tile);
                     FiercePlanet.Drawing.drawCanvases();
                 }
             }
             else {
-                FiercePlanet.Game.currentLevel.removeTile(currentPoint.posX, currentPoint.posY);
+                Lifecycle.currentLevel.removeTile(currentPoint.posX, currentPoint.posY);
             }
             FiercePlanet.Drawing.drawCanvases();
         }
@@ -149,17 +149,17 @@ FiercePlanet.Editor = FiercePlanet.Editor || {};
         var currentPoint = FiercePlanet.GeneralUI.getCurrentPosition(e);
 
         // Return if the co-ordinates are outside the level bounds
-        if (currentPoint.posX < 0 || currentPoint.posX >= FiercePlanet.Game.currentLevel.cellsAcross || currentPoint.posY < 0 || currentPoint.posY >= FiercePlanet.Game.currentLevel.cellsDown)
+        if (currentPoint.posX < 0 || currentPoint.posX >= Lifecycle.currentLevel.cellsAcross || currentPoint.posY < 0 || currentPoint.posY >= Lifecycle.currentLevel.cellsDown)
             return;
 
         FiercePlanet.Game.currentX = currentPoint.posX;
         FiercePlanet.Game.currentY = currentPoint.posY;
 
-        var currentTile = FiercePlanet.Game.currentLevel.getTile(FiercePlanet.Game.currentX, FiercePlanet.Game.currentY);
+        var currentTile = Lifecycle.currentLevel.getTile(FiercePlanet.Game.currentX, FiercePlanet.Game.currentY);
         if (FiercePlanet.Editor.clearMode) {
             if (currentTile == undefined) {
                 var tile = new Tile(DEFAULT_TILE_COLOR, FiercePlanet.Game.currentX, FiercePlanet.Game.currentY);
-                FiercePlanet.Game.currentLevel.addTile(tile);
+                Lifecycle.currentLevel.addTile(tile);
                 FiercePlanet.Drawing.drawCanvases();
             }
         }
@@ -168,7 +168,7 @@ FiercePlanet.Editor = FiercePlanet.Editor || {};
                 FiercePlanet.Editor.showDesignFeaturesDialog(e);
             }
             else {
-                FiercePlanet.Game.currentLevel.removeTile(FiercePlanet.Game.currentX, FiercePlanet.Game.currentY);
+                Lifecycle.currentLevel.removeTile(FiercePlanet.Game.currentX, FiercePlanet.Game.currentY);
                 FiercePlanet.Drawing.drawCanvases();
             }
         }
@@ -199,7 +199,7 @@ FiercePlanet.Editor = FiercePlanet.Editor || {};
      * Undoes the last action
      */
     this.undoAction = function() {
-        FiercePlanet.Game.currentLevel.tiles = (FiercePlanet.Game.oldTiles);
+        Lifecycle.currentLevel.tiles = (FiercePlanet.Game.oldTiles);
         FiercePlanet.Drawing.drawCanvases();
     };
 
@@ -207,8 +207,8 @@ FiercePlanet.Editor = FiercePlanet.Editor || {};
      * Refreshes the level with tiles
      */
     this.refreshTiles = function() {
-        FiercePlanet.Game.currentLevel.fillWithTiles();
-        FiercePlanet.Game.currentLevel.addEntryPoint(0, 0);
+        Lifecycle.currentLevel.fillWithTiles();
+        Lifecycle.currentLevel.addEntryPoint(0, 0);
         FiercePlanet.Drawing.drawCanvases();
     };
 
@@ -216,8 +216,8 @@ FiercePlanet.Editor = FiercePlanet.Editor || {};
      * Clears the level of tiles
      */
     this.fillAllTiles = function() {
-        FiercePlanet.Game.currentLevel.removeAllTiles();
-        FiercePlanet.Game.currentLevel.addEntryPoint(0, 0);
+        Lifecycle.currentLevel.removeAllTiles();
+        Lifecycle.currentLevel.addEntryPoint(0, 0);
         FiercePlanet.Drawing.drawCanvases();
     };
 
@@ -225,7 +225,7 @@ FiercePlanet.Editor = FiercePlanet.Editor || {};
      * Clears all entry points from the level
      */
     this.clearEntryPoints = function() {
-        FiercePlanet.Game.currentLevel.resetEntryPoints();
+        Lifecycle.currentLevel.resetEntryPoints();
         FiercePlanet.Drawing.drawCanvases();
     };
 
@@ -233,7 +233,7 @@ FiercePlanet.Editor = FiercePlanet.Editor || {};
      * Clears all exit points from the level
      */
     this.clearExitPoints = function() {
-        FiercePlanet.Game.currentLevel.resetExitPoints();
+        Lifecycle.currentLevel.resetExitPoints();
         FiercePlanet.Drawing.drawCanvases();
     };
 
@@ -263,7 +263,7 @@ FiercePlanet.Editor = FiercePlanet.Editor || {};
 //        $('#map_canvas').mouseup(FiercePlanet.GeneralUI.registerMouseUp);
 
         var mapOptions = FiercePlanet.GoogleMapUtils.defaultOptions();
-        $.extend(mapOptions, FiercePlanet.Game.currentLevel.mapOptions);
+        $.extend(mapOptions, Lifecycle.currentLevel.mapOptions);
         $.extend(mapOptions, {
                 disableDefaultUI: false,
                 mapTypeControl: true,
@@ -285,7 +285,7 @@ FiercePlanet.Editor = FiercePlanet.Editor || {};
         var tilt = FiercePlanet.Game.googleMap.getTilt();
         var zoom = FiercePlanet.Game.googleMap.getZoom();
         var mapTypeId = FiercePlanet.Game.googleMap.getMapTypeId();
-        FiercePlanet.Game.currentLevel.mapOptions = {
+        Lifecycle.currentLevel.mapOptions = {
             center: center,
             tilt: tilt,
             zoom: zoom,
@@ -302,7 +302,7 @@ FiercePlanet.Editor = FiercePlanet.Editor || {};
         $('#map_canvas').css({zIndex: 2});
         $('canvas').show();
         var mapOptions = FiercePlanet.GoogleMapUtils.defaultOptions();
-        $.extend(mapOptions, FiercePlanet.Game.currentLevel.mapOptions);
+        $.extend(mapOptions, Lifecycle.currentLevel.mapOptions);
         $.extend(mapOptions, {
             disableDefaultUI: true,
             mapTypeControl: false,

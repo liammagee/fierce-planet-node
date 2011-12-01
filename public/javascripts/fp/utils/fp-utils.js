@@ -68,7 +68,7 @@ FiercePlanet.Utils = FiercePlanet.Utils || {};
         $fp.w = $fp.w || World;
         $fp.s = $fp.s || World.settings;
         $fp.p = FiercePlanet.Game.currentProfile;
-        $fp.l = FiercePlanet.Game.currentLevel;
+        $fp.l = Lifecycle.currentLevel;
         $fp.r = FiercePlanet.Game.currentResource;
         $fp.rid = FiercePlanet.Game.currentResourceId;
         $fp.x = FiercePlanet.Game.currentX;
@@ -108,7 +108,7 @@ FiercePlanet.Utils = FiercePlanet.Utils || {};
         World.settings.recording = World.settings.recording || false;
         World.settings.godMode = World.settings.godMode || false;
 
-        World.settings.skewTiles = World.settings.skewTiles || true;
+        World.settings.skewTiles = World.settings.skewTiles || false;
         World.settings.showResourcesAsBoxes = World.settings.showResourcesAsBoxes || true;
 
         World.settings.sendEventsToServer = World.settings.sendEventsToServer || false;

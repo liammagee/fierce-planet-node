@@ -6,14 +6,10 @@
  * MIT Licensed
  */
 
-
-
-var FiercePlanet = FiercePlanet || {};
-
 /**
  * @namespace Manages modules
  */
-FiercePlanet.ModuleManager = FiercePlanet.ModuleManager || {};
+var ModuleManager = ModuleManager || {};
 
 
 (function() {
@@ -68,4 +64,8 @@ FiercePlanet.ModuleManager = FiercePlanet.ModuleManager || {};
 
 
 
-}).apply(FiercePlanet.ModuleManager);
+}).apply(ModuleManager);
+
+
+if (typeof(exports) != "undefined")
+    exports.ModuleManager = ModuleManager;

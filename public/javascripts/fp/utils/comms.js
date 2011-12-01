@@ -21,8 +21,8 @@ FiercePlanet.Comms = FiercePlanet.Comms || {};
         if (eventType == 'level') {
             var levelNumber = obj;
             if (World.settings.spectate) {
-                FiercePlanet.Game.currentLevelNumber = levelNumber;
-                FiercePlanet.Game.currentLevelPreset = true;
+                Lifecycle.currentLevelNumber = levelNumber;
+                Lifecycle.currentLevelPreset = true;
                 Lifecycle.newLevel();
 //                Lifecycle.startLevel();
             }
@@ -51,14 +51,14 @@ FiercePlanet.Comms = FiercePlanet.Comms || {};
                 for (var i in resources) {
                     FiercePlanet.Utils.makeFromJSONObject(resources[i], Resource.prototype);
                 }
-//                FiercePlanet.Game.currentLevel.addResource(resource);
+//                Lifecycle.currentLevel.addResource(resource);
                 FiercePlanet.Drawing.drawResources('#alt_resourceCanvas', resources);
 //            }
         }
         else if (eventType == 'agents') {
             var agents = obj;
             // Co-op mode
-//                FiercePlanet.Game.currentLevel.setCurrentAgents(agents);
+//                Lifecycle.currentLevel.setCurrentAgents(agents);
 //                FiercePlanet.Drawing.clearCanvas('#agentCanvas');
 //                FiercePlanet.Drawing.drawAgents();
             // Comp mode
@@ -67,7 +67,7 @@ FiercePlanet.Comms = FiercePlanet.Comms || {};
 
             // Same screen
             for (var i in agents) {
-                FiercePlanet.Game.currentLevel.currentAgents.push(agents[i]);
+                Lifecycle.currentLevel.currentAgents.push(agents[i]);
             }
             if (World.settings.spectate) {
                 Lifecycle.processAgents();
@@ -77,7 +77,7 @@ FiercePlanet.Comms = FiercePlanet.Comms || {};
         else if (eventType == 'agent') {
             duelingAgents.push(obj);
             // Co-op mode
-//                FiercePlanet.Game.currentLevel.setCurrentAgents(agents);
+//                Lifecycle.currentLevel.setCurrentAgents(agents);
 //                FiercePlanet.Drawing.clearCanvas('#agentCanvas');
 //                FiercePlanet.Drawing.drawAgents();
             FiercePlanet.Drawing.clearCanvas('#alt_agentCanvas');

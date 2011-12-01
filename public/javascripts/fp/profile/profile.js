@@ -102,7 +102,7 @@ Profile.prototype.resetCurrentStats = function(initialStore) {
     this.currentLevelSaved = 0;
     this.currentLevelExpired = 0;
 
-    this.currentLevelResourcesInStore = FiercePlanet.Game.currentLevel.initialResourceStore || FiercePlanet.Profile.STARTING_STORE;
+    this.currentLevelResourcesInStore = Lifecycle.currentLevel.initialResourceStore || FiercePlanet.Profile.STARTING_STORE;
     this.currentLevelResourcesSpent = 0;
     this.currentLevelResourcesSpentByCategory = {};
     for (var i = 0; i < World.resourceCategories.length; i++) {

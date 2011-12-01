@@ -36,12 +36,12 @@ FiercePlanet.LevelUI = FiercePlanet.LevelUI || {};
         FiercePlanet.Dialogs.levelEditorDialog.dialog('close');
 
         // Create new level
-        FiercePlanet.previousLevel = FiercePlanet.Game.currentLevel;
-        FiercePlanet.Game.currentLevel = new Level();
-		FiercePlanet.Game.currentLevelNumber = -1;
-		FiercePlanet.Game.currentLevelPreset = false;
-        FiercePlanet.Game.currentLevel.name = '[Enter the level name here]';
-		FiercePlanet.Game.currentLevel.fillWithTiles();
+        FiercePlanet.previousLevel = Lifecycle.currentLevel;
+        Lifecycle.currentLevel = new Level();
+		Lifecycle.currentLevelNumber = -1;
+		Lifecycle.currentLevelPreset = false;
+        Lifecycle.currentLevel.name = '[Enter the level name here]';
+		Lifecycle.currentLevel.fillWithTiles();
 
         // Prepare the level properties form
         FiercePlanet.LevelUI.prepareLevelPropertiesForm();
@@ -103,7 +103,7 @@ FiercePlanet.LevelUI = FiercePlanet.LevelUI || {};
      */
     this.saveLevel = function() {
 //        if (FiercePlanet.inDesignMode) {
-        var level = FiercePlanet.Game.currentLevel;
+        var level = Lifecycle.currentLevel;
 
         // Retrieve current dimensions
         var ca = level.cellsAcross;
@@ -117,7 +117,7 @@ FiercePlanet.LevelUI = FiercePlanet.LevelUI || {};
         });
 
         // If the level has been saved already, and the dimensions have changed, we need to start again
-        if (FiercePlanet.Game.currentLevel._id && (level.cellsAcross != ca || level.cellsDown != cd)) {
+        if (Lifecycle.currentLevel._id && (level.cellsAcross != ca || level.cellsDown != cd)) {
             if (confirm("The level dimensions have changed, and the current maze will be deleted. Should we proceed?")) {
                 // Redo level dimensions
                 level.fillWithTiles();
@@ -128,15 +128,15 @@ FiercePlanet.LevelUI = FiercePlanet.LevelUI || {};
                 level.cellsDown = cd;
             }
         }
-        else if (! FiercePlanet.Game.currentLevel._id) {
+        else if (! Lifecycle.currentLevel._id) {
             // Redo level dimensions
             level.fillWithTiles();
         }
 
         // Save the level
         $.post('/levels/save', { level: JSON.stringify(level) }, function(response) {
-            if (response._id && ! FiercePlanet.Game.currentLevel._id)
-                FiercePlanet.Game.currentLevel._id = response._id
+            if (response._id && ! Lifecycle.currentLevel._id)
+                Lifecycle.currentLevel._id = response._id
             FiercePlanet.Editor.setupLevelEditor();
         });
 //        }
@@ -160,9 +160,9 @@ FiercePlanet.LevelUI = FiercePlanet.LevelUI || {};
 //                    var levelTimerId = setInterval("FiercePlanet.LevelUI.saveLevel()", 5000);
 
             // Set the current level number and preset value
-            FiercePlanet.Game.currentLevelNumber = tmpLevel.id;
-            FiercePlanet.Game.currentLevelPreset = false;
-            FiercePlanet.Game.currentLevel = tmpLevel;
+            Lifecycle.currentLevelNumber = tmpLevel.id;
+            Lifecycle.currentLevelPreset = false;
+            Lifecycle.currentLevel = tmpLevel;
 
             // Prepare the level properties form
             FiercePlanet.LevelUI.prepareLevelPropertiesForm();
@@ -174,7 +174,7 @@ FiercePlanet.LevelUI = FiercePlanet.LevelUI || {};
      * Prepare current level properties form
      */
     this.prepareLevelPropertiesForm = function() {
-        var l = FiercePlanet.Game.currentLevel;
+        var l = Lifecycle.currentLevel;
         $('#level-object-id').val(l._id);
         $('#level-name').val(l.name);
         $('#level-url').attr('href', '/levels/share/' + l._id);
@@ -229,9 +229,9 @@ FiercePlanet.LevelUI = FiercePlanet.LevelUI || {};
                 }
                 tmpLevel.levelResources = tmpLevel.resources;
 
-                FiercePlanet.Game.currentLevel = tmpLevel;
-                FiercePlanet.Game.currentLevelNumber = tmpLevel.id;
-                FiercePlanet.Game.currentLevelPreset = false;
+                Lifecycle.currentLevel = tmpLevel;
+                Lifecycle.currentLevelNumber = tmpLevel.id;
+                Lifecycle.currentLevelPreset = false;
 
                 // Remember this level, along with other data
                 FiercePlanet.ProfileUI.storeProfileData();
@@ -252,9 +252,9 @@ FiercePlanet.LevelUI = FiercePlanet.LevelUI || {};
         }
         tmpLevel.levelResources = tmpLevel.resources;
 
-        FiercePlanet.Game.currentLevel = tmpLevel;
-        FiercePlanet.Game.currentLevelNumber = tmpLevel.id;
-        FiercePlanet.Game.currentLevelPreset = false;
+        Lifecycle.currentLevel = tmpLevel;
+        Lifecycle.currentLevelNumber = tmpLevel.id;
+        Lifecycle.currentLevelPreset = false;
 
         // Remember this level, along with other data
         FiercePlanet.ProfileUI.storeProfileData();

@@ -12,8 +12,7 @@ var FiercePlanet = FiercePlanet || {};
 /**
  * @namespace The namespace for preset levels
  */
-FiercePlanet.DefaultModule = FiercePlanet.DefaultModule || {};
-FiercePlanet.DefaultModule.Additional = FiercePlanet.DefaultModule.Additional || {};
+var Additional = Additional || new Campaign();
 
 (function() {
 
@@ -286,15 +285,17 @@ FiercePlanet.DefaultModule.Additional = FiercePlanet.DefaultModule.Additional ||
     
 
         // Checked and authorised
-
-        this.level12.mapOptions = ({mapTypeId: google.maps.MapTypeId.SATELLITE, center: new google.maps.LatLng(40.75537849652072, -73.98745089769363), zoom: 19}); // The World
-        this.level13.mapOptions = ({mapTypeId: google.maps.MapTypeId.SATELLITE, center: new google.maps.LatLng(33.30839307429315, 44.388874769210815), zoom: 18}); // The World
-        this.level14.mapOptions = ({mapTypeId: google.maps.MapTypeId.SATELLITE, center: new google.maps.LatLng(19.04721318329498, 72.85507321357727), zoom: 18}); // The World
-        this.level15.mapOptions = ({mapTypeId: google.maps.MapTypeId.SATELLITE, center: new google.maps.LatLng(55.75085915446095, 37.61694610118866), zoom: 18}); // The World
-        this.level16.mapOptions = ({mapTypeId: google.maps.MapTypeId.SATELLITE, center: new google.maps.LatLng(60.170506720026374, 24.94619607925415), zoom: 16}); // The World
-        this.level17.mapOptions = ({mapTypeId: google.maps.MapTypeId.SATELLITE, center: new google.maps.LatLng(34.101668544907994, -118.33886727690697), zoom: 19, tilt: 45}); // The World
-        this.level18.mapOptions = ({mapTypeId: google.maps.MapTypeId.SATELLITE, center: new google.maps.LatLng(46.52007450279348, 6.633171018458763), zoom: 18, tilt: 45}); // The World
-        this.level19.mapOptions = ({mapTypeId: google.maps.MapTypeId.SATELLITE, center: new google.maps.LatLng(25.119408837358463, 55.12870788574219), zoom: 14}); // The World
+		if (typeof(google) !== "undefined" && typeof(google.maps) !== "undefined") {
+	        this.level12.mapOptions = ({mapTypeId: google.maps.MapTypeId.SATELLITE, center: new google.maps.LatLng(40.75537849652072, -73.98745089769363), zoom: 19}); // The World
+	        this.level13.mapOptions = ({mapTypeId: google.maps.MapTypeId.SATELLITE, center: new google.maps.LatLng(33.30839307429315, 44.388874769210815), zoom: 18}); // The World
+	        this.level14.mapOptions = ({mapTypeId: google.maps.MapTypeId.SATELLITE, center: new google.maps.LatLng(19.04721318329498, 72.85507321357727), zoom: 18}); // The World
+	        this.level15.mapOptions = ({mapTypeId: google.maps.MapTypeId.SATELLITE, center: new google.maps.LatLng(55.75085915446095, 37.61694610118866), zoom: 18}); // The World
+	        this.level16.mapOptions = ({mapTypeId: google.maps.MapTypeId.SATELLITE, center: new google.maps.LatLng(60.170506720026374, 24.94619607925415), zoom: 16}); // The World
+	        this.level17.mapOptions = ({mapTypeId: google.maps.MapTypeId.SATELLITE, center: new google.maps.LatLng(34.101668544907994, -118.33886727690697), zoom: 19, tilt: 45}); // The World
+	        this.level18.mapOptions = ({mapTypeId: google.maps.MapTypeId.SATELLITE, center: new google.maps.LatLng(46.52007450279348, 6.633171018458763), zoom: 18, tilt: 45}); // The World
+	        this.level19.mapOptions = ({mapTypeId: google.maps.MapTypeId.SATELLITE, center: new google.maps.LatLng(25.119408837358463, 55.12870788574219), zoom: 14}); // The World
+		}
+		
 
 
         // Prepare as a module
@@ -306,4 +307,7 @@ FiercePlanet.DefaultModule.Additional = FiercePlanet.DefaultModule.Additional ||
 
     this.init();
 
-}).apply(FiercePlanet.DefaultModule.Additional);
+}).apply(Additional);
+
+if (typeof(exports) != "undefined") 
+    exports.Additional = Additional;

@@ -127,28 +127,28 @@ FiercePlanet.Graph = FiercePlanet.Graph || {};
     // Different stats models
     this.PopulationStats =  {
             setup: function() {
-                var yAxisMax = FiercePlanet.Game.numAgents;
+                var yAxisMax = Lifecycle.numAgents;
                 var options = {
                     series: { shadowSize: 0 }, // drawing is faster without shadows
                     yaxis: { min: 0, max: yAxisMax }
                 };
                 var seedData = [];
-                var agentSets = FiercePlanet.ModuleManager.currentModule.allAgentSets();
+                var agentSets = ModuleManager.currentModule.allCultures();
                 for (var i in agentSets) {
                     var as = agentSets[i];
-                    seedData.push({ color: as.color, data: [[0, FiercePlanet.Game.numAgents]], lines: { show: true } });
+                    seedData.push({ color: as.color, data: [[0, Lifecycle.numAgents]], lines: { show: true } });
                 }
                 return $.plot($("#world-graph"), seedData, options);
             },
             update: function(plot) {
                 var data = plot.getData();
                 if (Lifecycle.levelCounter > 0) {
-                    var agentSets = FiercePlanet.ModuleManager.currentModule.allAgentSets();
+                    var agentSets = ModuleManager.currentModule.allCultures();
                     var j = 0;
                     for (var i in agentSets) {
                         var as = agentSets[i];
                         var counter = 0;
-                        FiercePlanet.Game.currentLevel.currentAgents.forEach(function(a) {if (a.agentType.name == as.name) counter++} )
+                        Lifecycle.currentLevel.currentAgents.forEach(function(a) {if (a.culture.name == as.name) counter++} )
                         var d = [Lifecycle.levelCounter, counter];
                         j++;
                         data[i].data.push(d);
@@ -176,7 +176,7 @@ FiercePlanet.Graph = FiercePlanet.Graph || {};
             update: function(plot) {
                 var data = plot.getData();
                 if (Lifecycle.levelCounter > 0) {
-                    var stats = FiercePlanet.Game.currentLevel.currentAgentHealthStats();
+                    var stats = Lifecycle.currentLevel.currentAgentHealthStats();
                     var j = 0;
                     for (var i in stats) {
                         var d = [Lifecycle.levelCounter, stats[i]];
@@ -234,7 +234,7 @@ FiercePlanet.Graph = FiercePlanet.Graph || {};
             update: function(plot) {
                 var data = plot.getData();
                 if (Lifecycle.levelCounter > 0) {
-                    var stats = FiercePlanet.Game.currentLevel.currentAgentHealthStats();
+                    var stats = Lifecycle.currentLevel.currentAgentHealthStats();
                     var j = 0;
                     for (var i in stats) {
                         var d = [Lifecycle.levelCounter, stats[i]];
@@ -262,7 +262,7 @@ FiercePlanet.Graph = FiercePlanet.Graph || {};
             update: function(plot) {
                 var data = plot.getData();
                 if (Lifecycle.levelCounter > 0) {
-                    var stats = FiercePlanet.Game.currentLevel.currentAgentHealthStats();
+                    var stats = Lifecycle.currentLevel.currentAgentHealthStats();
                     var j = 0;
                     for (var i in stats) {
                         var d = [Lifecycle.levelCounter, stats[i]];

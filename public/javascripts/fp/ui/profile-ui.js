@@ -65,8 +65,8 @@ FiercePlanet.ProfileUI = FiercePlanet.ProfileUI || {};
      * Loads available settings from local storage
      */
     this.loadProfileSettingsFromStorage = function () {
-        FiercePlanet.Game.currentLevelNumber = (localStorage.currentLevelNumber != undefined ? parseInt(localStorage.currentLevelNumber) : FiercePlanet.Game.currentLevelNumber);
-        FiercePlanet.Game.currentLevelPreset = (localStorage.currentLevelPreset != undefined ? (localStorage.currentLevelPreset === 'true') : FiercePlanet.Game.currentLevelPreset);
+        Lifecycle.currentLevelNumber = (localStorage.currentLevelNumber != undefined ? parseInt(localStorage.currentLevelNumber) : Lifecycle.currentLevelNumber);
+        Lifecycle.currentLevelPreset = (localStorage.currentLevelPreset != undefined ? (localStorage.currentLevelPreset === 'true') : Lifecycle.currentLevelPreset);
         FiercePlanet.Game.currentScore = (localStorage.currentScore != undefined ? parseInt(localStorage.currentScore) : FiercePlanet.Game.currentScore);
         if (localStorage.currentProfile) {
             var cp = localStorage.currentProfile;
@@ -79,11 +79,11 @@ FiercePlanet.ProfileUI = FiercePlanet.ProfileUI || {};
      * Stores relevant profile data in local storage
      */
     this.storeProfileData = function() {
-        localStorage.currentLevelNumber = FiercePlanet.Game.currentLevelNumber;
-        if (FiercePlanet.Game.currentLevelSetID)
-            localStorage.currentLevelSetID = FiercePlanet.Game.currentLevelSetID;
-        if (FiercePlanet.Game.currentLevel)
-            localStorage.currentLevelPreset = FiercePlanet.Game.currentLevel.isPresetLevel;
+        localStorage.currentLevelNumber = Lifecycle.currentLevelNumber;
+        if (Lifecycle.currentLevelSetID)
+            localStorage.currentLevelSetID = Lifecycle.currentLevelSetID;
+        if (Lifecycle.currentLevel)
+            localStorage.currentLevelPreset = Lifecycle.currentLevel.isPresetLevel;
         localStorage.currentProfile = JSON.stringify(FiercePlanet.Game.currentProfile);
     };
 
@@ -135,7 +135,7 @@ FiercePlanet.ProfileUI = FiercePlanet.ProfileUI || {};
         var stats = "<table>" +
                 "<tr>" +
                 "<td>Level:</td>" +
-                "<td>" + FiercePlanet.Game.currentLevel.id + "</td>" +
+                "<td>" + Lifecycle.currentLevel.id + "</td>" +
                 "</tr>" +
                 "<tr>" +
                 "<td>Waves survived:</td>" +

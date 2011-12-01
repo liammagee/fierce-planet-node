@@ -21,6 +21,7 @@ function Level(id) {
 
     this.isPresetLevel = false;
     this.isTerminalLevel = false;
+    this.waves = [];
     this.entryPoints = [];
     this.exitPoints = [];
 
@@ -39,6 +40,7 @@ function Level(id) {
     this.customLevel = false;
     this.noWander = false;
     this.noSpeedChange = false;
+	this.resourcesOwnTilesExclusively = false;
 
     // Rendering options
     this.isometric = false;
@@ -46,6 +48,13 @@ function Level(id) {
     // Generation options
     this.randomiseAgents = false;
     this.randomiseResources = false;
+	this.generateWaveAgentsAutomatically = true;
+	this.incrementAgentsEachWave = true;
+	this.generateWaveAgentsAutomatically = true;
+    this.distributeAgentsNormally = false;
+    this.distributeAgentsSigma = 0;
+    this.distributeAgentsHealthNormally = false;
+    this.distributeAgentsHealthSigma = 0;
 
 
     // Current level state
@@ -58,6 +67,7 @@ function Level(id) {
     this.currentAgents = [];
     this.currentAgentsMap = {};
     this.expiredAgents = [];
+    this.savedAgents = [];
 
     // Resource variables
     this.levelResources = [];
@@ -486,7 +496,7 @@ Level.prototype.addAgent = function(agent) {
 };
 
 /**
- * Add agent
+ * Add expired agent
  */
 Level.prototype.addExpiredAgent = function(agent, time) {
     agent.alive = false;
@@ -496,12 +506,23 @@ Level.prototype.addExpiredAgent = function(agent, time) {
 
 
 /**
+ * Add saved agent
+ */
+Level.prototype.addSavedAgent = function(agent, time) {
+    agent.alive = false;
+    agent.diedAt = time;
+    this.savedAgents.push(agent);
+};
+
+
+/**
  *
- * @param agentType
+ * @param culture
  * @param number
  */
-Level.prototype.generateAgents = function(agentType, number) {
-    var agents = this.currentAgents;
+Level.prototype.generateAgents = function(culture, number) {
+//    var agents = this.currentAgents;
+    var agents = [];
     if (this.randomiseAgents) {
         // Get pathway length
         var pl = this.pathway.length;
@@ -509,7 +530,7 @@ Level.prototype.generateAgents = function(agentType, number) {
             // Generate a random tile position
             var tp = Math.floor(Math.random() * pl);
             var tile = this.pathway[tp];
-            var agent = this.generateAgentAtPoint(agentType, tile[0], tile[1]);
+            var agent = this.generateAgentAtPoint(culture, tile[0], tile[1]);
             agents.push(agent);
         }
     }
@@ -519,7 +540,7 @@ Level.prototype.generateAgents = function(agentType, number) {
             var x = point[0];
             var y = point[1];
             for (var i = 0; i < number; i ++) {
-                var agent = this.generateAgentAtPoint(agentType, x, y);
+                var agent = this.generateAgentAtPoint(culture, x, y, j);
                 agents.push(agent);
             }
         }
@@ -530,23 +551,27 @@ Level.prototype.generateAgents = function(agentType, number) {
     */
 
     this.setCurrentAgents(agents);
+	return agents;
 };
 
 /**
  * Generate agents at a point
  * @param numAgents
  */
-Level.prototype.generateAgentAtPoint = function(agentType, x, y) {
-    var agent = new Agent(agentType, x, y);
+Level.prototype.generateAgentAtPoint = function(culture, x, y, j) {
+    var agent = new Agent(culture, x, y);
     var colorSeed = j % 3;
     var colorScheme = (colorSeed == 0 ? "000" : (colorSeed == 1 ? "0f0" : "00f"));
     // TODO: Make this option configurable
 //            agent.setColor(colorScheme);
-    agent.delay = parseInt(Math.random() * DEFAULT_SPEED * 5);
+    agent.delay = parseInt(Math.random() * AgentConstants.DEFAULT_SPEED * 5);
     agent.canCommunicateWithOtherAgents = (World.settings.agentsCanCommunicate);
     agent.bornAt = (Lifecycle.levelCounter);
 
     // Reduce health of a random category
+    /**
+     * TODO: Replace with more systematic approach - belongs in Agent type or custom level config
+     */
     if (World.settings.agentsHaveRandomInitialHealth) {
         var categoryLength = World.resourceCategories.length;
         var categoryToReduceIndex = Math.floor(Math.random() * categoryLength);
@@ -569,7 +594,7 @@ Level.prototype.generateWaveAgents = function(numAgents) {
     for (var j = 0; j < numAgents; j++) {
         for (var i = 0; i < this.waveAgents.length; i++) {
             var waveAgent = this.waveAgents[i];
-            newAgents.push(new Agent(waveAgent.agentType, waveAgent.x, waveAgent.y));
+            newAgents.push(new Agent(waveAgent.culture, waveAgent.x, waveAgent.y));
         }
     }
     return newAgents;
@@ -600,6 +625,19 @@ Level.prototype.isPositionOccupiedByAgent = function (x, y) {
     return false;
 };
 
+/**
+ * Find the current resource index
+ */
+Level.prototype.countAgentsAtPosition = function (x, y) {
+    var count = 0;
+    for (var i = 0; i < this.currentAgents.length; i++) {
+        var agent = this.currentAgents[i];
+        if (agent.x == x && agent.y == y)
+            count++;
+    }
+    return count;
+};
+
 // Overall agent health functions
 
 /**
@@ -613,9 +651,9 @@ Level.prototype.currentAgentHealthStats = function () {
 	stats.total = 0;
     for (var i = 0; i < this.currentAgents.length; i++) {
         var agent = this.currentAgents[i];
-		for (var j in agent.agentType.healthCategories) {
-            var h = agent.getHealthForResourceCategory(agent.agentType.healthCategories[j]);
-			stats[agent.agentType.healthCategories[j].code] += h;
+		for (var j in agent.culture.healthCategories) {
+            var h = agent.getHealthForResourceCategory(agent.culture.healthCategories[j]);
+			stats[agent.culture.healthCategories[j].code] += h;
 		}
 		stats.total += agent.health;
     }
@@ -681,6 +719,12 @@ Level.prototype.generateLevelResources = function() {
             // Generate a random tile position
             var x = Math.floor(Math.random() * this.cellsAcross);
             var y = Math.floor(Math.random() * this.cellsDown);
+			/*
+			var catLen = World.resourceCategories.length;
+			var randomCat = World.resourceCategories[Math.floor(Math.random() * catLen)];
+			var typeLen = randomCat.types.length;
+			var rt = randomCat[Math.floor(Math.random() * typeLen)	];
+			*/
             var rt = World.resourceTypes[Math.floor(Math.random() * World.resourceTypes.length)];
             this.levelResources.push(new Resource(rt, x, y));
         }
@@ -931,7 +975,7 @@ Level.prototype.processNeighbouringAgents = function(agent) {
         var ax = a.x;
         var ay = a.y;
         if (Math.abs(ax - x) <= 1 && Math.abs(ay - y) <= 1) {
-            if (!World.settings.godMode && World.settings.predatorsVisible && agent.agentType.isHitable && a.agentType.canHit) {
+            if (!World.settings.godMode && World.settings.predatorsVisible && agent.culture.isHitable && a.culture.canHit) {
                 agent.isHit = true;
             }
         }
@@ -939,6 +983,38 @@ Level.prototype.processNeighbouringAgents = function(agent) {
     if (agent.isHit)
         agent.adjustGeneralHealth(-10);
 };
+
+/**
+ * Initialise waves
+ */
+Level.prototype.initialiseWaves = function(waveNumber) {
+	if (typeof(this.waves) === "undefined" || this.waves.length == 0) {
+		this.waves = [];
+		for (var i = 0; i < waveNumber; i++) {
+            var wave = new Wave();
+            wave.agents = [];
+            var cultures = ModuleManager.currentModule.allCultures();
+            for (var j in cultures) {
+                var culture = cultures[j];
+                if (culture.generateEachWave && this.generateWaveAgentsAutomatically) {
+                    var thisWaveNumber = (culture.waveNumber ? culture.waveNumber : Lifecycle.currentLevel.initialAgentNumber);
+                    console.log(thisWaveNumber)
+                    if (this.distributeAgentsNormally) {
+                        var s = this.distributeAgentsSigma;
+                        if (s == undefined)
+                            s = 0;
+                        thisWaveNumber = jStat.normal.sample(thisWaveNumber, s);
+                    }
+                    if (this.incrementAgentsEachWave)
+                        thisWaveNumber += (this.incrementAgentsEachWave * i);
+                    var agents = this.generateAgents(culture, thisWaveNumber);
+                    agents.forEach(function(a) {wave.agents.push(a);})
+                }
+            }
+            this.waves.push(wave);
+		}
+	}
+}
 
 
 

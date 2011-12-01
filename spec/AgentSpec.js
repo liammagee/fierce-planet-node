@@ -4,16 +4,16 @@ describe("agent-related classes", function() {
   var agent;
 
   beforeEach(function() {
-      agent = new Agent(World.agentTypes[0], 0, 0);
+      agent = new Agent(World.cultures[0], 0, 0);
   });
 
     describe("an agent", function() {
         it("should have a type", function() {
-          expect(agent.agentType).toEqual(World.agentTypes[0]);
+          expect(agent.culture).toEqual(World.cultures[0]);
         });
 
         it("should have a unique id", function() {
-          expect(agent.id).toNotEqual((new Agent(World.agentTypes[0], 0, 0).id));
+          expect(agent.id).toNotEqual((new Agent(World.cultures[0], 0, 0).id));
         });
 
         describe("health functions", function() {
@@ -101,7 +101,7 @@ describe("agent-related classes", function() {
                 level.removeTiles(65, 1);
 
                 // Place the agent at a co-ordinate on the path
-                agent = new Agent(World.agentTypes[0], 4, 5);
+                agent = new Agent(World.cultures[0], 4, 5);
                 defaultSpeed = agent.speed;
             });
 
@@ -203,7 +203,7 @@ describe("agent-related classes", function() {
                     level.addResource(new Resource(World.resourceTypes[0], 3, 4));
 
                     // Place the agent at a co-ordinate on the path
-                    agent = new Agent(World.agentTypes[0], 4, 5);
+                    agent = new Agent(World.cultures[0], 4, 5);
                     agent.adjustGeneralHealth(-50);
                 });
 
@@ -238,7 +238,7 @@ describe("agent-related classes", function() {
                 level.removeTiles(65, 1);
 
                 // Place the agent at a co-ordinate on the path
-                agent = new Agent(World.agentTypes[0], 4, 5);
+                agent = new Agent(World.cultures[0], 4, 5);
             });
 
             it("should have a memory", function() {
@@ -337,7 +337,7 @@ describe("agent-related classes", function() {
                 level.removeTiles(65, 1);
 
                 // Place the agent at a co-ordinate on the path
-                agent = new Agent(World.agentTypes[0], 3, 5);
+                agent = new Agent(World.cultures[0], 3, 5);
             });
 
             it("should find a position", function() {

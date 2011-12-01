@@ -30,7 +30,7 @@ function Catastrophe(kind, start, duration, effect, notice) {
 Catastrophe.prototype.strike = function() {
     if (! this.struck) {
         // Apply catastrophe effects
-        var resources = FiercePlanet.Game.currentLevel.resources;
+        var resources = Lifecycle.currentLevel.resources;
         var lod = FiercePlanet.Game.levelOfDifficulty;
         var newResources = [];
         for (var i = 0, len = resources.length; i < len; i++) {
@@ -45,11 +45,17 @@ Catastrophe.prototype.strike = function() {
             }
         }
 //        FiercePlanet.levelOfDifficulty
-        FiercePlanet.Game.currentLevel.setResources(newResources);
+        Lifecycle.currentLevel.setResources(newResources);
 //        FiercePlanet.clearCanvas('resourceCanvas');
 //        FiercePlanet.drawResources();
 //        FiercePlanet.Game.currentNotice = new Notice("RESOURCES WIPED OUT!");
         this.struck = true;
     }
 };
+
+
+if (typeof(exports) != "undefined")
+    exports.Catastrophe = Catastrophe;
+
+
 

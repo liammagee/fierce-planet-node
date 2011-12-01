@@ -23,15 +23,15 @@ FiercePlanet.LevelGallery = FiercePlanet.LevelGallery || {};
     this.init = function() {
         $('#difficulty-input-' + FiercePlanet.Game.levelOfDifficulty).attr('checked', 'checked');
         $(".difficultyInput").click(FiercePlanet.LevelGallery.changeDifficulty);
-        var tnID = 'tn-' + FiercePlanet.Game.currentLevelSetID + '-' + FiercePlanet.Game.currentLevelNumber;
-        FiercePlanet.LevelGallery.highlightGalleryItem(tnID, FiercePlanet.Game.currentLevelNumber);
+        var tnID = 'tn-' + Lifecycle.currentLevelSetID + '-' + Lifecycle.currentLevelNumber;
+        FiercePlanet.LevelGallery.highlightGalleryItem(tnID, Lifecycle.currentLevelNumber);
     };
 
     /**
      * Renders modules and levels in the level gallery
      */
     this.renderModules = function() {
-        var modules = FiercePlanet.ModuleManager.currentModule.allCampaigns();
+        var modules = ModuleManager.currentModule.allCampaigns();
         for (var i in modules) {
             var module = modules[i];
             $('#level-gallery-tabs>ul').prepend('<li><a href="#' + module.id + '"> ' + module.name + '</a></li>');
@@ -68,8 +68,8 @@ FiercePlanet.LevelGallery = FiercePlanet.LevelGallery || {};
      */
     this.changePresetLevel = function() {
         var level = $('#levelInput').val();
-        FiercePlanet.Game.currentLevelNumber = FiercePlanet.Utils.checkInteger(level);
-        FiercePlanet.Game.currentLevelPreset = true;
+        Lifecycle.currentLevelNumber = FiercePlanet.Utils.checkInteger(level);
+        Lifecycle.currentLevelPreset = true;
         // Remember this level, along with other data
         FiercePlanet.ProfileUI.storeProfileData();
     };
@@ -88,9 +88,9 @@ FiercePlanet.LevelGallery = FiercePlanet.LevelGallery || {};
         var level = $(this).data('level');
         var thumbnailID = 'tn-' + set + '-' + level;
         FiercePlanet.LevelGallery.highlightGalleryItem(tnID, level);
-        FiercePlanet.Game.currentLevelSetID = set;
-        FiercePlanet.Game.currentLevelNumber = FiercePlanet.Utils.checkInteger(level);
-        FiercePlanet.Game.currentLevelPreset = true;
+        Lifecycle.currentLevelSetID = set;
+        Lifecycle.currentLevelNumber = FiercePlanet.Utils.checkInteger(level);
+        Lifecycle.currentLevelPreset = true;
         // Remember this level, along with other data
         FiercePlanet.ProfileUI.storeProfileData();
     };

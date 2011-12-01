@@ -127,44 +127,63 @@ initWorld = (function() {
 
         this.resourceTypes = [];
 
-        this.agentTypes = [];
+        this.cultures = [];
+
+        this.switchResourceSet = function(resourceSet) {
+			this.resourceTypeNamespace = resourceSet;
+			
+			if (resourceSet.categories) {
+	            this.resourceCategories = resourceSet.categories;
+	            if (this.cultures)
+	                this.updateRegisteredCultures();
+			}
+			if (resourceSet.types) {
+	            this.resourceTypes = resourceSet.types;
+			}
+			//	this.registerResourceCategories(resourceSet.categories)
+        };
 
         this.registerResourceCategories = function(rcs) {
             this.resourceCategories = rcs;
-            if (this.agentTypes)
-                this.updateRegisteredAgentTypes();
+            if (this.cultures)
+                this.updateRegisteredCultures();
         };
 
         this.registerResourceTypes = function (rts) {
             this.resourceTypes = rts;
         };
 
-        this.registerAgentTypes = function (agt) {
-            this.agentTypes = agt;
+        this.registerCultures = function (agt) {
+            this.cultures = agt;
         };
 
-        this.updateRegisteredAgentTypes = function() {
-            for (var i in this.agentTypes) {
-                this.agentTypes[i].healthCategories = this.resourceCategories;
+        this.updateRegisteredCultures = function() {
+            for (var i in this.cultures) {
+                this.cultures[i].healthCategories = this.resourceCategories;
             }
         };
 
         this.resolveResourceType  = function(code) {
+			/*
+            for (var i in this.resourceCategories) {
+				var category = this.resourceCategories[i];
+				for (var j in category.types) {
+	                var resourceType = category.types[j];
+	                if (resourceType.code == code)
+	                    return resourceType;
+				}
+            }
+            return undefined;
+*/
             for (var i in this.resourceTypes) {
                 var resourceType = this.resourceTypes[i];
                 if (resourceType.code == code)
                     return resourceType;
             }
             return undefined;
+
         };
 
-
-        // State variables
-        this.currentLevel = null;
-
-        this.currentWave = null;
-
-        this.currentResource = null;
 
 
 

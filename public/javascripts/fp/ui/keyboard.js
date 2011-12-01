@@ -33,7 +33,7 @@ FiercePlanet.Keyboard = FiercePlanet.Keyboard || {};
 
 
         if (World.settings.firstPerson) {
-            var myAgent = FiercePlanet.Game.currentLevel.currentAgents[0];
+            var myAgent = Lifecycle.currentLevel.currentAgents[0];
             if (myAgent) {
                 switch (e.which) {
                     // +, -, 0: Zoom functions

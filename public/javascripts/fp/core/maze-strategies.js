@@ -80,7 +80,7 @@ FiercePlanet.Framework.MazeStrategies = FiercePlanet.Framework.MazeStrategies ||
                     if (level.isInHistory(newCell, history))
                         continue;
                     // Exclude cells occupied exclusively by resources
-                    if (World.settings.resourcesOwnTilesExclusively && level.isPositionOccupiedByResource(nx, ny))
+                    if ((World.settings.resourcesOwnTilesExclusively || level.resourcesOwnTilesExclusively) && level.isPositionOccupiedByResource(nx, ny))
                         continue;
 
                     newCandidates.push(newCell);

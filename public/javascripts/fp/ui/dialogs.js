@@ -213,6 +213,7 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
                     }
             });
 
+
         FiercePlanet.LevelGallery.renderModules();
         this.levelGalleryDialog = $('#level-gallery-dialog')
             .dialog({
@@ -461,8 +462,8 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
 
         $('#tutorial').click(function(e) {
             if (confirm("Stop current game and begin the tutorial?")) {
-                FiercePlanet.Game.currentLevelNumber = 0;
-                FiercePlanet.Game.currentLevelPreset = true;
+                Lifecycle.currentLevelNumber = 0;
+                Lifecycle.currentLevelPreset = true;
                 Lifecycle.restartLevel();
             }
         });
@@ -543,7 +544,7 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
     this.openCompleteLevelDialog = function() {
         this.completeLevelDialog
                 .html(
-                "<div>" + FiercePlanet.Game.currentLevel.conclusion + "</div>" + FiercePlanet.ProfileUI.generateStats()
+                "<div>" + Lifecycle.currentLevel.conclusion + "</div>" + FiercePlanet.ProfileUI.generateStats()
                 ).dialog('open');
     };
 
@@ -551,7 +552,7 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
      * Show the resource gallery, and allow the user to pick from a range of capabilities
      */
     this.showResourceGallery = function() {
-        Lifecycle.pauseGame();
+        FiercePlanet.Game.pauseGame();
 
         $('#current-profile-class')[0].innerHTML = FiercePlanet.Game.currentProfile.profileClass;
         $('#current-credits')[0].innerHTML = FiercePlanet.Game.currentProfile.credits;
@@ -655,7 +656,7 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
      * Shows the Fierce Planet settings
      */
     this.showSettings = function() {
-        Lifecycle.pauseGame();
+        FiercePlanet.Game.pauseGame();
         FiercePlanet.Dialogs.settingsDialog.dialog('open');
     };
 
@@ -663,7 +664,7 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
      * Shows the Fierce Planet level gallery
      */
     this.showLevelGallery = function() {
-        Lifecycle.pauseGame();
+        FiercePlanet.Game.pauseGame();
         FiercePlanet.Dialogs.levelGalleryDialog.dialog('open');
     };
 
@@ -672,7 +673,7 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
      * Shows the Fierce Planet credits
      */
     this.showCredits = function() {
-        Lifecycle.pauseGame();
+        FiercePlanet.Game.pauseGame();
         FiercePlanet.Dialogs.creditsDialog.dialog('open');
     };
 
@@ -680,7 +681,7 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
      * Shows the Fierce Planet login
      */
     this.showLogin = function() {
-        Lifecycle.pauseGame();
+        FiercePlanet.Game.pauseGame();
         FiercePlanet.Dialogs.loginDialog.dialog('open');
     };
 

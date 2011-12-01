@@ -2,7 +2,7 @@ var event_tests = {
 	test_event_construction : function() {
 		module("Event Test");
 		test("Test event", function() {
-            var e = new Event("agent", null, "created", FiercePlanet.Lifecycle.worldCounter, FiercePlanet.Game.currentLevel);
+            var e = new Event("agent", null, "created", FiercePlanet.Lifecycle.worldCounter, Lifecycle.currentLevel);
             var et = new EventTarget();
             et.addListener("agent", function(e) {
                 FiercePlanet.Game.currentNotice = new Notice("agent " + e._event);

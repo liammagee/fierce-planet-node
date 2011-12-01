@@ -54,8 +54,10 @@ function ResourceType(name, code, image, cost, upgradeCost, totalYield, perAgent
     this.totalYield = totalYield;
     this.perAgentYield = perAgentYield;
 
-    this.actualImage = new Image();
-    this.actualImage.src = image;
+	if (typeof(Image) !== "undefined") {
+	    this.actualImage = new Image();
+	    this.actualImage.src = image;
+	}
 }
 /**
  * Returns clone of this resource type

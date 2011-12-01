@@ -134,7 +134,7 @@ FiercePlanet.Event = FiercePlanet.Event || {};
                 var resourceCategoryName = resourceCategory.name;
                 var resourceCategoryColor = resourceCategory.color;
                 var resourceCategoryCode = resourceCategory.code;
-                var categoryCount = FiercePlanet.Game.currentLevel.getResourceCategoryCount(resourceCategoryCode);
+                var categoryCount = Lifecycle.currentLevel.getResourceCategoryCount(resourceCategoryCode);
                 if (categoryCount == 1) {
                     FiercePlanet.Game.currentNotice = new Notice("Well done! You've added your first " + resourceCategoryName + " resource!");
                     FiercePlanet.Game.currentNotice.height = 80;

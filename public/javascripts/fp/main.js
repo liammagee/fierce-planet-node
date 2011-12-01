@@ -46,7 +46,8 @@ $LAB
    .script("spin.js/spin.min.js")
    .script("sylvester/sylvester.js")
    .script("flot-0.7/flot/jquery.flot.min.js")
-   .script("jstat-1.0.0/js/jstat-0.1.0.min.js")
+   //.script("jstat-1.0.0/js/jstat-0.1.0.min.js")
+   .script("jstat-1.0.0/js/jstat.js")
    .script("jpicker-1.1.6/jpicker-1.1.6.js")
    .script("jq-console/demo/jqconsole-min.js")
    .script("/socket.io/socket.io.js")
@@ -57,8 +58,10 @@ $LAB
         'fp/core/world.js'
        , 'fp/core/agent.js'
        , 'fp/core/catastrophe.js'
-       , 'fp/core/culture.js'
+       , 'fp/core/cultures/culture.js'
+       , 'fp/core/campaign.js'
        , 'fp/core/level.js'
+       , 'fp/core/wave.js'
        , 'fp/core/resource.js'
        , 'fp/core/species.js'
        , 'fp/core/terrain.js'
@@ -67,6 +70,7 @@ $LAB
     , 'fp/core/module-manager.js'
     , 'fp/core/module.js'
     , 'fp/core/lifecycle.js'
+    , 'fp/core/statistics.js'
 
        , 'fp/profile/profile.js'
        , 'fp/profile/profile_class.js'
@@ -121,8 +125,8 @@ $LAB
    , 'fp/modules/pp/agents/agent_types.js'
     ])
     .wait(function() {
-            FiercePlanet.DefaultModule.init();
-//        FiercePlanet.PredatorPreyModule.init();
+            DefaultModule.init();
+//        PredatorPreyModule.init();
         })
     .wait(function() {
         FiercePlanet.Game.loadGame();
@@ -182,7 +186,7 @@ require([
 ], function() {
     //This function is called when all the scripts are loaded
         $('.thumbnail, .customLevel').click(FiercePlanet.GeneralUI.changePresetLevelDirectly);
-        FiercePlanet.GeneralUI.highlightGalleryItem(FiercePlanet.Game.currentLevelNumber);
+        FiercePlanet.GeneralUI.highlightGalleryItem(Lifecycle.currentLevelNumber);
         $('#difficulty-input-' + FiercePlanet.levelOfDifficulty).attr('checked', 'checked');
         $(".difficultyInput").click(FiercePlanet.GeneralUI.changeDifficulty);
 

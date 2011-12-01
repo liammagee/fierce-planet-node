@@ -151,7 +151,7 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
         posY = Math.floor(posY / (sh / FiercePlanet.Orientation.worldHeight));
 
         // Correct for tilt isometric view
-        if (World.settings.skewTiles || FiercePlanet.Game.currentLevel.isometric) {
+        if (World.settings.skewTiles || Lifecycle.currentLevel.isometric) {
             var point = FiercePlanet.Isometric.normaliseCoordinates(x, y);
             posX = Math.floor(point.x / FiercePlanet.Orientation.cellWidth);
             posY = Math.floor(point.y / FiercePlanet.Orientation.cellHeight);
@@ -198,7 +198,7 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
      */
     this.levelInfo = function() {
         var levelHTML = "";
-        var level = FiercePlanet.Game.currentLevel;
+        var level = Lifecycle.currentLevel;
         if (level.image != undefined) {
             levelHTML += '<img src="' + level.image + '" alt="City Image" width="460" height="140">';
             if (level.imageAttribution)

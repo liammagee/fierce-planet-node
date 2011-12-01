@@ -580,7 +580,7 @@ describe("level-related classes", function() {
     describe("handling agents", function() {
         beforeEach(function() {
             level.addEntryPoint(0, 0);
-            level.generateAgents(World.agentTypes[0], 10);
+            level.generateAgents(World.cultures[0], 10);
         });
 
         it("should generate a set of standard agents at the entry point", function() {
@@ -599,8 +599,8 @@ describe("level-related classes", function() {
 
         describe("handling level agents", function() {
             beforeEach(function() {
-                level.addLevelAgent(new Agent(World.agentTypes[0], 0, 0));
-                level.generateAgents(World.agentTypes[0], 10);
+                level.addLevelAgent(new Agent(World.cultures[0], 0, 0));
+                level.generateAgents(World.cultures[0], 10);
             });
 
             it("should add a level agent to the current agents", function() {
@@ -611,8 +611,8 @@ describe("level-related classes", function() {
 
         describe("handling wave agents", function() {
             beforeEach(function() {
-                level.addWaveAgent(new Agent(World.agentTypes[0], 0, 0));
-                level.generateAgents(World.agentTypes[0], 10);
+                level.addWaveAgent(new Agent(World.cultures[0], 0, 0));
+                level.generateAgents(World.cultures[0], 10);
             });
 
             it("should add a set of wave agent to the current agents", function() {
@@ -624,7 +624,7 @@ describe("level-related classes", function() {
         describe("random initial health dilution", function() {
             beforeEach(function() {
                 World.settings.agentsHaveRandomInitialHealth = true;
-                level.generateAgents(World.agentTypes[0], 10);
+                level.generateAgents(World.cultures[0], 10);
             });
 
             it("should have less than 100 health", function() {
@@ -642,17 +642,17 @@ describe("level-related classes", function() {
             });
 
             it("should generate 2 x the number of agents", function() {
-                level.generateAgents(World.agentTypes[0], 10);
+                level.generateAgents(World.cultures[0], 10);
                 expect(level.currentAgents.length).toEqual(20);
             });
 
             describe("handling level agents", function() {
                 beforeEach(function() {
-                    level.addLevelAgent(new Agent(World.agentTypes[0], 0, 0));
+                    level.addLevelAgent(new Agent(World.cultures[0], 0, 0));
                 });
 
                 it("should add only one level agent to the current agents", function() {
-                    level.generateAgents(World.agentTypes[0], 10);
+                    level.generateAgents(World.cultures[0], 10);
                     expect(level.levelAgents.length).toEqual(1);
                     expect(level.currentAgents.length).toEqual(21);
                 });
@@ -660,11 +660,11 @@ describe("level-related classes", function() {
 
             describe("handling wave agents", function() {
                 beforeEach(function() {
-                    level.addWaveAgent(new Agent(World.agentTypes[0], 0, 0));
+                    level.addWaveAgent(new Agent(World.cultures[0], 0, 0));
                 });
 
                 it("should add only one set of wave agent to the current agents", function() {
-                    level.generateAgents(World.agentTypes[0], 10);
+                    level.generateAgents(World.cultures[0], 10);
                     expect(level.waveAgents.length).toEqual(1);
                     expect(level.currentAgents.length).toEqual(30);
                 });
@@ -676,7 +676,7 @@ describe("level-related classes", function() {
             var agent, resource;
 
             beforeEach(function() {
-                level.generateAgents(World.agentTypes[0], 10);
+                level.generateAgents(World.cultures[0], 10);
                 level.addResource(new Resource(World.resourceTypes[0], 1, 1));
                 agent = level.currentAgents[0];
                 resource = level.resources[0];
@@ -696,11 +696,11 @@ describe("level-related classes", function() {
 
             beforeEach(function() {
                 World.settings.predatorsVisible = true;
-                World.agentTypes[0].isHitable = (true);
-                World.agentTypes[1].canHit = (true);
-                hittingAgent = new Agent(World.agentTypes[1], 0, 0);
+                World.cultures[0].isHitable = (true);
+                World.cultures[1].canHit = (true);
+                hittingAgent = new Agent(World.cultures[1], 0, 0);
                 level.addLevelAgent(hittingAgent);
-                level.generateAgents(World.agentTypes[0], 10);
+                level.generateAgents(World.cultures[0], 10);
                 hitAgent = level.currentAgents[0];
             });
 

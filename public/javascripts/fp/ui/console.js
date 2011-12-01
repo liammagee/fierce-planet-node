@@ -383,23 +383,23 @@ $(function() {
               var rs = params[1];
               jqconsole.Write(rs + '\n')
               if (rs == 'tbl') {
-                  World.resourceTypeNamespace = FiercePlanet.DefaultModule.TBL;
+                  World.resourceTypeNamespace = TBL;
                   if (World.resourceTypeNamespace.doSetup)
                       World.resourceTypeNamespace.doSetup();
 
                   //TBL
-                  World.registerResourceCategories([FiercePlanet.DefaultModule.TBL.ECO_CATEGORY, FiercePlanet.DefaultModule.TBL.ENV_CATEGORY, FiercePlanet.DefaultModule.TBL.SOC_CATEGORY]);
-                  World.registerResourceTypes(FiercePlanet.DefaultModule.TBL.ECONOMIC_RESOURCE_TYPES.concat(FiercePlanet.DefaultModule.TBL.ENVIRONMENTAL_RESOURCE_TYPES.concat(FiercePlanet.DefaultModule.TBL.SOCIAL_RESOURCE_TYPES)));
+                  World.registerResourceCategories([TBL.ECO_CATEGORY, TBL.ENV_CATEGORY, TBL.SOC_CATEGORY]);
+                  World.registerResourceTypes(TBL.ECONOMIC_RESOURCE_TYPES.concat(TBL.ENVIRONMENTAL_RESOURCE_TYPES.concat(TBL.SOCIAL_RESOURCE_TYPES)));
                   FiercePlanet.Game.currentProfile.capabilities = ["farm", "water", "clinic"];
               }
               else if (rs == 'cos') {
-                  World.resourceTypeNamespace = FiercePlanet.DefaultModule.CoS;
+                  World.resourceTypeNamespace = CoS;
                   if (World.resourceTypeNamespace.doSetup)
                       World.resourceTypeNamespace.doSetup();
 
                   //CoS
-                  World.registerResourceCategories([FiercePlanet.DefaultModule.CoS.ECO_CATEGORY, FiercePlanet.DefaultModule.CoS.ENV_CATEGORY, FiercePlanet.DefaultModule.CoS.POL_CATEGORY, FiercePlanet.DefaultModule.CoS.CUL_CATEGORY]);
-                  World.registerResourceTypes(FiercePlanet.DefaultModule.CoS.ECONOMIC_RESOURCE_TYPES.concat(FiercePlanet.DefaultModule.CoS.ECOLOGICAL_RESOURCE_TYPES.concat(FiercePlanet.DefaultModule.CoS.POLITICAL_RESOURCE_TYPES.concat(FiercePlanet.DefaultModule.CoS.CULTURAL_RESOURCE_TYPES))));
+                  World.registerResourceCategories([CoS.ECO_CATEGORY, CoS.ENV_CATEGORY, CoS.POL_CATEGORY, CoS.CUL_CATEGORY]);
+                  World.registerResourceTypes(CoS.ECONOMIC_RESOURCE_TYPES.concat(CoS.ECOLOGICAL_RESOURCE_TYPES.concat(CoS.POLITICAL_RESOURCE_TYPES.concat(CoS.CULTURAL_RESOURCE_TYPES))));
                   FiercePlanet.Game.currentProfile.capabilities = ["farm", "water", "clinic", "legal"];
               }
 
@@ -521,40 +521,40 @@ $(function() {
             switch(jqconsole.zone.agentSetup) {
                 case 1:
                     // Level width
-                    FiercePlanet.Game.currentLevel.cellsAcross = parseInt(command);
-                    FiercePlanet.Game.currentLevel.generatePath();
-                    FiercePlanet.Orientation.cellsAcross = FiercePlanet.Game.currentLevel.cellsAcross;
+                    Lifecycle.currentLevel.cellsAcross = parseInt(command);
+                    Lifecycle.currentLevel.generatePath();
+                    FiercePlanet.Orientation.cellsAcross = Lifecycle.currentLevel.cellsAcross;
                     FiercePlanet.Orientation.recalibrateParameters();
                     FiercePlanet.Drawing.drawCanvases();
                     jqconsole.zone.agentSetup = 2;
-                    jqconsole.Write("The level width is " + FiercePlanet.Game.currentLevel.cellsDown + ".\n");
+                    jqconsole.Write("The level width is " + Lifecycle.currentLevel.cellsDown + ".\n");
                     jqconsole.Write("What height would you like?\n");
                     break;
                 case 2:
                     // Level height
-                    FiercePlanet.Game.currentLevel.cellsDown = parseInt(command);
-                    FiercePlanet.Game.currentLevel.generatePath();
-                    FiercePlanet.Orientation.cellsDown = FiercePlanet.Game.currentLevel.cellsDown;
+                    Lifecycle.currentLevel.cellsDown = parseInt(command);
+                    Lifecycle.currentLevel.generatePath();
+                    FiercePlanet.Orientation.cellsDown = Lifecycle.currentLevel.cellsDown;
                     FiercePlanet.Orientation.recalibrateParameters();
                     FiercePlanet.Drawing.drawCanvases();
                     jqconsole.zone.agentSetup = 3;
-                    jqconsole.Write("The level height is " + FiercePlanet.Game.currentLevel.cellsDown + ".\n");
+                    jqconsole.Write("The level height is " + Lifecycle.currentLevel.cellsDown + ".\n");
                     jqconsole.Write("How many agents would you like?\n");
                     break;
                 case 3:
                     // Agent number
-                    FiercePlanet.Game.currentLevel.initialAgentNumber = parseInt(command);
-                    FiercePlanet.numAgents = FiercePlanet.Game.currentLevel.initialAgentNumber;
-                    FiercePlanet.Game.currentLevel.expiryLimit = FiercePlanet.Game.currentLevel.initialAgentNumber;
-                    jqconsole.Write("You've got " + FiercePlanet.Game.currentLevel.initialAgentNumber + " agents!\n");
+                    Lifecycle.currentLevel.initialAgentNumber = parseInt(command);
+                    FiercePlanet.numAgents = Lifecycle.currentLevel.initialAgentNumber;
+                    Lifecycle.currentLevel.expiryLimit = Lifecycle.currentLevel.initialAgentNumber;
+                    jqconsole.Write("You've got " + Lifecycle.currentLevel.initialAgentNumber + " agents!\n");
                     jqconsole.Write("How many resources would you like?\n");
                     jqconsole.zone.agentSetup = 4;
                     break;
                 case 4:
                     // Resource number
-                    FiercePlanet.Game.currentLevel.initialResourceNumber = parseInt(command);
-                    jqconsole.Write("You've got " + FiercePlanet.Game.currentLevel.initialResourceNumber + " resources!\n");
-                    FiercePlanet.Game.currentLevel.generateLevelResources();
+                    Lifecycle.currentLevel.initialResourceNumber = parseInt(command);
+                    jqconsole.Write("You've got " + Lifecycle.currentLevel.initialResourceNumber + " resources!\n");
+                    Lifecycle.currentLevel.generateLevelResources();
                     FiercePlanet.Drawing.drawCanvases();
                     jqconsole.zone.agentSetup = -1;
                     break;
@@ -562,10 +562,10 @@ $(function() {
         }
         else {
             if (command == 'new') {
-                FiercePlanet.Game.currentLevel = new Level();
-                FiercePlanet.Game.currentLevel.randomiseAgents = true;
-                FiercePlanet.Game.currentLevel.randomiseResources = true;
-                FiercePlanet.Game.currentLevel.waveNumber = 1;
+                Lifecycle.currentLevel = new Level();
+                Lifecycle.currentLevel.randomiseAgents = true;
+                Lifecycle.currentLevel.randomiseResources = true;
+                Lifecycle.currentLevel.waveNumber = 1;
                 FiercePlanet.Drawing.drawGame();
                 jqconsole.Write("What width would you like?\n");
                 jqconsole.zone.agentSetup = 1;

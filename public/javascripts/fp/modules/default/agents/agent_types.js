@@ -10,9 +10,7 @@
 Agent Type setup
  */
 
-var AgentTypes = function() {};
-FiercePlanet.DefaultModule = FiercePlanet.DefaultModule || {};
-FiercePlanet.DefaultModule.AgentTypes = FiercePlanet.DefaultModule.AgentTypes || {};
+var DefaultCultures = DefaultCultures || {};
 
 
 /**
@@ -21,9 +19,9 @@ FiercePlanet.DefaultModule.AgentTypes = FiercePlanet.DefaultModule.AgentTypes ||
 (function() {
 
     this.init = function() {
-        AgentTypes.CITIZEN_AGENT_TYPE = new AgentType("Citizen", "000", World.resourceCategories);
-        AgentTypes.CITIZEN_AGENT_TYPE.isHitable = (true);
-        AgentTypes.CITIZEN_AGENT_TYPE.drawFunction = (function(ctx, agent, x, y, pieceWidth, pieceHeight, newColor, counter, direction) {
+        this.CITIZEN_AGENT_TYPE = new Culture("Citizen", "000", World.resourceCategories);
+        this.CITIZEN_AGENT_TYPE.isHitable = (true);
+        this.CITIZEN_AGENT_TYPE.drawFunction = (function(ctx, agent, x, y, pieceWidth, pieceHeight, newColor, counter, direction) {
 
             if (pieceWidth < (8 ) || pieceHeight < (8 )) {
     //        if (false) {
@@ -48,18 +46,35 @@ FiercePlanet.DefaultModule.AgentTypes = FiercePlanet.DefaultModule.AgentTypes ||
 
                 // Category Health
                 var yHealthOffset = -5;
-                for (var j in agent.agentType.healthCategories) {
-                    var rc = agent.agentType.healthCategories[j];
+                for (var j in agent.culture.healthCategories) {
+                    var rc = agent.culture.healthCategories[j];
                     var h = agent.getHealthForResourceCategory(rc);
+                    var barLength = Math.floor((h / AgentConstants.INITIAL_HEALTH) * pieceWidth / 2);
+
+                    ctx.lineWidth = 3;
+                    ctx.lineCap = "round";
+
+					// Draw white line background first
+					/*
                     ctx.beginPath();
                     ctx.moveTo(x - pieceWidth / 4, y + yHealthOffset);
-                    var barLength = (h / INITIAL_HEALTH) * pieceWidth / 2;
-                    ctx.lineTo(x - pieceWidth / 4 + barLength, y + yHealthOffset);
-                    ctx.closePath(); yHealthOffset -= 3;
-                    ctx.lineWidth = 3;
-                    ctx.strokeStyle = "#" + rc.color;
-                    ctx.lineCap = "round";
+                    ctx.lineTo(x + pieceWidth / 4, y + yHealthOffset);
+                    ctx.closePath(); 
+
+                    ctx.strokeStyle = "#fff";
                     ctx.stroke();
+					*/
+
+					// Draw health line next
+                    ctx.beginPath();
+                    ctx.moveTo(x - pieceWidth / 4, y + yHealthOffset);
+                    ctx.lineTo(x - pieceWidth / 4 + barLength, y + yHealthOffset);
+                    ctx.closePath(); 
+
+                    ctx.strokeStyle = "#" + rc.color;
+                    ctx.stroke();
+
+					yHealthOffset -= 3;
                 }
 
                 // General Health
@@ -99,7 +114,7 @@ FiercePlanet.DefaultModule.AgentTypes = FiercePlanet.DefaultModule.AgentTypes ||
         });
 
 
-        AgentTypes.CITIZEN_AGENT_TYPE.drawExpired = function(ctx, agent, x, y, pieceWidth, pieceHeight, newColor, counter, direction) {
+        DefaultCultures.CITIZEN_AGENT_TYPE.drawExpired = function(ctx, agent, x, y, pieceWidth, pieceHeight, newColor, counter, direction) {
             // Draw an explosion here
             var explosionX = x;
             var explosionY = y  + pieceWidth / 2;
@@ -216,74 +231,14 @@ FiercePlanet.DefaultModule.AgentTypes = FiercePlanet.DefaultModule.AgentTypes ||
             }
         };
 
-        AgentTypes.PREDATOR_AGENT_TYPE = new AgentType("Predator", "fbe53b", World.resourceCategories);
-        AgentTypes.PREDATOR_AGENT_TYPE.canHit = (true);
-        AgentTypes.PREDATOR_AGENT_TYPE.generateEachWave = false;
-        AgentTypes.PREDATOR_AGENT_TYPE.drawFunction = (function(ctx, agent, intX, intY, pieceWidth, pieceHeight, newColor, counter, direction) {
-            var radius = (pieceWidth / 4);
-            var bodyLength = (pieceWidth / 2);
-
-            var img = new Image();
-    //    img.src = "/images/fp/fierce_planet_monster1.png";
-
-            if (counter % 4 == 0) {
-                img.src = "/images/fp/monster1.png";
-            }
-            else if (counter % 4 == 1) {
-                img.src = "/images/fp/monster2.png";
-            }
-            else if (counter % 4 == 2) {
-                img.src = "/images/fp/monster1.png";
-            }
-            else {
-                img.src = "/images/fp/monster3.png";
-            }
-            ctx.drawImage(img, intX - pieceWidth / 2, intY - pieceWidth / 2, pieceWidth, pieceWidth);
-        });
-
-        AgentTypes.RIVAL_AGENT_TYPE = new AgentType("Rival", "3be5fb", World.resourceCategories);
-        AgentTypes.RIVAL_AGENT_TYPE.generateEachWave = false;
-        AgentTypes.RIVAL_AGENT_TYPE.drawFunction = (function(ctx, agent, intX, intY, pieceWidth, pieceHeight, newColor, counter, direction) {
-
-            if (pieceWidth < (8 / FiercePlanet.Orientation.zoomMagnificationFactor) || pieceHeight < (8 / FiercePlanet.Orientation.zoomMagnificationFactor)) {
-                var radius = (pieceWidth / 4);
-
-                ctx.lineWidth = 1.5;
-                ctx.beginPath();
-                ctx.arc(x + radius, y + radius, radius, 0, Math.PI * 2, false);
-                ctx.closePath();
-                ctx.strokeStyle = "#ccc";
-                ctx.stroke();
-                ctx.fillStyle = "#" + newColor;
-                ctx.fill();
-            }
-            else {
-                // Define agent elements here
-                var frames = 3;
-                var speed = agent.speed;
-                var countdown = agent.countdownToMove;
-                var frame = Math.floor((countdown / (speed + 1)) * frames);
-
-                var sf = new FiercePlanet.StickFigure(x, y, pieceWidth, pieceHeight);
-                if (speed > 5)
-                    sf.defaultAction = sf.walk;
-                else
-                    sf.defaultAction = sf.run;
-                sf.defaultAction(frame, direction);
-                sf.drawFigure(ctx);
-
-
-                // Now draw the figure
-                ctx.lineWidth = 0.5;
-                ctx.strokeStyle = "#" + newColor;
-                ctx.lineCap = "round";
-                ctx.stroke();
-            }
-        });
 
         this.id = 'FP-Agents';
-        this.agentTypes = [AgentTypes.CITIZEN_AGENT_TYPE, AgentTypes.PREDATOR_AGENT_TYPE, AgentTypes.RIVAL_AGENT_TYPE];
+        this.cultures = [DefaultCultures.CITIZEN_AGENT_TYPE];
     }
 
-}).apply(FiercePlanet.DefaultModule.AgentTypes);
+}).apply(DefaultCultures);
+
+
+if (typeof(exports) != "undefined") 
+    exports.DefaultCultures = DefaultCultures;
 

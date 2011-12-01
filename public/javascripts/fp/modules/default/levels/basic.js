@@ -12,8 +12,7 @@ var FiercePlanet = FiercePlanet || {};
 /**
  * @namespace The namespace for preset levels
  */
-FiercePlanet.DefaultModule = FiercePlanet.DefaultModule || {};
-FiercePlanet.DefaultModule.Basic = FiercePlanet.DefaultModule.Basic || {};
+var Basic = Basic || new Campaign();
 
 
 (function() {
@@ -74,7 +73,8 @@ FiercePlanet.DefaultModule.Basic = FiercePlanet.DefaultModule.Basic || {};
         );
         //"<p>The citizens of Fierce Planet are under threat. They are migrating in ever increasing numbers, seeking a promised land of peace and prosperity.</p>" +
         //"<p>Help them by placing resources beside their path - before they expire!</p> "
-        this.level1.tip = (new Notice("Drag or click the resources on the right (->), then add them to the map.", FiercePlanet.Orientation.worldWidth - FiercePlanet.Game.WAVE_NOTICE_WIDTH, FiercePlanet.Orientation.halfWorldHeight));
+        // this.level1.tip = new Notice("Drag or click the resources on the right (->), then add them to the map.", FiercePlanet.Orientation.worldWidth - FiercePlanet.Game.WAVE_NOTICE_WIDTH, FiercePlanet.Orientation.halfWorldHeight);
+        this.level1.tip = new Notice("Drag or click the resources on the right (->), then add them to the map.");
         this.level1.soundSrc = ("http://db.tt/iFLVJKi");
 
 
@@ -486,14 +486,13 @@ FiercePlanet.DefaultModule.Basic = FiercePlanet.DefaultModule.Basic || {};
         // TODO: Testing - remove for production deployment
         this.level7.initialResourceStore = 200;
         this.level7.agentGoToNearestExit = true;
+        this.level7.resourcesOwnTilesExclusively = true;
         this.level7.name = ("Level 7: Like, Totally Random...");
         this.level7.introduction = (
                 "<p>Ahead lies a vast and empty expanse. Your citizens are understandably nervous. Left unaided, they will try not to backtrack, but could find themselves hopelessly lost.</p>");
         this.level7.tip = (new Notice("You can add resources to the paths (the white squares) on this level, to direct citizens to their goal."));
         this.level7.conclusion = ("Spaced out! Time to move back to the (apparent) comforts of the city.");
         this.level7.soundSrc = ("http://db.tt/7SRv0qP");
-
-        World.settings.resourcesOwnTilesExclusively = true;
 
         this.level7.setup = function() {
             this.fillWithTiles();
@@ -915,17 +914,19 @@ FiercePlanet.DefaultModule.Basic = FiercePlanet.DefaultModule.Basic || {};
 
 
         /* Google Map links */
-        this.level1.mapOptions = ({mapTypeId: 'mars_infrared', center: new google.maps.LatLng(-80.73270997231712, 85.09268911182834), zoom: 3, tilt: 0}); // Budapest: 47.5153, 19.0782
-        this.level2.mapOptions = ({mapTypeId: google.maps.MapTypeId.SATELLITE, center: new google.maps.LatLng(37.390296, -5.954579), zoom: 18, tilt: 45}); // Seville: 37.390296,-5.954579
-        this.level3.mapOptions = ({mapTypeId: google.maps.MapTypeId.SATELLITE, center: new google.maps.LatLng(45.433607, 12.338124), zoom: 18, tilt: 45}); // Venice: 45.433607,12.338124
-        this.level4.mapOptions = ({mapTypeId: google.maps.MapTypeId.SATELLITE, center: new google.maps.LatLng(41.890384354793554, 12.49228627979709), zoom: 19, tilt: 45}); // Rome, Colosseum: 41.890384354793554, 12.49228627979709
-        this.level5.mapOptions = ({mapTypeId: google.maps.MapTypeId.SATELLITE, center: new google.maps.LatLng(-33.434969, -70.655254), zoom: 18, tilt: 45}); // Santiago: -33.434969,-70.655254
-        this.level6.mapOptions = ({mapTypeId: google.maps.MapTypeId.SATELLITE, center: new google.maps.LatLng(47.487229, 19.07513), zoom: 18, tilt: 45}); // Budapest: 47.487229,19.07513
-        this.level7.mapOptions = ({mapTypeId: google.maps.MapTypeId.SATELLITE, center: new google.maps.LatLng(30.006533, -90.158792), zoom: 18, tilt: 45}); // New Orleans: 30.006533,-90.158792
-        this.level8.mapOptions = ({mapTypeId: google.maps.MapTypeId.SATELLITE, center: new google.maps.LatLng(33.441393, -112.077407), zoom: 18, tilt: 45}); // Phoenix, Arizona: 33.441393,-112.077407
-        this.level9.mapOptions = ({mapTypeId: google.maps.MapTypeId.SATELLITE, center: new google.maps.LatLng(21.281500, -157.839000), zoom: 18, tilt: 45}); // Honululu: 21.283355,-157.837787
-        this.level10.mapOptions = ({mapTypeId: google.maps.MapTypeId.SATELLITE, center: new google.maps.LatLng(30.265450, -97.744524), zoom: 18, tilt: 45}); // Austin, Texas: 30.265452,-97.744524
-        this.level11.mapOptions = ({mapTypeId: google.maps.MapTypeId.SATELLITE, center: new google.maps.LatLng(51, 73), zoom: 2}); // The World
+		if (typeof(google) !== "undefined" && typeof(google.maps) !== "undefined") {
+	        this.level1.mapOptions = ({mapTypeId: 'mars_infrared', center: new google.maps.LatLng(-80.73270997231712, 85.09268911182834), zoom: 3, tilt: 0}); // Budapest: 47.5153, 19.0782
+	        this.level2.mapOptions = ({mapTypeId: google.maps.MapTypeId.SATELLITE, center: new google.maps.LatLng(37.390296, -5.954579), zoom: 18, tilt: 45}); // Seville: 37.390296,-5.954579
+	        this.level3.mapOptions = ({mapTypeId: google.maps.MapTypeId.SATELLITE, center: new google.maps.LatLng(45.433607, 12.338124), zoom: 18, tilt: 45}); // Venice: 45.433607,12.338124
+	        this.level4.mapOptions = ({mapTypeId: google.maps.MapTypeId.SATELLITE, center: new google.maps.LatLng(41.890384354793554, 12.49228627979709), zoom: 19, tilt: 45}); // Rome, Colosseum: 41.890384354793554, 12.49228627979709
+	        this.level5.mapOptions = ({mapTypeId: google.maps.MapTypeId.SATELLITE, center: new google.maps.LatLng(-33.434969, -70.655254), zoom: 18, tilt: 45}); // Santiago: -33.434969,-70.655254
+	        this.level6.mapOptions = ({mapTypeId: google.maps.MapTypeId.SATELLITE, center: new google.maps.LatLng(47.487229, 19.07513), zoom: 18, tilt: 45}); // Budapest: 47.487229,19.07513
+	        this.level7.mapOptions = ({mapTypeId: google.maps.MapTypeId.SATELLITE, center: new google.maps.LatLng(30.006533, -90.158792), zoom: 18, tilt: 45}); // New Orleans: 30.006533,-90.158792
+	        this.level8.mapOptions = ({mapTypeId: google.maps.MapTypeId.SATELLITE, center: new google.maps.LatLng(33.441393, -112.077407), zoom: 18, tilt: 45}); // Phoenix, Arizona: 33.441393,-112.077407
+	        this.level9.mapOptions = ({mapTypeId: google.maps.MapTypeId.SATELLITE, center: new google.maps.LatLng(21.281500, -157.839000), zoom: 18, tilt: 45}); // Honululu: 21.283355,-157.837787
+	        this.level10.mapOptions = ({mapTypeId: google.maps.MapTypeId.SATELLITE, center: new google.maps.LatLng(30.265450, -97.744524), zoom: 18, tilt: 45}); // Austin, Texas: 30.265452,-97.744524
+	        this.level11.mapOptions = ({mapTypeId: google.maps.MapTypeId.SATELLITE, center: new google.maps.LatLng(51, 73), zoom: 2}); // The World
+		}
 
 
         // Prepare as a module
@@ -937,4 +938,7 @@ FiercePlanet.DefaultModule.Basic = FiercePlanet.DefaultModule.Basic || {};
 
     this.init();
 
-}).apply(FiercePlanet.DefaultModule.Basic);
+}).apply(Basic);
+
+if (typeof(exports) != "undefined") 
+    exports.Basic = Basic;

@@ -1180,7 +1180,7 @@ var NormalDistribution = ContinuousDistribution.extend({
         }
         if(sigma<=0) {
             if(sigma < 0) {
-                throw "invalid sigma in _pdf";
+                throw " alid sigma in _pdf";
             }
             return (x==mu)?Number.POSITIVE_INFINITY:(give_log)?Number.NEGATIVE_INFINITY:0.0;
         }
