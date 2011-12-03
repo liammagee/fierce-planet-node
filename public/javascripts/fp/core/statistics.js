@@ -53,62 +53,76 @@ var Statistics = {};
         }
 		return data;
 	};
-	
+
+    /**
+     * Firstly, calculates life expectancy based on average age of expired agents.
+     * Secondly, recalibrates for saved and live agents, where those agents exceed the life
+     * expectancy of expired agents.
+     */
 	this.lifeExpectancyStats = function() {
 		var data = [];
         if (Lifecycle.levelCounter > 0) {
+            // Set up variables
+            var expiredCount = 0, expiredTotal = 0, expiredMin = 0, expiredMax = 0, expiredAve = 0;
+            var recalibratedCount = 0, recalibratedTotal = 0, recalibratedMin = 0, recalibratedMax = 0, recalibratedAve = 0;
+			var liveCounter = 0, liveMin = 0, liveMax = 0;
 			var savedCounter = 0, savedMin = 0, savedMax = 0;
-			var expiredCounter = 0, expiredMin = 0, expiredMax = 0;
+			var live =  Lifecycle.currentLevel.currentAgents.length;
 			var saved =  Lifecycle.currentLevel.savedAgents.length;
 			var expired =  Lifecycle.currentLevel.expiredAgents.length;
 			var total = saved + expired, totalMin = 0, totalMax = 0;
-			total = (total == 0 ? 1 : total)
+			live = (live == 0 ? 1 : live)
 			saved = (saved == 0 ? 1 : saved)
 			expired = (expired == 0 ? 1 : expired)
-			for (var i in Lifecycle.currentLevel.savedAgents) {
-				var agent = Lifecycle.currentLevel.savedAgents[i];
-				var age = (agent.diedAt - agent.bornAt);
-				savedCounter += age;
-				if (i == 0) {
-					savedMin = age;
-					savedMax = age;
-				}
-				else {
-					if (age < savedMin)
-						savedMin = age;
-					if (age > savedMax)
-						savedMax = age;
-				}
-			}
-			for (var i in Lifecycle.currentLevel.expiredAgents) {
-				var agent = Lifecycle.currentLevel.expiredAgents[i];
-				var age = (agent.diedAt - agent.bornAt);
-				expiredCounter += age;
-				if (i == 0) {
-					expiredMin = age;
-					expiredMax = age;
-				}
-				else {
-					if (age < expiredMin)
-						expiredMin = age;
-					if (age > expiredMax)
-						expiredMax = age;
-				}
-			}
-			var sle = savedCounter / saved;
-			var ele = expiredCounter / expired;
-			var le = (savedCounter + expiredCounter) / total;
-			totalMin = ((savedMin < expiredMin && savedMin > 0) ? savedMin : expiredMin);
-			totalMax = (savedMax > expiredMax ? savedMax : expiredMax);
-            data.push(['Saved ave', Math.floor(sle) ]);
-            data.push(['Saved min', Math.floor(savedMin) ]);
-            data.push(['Saved max', Math.floor(savedMax) ]);
-            data.push(['Expired ave', Math.floor(ele) ]);
+            total = (total == 0 ? 1 : total)
+
+
+            // Calculate life expectancy for expired agents
+            var expiredCount = Lifecycle.currentLevel.expiredAgents.length;
+            Lifecycle.currentLevel.expiredAgents.forEach(function(agent) {
+                var age = (agent.diedAt - agent.bornAt);
+                expiredTotal += age;
+                if (expiredMin == 0 || age < expiredMin)
+                    expiredMin = age;
+                if (age > expiredMax)
+                    expiredMax = age;
+            });
+            expiredAve = expiredTotal / expiredCount;
+
+            // Now recalibrate for saved and live agents
+            recalibratedCount = expiredCount;
+            recalibratedTotal = expiredTotal;
+            recalibratedMin = expiredMin;
+            recalibratedMax = expiredMax;
+            // Saved agents
+            Lifecycle.currentLevel.savedAgents.forEach(function(agent) {
+                var age = (agent.diedAt - agent.bornAt);
+                if (age > expiredAve) {
+                    recalibratedCount++;
+                    recalibratedTotal += age;
+                    if (age > recalibratedMax)
+                        recalibratedMax = age;
+                }
+            });
+            // Live agents
+            Lifecycle.currentLevel.currentAgents.forEach(function(agent) {
+                var age = (Lifecycle.levelCounter - agent.bornAt);
+                if (age > expiredAve) {
+                    recalibratedCount++;
+                    recalibratedTotal += age;
+                    if (age > recalibratedMax)
+                        recalibratedMax = age;
+                }
+            });
+            recalibratedAve = recalibratedTotal / recalibratedCount;
+            data.push(['Expired count', Math.floor(expiredCount) ]);
+            data.push(['Expired ave', Math.floor(expiredAve) ]);
             data.push(['Expired min', Math.floor(expiredMin) ]);
             data.push(['Expired max', Math.floor(expiredMax) ]);
-            data.push(['Total ave', Math.floor(le) ]);
-            data.push(['Total min', Math.floor(totalMin) ]);
-            data.push(['Total max', Math.floor(totalMax) ]);
+            data.push(['Recalibrated count', Math.floor(recalibratedCount) ]);
+            data.push(['Recalibrated ave', Math.floor(recalibratedAve) ]);
+            data.push(['Recalibrated min', Math.floor(recalibratedMin) ]);
+            data.push(['Recalibrated max', Math.floor(recalibratedMax) ]);
         }
 		return data;
 	};

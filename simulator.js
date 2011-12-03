@@ -49,12 +49,14 @@ console.log(w.agents)
 //DefaultModule.init();
 PredatorPreyModule.init();
 World.settings.agentsCanAdjustWander = false;
+World.settings.noGameOver = true;
 Lifecycle.preProcessCallback = function() {
 	//console.log('Got here ' + Lifecycle.currentLevel.currentAgents.length);
 }
 Lifecycle.postProcessCallback = function() {
     //console.log('Got htere');
     console.log('Population: ' + Statistics.populationStats())
+    console.log('Life expectancy: ' + Statistics.lifeExpectancyStats())
     /*
 	console.log('=========================');
 	console.log('Level: ' + Lifecycle.currentLevelNumber)
@@ -64,7 +66,6 @@ Lifecycle.postProcessCallback = function() {
 		console.log('Population: ' + Statistics.populationStats())
 		console.log('Health: ' + Statistics.healthStats())
 		console.log('Saved & expired: ' + Statistics.savedAndExpiredStats())
-		//console.log('Life expectancy: ' + Statistics.lifeExpectancyStats())
 		console.log('Life expectancy: ' + Statistics.lifeExpectancyByAgentCultureStats())
 		
 	}

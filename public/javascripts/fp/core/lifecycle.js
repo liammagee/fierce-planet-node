@@ -178,7 +178,7 @@ var Lifecycle = Lifecycle || {};
             Lifecycle.currentLevel.currentAgents.splice(nullIndex, 1);
         }
 
-        if (Lifecycle.currentLevel.expiredAgents.length >= Lifecycle.currentLevel.expiryLimit) {
+        if (Lifecycle.currentLevel.expiredAgents.length >= Lifecycle.currentLevel.expiryLimit && ! World.settings.noGameOver) {
             return Lifecycle.gameOver();
         }
 		else {
