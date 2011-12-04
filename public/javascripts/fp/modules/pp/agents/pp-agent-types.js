@@ -28,7 +28,7 @@ var PredatorPreyCultures = PredatorPreyCultures || {};
         this.PREDATOR_AGENT_TYPE.birthProbability = 0.2;
         this.PREDATOR_AGENT_TYPE.reproductionAge = 25;
         this.PREDATOR_AGENT_TYPE.preyProbability = 0.2;
-        this.PREDATOR_AGENT_TYPE.predatorGain = 10;
+        this.PREDATOR_AGENT_TYPE.predatorGain = 20;
         this.PREDATOR_AGENT_TYPE.preyCost = -10;
         this.PREDATOR_AGENT_TYPE.moveCost = -5;
         this.PREDATOR_AGENT_TYPE.waveNumber = 20;
@@ -240,53 +240,17 @@ var PredatorPreyCultures = PredatorPreyCultures || {};
                 ctx.fill();
             }
         };
+        this.PREY_AGENT_TYPE.capabilities = [
+            Capabilities.ConsumeResourcesCapability
+//            , Capabilities.ProduceResourcesCapability
+            , Capabilities.RegenerateCapability
+            , Capabilities.AdjustHealthCapability
+        ];
+
         this.PREY_AGENT_TYPE.initFunction = function (agent, level) {
             var r = Math.random();
             agent.gender = (r < 0.5 ? 'm' : 'f');
         }
-        this.PREY_AGENT_TYPE.updateFunction = function (agent, level) {
-            // Hook for detecting 'active' resources
-            this.processNeighbouringResources(agent, level);
-
-            // Hook for detecting other agents
-            this.processNeighbouringAgents(agent, level);
-
-            if (!World.settings.godMode || World.settings.showHealthReductionInGodMode)
-                agent.adjustGeneralHealth(this.moveCost);
-        };
-
-        this.PREY_AGENT_TYPE.processNeighbouringAgents = function (agent, level) {
-            if (agent.gender != 'f' || agent.age < this.reproductionAge)
-                return;
-
-            var x = agent.x;
-            var y = agent.y;
-            agent.isHit = false;
-            var agents = level.currentAgents;
-            for (var j = 0; j < agents.length; j++) {
-                var a = agents[j];
-                var ax = a.x;
-                var ay = a.y;
-                if (Math.abs(ax - x) <= 1 && Math.abs(ay - y) <= 1) {
-                    if (a.gender == 'm' && a.culture.name == agent.culture.name && a.age > this.reproductionAge) {
-                        // Some random chance a new agent is born
-                        var birthChance = Math.random();
-                        if (birthChance < this.birthProbability) {
-                            if (level.countAgentsAtPosition(x, y) <= 1 && (World.settings.agentsOwnTilesExclusively || level.agentsOwnTilesExclusively)) {
-                                var childAgent = new Agent(agent.culture, agent.x, agent.y);
-                                childAgent.delay = parseInt(Math.random() * AgentConstants.DEFAULT_SPEED * 5);
-                                childAgent.canCommunicateWithOtherAgents = (World.settings.agentsCanCommunicate);
-                                childAgent.bornAt = (Lifecycle.levelCounter);
-                                childAgent.parents = [agent, a];
-                                agent.children.push(childAgent);
-                                a.children.push(childAgent);
-                                Lifecycle.currentLevel.currentAgents.push(childAgent);
-                            }
-                        }
-                    }
-                }
-            }
-        };
 
         this.PREDATOR_AGENT_TYPE.drawFunction = (function (ctx, agent, x, y, pieceWidth, pieceHeight, newColor, counter, direction) {
             newColor = agent.culture.color;
@@ -329,50 +293,10 @@ var PredatorPreyCultures = PredatorPreyCultures || {};
             var r = Math.random();
             agent.gender = (r < 0.5 ? 'm' : 'f');
         }
-        this.PREDATOR_AGENT_TYPE.updateFunction = function (agent, level) {
-            var x = agent.x;
-            var y = agent.y;
-            var agents = level.currentAgents;
-            var foundPrey = false;
-            for (var j = 0; j < agents.length; j++) {
-                var a = agents[j];
-                var ax = a.x;
-                var ay = a.y;
-                if (Math.abs(ax - x) <= 1 && Math.abs(ay - y) <= 1) {
-                    if (a.culture == PredatorPreyCultures.PREY_AGENT_TYPE) {
-                        if (Math.random() < this.preyProbability) {
-                            a.adjustGeneralHealth(this.preyCost);
-                            agent.adjustGeneralHealth(this.predatorGain);
-                            foundPrey = true;
-                            break;
-                        }
-
-                    }
-                    else {
-                        if (a.gender == 'm' && a.culture.name == agent.culture.name && agent.age > this.reproductionAge && a.age > this.reproductionAge) {
-                            // Some random chance a new agent is born
-                            var birthChance = Math.random();
-                            if (birthChance < this.birthProbability) {
-//                                console.log(level.countAgentsAtPosition(x, y))
-                                if (level.countAgentsAtPosition(x, y) <= 1 && (World.settings.agentsOwnTilesExclusively || level.agentsOwnTilesExclusively)) {
-                                    var childAgent = new Agent(agent.culture, agent.x, agent.y);
-                                    childAgent.delay = parseInt(Math.random() * AgentConstants.DEFAULT_SPEED * 5);
-                                    childAgent.canCommunicateWithOtherAgents = (World.settings.agentsCanCommunicate);
-                                    childAgent.bornAt = (Lifecycle.levelCounter);
-                                    childAgent.parents = [agent, a];
-                                    agent.children.push(childAgent);
-                                    a.children.push(childAgent);
-                                    Lifecycle.currentLevel.currentAgents.push(childAgent);
-                                }
-                            }
-                        }
-
-                    }
-                }
-            }
-            if (!foundPrey)
-                agent.adjustGeneralHealth(this.moveCost);
-        }
+        this.PREDATOR_AGENT_TYPE.capabilities = [
+            Capabilities.PreyOnOtherAgentsCapability
+            , Capabilities.RegenerateCapability
+        ];
 
         this.id = 'FP-Agents';
         this.cultures = [PredatorPreyCultures.PREY_AGENT_TYPE, PredatorPreyCultures.PREDATOR_AGENT_TYPE];

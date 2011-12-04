@@ -8,6 +8,7 @@ ResourceCategory = require('./public/javascripts/fp/core/resource.js').ResourceC
 ResourceType = require('./public/javascripts/fp/core/resource.js').ResourceType;
 AgentConstants = require('./public/javascripts/fp/core/agent.js').AgentConstants;
 Culture = require('./public/javascripts/fp/core/cultures/culture.js').Culture;
+Capabilities = require('./public/javascripts/fp/core/cultures/capabilities.js').Capabilities;
 Agent = require('./public/javascripts/fp/core/agent.js').Agent;
 Campaign = require('./public/javascripts/fp/core/campaign.js').Campaign;
 Level = require('./public/javascripts/fp/core/level.js').Level;
@@ -30,8 +31,8 @@ Basic = require('./public/javascripts/fp/modules/default/levels/basic.js').Basic
 Additional = require('./public/javascripts/fp/modules/default/levels/additional.js').Additional;
 DefaultModule = require('./public/javascripts/fp/modules/default/default-module.js').DefaultModule;
 
-PredatorPreyCultures = require('./public/javascripts/fp/modules/pp/agents/agent_types.js').PredatorPreyCultures;
-PredatorPreyLevels = require('./public/javascripts/fp/modules/pp/levels/pp.js').PredatorPreyLevels;
+PredatorPreyCultures = require('./public/javascripts/fp/modules/pp/agents/pp-agent-types.js').PredatorPreyCultures;
+PredatorPreyLevels = require('./public/javascripts/fp/modules/pp/levels/pp-levels.js').PredatorPreyLevels;
 PredatorPreyModule = require('./public/javascripts/fp/modules/pp/predator-prey-module.js').PredatorPreyModule;
 //jstat = require('./public/javascripts/jstat-1.0.0/js/jstat-1.0.0.js').jstat;
 //NormalDistribution = require('./public/javascripts/jstat-1.0.0/js/jstat-1.0.0.js').NormalDistribution;
@@ -56,7 +57,7 @@ Lifecycle.preProcessCallback = function() {
 Lifecycle.postProcessCallback = function() {
     //console.log('Got htere');
     console.log('Population: ' + Statistics.populationStats())
-    console.log('Life expectancy: ' + Statistics.lifeExpectancyStats())
+//    console.log('Life expectancy: ' + Statistics.lifeExpectancyStats())
     /*
 	console.log('=========================');
 	console.log('Level: ' + Lifecycle.currentLevelNumber)

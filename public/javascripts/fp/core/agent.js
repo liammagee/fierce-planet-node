@@ -621,8 +621,8 @@ Agent.prototype.findPosition = function(level, withNoRepeat, withNoCollision, wi
     }
     else {
 //        return this.findPositionUp(level, withNoRepeat, withNoCollision, withOffscreenCycling)
-        return this.findPositionRandomly(level, withNoRepeat, withNoCollision, withOffscreenCycling)
-//        return this.findPositionWithFreeNavigation(level, withNoRepeat, withNoCollision, withOffscreenCycling)
+//        return this.findPositionRandomly(level, withNoRepeat, withNoCollision, withOffscreenCycling)
+        return this.findPositionWithFreeNavigation(level, withNoRepeat, withNoCollision, withOffscreenCycling)
     }
 }
 

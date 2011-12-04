@@ -101,8 +101,8 @@ var Lifecycle = Lifecycle || {};
             var countDown = (agent.countdownToMove) % speed;
 
             // TODO: Constrain memory usage - expensive for large simulations
-//            if (countDown == 0)
-//                agent.memorise(Lifecycle.currentLevel);
+            if (countDown == 0)
+                agent.memorise(Lifecycle.currentLevel);
 //                agent.memorise(undefined);
         }
 

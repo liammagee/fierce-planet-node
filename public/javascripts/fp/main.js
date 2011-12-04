@@ -59,6 +59,7 @@ $LAB
        , 'fp/core/agent.js'
        , 'fp/core/catastrophe.js'
        , 'fp/core/cultures/culture.js'
+       , 'fp/core/cultures/capabilities.js'
        , 'fp/core/campaign.js'
        , 'fp/core/level.js'
        , 'fp/core/wave.js'
@@ -122,8 +123,8 @@ $LAB
     .wait()
     .script([
     , 'fp/modules/pp/predator-prey-module.js'
-    , 'fp/modules/pp/levels/pp.js'
-   , 'fp/modules/pp/agents/agent_types.js'
+    , 'fp/modules/pp/levels/pp-levels.js'
+   , 'fp/modules/pp/agents/pp-agent-types.js'
     ])
     .wait(function() {
 //            DefaultModule.init();

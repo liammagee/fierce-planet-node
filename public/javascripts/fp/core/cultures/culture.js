@@ -24,66 +24,16 @@ function Culture(name, color, healthCategories, speed, health, drawFunction, ini
     this.isHitable = false;
     this.canHit = false;
     this.generateEachWave = true;
+    this.capabilities = [];
     this.drawFunction = drawFunction || function(){};
     this.initFunction = initFunction || function(){};
-    this.updateFunction = updateFunction || function(agent, level){
-
-        // Hook for detecting 'active' resources
-        this.processNeighbouringResources(agent, level);
-
-        // Hook for detecting other agents
-        this.processNeighbouringAgents(agent, level);
-
-        if (!World.settings.godMode || World.settings.showHealthReductionInGodMode)
-            agent.adjustGeneralHealth(World.settings.agentCostPerMove);
+    this.defaultUpdateFunction = function(agent, level){
+        this.capabilities.forEach(function(capability) {
+            capability.exercise(agent, level);
+        })
     };
+    this.updateFunction = this.updateFunction || this.defaultUpdateFunction;
 
-    /**
-     * Processes neighbouring resources
-     *
-     * TODO: Add tests
-     */
-    this.processNeighbouringResources = function(agent, level) {
-        var x = agent.x;
-        var y = agent.y;
-        for (var j = 0; j < level.resources.length; j++) {
-            var resource = level.resources[j];
-            var rx = resource.x;
-            var ry = resource.y;
-            if (Math.abs(rx - x) <= 1 && Math.abs(ry - y) <= 1) {
-                var resourceEffect = level.calculateResourceEffect(resource);
-                resource.provideYield(agent, resourceEffect, !level.noSpeedChange);
-            }
-        }
-    };
-
-
-    /**
-     * Processes neighbouring agents
-     *
-     * TODO: Add tests
-     */
-    this.processNeighbouringAgents = function(agent, level) {
-        if (World.settings.godMode || !World.settings.predatorsVisible)
-            return;
-
-        var x = agent.x;
-        var y = agent.y;
-        agent.isHit = false;
-        var agents = level.currentAgents;
-        for (var j = 0; j < agents.length; j++) {
-            var a = agents[j];
-            var ax = a.x;
-            var ay = a.y;
-            if (Math.abs(ax - x) <= 1 && Math.abs(ay - y) <= 1) {
-                if (!World.settings.godMode && World.settings.predatorsVisible && agent.culture.isHitable && a.culture.canHit) {
-                    agent.isHit = true;
-                }
-            }
-        }
-        if (agent.isHit)
-            agent.adjustGeneralHealth(-10);
-    };
 }
 
 

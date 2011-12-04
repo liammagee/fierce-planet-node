@@ -33,8 +33,12 @@ function Level(id) {
     this.initialAgentNumber = 1;
     this.waveNumber = 10;
     this.expiryLimit = 20;
+
     this.initialResourceStore = 100;
+    this.currentResourceStore = 100;
+    this.currentResourceSpent = 0;
     this.initialResourceNumber = 0;
+
     this.allowOffscreenCycling = false;
     this.allowResourcesOnPath = false;
     this.customLevel = false;
@@ -512,6 +516,11 @@ Level.prototype.addSavedAgent = function(agent, time) {
     agent.alive = false;
     agent.diedAt = time;
     this.savedAgents.push(agent);
+
+    // Adjust resources
+    var resourceBonus = (this.currentWaveNumber < 5 ? 4 : (this.currentWaveNumber < 10 ? 3 : (this.currentWaveNumber < 20 ? 2 : 1)));
+    this.currentResourceStore += resourceBonus;
+
 };
 
 
@@ -676,6 +685,9 @@ Level.prototype.getResources = function() { return this.resources; };
  * @param resources
  */
 Level.prototype.resetResources = function() {
+    this.currentResourceStore = this.initialResourceStore;
+    this.currentResourceSpent = 0;
+
     this.resources = [];
     this.levelResources = this.levelResources || [];
 
@@ -684,6 +696,7 @@ Level.prototype.resetResources = function() {
     }
     this.resourceCategoryCounts = this.resetResourceCategoryCounts();
 };
+
 /**
  *
  * @param resources
@@ -741,6 +754,11 @@ Level.prototype.generateLevelResources = function() {
 Level.prototype.addResource = function(resource) {
     this.resources.push(resource);
     this.incrementResourceCategoryCount(resource);
+
+    var resourceCategory = resource.category.code;
+    this.currentResourceStore -= resource.cost;
+    this.currentResourceSpent += resource.cost;
+//    this.currentLevelResourcesSpentByCategory[resourceCategory] += 1;
 };
 
 /**
