@@ -40,6 +40,7 @@ $LAB
 
     // Load JQuery Plug-ins
    .script("jquery.mousewheel.3.0.2/jquery.mousewheel.js")
+   .script("jquery-animate-css-rotate-scale.js")
    .script("jquery/jquery.zoom.js")
 
     // Load other plugins

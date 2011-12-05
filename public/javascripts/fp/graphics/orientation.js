@@ -87,10 +87,11 @@ FiercePlanet.Orientation = FiercePlanet.Orientation || {};
 
     this.resizeWorld = function() {
         try {
-            var canvases = $('#world, #imageCanvas, #map_canvas, #baseCanvas, #guideCanvas, #noticeCanvas, #agentCanvas, #resourceCanvas, #scrollingCanvas');
+            var canvases = $('#world, #imageCanvas, #baseCanvas, #guideCanvas, #noticeCanvas, #agentCanvas, #resourceCanvas, #scrollingCanvas');
+//            #map_canvas,
             //, #alt_map_canvas
-            $('#map_canvas')[0].width = this.worldWidth;
-            $('#map_canvas')[0].height = this.worldHeight;
+//            $('#map_canvas')[0].width = this.worldWidth;
+//            $('#map_canvas')[0].height = this.worldHeight;
             $('#baseCanvas')[0].width = this.worldWidth;
             $('#baseCanvas')[0].height = this.worldHeight;
             $('#noticeCanvas')[0].width = this.worldWidth;
@@ -110,6 +111,8 @@ FiercePlanet.Orientation = FiercePlanet.Orientation || {};
 			$('#global-info-panel').css({left: this.worldWidth - 90});
 			$('#notifications').css({top: 117 + this.worldHeight, width: this.worldWidth});
             $('#level-editor').css({top: 190 + this.worldHeight, width: this.worldWidth});
+            $('#world').css({'position': 'relative', overflow: 'hidden', float: 'left' });
+            $('#map_canvas').css({'-webkit-transform': 'rotate(20deg)', position: 'absolute', width: (this.worldWidth * 2), height: (this.worldHeight * 2), top: '50%', left: '50%', 'margin-top': -this.worldHeight, 'margin-left': -this.worldWidth });
             //$('#controls').css({left: 385 - this.worldWidth});
             //$('#world').css({left: 480 - this.worldWidth});
 			//$('#notifications').css({left: 480 - this.worldWidth, top: 117 + this.worldHeight, width: this.worldWidth});

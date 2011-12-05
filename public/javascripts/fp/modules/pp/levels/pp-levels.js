@@ -57,8 +57,8 @@ var PredatorPreyLevels = PredatorPreyLevels || new Campaign();
 
                 this.setup = function() {
 //                    World.settings.firstPerson = true;
-                    var bg = new Terrain('#ABBB2A', 0.1);
-                    this.addTerrainToBackground(bg);
+                    var bg = new Terrain('#ABBB2A', 0.01);
+//                    this.addTerrainToBackground(bg);
                     this.generatePath();
                     for (var i = 0; i < this.cellsAcross; i++) {
                         for (var j = 0; j < this.cellsDown; j++) {
@@ -75,6 +75,11 @@ var PredatorPreyLevels = PredatorPreyLevels || new Campaign();
                     */
                     this.generateLevelResources();
                 };
+
+                /* Google Map links */
+                if (typeof(google) !== "undefined" && typeof(google.maps) !== "undefined") {
+                    this.mapOptions = ({mapTypeId: google.maps.MapTypeId.HYBRID , center: new google.maps.LatLng(-37.81439, 144.96099), zoom: 16, tilt: 0}); // Budapest: 47.5153, 19.0782
+                }
 
             }).apply(this.predatorPreyLevel);
 

@@ -1679,7 +1679,8 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
      * Animates new level
      */
     this.animateLevel = function () {
-        var canvases = $('#map_canvas, #baseCanvas, #scrollingCanvas, #noticeCanvas');
+        //#map_canvas,
+        var canvases = $('#baseCanvas, #scrollingCanvas, #noticeCanvas');
         var world = $('#world');
         var rwl = world.position().left;
         var rwt = world.position().top;
