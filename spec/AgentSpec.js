@@ -78,7 +78,7 @@ describe("agent-related classes", function() {
             });
 
             it("should generate a random order of possible directions", function() {
-                var directions = agent.randomDirectionOrder();
+                var directions = Capabilities.MoveUtilities.randomDirectionOrder();
                 expect(directions.length).toEqual(4);
                 expect($.inArray(0, directions)).toBeGreaterThan(-1);
                 expect($.inArray(1, directions)).toBeGreaterThan(-1);
@@ -212,13 +212,11 @@ describe("agent-related classes", function() {
                 });
 
                 it("should have a new speed when it meets a resource", function() {
-                    level.processNeighbouringResources(agent);
                     expect(agent.speed).toEqual(20);
                 });
 
                 it("should not have a new speed when it meets a resource and has full health", function() {
                     agent.adjustGeneralHealth(100);
-                    level.processNeighbouringResources(agent);
                     expect(agent.speed).toEqual(defaultSpeed);
                 });
             });
@@ -272,7 +270,7 @@ describe("agent-related classes", function() {
 
                 describe("adding new memory", function() {
                     beforeEach(function() {
-                        agent.memorise(level);
+                        agent.reviseBeliefs(level);
                     });
 
                     it("should have a new last memory", function() {
@@ -290,7 +288,7 @@ describe("agent-related classes", function() {
                     describe("going back to previous position", function() {
                         beforeEach(function() {
                             agent.moveTo(4, 5);
-                            agent.memorise(level);
+                            agent.reviseBeliefs(level);
                         });
 
                         it("should have a new last memory", function() {
@@ -306,7 +304,7 @@ describe("agent-related classes", function() {
                         describe("returning to first position", function() {
                             beforeEach(function() {
                                 agent.moveTo(4, 6);
-                                agent.memorise(level);
+                                agent.reviseBeliefs(level);
                             });
 
                             it("should have a new last memory", function() {
@@ -348,7 +346,7 @@ describe("agent-related classes", function() {
 
             describe("finding further positions", function() {
                 beforeEach(function() {
-                    agent.memorise(level);
+                    agent.reviseBeliefs(level);
                     agent.evaluateMove(level);
                 });
 
@@ -363,7 +361,7 @@ describe("agent-related classes", function() {
 
                 describe("a fork in the path", function() {
                     beforeEach(function() {
-                        agent.memorise(level);
+                        agent.reviseBeliefs(level);
                         agent.evaluateMove(level);
                     });
 
@@ -380,7 +378,7 @@ describe("agent-related classes", function() {
                         var position;
 
                         beforeEach(function() {
-                            agent.memorise(level);
+                            agent.reviseBeliefs(level);
                             agent.evaluateMove(level);
                             position = agent.getPosition();
                         });

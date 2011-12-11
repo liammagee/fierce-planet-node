@@ -22,7 +22,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
      */
     this.drawGame = function() {
         // Clear canvases
-        $('#map_canvas').empty();
+        $('#actual_map').empty();
         this.clearCanvas('#baseCanvas');
         this.clearCanvas('#resourceCanvas');
         this.clearCanvas('#scrollingCanvas');
@@ -267,12 +267,12 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
      * Callback method for Google Maps
      */
     this.drawMap = function(altCanvasName) {
-        var canvasName = altCanvasName || '#map_canvas';
+        var canvasName = altCanvasName || '#actual_map';
     //    if (FiercePlanet.googleMap == undefined)
         if (Lifecycle.currentLevel != undefined) {
             var mapOptions = FiercePlanet.GoogleMapUtils.defaultOptions();
             $.extend(mapOptions, Lifecycle.currentLevel.mapOptions);
-    
+
             // Handle built-in zoom
             if (FiercePlanet.Orientation.zoomLevel > 1)
                 mapOptions['zoom'] = mapOptions['zoom'] + Math.log(FiercePlanet.Orientation.zoomLevel) / Math.log(1.5);
@@ -1317,8 +1317,8 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
             var redH = agent.healthCategoryStats[World.resourceCategories[2].code];
             var c = agent.color.toString();
             var newColor = this.diluteColour(redH, greenH, blueH, c);
-            if (agent.isHit)
-                newColor = "f00";
+//            if (agent.isHit)
+//                newColor = "f00";
     
             try {
                 eval(agent.culture.drawFunction)(ctx, agent, x, y, FiercePlanet.Orientation.pieceWidth, FiercePlanet.Orientation.pieceHeight, newColor, Lifecycle.waveCounter, direction);
@@ -1364,8 +1364,8 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         var redH = agent.healthCategoryStats[World.resourceCategories[2].code];
         var c = agent.color.toString();
         var newColor = this.diluteColour(redH, greenH, blueH, c);
-        if (agent.isHit)
-            newColor = "f00";
+//        if (agent.isHit)
+//            newColor = "f00";
 
         try {
             eval(agent.culture.drawFunction)(ctx, agent, x, y, FiercePlanet.Orientation.pieceWidth, FiercePlanet.Orientation.pieceHeight, newColor, Lifecycle.waveCounter, direction);
@@ -1722,14 +1722,17 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
             World.settings.skewTiles = false;
             $('#resourceCanvas').css({zIndex: 5});
             $('#agentCanvas').css({zIndex: 6});
+            Lifecycle.currentLevel.mapOptions.rotate = 0;
             $('#3d')[0].innerHTML = 'View 3D';
         }
         else {
             World.settings.skewTiles = true;
             $('#resourceCanvas').css({zIndex: 6});
             $('#agentCanvas').css({zIndex: 5});
+            Lifecycle.currentLevel.mapOptions.rotate = 30;
             $('#3d')[0].innerHTML = 'View 2D';
         }
+        FiercePlanet.Drawing.drawMap();
         FiercePlanet.Drawing.drawCanvases();
     };
 

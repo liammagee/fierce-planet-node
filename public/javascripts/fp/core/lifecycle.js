@@ -21,43 +21,21 @@ var Lifecycle = Lifecycle || {};
     this.NEW_LEVEL_DELAY = 3000;
     /** @constant The time to wait between waves */
     this.NEW_WAVE_DELAY = 200;
-    this.levelDelayCounter = 0;
-    this.waveDelayCounter = 0;
-
-    this.waveCounter = 0;
-    this.levelCounter = 0;
-    this.worldCounter = 0;
+    // Delay variables
+    this.levelDelayCounter = 0, this.waveDelayCounter = 0;
+    // Counter variables
+    this.waveCounter = 0, this.levelCounter = 0, this.worldCounter = 0;
     // Game play variables
-    this.waveOverride = 0;
-    this.maxWaveMoves = 0;
-    this.maxLevelMoves = 0;
-
-    this.resourceRecoveryCycle = 5;
-    this.interval = 40;
-    this.agentTimerId = 0;
-    this.inPlay = false;
-
-    this.currentLevel = null;
-    this.currentLevelSetID = 'Default';
-    this.currentLevelNumber = 1;
-    //this.currentWave = null;
-    this.currentWave = 1;
-    this.currentWaveNumber = 0;
-    this.currentLevelPreset = true;
-    this.existingCurrentLevel = null;
-
+    this.waveOverride = 0, this.maxWaveMoves = 0, this.maxLevelMoves = 0;
+    // Game interval variables
+    this.resourceRecoveryCycle = 5, this.interval = 40, this.agentTimerId = 0, this.inPlay = false;
+    // Level state variables
+    this.currentLevel = null, this.currentLevelSetID = 'Default', this.currentLevelNumber = 1, this.currentLevelPreset = true, this.existingCurrentLevel = null;
+    // Wave state variables
+    this.currentWave = 1, this.currentWaveNumber = 0;
     this.numAgents = 1;
-	
-
 	// Callbacks
-    this.preNewGameCallback = null;
-    this.postNewGameCallback = null;
-    this.preNewLevelCallback = null;
-    this.postNewLevelCallback = null;
-    this.preNewWaveCallback = null;
-    this.postNewWaveCallback = null;
-    this.preProcessCallback = null;
-    this.postProcessCallback = null;
+    this.preNewGameCallback, this.postNewGameCallback, this.preNewLevelCallback, this.postNewLevelCallback = null, this.preNewWaveCallback = null, this.postNewWaveCallback = null, this.preProcessCallback = null, this.postProcessCallback = null;
 
     /**
      * Core logic loop: processes agents.
@@ -86,12 +64,9 @@ var Lifecycle = Lifecycle || {};
         Lifecycle.levelCounter++;
         Lifecycle.worldCounter++;
 
+        var agents = Lifecycle.currentLevel.currentAgents, nullifiedAgents = [], agentCount = 0;
 
-        var nullifiedAgents = [];
-        var citizenCount = 0;
-        var agents = Lifecycle.currentLevel.currentAgents;
-
-        // Pre-movement processing - DO NOTHING FOR NOW
+        // Pre-movement processing - memorises current position
         for (var i = 0; i < agents.length; i++) {
             var agent = agents[i];
             if (Lifecycle.waveCounter < agent.delay)
@@ -102,15 +77,14 @@ var Lifecycle = Lifecycle || {};
 
             // TODO: Constrain memory usage - expensive for large simulations
             if (countDown == 0)
-                agent.memorise(Lifecycle.currentLevel);
-//                agent.memorise(undefined);
+                agent.reviseBeliefs(Lifecycle.currentLevel);
         }
 
 
         // Move agents
         var options = {"withNoRepeat": true, "withNoCollision": false};
         for (var i = 0; i < agents.length; i++) {
-            citizenCount++;
+            agentCount++;
             var agent = agents[i];
             if (Lifecycle.waveCounter < agent.delay)
                 continue;
@@ -119,7 +93,6 @@ var Lifecycle = Lifecycle || {};
             var countDown = (agent.countdownToMove) % speed;
 
             if (countDown == 0) {
-                //agent.memorise(Lifecycle.currentLevel);
                 recordableChangeMade = true;
 
                 // TODO: move this logic elsewhere
@@ -131,7 +104,7 @@ var Lifecycle = Lifecycle || {};
                 }
 
                 // Do for all agents
-                agent.evaluateMove(Lifecycle.currentLevel, options);
+//                agent.evaluateMove(Lifecycle.currentLevel, options);
 
                 // Reset countdown
                 agent.resetCountdownToMove();
@@ -155,8 +128,10 @@ var Lifecycle = Lifecycle || {};
                 if (agent.age > Lifecycle.maxWaveMoves)
                     Lifecycle.maxWaveMoves = agent.age;
 
-                // TODO: should be in-lined?
+                // Exercises all of the agent's capabilities
                 agent.update(Lifecycle.currentLevel);
+
+                // TODO: should be in-lined?
                 if (agent.health <= 0 && !World.settings.godMode) {
                     nullifiedAgents.push(i);
                     Lifecycle.currentLevel.addExpiredAgent(agent, Lifecycle.levelCounter);
@@ -176,6 +151,8 @@ var Lifecycle = Lifecycle || {};
             var nullIndex = nullifiedAgents[i];
             var nullifiedAgent = Lifecycle.currentLevel.currentAgents[nullIndex];
             Lifecycle.currentLevel.currentAgents.splice(nullIndex, 1);
+            // Remove the agent from the map
+            Lifecycle.currentLevel.removeAgentFromContentMap(agent);
         }
 
         if (Lifecycle.currentLevel.expiredAgents.length >= Lifecycle.currentLevel.expiryLimit && ! World.settings.noGameOver) {
@@ -402,17 +379,7 @@ var Lifecycle = Lifecycle || {};
 
         Lifecycle.currentWave = 1;
         Lifecycle.currentWaveNumber = 0;
-        Lifecycle.currentLevel.setCurrentAgents([]);
-        Lifecycle.currentLevel.expiredAgents = [];
-        Lifecycle.currentLevel.resetResources();
-        if (Lifecycle.currentLevel.catastrophe != undefined)
-            Lifecycle.currentLevel.catastrophe.struck = false;
-
-        // Set up level
-        if (Lifecycle.currentLevel.setup)
-            Lifecycle.currentLevel.setup();
-
-        Lifecycle.currentLevel.initialiseWaves(Lifecycle.currentLevel.waveNumber);
+        Lifecycle.currentLevel.init();
 
 		if (this.postInitialiseGameCallback)
 			this.postInitialiseGameCallback();
@@ -472,7 +439,6 @@ var Lifecycle = Lifecycle || {};
 
 
 }).apply(Lifecycle);
-
 
 if (typeof(exports) != "undefined")
     exports.Lifecycle = Lifecycle;

@@ -916,7 +916,7 @@ var Basic = Basic || new Campaign();
         /* Google Map links */
 		if (typeof(google) !== "undefined" && typeof(google.maps) !== "undefined") {
 	        this.level1.mapOptions = ({mapTypeId: 'mars_infrared', center: new google.maps.LatLng(-80.73270997231712, 85.09268911182834), zoom: 3, tilt: 0}); // Budapest: 47.5153, 19.0782
-	        this.level2.mapOptions = ({mapTypeId: google.maps.MapTypeId.SATELLITE, center: new google.maps.LatLng(37.390296, -5.954579), zoom: 18, tilt: 45}); // Seville: 37.390296,-5.954579
+	        this.level2.mapOptions = ({mapTypeId: google.maps.MapTypeId.SATELLITE, rotate: -0, center: new google.maps.LatLng(37.390296, -5.954579), zoom: 18, tilt: 45}); // Seville: 37.390296,-5.954579
 	        this.level3.mapOptions = ({mapTypeId: google.maps.MapTypeId.SATELLITE, center: new google.maps.LatLng(45.433607, 12.338124), zoom: 18, tilt: 45}); // Venice: 45.433607,12.338124
 	        this.level4.mapOptions = ({mapTypeId: google.maps.MapTypeId.SATELLITE, center: new google.maps.LatLng(41.890384354793554, 12.49228627979709), zoom: 19, tilt: 45}); // Rome, Colosseum: 41.890384354793554, 12.49228627979709
 	        this.level5.mapOptions = ({mapTypeId: google.maps.MapTypeId.SATELLITE, center: new google.maps.LatLng(-33.434969, -70.655254), zoom: 18, tilt: 45}); // Santiago: -33.434969,-70.655254

@@ -28,6 +28,7 @@ var PredatorPreyModule = PredatorPreyModule || {};
 		//        World.registerAgentTypes(DefaultModule.AgentTypes.agentTypes);
 		World.switchResourceSet(TBL);
 		World.settings.skewTiles = false;
+        World.settings.agentsCanCommunicate = false;
     };
 
 

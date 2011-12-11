@@ -34,6 +34,20 @@ var PredatorPreyCultures = PredatorPreyCultures || {};
         this.PREDATOR_AGENT_TYPE.waveNumber = 20;
         //this.TEST_AGENT_TYPE.waveNumber = 1;
 
+
+        this.PREY_AGENT_TYPE.characteristics = [
+        ];
+        this.PREY_AGENT_TYPE.beliefs = [
+            Beliefs.BeliefsAboutPaths
+            , Beliefs.BeliefsAboutResources
+            , Beliefs.BeliefsBasedOnOtherAgentsBeliefs
+        ];
+        this.PREY_AGENT_TYPE.desires = [
+            Desires.ExploreSpace
+            , Desires.Flee
+            , Desires.ImproveHealth
+        ];
+
         this.PREY_AGENT_TYPE.drawFunction = (function (ctx, agent, x, y, pieceWidth, pieceHeight, newColor, counter, direction) {
 
             if (pieceWidth < (8 ) || pieceHeight < (8 )) {
@@ -240,18 +254,17 @@ var PredatorPreyCultures = PredatorPreyCultures || {};
                 ctx.fill();
             }
         };
-        this.PREY_AGENT_TYPE.capabilities = [
-            Capabilities.ConsumeResourcesCapability
-//            , Capabilities.ProduceResourcesCapability
-            , Capabilities.RegenerateCapability
-            , Capabilities.AdjustHealthCapability
-        ];
 
         this.PREY_AGENT_TYPE.initFunction = function (agent, level) {
             var r = Math.random();
             agent.gender = (r < 0.5 ? 'm' : 'f');
         }
 
+
+        // Predator definition
+        this.PREDATOR_AGENT_TYPE.beliefs = [
+            Beliefs.BeliefsAboutPaths
+        ];
         this.PREDATOR_AGENT_TYPE.drawFunction = (function (ctx, agent, x, y, pieceWidth, pieceHeight, newColor, counter, direction) {
             newColor = agent.culture.color;
             if (pieceWidth < (8 ) || pieceHeight < (8 )) {
@@ -294,7 +307,8 @@ var PredatorPreyCultures = PredatorPreyCultures || {};
             agent.gender = (r < 0.5 ? 'm' : 'f');
         }
         this.PREDATOR_AGENT_TYPE.capabilities = [
-            Capabilities.PreyOnOtherAgentsCapability
+            Capabilities.MoveRandomlyCapability
+            , Capabilities.PreyOnOtherAgentsCapability
             , Capabilities.RegenerateCapability
         ];
 

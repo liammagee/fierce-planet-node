@@ -233,7 +233,7 @@ FiercePlanet.GoogleMapUtils = FiercePlanet.GoogleMapUtils || {};
           style: google.maps.MapTypeControlStyle.DROPDOWN_MENU
         }
       };
-      map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
+      map = new google.maps.Map(document.getElementById("actual_map"), mapOptions);
 
       // push the credit/copyright custom control
       map.controls[google.maps.ControlPosition.BOTTOM_RIGHT].push(creditNode);
@@ -276,7 +276,14 @@ FiercePlanet.GoogleMapUtils = FiercePlanet.GoogleMapUtils || {};
      * @param value
      */
     this.createMap = function(options, altCanvasName) {
-        var canvasName = altCanvasName || '#map_canvas';
+        var canvasName = altCanvasName || '#actual_map';
+
+        // If the map needs rotation, rotate the underlying div
+        if (options && typeof(options.rotate) !== "undefined") {
+            $('#actual_map').css({'-webkit-transform': 'rotate(' + options.rotate + 'deg)'});
+            //'-webkit-transform': 'rotate(' + this.mapRotationAngle + 'deg)',
+        }
+
         // If this is not a LatLng object, make one
         if (options && !options.center.lat)
             options.center = new google.maps.LatLng(options.center[0], options.center[1]);

@@ -62,10 +62,9 @@ body {
 }
 #world {
 	position:absolute;
-	overflow: hidden;
-    float: left;
 	left:-120px;
 	top:110px;
+	float: left;
 	padding:7px;
 	border-radius:4px;
 	background:#1F62C1;
@@ -75,18 +74,7 @@ body {
 }
 
 #imageCanvas        { z-index: 1 }
-#map_canvas         {
-    position:relative;
-    overflow: hidden;
-    float: left;
-    z-index: 2
-}
-#actual_map         {
-    position:absolute;
-    top: 50%;
-    left: 50%;
-
-}
+#map_canvas         { z-index: 2 }
 #baseCanvas         { z-index: 3 }
 #guideCanvas        { z-index: 4 }
 #agentCanvas        { z-index: 5 }

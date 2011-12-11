@@ -684,7 +684,6 @@ describe("level-related classes", function() {
             });
 
             it("should get a benefit from a neighbouring resource", function() {
-                level.processNeighbouringResources(agent);
 
                 expect(agent.getHealthForResource(resource)).toEqual(70);
                 expect(resource.totalYield).toEqual(80);
@@ -696,18 +695,15 @@ describe("level-related classes", function() {
 
             beforeEach(function() {
                 World.settings.predatorsVisible = true;
-                World.cultures[0].isHitable = (true);
-                World.cultures[1].canHit = (true);
                 hittingAgent = new Agent(World.cultures[1], 0, 0);
                 level.addLevelAgent(hittingAgent);
                 level.generateAgents(World.cultures[0], 10);
                 hitAgent = level.currentAgents[0];
             });
 
-            it("should be hit by a neighbouring agent", function() {
-                level.processNeighbouringAgents(hitAgent);
-                expect(hitAgent.isHit).toBeTruthy();
-            });
+//            it("should be hit by a neighbouring agent", function() {
+//                expect(hitAgent.isHit).toBeTruthy();
+//            });
         });
 
     });

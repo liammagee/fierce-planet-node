@@ -112,9 +112,7 @@ var DefaultCultures = DefaultCultures || {};
                 ctx.fill();
             }
         });
-
-
-        DefaultCultures.CITIZEN_AGENT_TYPE.drawExpired = function(ctx, agent, x, y, pieceWidth, pieceHeight, newColor, counter, direction) {
+        this.CITIZEN_AGENT_TYPE.drawExpired = function(ctx, agent, x, y, pieceWidth, pieceHeight, newColor, counter, direction) {
             // Draw an explosion here
             var explosionX = x;
             var explosionY = y  + pieceWidth / 2;
@@ -231,6 +229,11 @@ var DefaultCultures = DefaultCultures || {};
             }
         };
 
+        this.CITIZEN_AGENT_TYPE.capabilities = [
+            Capabilities.MoveCapability
+            , Capabilities.ConsumeResourcesCapability
+            , Capabilities.AdjustHealthCapability
+        ];
 
         this.id = 'FP-Agents';
         this.cultures = [DefaultCultures.CITIZEN_AGENT_TYPE];

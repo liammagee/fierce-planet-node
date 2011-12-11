@@ -256,6 +256,14 @@ app.get('/', function(req, res){
     });
 });
 
+app.get('/mobile', function(req, res){
+    res.render('index', {
+        title: 'Fierce Planet',
+        layout: 'mobile',
+        locals: {}
+    });
+});
+
 app.get('/levels/gallery', function(req, res){
   fpProvider.findAll(function(error, levels){
       res.render('levels/gallery.jade', { locals: {

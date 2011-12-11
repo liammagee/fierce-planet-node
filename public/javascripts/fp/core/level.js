@@ -63,25 +63,24 @@ function Level(id) {
 
     // Current level state
     this.tiles = [];
-    this.tileMap = [];
 
     // Agent variables
     this.levelAgents = [];
     this.waveAgents = [];
-    this.currentAgents = [];
-    this.currentAgentsMap = {};
+    this.currentAgents = [], this.currentAgentsMap = {};
     this.expiredAgents = [];
     this.savedAgents = [];
 
     // Resource variables
     this.levelResources = [];
     this.resources = [];
-    this.resourceCategoryCounts = this.resetResourceCategoryCounts();
+    this.resourceCategoryCounts = [];
 
     /** Object for storing tiles, resources and other level entities for co-ordinate based look-up */
+    this.contentMap = {};
     this.cells = {};
 
-    this.pathway = this.generatePath();
+
     this.terrainMap = {};
 
     // User interface elements
@@ -98,6 +97,22 @@ function Level(id) {
     this.image = null;
     this.imageAttribution = null;
     this.soundSrc = null;
+
+    this.init = function() {
+        this.generatePath();
+        this.initContentMap();
+        this.waves = undefined;
+        this.setCurrentAgents([]);
+        this.expiredAgents = [];
+        this.resetResources();
+        if (this.catastrophe != undefined)
+            this.catastrophe.struck = false;
+        this.initialiseWaves(this.waveNumber);
+
+        // Set up level
+        if (this.setup)
+            this.setup();
+    };
 
 }
 
@@ -348,6 +363,109 @@ Level.prototype.assignCells = function() {
     }
 };
 
+// Object functions
+Level.prototype.initContentMap = function() {
+    this.contentMap = {};
+
+    for (var i = 0; i < this.cellsAcross; i++) {
+        for (var j = 0; j < this.cellsDown; j++) {
+            this.addNewContentToMap(i, j);
+        }
+    }
+    this.updateContentMap();
+};
+Level.prototype.addNewContentToMap = function(x, y) {
+    var contents = {};
+    contents.resources = [];
+    contents.agents = [];
+    this.contentMap[[x, y]] = contents;
+}
+
+Level.prototype.updateContentMap = function() {
+    for (var i = 0; i < this.resources.length; i++) {
+        var resource = this.resources[i];
+        var x = resource.x, y = resource.y;
+        var contents = this.contentMap[[x, y]];
+        contents.resources.push(resource);
+    }
+    for (var i = 0; i < this.currentAgents.length; i++) {
+        var agent = this.currentAgents[i];
+        var x = agent.x, y = agent.y;
+        var contents = this.contentMap[[x, y]];
+        contents.agents.push(agent);
+    }
+};
+Level.prototype.addResourceToContentMap = function(resource) {
+    var x = resource.x, y = resource.y;
+    var contents = this.contentMap[[x, y]];
+    contents.resources.push(resource);
+};
+Level.prototype.removeResourceFromContentMap = function(resource) {
+    var x = resource.x, y = resource.y;
+    var contents = this.contentMap[[x, y]];
+    var foundIndex = -1;
+    for (var i = 0; i < contents.resources.length; i++) {
+        var r = contents.resources[i];
+        if (r == resource)
+            foundIndex = i;
+    }
+    if (foundIndex > -1)
+        contents.resources.splice(foundIndex, 1);
+};
+Level.prototype.changeResourceInContentMap = function(resource, lastX, lastY) {
+    var x = resource.x, y = resource.y;
+    var lastContents = this.contentMap[[lastX, lastX]];
+    var foundIndex = -1;
+    for (var i = 0; i < lastContents.resource.length; i++) {
+        var r = lastContents.resource[i];
+        if (r == resource)
+            foundIndex = i;
+    }
+    if (foundIndex > -1)
+        lastContents.resources.splice(foundIndex, 1);
+
+    this.addResourceToContentMap(resource);
+};
+Level.prototype.getResourcesAtContentMap = function(x, y) {
+    return this.contentMap[[x, y]].resources;
+};
+Level.prototype.addAgentToContentMap = function(agent) {
+    var x = agent.x, y = agent.y;
+    var contents = this.contentMap[[x, y]];
+    contents.agents.push(agent);
+};
+Level.prototype.removeAgentFromContentMap = function(agent) {
+    var x = agent.x, y = agent.y;
+    var contents = this.contentMap[[x, y]];
+    var foundIndex = -1;
+    for (var i = 0; i < contents.agents.length; i++) {
+        var a = contents.agents[i];
+        if (a == agent)
+            foundIndex = i;
+    }
+    if (foundIndex > -1)
+        contents.agents.splice(foundIndex, 1);
+};
+Level.prototype.changeAgentInContentMap = function(agent, lastX, lastY) {
+    var x = agent.x, y = agent.y;
+    var lastContents = this.contentMap[[lastX, lastX]];
+    var contents = this.contentMap[[x, y]];
+    var foundIndex = -1;
+    for (var i = 0; i < lastContents.agents.length; i++) {
+        var a = lastContents.agents[i];
+        if (a == agent)
+            foundIndex = i;
+    }
+    if (foundIndex > -1)
+        lastContents.agents.splice(foundIndex, 1);
+
+    this.addAgentToContentMap(agent);
+};
+Level.prototype.getAgentAtContentMap = function(x, y) {
+    return this.contentMap[[x, y]].agents;
+};
+
+
 // Entry point functions
 /**
  *
@@ -486,18 +604,11 @@ Level.prototype.setCurrentAgents = function(currentAgents) {
     this.currentAgents = currentAgents;
     for (var i in this.currentAgents) {
         var agent = this.currentAgents[i];
-        this.currentAgentsMap[agent.id] = agent;
+        this.currentAgentsMap[[agent.x, agent.y]] = agent;
+        this.addAgentToContentMap(agent);
     }
 };
 Level.prototype.getAgentByID = function(agentID) { return this.currentAgentsMap[agentID]; };
-
-/**
- * Add agent
- */
-Level.prototype.addAgent = function(agent) {
-    this.currentAgents.push(agent);
-    this.currentAgentsMap[agent.id] = agent;
-};
 
 /**
  * Add expired agent
@@ -520,7 +631,6 @@ Level.prototype.addSavedAgent = function(agent, time) {
     // Adjust resources
     var resourceBonus = (this.currentWaveNumber < 5 ? 4 : (this.currentWaveNumber < 10 ? 3 : (this.currentWaveNumber < 20 ? 2 : 1)));
     this.currentResourceStore += resourceBonus;
-
 };
 
 
@@ -674,7 +784,11 @@ Level.prototype.currentAgentHealthStats = function () {
     return stats;
 };
 
-// Resource functions
+
+/******************************************/
+/** RESOURCE FUNCTIONS ********************/
+/******************************************/
+
 /**
  *
  */
@@ -692,6 +806,7 @@ Level.prototype.resetResources = function() {
 
     for (var i = 0; i < this.levelResources.length; i++) {
         this.resources.push(this.levelResources[i]);
+        this.addResourceToContentMap(this.levelResources[i]);
     }
     this.resourceCategoryCounts = this.resetResourceCategoryCounts();
 };
@@ -752,6 +867,7 @@ Level.prototype.generateLevelResources = function() {
  */
 Level.prototype.addResource = function(resource) {
     this.resources.push(resource);
+    this.addResourceToContentMap(resource);
     this.incrementResourceCategoryCount(resource);
 
     var resourceCategory = resource.category.code;
@@ -768,6 +884,7 @@ Level.prototype.removeResource = function(resource) {
     var index = this.getCurrentResourceIndex(resource);
     if (index > -1) {
         this.resources.splice(index, 1);
+        this.removeResourceFromContentMap(resource);
         this.decrementResourceCategoryCount(resource);
     }
 };
@@ -782,6 +899,7 @@ Level.prototype.removeResourceByPosition = function(x, y) {
     if (index > -1) {
         var resource = this.resources[index];
         this.resources.splice(index, 1);
+        this.removeResourceFromContentMap(resource);
         this.decrementResourceCategoryCount(resource);
     }
 };
@@ -956,53 +1074,6 @@ Level.prototype.recoverResources = function () {
 
 
 /**
- * Processes neighbouring resources
- *
- * TODO: Add tests
- */
-Level.prototype.processNeighbouringResources = function(agent) {
-    var x = agent.x;
-    var y = agent.y;
-    for (var j = 0; j < this.resources.length; j++) {
-        var resource = this.resources[j];
-        var rx = resource.x;
-        var ry = resource.y;
-        if (Math.abs(rx - x) <= 1 && Math.abs(ry - y) <= 1) {
-            var resourceEffect = this.calculateResourceEffect(resource);
-            resource.provideYield(agent, resourceEffect, !this.noSpeedChange);
-        }
-    }
-};
-
-
-/**
- * Processes neighbouring agents
- *
- * TODO: Add tests
- */
-Level.prototype.processNeighbouringAgents = function(agent) {
-    if (World.settings.godMode || !World.settings.predatorsVisible)
-        return;
-
-    var x = agent.x;
-    var y = agent.y;
-    agent.isHit = (false);
-    var agents = this.currentAgents;
-    for (var j = 0; j < agents.length; j++) {
-        var a = agents[j];
-        var ax = a.x;
-        var ay = a.y;
-        if (Math.abs(ax - x) <= 1 && Math.abs(ay - y) <= 1) {
-            if (!World.settings.godMode && World.settings.predatorsVisible && agent.culture.isHitable && a.culture.canHit) {
-                agent.isHit = true;
-            }
-        }
-    }
-    if (agent.isHit)
-        agent.adjustGeneralHealth(-10);
-};
-
-/**
  * Initialise waves
  */
 Level.prototype.initialiseWaves = function(waveNumber) {
@@ -1035,94 +1106,11 @@ Level.prototype.initialiseWaves = function(waveNumber) {
 
 
 
-/**
- * Find the critical path to the nearest exit point
- */
-Level.prototype.criticalPath = function(x, y, h) {
-    var horizontal = h || true;
 
-    var shortestDistance = -1, shortistTrail;
-    for (var i in this.exitPoints) {
-        var ep = this.exitPoints[i];
-        var tx = ep[0], ty = ep[1];
-        var result = FiercePlanet.Framework.MazeStrategies.criticalPathToExitPoint(x, y, tx, ty);
-        var distance = result.length;
-        if (shortestDistance == -1 ||  distance < shortestDistance) {
-            shortestDistance = distance;
-            shortistTrail = result;
-        }
-    }
-    return { res: shortistTrail.length, trail: shortistTrail};
-};
+/******************************************/
+/** LEVEL DIMENSION FUNCTIONS *************/
+/******************************************/
 
-
-var MAX_DEPTH = 1000;
-Level.prototype.criticalPathToExitPoint = function(sx, sy, ex, ey) {
-    var cell = [sx, sy], goal = [ex, ey];
-    var history = [];
-    var trails = {};
-    var depth = 0;
-    history.push(cell);
-    trails[sy * this.cellsAcross + sx] = [cell];
-    var candidates = [];
-    candidates.push(cell);
-    while (depth++ < MAX_DEPTH) {
-        var newCandidates = [];
-        for (var i in candidates) {
-            var candidate = candidates[i];
-            var x = candidate[0], y = candidate[1];
-            if (this.isSameCell(candidate, goal)) {
-                return trails[y * this.cellsAcross + x];
-            }
-            var directions = this.getDirections(candidate, goal);
-            for (var j = 0; j < directions.length; j++) {
-                var nx = x, ny = y;
-                switch(directions[j]) {
-                    case 0:
-                        nx++;
-                        break;
-                    case 1:
-                        ny++;
-                        break;
-                    case 2:
-                        nx--;
-                        break;
-                    case 3:
-                        ny--;
-                        break;
-                }
-                var newCell = [nx, ny];
-                if (nx < 0 || nx >= this.cellsAcross || ny < 0 || ny >= this.cellsDown)
-                    continue;
-                if (!this.isCell(newCell))
-                    continue;
-                if (this.isInHistory(newCell, history))
-                    continue;
-                // Exclude cells occupied exclusively by resources
-                if (World.settings.resourcesOwnTilesExclusively && this.isPositionOccupiedByResource(nx, ny))
-                    continue;
-
-                newCandidates.push(newCell);
-                history.push(newCell)
-
-                var candidateKey = y * this.cellsAcross + x;
-                var candidateTrail = trails[candidateKey]
-                var newCandidateKey = ny * this.cellsAcross + nx;
-                var newCandidateTrail = []
-                for (var k in candidateTrail) {
-                    newCandidateTrail.push(candidateTrail[k]);
-                }
-                newCandidateTrail.push(newCell);
-                trails[newCandidateKey] = newCandidateTrail;
-            }
-        }
-        candidates = [];
-        for (var i in newCandidates) {
-            candidates.push(newCandidates[i]);
-        }
-    }
-
-};
 
 /**
  * Find the critical path to the nearest exit point
@@ -1170,6 +1158,26 @@ Level.prototype.getDirections = function (cell, goal){
             directions = (dx < 0) ? [1, 2, 0, 3] : [1, 0, 2, 3];
     }
     return directions;
+};
+
+/**
+ * Gets tiles surrounding a given co-ordinate
+ * @param x
+ * @param y
+ */
+Level.prototype.getSurroundingPositions = function(x, y) {
+    var surroundingPositions = [];
+
+    if (x > 0)
+        surroundingPositions.push([x - 1, y]);
+    if (x < this.cellsAcross - 1)
+        surroundingPositions.push([x + 1, y]);
+    if (y > 0)
+        surroundingPositions.push([x, y - 1]);
+    if (y < this.cellsDown - 1)
+        surroundingPositions.push([x, y + 1]);
+
+    return surroundingPositions;
 };
 
 

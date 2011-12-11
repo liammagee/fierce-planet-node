@@ -21,10 +21,13 @@ function Culture(name, color, healthCategories, speed, health, drawFunction, ini
     this.healthCategories = healthCategories || [];
     this.speed = speed || AgentConstants.DEFAULT_SPEED;
     this.health = health || AgentConstants.INITIAL_HEALTH;
-    this.isHitable = false;
-    this.canHit = false;
     this.generateEachWave = true;
+
+    this.characteristics = {};
+    this.beliefs = [];
+    this.desires = [];
     this.capabilities = [];
+
     this.drawFunction = drawFunction || function(){};
     this.initFunction = initFunction || function(){};
     this.defaultUpdateFunction = function(agent, level){

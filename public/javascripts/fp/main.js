@@ -57,10 +57,15 @@ $LAB
         // Load FiercePlanet other plugins
    .script([
         'fp/core/world.js'
-       , 'fp/core/agent.js'
        , 'fp/core/catastrophe.js'
-       , 'fp/core/cultures/culture.js'
-       , 'fp/core/cultures/capabilities.js'
+
+       , 'fp/core/agent/agent.js'
+       , 'fp/core/agent/culture.js'
+        , 'fp/core/agent/beliefs.js'
+       , 'fp/core/agent/desires.js'
+       , 'fp/core/agent/capabilities.js'
+       , 'fp/core/agent/characteristics.js'
+
        , 'fp/core/campaign.js'
        , 'fp/core/level.js'
        , 'fp/core/wave.js'
@@ -68,7 +73,7 @@ $LAB
        , 'fp/core/species.js'
        , 'fp/core/terrain.js'
        , 'fp/core/tile.js'
-       , 'fp/core/maze-strategies.js'
+//       , 'fp/core/maze-strategies.js'
     , 'fp/core/module-manager.js'
     , 'fp/core/module.js'
     , 'fp/core/lifecycle.js'
