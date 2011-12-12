@@ -379,7 +379,7 @@ var Lifecycle = Lifecycle || {};
 
         Lifecycle.currentWave = 1;
         Lifecycle.currentWaveNumber = 0;
-        Lifecycle.currentLevel.init();
+        Lifecycle.currentLevel.initLevel();
 
 		if (this.postInitialiseGameCallback)
 			this.postInitialiseGameCallback();

@@ -98,7 +98,7 @@ function Level(id) {
     this.imageAttribution = null;
     this.soundSrc = null;
 
-    this.init = function() {
+    this.initLevel = function() {
         this.generatePath();
         this.initContentMap();
         this.waves = undefined;
@@ -412,6 +412,15 @@ Level.prototype.removeResourceFromContentMap = function(resource) {
     if (foundIndex > -1)
         contents.resources.splice(foundIndex, 1);
 };
+Level.prototype.removeAllResourcesFromContentMap = function() {
+    for (var i = 0; i < this.cellsAcross; i++) {
+        for (var j = 0; j < this.cellsDown; j++) {
+            var content = this.contentMap[[i, j]];
+            if (typeof(content) !== 'undefined')
+                content.resources = [];
+        }
+    }
+};
 Level.prototype.changeResourceInContentMap = function(resource, lastX, lastY) {
     var x = resource.x, y = resource.y;
     var lastContents = this.contentMap[[lastX, lastX]];
@@ -461,7 +470,16 @@ Level.prototype.changeAgentInContentMap = function(agent, lastX, lastY) {
 
     this.addAgentToContentMap(agent);
 };
-Level.prototype.getAgentAtContentMap = function(x, y) {
+Level.prototype.removeAllAgentsFromContentMap = function() {
+    for (var i = 0; i < this.cellsAcross; i++) {
+        for (var j = 0; j < this.cellsDown; j++) {
+            var content = this.contentMap[[i, j]];
+            if (typeof(content) !== 'undefined')
+                content.agents = [];
+        }
+    }
+};
+Level.prototype.getAgentsAtContentMap = function(x, y) {
     return this.contentMap[[x, y]].agents;
 };
 
@@ -803,6 +821,7 @@ Level.prototype.resetResources = function() {
 
     this.resources = [];
     this.levelResources = this.levelResources || [];
+    this.removeAllResourcesFromContentMap();
 
     for (var i = 0; i < this.levelResources.length; i++) {
         this.resources.push(this.levelResources[i]);
@@ -1168,14 +1187,14 @@ Level.prototype.getDirections = function (cell, goal){
 Level.prototype.getSurroundingPositions = function(x, y) {
     var surroundingPositions = [];
 
-    if (x > 0)
-        surroundingPositions.push([x - 1, y]);
     if (x < this.cellsAcross - 1)
         surroundingPositions.push([x + 1, y]);
-    if (y > 0)
-        surroundingPositions.push([x, y - 1]);
     if (y < this.cellsDown - 1)
         surroundingPositions.push([x, y + 1]);
+    if (x > 0)
+        surroundingPositions.push([x - 1, y]);
+    if (y > 0)
+        surroundingPositions.push([x, y - 1]);
 
     return surroundingPositions;
 };
