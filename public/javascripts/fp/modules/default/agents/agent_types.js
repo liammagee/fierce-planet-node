@@ -20,7 +20,25 @@ var DefaultCultures = DefaultCultures || {};
 
     this.init = function() {
         this.CITIZEN_AGENT_TYPE = new Culture("Citizen", "000", World.resourceCategories);
-        this.CITIZEN_AGENT_TYPE.isHitable = (true);
+
+        this.CITIZEN_AGENT_TYPE.characteristics = [
+        ];
+        this.CITIZEN_AGENT_TYPE.beliefs = [
+            Beliefs.BeliefsAboutPaths
+            , Beliefs.BeliefsAboutResources
+            , Beliefs.BeliefsBasedOnOtherAgentsBeliefs
+        ];
+        this.CITIZEN_AGENT_TYPE.desires = [
+            Desires.ExploreSpace
+            , Desires.Flee
+            , Desires.ImproveHealth
+        ];
+        this.CITIZEN_AGENT_TYPE.capabilities = [
+            Capabilities.MoveCapability
+            , Capabilities.ConsumeResourcesCapability
+            , Capabilities.AdjustHealthCapability
+        ];
+
         this.CITIZEN_AGENT_TYPE.drawFunction = (function(ctx, agent, x, y, pieceWidth, pieceHeight, newColor, counter, direction) {
 
             if (pieceWidth < (8 ) || pieceHeight < (8 )) {
@@ -229,11 +247,6 @@ var DefaultCultures = DefaultCultures || {};
             }
         };
 
-        this.CITIZEN_AGENT_TYPE.capabilities = [
-            Capabilities.MoveCapability
-            , Capabilities.ConsumeResourcesCapability
-            , Capabilities.AdjustHealthCapability
-        ];
 
         this.id = 'FP-Agents';
         this.cultures = [DefaultCultures.CITIZEN_AGENT_TYPE];

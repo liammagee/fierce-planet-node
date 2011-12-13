@@ -20,20 +20,20 @@ describe("level-related classes", function() {
         it("should have the correct positions", function() {
             var surroundingPositions = level.getSurroundingPositions(0, 0);
             expect(surroundingPositions.length).toEqual(2);
-            expect(surroundingPositions[0]).toEqual([1, 0]);
-            expect(surroundingPositions[1]).toEqual([0, 1]);
+            expect(surroundingPositions[0]).toEqual({x: 1, y: 0});
+            expect(surroundingPositions[1]).toEqual({x: 0, y: 1});
 
             surroundingPositions = level.getSurroundingPositions(10, 10);
             expect(surroundingPositions.length).toEqual(4);
-            expect(surroundingPositions[0]).toEqual([11, 10]);
-            expect(surroundingPositions[1]).toEqual([10, 11]);
-            expect(surroundingPositions[2]).toEqual([9, 10]);
-            expect(surroundingPositions[3]).toEqual([10, 9]);
+            expect(surroundingPositions[0]).toEqual({x: 11, y: 10});
+            expect(surroundingPositions[1]).toEqual({x: 10, y: 11});
+            expect(surroundingPositions[2]).toEqual({x: 9, y: 10});
+            expect(surroundingPositions[3]).toEqual({x: 10, y: 9});
 
             surroundingPositions = level.getSurroundingPositions(19, 19);
             expect(surroundingPositions.length).toEqual(2);
-            expect(surroundingPositions[0]).toEqual([18, 19]);
-            expect(surroundingPositions[1]).toEqual([19, 18]);
+            expect(surroundingPositions[0]).toEqual({x: 18, y: 19});
+            expect(surroundingPositions[1]).toEqual({x: 19, y: 18});
         });
 
     });
@@ -68,7 +68,7 @@ describe("level-related classes", function() {
                 var positions = level.getSurroundingPositions(10, 10);
                 var allResources = [];
                 positions.forEach(function(position) {
-                    var resources = level.getResourcesAtContentMap(position[0], position[1]);
+                    var resources = level.getResourcesAtContentMap(position.x, position.y);
                     resources.forEach(function(resource) {
                         allResources.push(resource);
                     })
@@ -108,7 +108,7 @@ describe("level-related classes", function() {
                 var positions = level.getSurroundingPositions(11, 10);
                 var allAgents = [];
                 positions.forEach(function(position) {
-                    var agents = level.getAgentsAtContentMap(position[0], position[1]);
+                    var agents = level.getAgentsAtContentMap(position.x, position.y);
                     agents.forEach(function(agent) {
                         allAgents.push(agent);
                     })

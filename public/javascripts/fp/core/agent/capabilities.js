@@ -203,7 +203,7 @@ Capabilities.MoveRandomlyCapability = {};
 
         var position = this.findPositionRandomly(agent, level, withNoRepeat, withNoCollision, withOffscreenCycling)
 
-        //console.log(this.x + ':' +this.y + ':' +position[0] + ':' +position[1])
+//        console.log(agent.x + ':' +agent.y + ':' +position[0] + ':' +position[1])
         // Set the position and add the move to the agent's memory
         agent.moveTo(position[0], position[1]);
     };

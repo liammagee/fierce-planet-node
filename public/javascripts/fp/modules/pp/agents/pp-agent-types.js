@@ -47,7 +47,11 @@ var PredatorPreyCultures = PredatorPreyCultures || {};
             , Desires.Flee
             , Desires.ImproveHealth
         ];
-
+        this.PREY_AGENT_TYPE.capabilities = [
+            Capabilities.MoveRandomlyCapability
+            , Capabilities.ConsumeResourcesCapability
+            , Capabilities.RegenerateCapability
+        ];
         this.PREY_AGENT_TYPE.drawFunction = (function (ctx, agent, x, y, pieceWidth, pieceHeight, newColor, counter, direction) {
 
             if (pieceWidth < (8 ) || pieceHeight < (8 )) {

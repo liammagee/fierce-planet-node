@@ -457,7 +457,7 @@ Level.prototype.removeAgentFromContentMap = function(agent) {
 };
 Level.prototype.changeAgentInContentMap = function(agent, lastX, lastY) {
     var x = agent.x, y = agent.y;
-    var lastContents = this.contentMap[[lastX, lastX]];
+    var lastContents = this.contentMap[[lastX, lastY]];
     var contents = this.contentMap[[x, y]];
     var foundIndex = -1;
     for (var i = 0; i < lastContents.agents.length; i++) {
@@ -1184,17 +1184,20 @@ Level.prototype.getDirections = function (cell, goal){
  * @param x
  * @param y
  */
-Level.prototype.getSurroundingPositions = function(x, y) {
+Level.prototype.getSurroundingPositions = function(x, y, includeSelf) {
     var surroundingPositions = [];
 
+    if (includeSelf)
+        surroundingPositions.push({x: x, y: y});
+
     if (x < this.cellsAcross - 1)
-        surroundingPositions.push([x + 1, y]);
+        surroundingPositions.push({x: x + 1, y: y});
     if (y < this.cellsDown - 1)
-        surroundingPositions.push([x, y + 1]);
+        surroundingPositions.push({x: x, y: y + 1});
     if (x > 0)
-        surroundingPositions.push([x - 1, y]);
+        surroundingPositions.push({x: x - 1, y: y});
     if (y > 0)
-        surroundingPositions.push([x, y - 1]);
+        surroundingPositions.push({x: x, y: y - 1});
 
     return surroundingPositions;
 };

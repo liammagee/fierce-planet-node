@@ -138,9 +138,12 @@ $LAB
         Lifecycle.interval = 100;
         World.settings.agentsCanCommunicate = false;
         PredatorPreyModule.init();
+
         })
     .wait(function() {
         FiercePlanet.Game.loadGame();
+        FiercePlanet.Orientation.adjustParameters(1200, 800);
+        FiercePlanet.Drawing.drawGame();
     });
 
 

@@ -83,6 +83,15 @@ Beliefs.BeliefsAboutResources = {};
         var resources = level.resources;
 
         // Add neighbouring resources to memory
+        var positions = level.getSurroundingPositions(x, y, true);
+        positions.forEach(function(position) {
+            var resources = level.getResourcesAtContentMap(position.x, position.y);
+            // TODO: Can only add one resource to memory
+            if (resources && resources.length > 0)
+                agent.memoriesOfResources[[x, y]] = resources[0];
+        });
+
+        /*
         for (var j = 0; j < resources.length; j++) {
             var resource = resources[j];
             var resourceX = resource.x;
@@ -95,7 +104,9 @@ Beliefs.BeliefsAboutResources = {};
                 // Add resource to memory
                 agent.memoriesOfResources[[x, y]] = resource;
             }
-        }    };
+        }
+        */
+    };
 }).apply(Beliefs.BeliefsAboutResources);
 
 Beliefs.BeliefsAboutOtherAgents = {};
@@ -111,8 +122,22 @@ Beliefs.BeliefsAboutOtherAgents = {};
 
         var x = agent.x, y = agent.y;
 
-        var agents = level.agemts;
 
+
+        // Add neighbouring resources to memory
+        var positions = level.getSurroundingPositions(x, y, true);
+        positions.forEach(function(position) {
+            var agents = level.getAgentsAtContentMap(position.x, position.y);
+            // TODO: Can only add one resource to memory
+            if (agents && agents.length > 0) {
+                agents.forEach(function(otherAgent) {
+                    agent.memoriesOfAgents[otherAgent.id] = new MemoryOfAgent(agent.id, agent.age, x, y, otherAgent.id);
+                });
+            }
+        });
+
+        /*
+        var agents = level.currentAgents;
         // Add neighbouring resources to memory
         for (var j = 0; j < agents.length; j++) {
             var otherAgent = agents[j];
@@ -127,7 +152,9 @@ Beliefs.BeliefsAboutOtherAgents = {};
                 agent.memoriesOfAgents[otherAgent.id] = new MemoryOfAgent(agent.id, agent.age, x, y, otherAgent.id);
 //                agent.memoriesOfAgents[[x, y]] = otherAgent;
             }
-        }    };
+        }
+        */
+   };
 }).apply(Beliefs.BeliefsAboutOtherAgents);
 
 Beliefs.BeliefsBasedOnOtherAgentsBeliefs = {};
@@ -145,7 +172,69 @@ Beliefs.BeliefsBasedOnOtherAgentsBeliefs = {};
 
         var x = agent.x, y = agent.y;
 
+
         // Add agents on this tile to memory
+//        /*
+        var neighbouringAgents = [];
+        var positions = level.getSurroundingPositions(x, y, true);
+        positions.forEach(function(position) {
+            var agents = level.getAgentsAtContentMap(position.x, position.y);
+            if (agents && agents.length > 0) {
+                agents.forEach(function(otherAgent) {
+                    if (otherAgent.id != agent.id)
+                        neighbouringAgents.push(otherAgent);
+                });
+            }
+        });
+        neighbouringAgents.forEach(function(otherAgent) {
+            if (otherAgent.lastMemory.x != agent.lastMemory.x || otherAgent.lastMemory.y != agent.lastMemory.y) {
+                // Premature optimisation...
+//                         if (agent.memoriesOfPlacesVisitedByOtherAgents.length > 10)
+//                         agent.memoriesOfPlacesVisitedByOtherAgents = [];
+//                         if (agent.memoriesOfPathsUntriedByOtherAgents.length > 10)
+//                         agent.memoriesOfPathsUntriedByOtherAgents = [];
+
+                // Add agent to memory
+                agent.memoriesOfAgents[otherAgent.id] = new MemoryOfAgent(agent.id, agent.age, x, y, otherAgent.id);
+                var mpv = [];
+                for (var j in otherAgent.memoriesOfPlacesVisited) {
+                    var m = otherAgent.memoriesOfPlacesVisited[j];
+                    if (m != undefined)
+                        mpv[[m.x, m.y]] = new Memory(m.agentID, m.age, m.x, m.y);
+                }
+                agent.memoriesOfPlacesVisitedByOtherAgents[otherAgent.id] = mpv;
+
+                var mpu = [];
+                for (var j in otherAgent.memoriesOfPathsUntried) {
+                    var m = otherAgent.memoriesOfPathsUntried[j];
+                    if (m != undefined)
+                        mpu[[m.x, m.y]] = new Memory(m.agentID, m.age, m.x, m.y);
+                }
+                agent.memoriesOfPathsUntriedByOtherAgents[otherAgent.id] = mpu;
+
+                // Add memories to other agent
+                // TODO: No longer necessary?
+//                    agent._memoriesOfAgents[agent.id] = new MemoryOfAgent(agent.id, agent.age, x, y, agent.id) ;
+//                    mpv = [];
+//                    for (var j in agent.memoriesOfPlacesVisited) {
+//                        var m = agent.memoriesOfPlacesVisited[j];
+//                        if (m != undefined)
+//                            mpv[[m.x, m.y]] = new Memory(m.agentID, m.age, m.x, m.y);
+//                    }
+//                    agent._memoriesOfPlacesVisitedByOtherAgents[agent.id] = mpv;
+//                    mpu = [];
+//                    for (var j in agent.memoriesOfPathsUntried) {
+//                        var m = agent.memoriesOfPathsUntried[j];
+//                        if (m != undefined)
+//                            mpu[[m.x, m.y]] = new Memory(m.agentID, m.age, m.x, m.y);
+//                    }
+//                    agent._memoriesOfPathsUntriedByOtherAgents[agent.id] = mpu;
+
+            }
+        });
+//*/
+
+        /*
         var agents = level.currentAgents;
         for (var i = 0; i < agents.length; i++) {
             var otherAgent = agents[i];
@@ -158,12 +247,10 @@ Beliefs.BeliefsBasedOnOtherAgentsBeliefs = {};
             if ((otherAgent.lastMemory.x != agent.lastMemory.x || otherAgent.lastMemory.y != agent.lastMemory.y) && (Math.abs(agentX - x) <= 1 && Math.abs(agentY - y) <= 1)) {
 
                 // Premature optimisation...
-                /*
-                 if (agent.memoriesOfPlacesVisitedByOtherAgents.length > 10)
-                 agent.memoriesOfPlacesVisitedByOtherAgents = [];
-                 if (agent.memoriesOfPathsUntriedByOtherAgents.length > 10)
-                 agent.memoriesOfPathsUntriedByOtherAgents = [];
-                 */
+//                 if (agent.memoriesOfPlacesVisitedByOtherAgents.length > 10)
+//                 agent.memoriesOfPlacesVisitedByOtherAgents = [];
+//                 if (agent.memoriesOfPathsUntriedByOtherAgents.length > 10)
+//                 agent.memoriesOfPathsUntriedByOtherAgents = [];
 
                 // Add agent to memory
                 agent.memoriesOfAgents[otherAgent.id] = new MemoryOfAgent(agent.id, agent.age, x, y, otherAgent.id);
@@ -202,6 +289,7 @@ Beliefs.BeliefsBasedOnOtherAgentsBeliefs = {};
 
             }
         }
+        */
     };
 }).apply(Beliefs.BeliefsBasedOnOtherAgentsBeliefs);
 
