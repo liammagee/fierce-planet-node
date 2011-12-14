@@ -33,6 +33,8 @@ function Culture(name, color, healthCategories, speed, health, drawFunction, ini
     this.defaultUpdateFunction = function(agent, level){
         this.capabilities.forEach(function(capability) {
             capability.exercise(agent, level);
+            if (typeof(capability.cost) !== 'undefined')
+                agent.adjustGeneralHealth(capability.cost);
         })
     };
     this.updateFunction = this.updateFunction || this.defaultUpdateFunction;

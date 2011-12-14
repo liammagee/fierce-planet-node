@@ -8,6 +8,7 @@
 
 var Capabilities = Capabilities || {};
 
+
 Capabilities.ConsumeResourcesCapability = {};
 (function() {
     this.exercise = function(agent, level) {
@@ -24,6 +25,7 @@ Capabilities.ConsumeResourcesCapability = {};
         }
     };
 }).apply(Capabilities.ConsumeResourcesCapability);
+
 Capabilities.ProduceResourcesCapability = {};
 (function() {
     this.exercise = function(agent, level) {
@@ -37,11 +39,6 @@ Capabilities.ProduceResourcesCapability = {};
     };
 }).apply(Capabilities.ProduceResourcesCapability);
 
-Capabilities.ShareMemoriesCapability = {};
-(function() {
-    this.exercise = function(agent, level) {
-    };
-}).apply(Capabilities.ShareMemoriesCapability);
 
 Capabilities.AdjustHealthCapability = {};
 (function() {
@@ -118,7 +115,6 @@ Capabilities.PreyOnOtherAgentsCapability = {};
 
 Capabilities.MoveUtilities = {};
 (function() {
-
     /**
      * Generates a random order for the available directions (UP, RIGHT, DOWN, LEFT)
      */
@@ -139,6 +135,7 @@ Capabilities.MoveUtilities = {};
 
 Capabilities.MoveCapability = {};
 (function() {
+    this.cost = -10;
     this.exercise = function(agent, level) {
         if (level.agentGoToNearestExit || World.settings.agentGoToNearestExit) {
             try {
@@ -157,6 +154,7 @@ Capabilities.MoveCapability = {};
 
 Capabilities.MoveUpwardsCapability = {};
 (function() {
+    this.cost = 10;
     this.exercise = function(agent, level) {
         // TODO: Make these parameters of the level
 
@@ -193,6 +191,7 @@ Capabilities.MoveUpwardsCapability = {};
 
 Capabilities.MoveRandomlyCapability = {};
 (function() {
+    this.cost = 10;
     this.exercise = function(agent, level) {
         // TODO: Make these parameters of the level
 
@@ -282,6 +281,7 @@ Capabilities.MoveRandomlyCapability = {};
 
 Capabilities.MoveTowardsNearestExitCapability = {};
 (function() {
+    this.cost = 10;
     this.exercise = function(agent, level) {
         // TODO: Make these parameters of the level
 
@@ -425,6 +425,7 @@ Capabilities.MoveTowardsNearestExitCapability = {};
 
 Capabilities.MoveWithMemoryCapability = {};
 (function() {
+    this.cost = -10;
     this.exercise = function(agent, level) {
         // TODO: Make these parameters of the level
 

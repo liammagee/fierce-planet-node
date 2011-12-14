@@ -26,10 +26,10 @@ describe("agent-related classes", function() {
 
         describe("an agent", function() {
             it("should have desires", function() {
-                var rankedDesires = Desires.rankDesires(culture.desires, agent);
+                var rankedDesires = Desires.rankDesires(agent);
                 expect(rankedDesires[0].name).toEqual('Explore');
                 agent.health = 1;
-                rankedDesires = Desires.rankDesires(culture.desires, agent);
+                rankedDesires = Desires.rankDesires(agent);
                 expect(rankedDesires[0].name).toEqual('Improve Health');
             });
 

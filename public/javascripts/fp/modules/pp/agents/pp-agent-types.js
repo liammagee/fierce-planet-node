@@ -18,7 +18,7 @@ var PredatorPreyCultures = PredatorPreyCultures || {};
 
     this.init = function () {
         this.PREY_AGENT_TYPE = new Culture("Prey", "000", World.resourceCategories);
-        this.PREDATOR_AGENT_TYPE = new Culture("Predator", "fbe53b", World.resourceCategories);
+        this.PREDATOR_AGENT_TYPE = new Culture("Predator", "f00", World.resourceCategories);
         this.TEST_AGENT_TYPE = new Culture("Test", "fbe53b", World.resourceCategories);
 
         this.PREY_AGENT_TYPE.birthProbability = 0.8;

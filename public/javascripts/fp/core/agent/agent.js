@@ -149,14 +149,12 @@ function Agent(culture, x, y) {
 
     this.reviseBeliefs(undefined);
 
-
     // IMPORTED ABM FEATURES - EXPERIMENTAL
     /* Gender: UNSPECIFIED: 0, MALE: -1; FEMALE:1 */
     this.gender = 0;
     this.children = [];
     this.parents = [];
     this.currentPartner = [];
-
 
 
     /**
@@ -453,131 +451,6 @@ Agent.prototype.reviseBeliefs = function(level) {
         if (belief && typeof(belief.makeBelief) !== 'undefined')
             belief.makeBelief(agent, level);
     });
-    /*
-    var x = this.x, y = this.y;
-
-
-    var memory = null;
-    if (this.memoriesOfPlacesVisited[[x, y]] != undefined) {
-        memory = this.memoriesOfPlacesVisited[[x, y]];
-        memory.addVisit(this.id, this.age);
-    }
-    else {
-        memory = new Memory(this.id, this.age, x, y);
-        this.memoriesOfPlacesVisited[[x, y]] = memory;
-    }
-
-    if (this.memoriesOfPathsUntried[[x, y]] != undefined) {
-        delete this.memoriesOfPathsUntried[[x, y]];
-    }
-    if (this.lastUntriedPathMemory != undefined)
-        memory.distanceFromLastUntriedPath = (this.age - this.lastUntriedPathMemory.age);
-    this.lastMemory = memory;
-    // Add to ordered memory
-    this.chronologicalMemory[this.age] = memory;
-
-    if (level != undefined) {
-        var resources = level.resources;
-
-
-        // Add neighbouring resources to memory
-        for (var j = 0; j < resources.length; j++) {
-            var resource = resources[j];
-            var resourceX = resource.x;
-            var resourceY = resource.y;
-            // Is the resource next to our current position?
-            var diffX = Math.abs(resourceX - x);
-            var diffY = Math.abs(resourceY - y);
-            var diff = diffX * diffY;
-            if (diff <= 1) {
-                // Add resource to memory
-                this.memoriesOfResources[[x, y]] = resource;
-            }
-        }
-
-        // Add any unvisited path cells to memory
-        if (x - 1 >= 0 && level.getTile(x - 1, y) == undefined && this.memoriesOfPlacesVisited[[x - 1, y]] == undefined) {
-            // Add path cell to memory
-            this.lastUntriedPathMemory = new Memory(this.id, this.age, x - 1, y);
-            this.memoriesOfPathsUntried[[x - 1, y]] = this.lastUntriedPathMemory;
-        }
-        if (x + 1 < level.cellsAcross && level.getTile(x + 1, y) == undefined && this.memoriesOfPlacesVisited[[x + 1, y]] == undefined) {
-            // Add path cell to memory
-            this.lastUntriedPathMemory = new Memory(this.id, this.age, x + 1, y);
-            this.memoriesOfPathsUntried[[x + 1, y]] = this.lastUntriedPathMemory;
-        }
-        if (y - 1 >= 0 && level.getTile(x, y - 1) == undefined && this.memoriesOfPlacesVisited[[x, y - 1]] == undefined) {
-            // Add path cell to memory
-            this.lastUntriedPathMemory = new Memory(this.id, this.age, x, y - 1);
-            this.memoriesOfPathsUntried[[x, y - 1]] = this.lastUntriedPathMemory;
-        }
-        if (y + 1 < level.cellsDown && level.getTile(x, y + 1) == undefined && this.memoriesOfPlacesVisited[[x, y + 1]] == undefined) {
-            // Add path cell to memory
-            this.lastUntriedPathMemory = new Memory(this.id, this.age, x, y + 1);
-            this.memoriesOfPathsUntried[[x, y + 1]] = this.lastUntriedPathMemory;
-        }
-
-
-        // Add agents on this tile to memory
-
-        if (this.canCommunicateWithOtherAgents) {
-            var agents = level.currentAgents;
-            for (var i = 0; i < agents.length; i++) {
-                var agent = agents[i];
-                if (agent.id == this.id)
-                    continue;
-                var agentX = agent.x;
-                var agentY = agent.y;
-//                if (agentX == x && agentY == y && (agent.lastPosition().x != this.lastPosition().x || agent.lastPosition().y != this.lastPosition().y)) {
-                // TODO: This is very slow - consider ways to optimise
-                if ((agent.lastMemory.x != this.lastMemory.x || agent.lastMemory.y != this.lastMemory.y) && (Math.abs(agentX - x) <= 1 && Math.abs(agentY - y) <= 1)) {
-
-                    // Premature optimisation...
-//                    if (this.memoriesOfPlacesVisitedByOtherAgents.length > 10)
-//                        this.memoriesOfPlacesVisitedByOtherAgents = [];
-//                    if (this.memoriesOfPathsUntriedByOtherAgents.length > 10)
-//                        this.memoriesOfPathsUntriedByOtherAgents = [];
-
-                    // Add agent to memory
-                    this.memoriesOfAgents[agent.id] = new MemoryOfAgent(this.id, this.age, x, y, agent.id);
-                    var mpv = [];
-                    for (var j in agent.memoriesOfPlacesVisited) {
-                        var m = agent.memoriesOfPlacesVisited[j];
-                        if (m != undefined)
-                            mpv[[m.x, m.y]] = new Memory(m.agentID, m.age, m.x, m.y);
-                    }
-                    this.memoriesOfPlacesVisitedByOtherAgents[agent.id] = mpv;
-                    var mpu = [];
-                    for (var j in agent.memoriesOfPathsUntried) {
-                        var m = agent.memoriesOfPathsUntried[j];
-                        if (m != undefined)
-                            mpu[[m.x, m.y]] = new Memory(m.agentID, m.age, m.x, m.y);
-                    }
-                    this.memoriesOfPathsUntriedByOtherAgents[agent.id] = mpu;
-
-                    // Add memories to other agent
-                    // TODO: No longer necessary?
-//                    agent._memoriesOfAgents[this.id] = new MemoryOfAgent(agent.id, agent.age, x, y, this.id) ;
-//                    mpv = [];
-//                    for (var j in this.memoriesOfPlacesVisited) {
-//                        var m = this.memoriesOfPlacesVisited[j];
-//                        if (m != undefined)
-//                            mpv[[m.x, m.y]] = new Memory(m.agentID, m.age, m.x, m.y);
-//                    }
-//                    agent._memoriesOfPlacesVisitedByOtherAgents[this.id] = mpv;
-//                    mpu = [];
-//                    for (var j in this.memoriesOfPathsUntried) {
-//                        var m = this.memoriesOfPathsUntried[j];
-//                        if (m != undefined)
-//                            mpu[[m.x, m.y]] = new Memory(m.agentID, m.age, m.x, m.y);
-//                    }
-//                    agent._memoriesOfPathsUntriedByOtherAgents[this.id] = mpu;
-
-                }
-            }
-        }
-    }
-    */
 };
 
 

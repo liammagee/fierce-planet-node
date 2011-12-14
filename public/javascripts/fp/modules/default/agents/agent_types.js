@@ -36,7 +36,6 @@ var DefaultCultures = DefaultCultures || {};
         this.CITIZEN_AGENT_TYPE.capabilities = [
             Capabilities.MoveCapability
             , Capabilities.ConsumeResourcesCapability
-            , Capabilities.AdjustHealthCapability
         ];
 
         this.CITIZEN_AGENT_TYPE.drawFunction = (function(ctx, agent, x, y, pieceWidth, pieceHeight, newColor, counter, direction) {

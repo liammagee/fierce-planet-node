@@ -8,7 +8,8 @@
 
 var Desires = Desires || {};
 (function() {
-    this.rankDesires = function(desires, agent) {
+    this.rankDesires = function(agent) {
+        var desires = agent.culture.desires;
         return desires.sort(function(a, b) {
             if (typeof(a.evaluate) == 'undefined' || typeof(b.evaluate) == 'undefined')
                 return 0;
@@ -37,7 +38,21 @@ Desires.Flee = {};
 (function() {
     this.name = 'Flee';
     this.evaluate = function(agent, level) {
-        if (typeof(agent.beliefs.presenceOfThreat) !== "undefined")
+        var surroundingPositions = level.getSurroundingPositions(agent.x, agent.y, true);
+        var presenceOfThreat = false;
+        surroundingPositions.forEach(function(position) {
+            var agents = level.getAgentsAtContentMap(position.x, position.y);
+            agents.forEach(function(otherAgent) {
+                if (otherAgent.id != agent.id && otherAgent.culture != agent.culture) {
+                    otherAgent.capabilities.forEach(function(capability) {
+                        if (capability == Capabilities.PreyOnOtherAgentsCapability) {
+                            presenceOfThreat = true;
+                        }
+                    })
+                }
+            });
+        })
+        if (presenceOfThreat)
             return 1.0;
         else
             return 0.0;
