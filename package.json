@@ -16,7 +16,6 @@
     , "socket.io": ">= 0.7.7"
     , "now": ">= 0.7"
     , "everyauth": ">= 0.2"
-    //, "jake": ">= 0.1.8"
     , "mongoose": ">= 1.0"
     , "connect-mongodb": ">= 1.0"
     , "node-proxy": "0.4.0"
