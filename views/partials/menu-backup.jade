@@ -1,0 +1,10 @@
+#menu
+  #user-links
+    - if (!everyauth.user)
+      a#login(href='#') Login
+    - else
+      a#welcome-link(href='#')= 'Welcome ' + everyauth.user.profile.nickname
+      span= ' | '
+      a#blog(href='http://blog.fierce-planet.com',target='_blank') Blog
+      span= ' | '
+      a#logout(href='/logout') Logout
