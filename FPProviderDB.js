@@ -24,7 +24,7 @@ FPProvider = function(url, callback){
 //  this.db = new Db(name, new Server(host, parseInt(port), {auto_reconnect: true}, {}));
 //    username = u, password = p;
     var that = this;
-    this.db = connect(url, {noOpen: true}, function(err, db) {
+    connect(url, function(err, db) {
 //    this.db = mongo.db(url);
 //    this.db.open(function(err, db){
         this.db = db;
