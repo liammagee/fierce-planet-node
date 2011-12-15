@@ -10,12 +10,12 @@ var express = require('express')
     , conf = require('./conf')
     , MongoStore = require('connect-mongodb');
 
-var jsdom = require('jsdom').jsdom
-  , myWindow = jsdom().createWindow()
-  , $ = require('jquery')
-  , jq = require('jquery').create()
-  , jQuery = require('jquery').create(myWindow)
-  ;
+//var jsdom = require('jsdom').jsdom
+//  , myWindow = jsdom().createWindow()
+//  , $ = require('jquery')
+//  , jq = require('jquery').create()
+//  , jQuery = require('jquery').create(myWindow)
+//  ;
 
 
 
@@ -27,8 +27,8 @@ var FPProvider = require('./FPProviderDB').FPProvider;
 var fpProvider;
 
 app.configure('development', function() {
-	fpProvider = new FPProvider('test', '127.0.0.1', '27017', function(error, res) {
-//    fpProvider = new FPProvider('app708577', 'staff.mongohq.com', '10089', 'heroku', '0846c19ac36a5b9e920880bf188dd43e', function(error, res) {
+//	fpProvider = new FPProvider('test', '127.0.0.1', '27017', function(error, res) {
+    fpProvider = new FPProvider('app708577', 'staff.mongohq.com', '10089', 'heroku', '0846c19ac36a5b9e920880bf188dd43e', function(error, res) {
 	    if( error ) console.log(error);
 	    else if (res) {
 	    }
