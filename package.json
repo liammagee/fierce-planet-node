@@ -16,6 +16,8 @@
     , "now": ">= 0.7"
     , "everyauth": ">= 0.2"
     , "mongodb": ">= 0.9.6-7"
+    , "jake": ">= 0.1.8"
+    , "node-proxy": "0.4.0"
     , "mongoose": ">= 1.0"
     , "connect-mongodb": ">= 1.0"
     , "mongoose-auth": ">= 0.0.11"
