@@ -10,7 +10,8 @@ var Profile = require('./public/javascripts/fp/profile/profile.js').Profile;
 
 
 
-var Db = require('mongodb').Db;
+var Db = require('mongodb').Db,
+    connect = require('mongodb').connect;
 var Connection = require('mongodb').Connection;
 var Server = require('mongodb').Server;
 var BSON = require('mongodb').BSON;
@@ -18,24 +19,33 @@ var ObjectID = require('mongodb').ObjectID;
 //var mongo = require('mongoskin');
 var username, password;
 
-FPProvider = function(name, host, port, u, p, callback){
-//FPProvider = function(url, callback){
-  this.db = new Db(name, new Server(host, parseInt(port), {auto_reconnect: true}, {}));
-    username = u, password = p;
+//FPProvider = function(name, host, port, u, p, callback){
+FPProvider = function(url, callback){
+//  this.db = new Db(name, new Server(host, parseInt(port), {auto_reconnect: true}, {}));
+//    username = u, password = p;
+    var that = this;
+    this.db = connect(url, {noOpen: true}, function(err, db) {
 //    this.db = mongo.db(url);
-    this.db.open(function(err, db){
+//    this.db.open(function(err, db){
+        this.db = db;
+        that.db = db;
       if (err) {
           console.log(err)
           callback(err);
       }
+       else {
+          callback(null, db);
+      }
 
       // Authenticate
+        /*
       if (username && password) {
           db.authenticate(username, password, function(error, res) {
             if( error ) callback(error);
             else callback(null, res);
         });
       }
+      */
   });
 };
 FPProvider.prototype.levels = [];
