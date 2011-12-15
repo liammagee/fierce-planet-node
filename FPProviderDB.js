@@ -20,9 +20,8 @@ var username, password;
 
 FPProvider = function(name, host, port, u, p, callback){
 //FPProvider = function(url, callback){
-  this.db = new Db(name, new Server(host, port, {auto_reconnect: true}, {}));
+  this.db = new Db(name, new Server(host, parseInt(port), {auto_reconnect: true}, {}));
     username = u, password = p;
-    console.log(name, host, port, username, password)
 //    this.db = mongo.db(url);
     this.db.open(function(err, db){
       if (err) {
