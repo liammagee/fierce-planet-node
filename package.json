@@ -15,8 +15,6 @@
     , "socket.io": ">= 0.7.7"
     , "everyauth": ">= 0.2"
     , "mongodb": ">= 0.9.7"
-    , "mongoskin": ">= 0.2.2"
     , "connect-mongodb": ">= 1.7.2"
-    , "connect-mongo": ">= 1.7.2"
 }
 }
