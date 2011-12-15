@@ -9,6 +9,7 @@ var express = require('express')
     , everyauth = require('everyauth')
     , conf = require('./conf')
     , MongoStore = require('connect-mongodb');
+//    , MongoStore = require('connect-mongo');
 
 //var jsdom = require('jsdom').jsdom
 //  , myWindow = jsdom().createWindow()
@@ -27,8 +28,8 @@ var FPProvider = require('./FPProviderDB').FPProvider;
 var fpProvider;
 
 app.configure('development', function() {
-//	fpProvider = new FPProvider('test', '127.0.0.1', '27017', function(error, res) {
-    fpProvider = new FPProvider('app708577', 'staff.mongohq.com', '10089', 'heroku', '0846c19ac36a5b9e920880bf188dd43e', function(error, res) {
+    fpProvider = new FPProvider('test', '127.0.0.1', '27017', function(error, res) {
+//    fpProvider = new FPProvider('app708577', 'staff.mongohq.com', '10089', 'heroku', 'password', function(error, res) {
 	    if( error ) console.log(error);
 	    else if (res) {
 	    }
@@ -36,7 +37,7 @@ app.configure('development', function() {
 });
 
 app.configure('production', function() {
-	fpProvider = new FPProvider('app708577', 'staff.mongohq.com', '10089', 'heroku', '0846c19ac36a5b9e920880bf188dd43e', function(error, res) {
+	fpProvider = new FPProvider('app708577', 'staff.mongohq.com', '10089', 'heroku', 'password', function(error, res) {
 	    if( error ) console.log(error);
 	    else if (res) {
 	    }

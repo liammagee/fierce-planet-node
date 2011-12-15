@@ -15,11 +15,16 @@ var Connection = require('mongodb').Connection;
 var Server = require('mongodb').Server;
 var BSON = require('mongodb').BSON;
 var ObjectID = require('mongodb').ObjectID;
+var mongo = require('mongoskin');
 var username, password;
 
-FPProvider = function(name, host, port, username, password, callback){
+FPProvider = function(name, host, port, u, p, callback){
+//FPProvider = function(url, callback){
   this.db = new Db(name, new Server(host, port, {auto_reconnect: true}, {}));
-  this.db.open(function(err, db){
+    username = u, password = p;
+    console.log(name, host, port, username, password)
+//    this.db = mongo.db(url);
+    this.db.open(function(err, db){
       if (err) {
           console.log(err)
           callback(err);
