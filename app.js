@@ -210,10 +210,10 @@ app.configure(function(){
   app.use(express.bodyParser());
     app.use(express.methodOverride());
     app.use(express.cookieParser());
-//    app.use(express.session({
-//        secret: "very fierce planet"
-//        , store: new MongoStore({ db: fpProvider.db })
-//    }));
+    app.use(express.session({
+        secret: "very fierce planet"
+        , store: new MongoStore({ db: fpProvider.db })
+    }));
 //    , maxAge : new Date(Date.now() + 3600000) //1 Hour
 
     // Use mongo alternative?
