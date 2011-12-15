@@ -144,6 +144,8 @@ $LAB
                 Lifecycle.currentLevelSetID = 'Predator-Prey';
                 Lifecycle.currentLevelNumber = localStorage.currentLevelNumber = 0;
                 Lifecycle.currentLevelPreset = true;
+                World.settings.skewTiles = false;
+                World.settings.showGraph = true;
                 FiercePlanet.Game.loadGame();
                 FiercePlanet.Orientation.adjustParameters(1200, 800);
                 FiercePlanet.Drawing.drawGame();

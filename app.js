@@ -27,14 +27,12 @@ var app = module.exports = express.createServer();
 var FPProvider = require('./FPProviderDB').FPProvider;
 var fpProvider;
 
-/*
 app.configure('development', function() {
 //    fpProvider = new FPProvider('mongodb://127.0.0.1:27017/test?auto_reconnect=true', function(error, res) {
     fpProvider = new FPProvider('test', '127.0.0.1', '27017', function(error, res) {
 //    fpProvider = new FPProvider('app708577', 'staff.mongohq.com', '10089', 'heroku', 'password', function(error, res) {
 	    if( error ) console.log(error);
 	    else if (res) {
-            fpProvider.db = res;
 	    }
 	});
 });
@@ -47,7 +45,8 @@ app.configure('production', function() {
 	    }
 	});
 });
-
+console.log(fpProvider.db)
+/*
 
 // Everyauth config
 everyauth.debug = true;
