@@ -204,6 +204,7 @@ app.configure(function(){
 
 
   app.use(express.bodyParser());
+    app.use(express.methodOverride());
     app.use(express.cookieParser());
     app.use(express.session({
         secret: "very fierce planet"
@@ -220,7 +221,6 @@ app.configure(function(){
 //    }));
     app.use(everyauth.middleware());
 //    app.use(mongooseAuth.middleware());
-    app.use(express.methodOverride());
 
         // IMPORTANT!!!!!!! Do not add app.router, to your middleware chain
         // explicitly, or you will run into problems accessing `req.user`
