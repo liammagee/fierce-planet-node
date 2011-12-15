@@ -135,7 +135,7 @@ Capabilities.MoveUtilities = {};
 
 Capabilities.MoveCapability = {};
 (function() {
-    this.cost = -10;
+    this.cost = -3;
     this.exercise = function(agent, level) {
         if (level.agentGoToNearestExit || World.settings.agentGoToNearestExit) {
             try {
@@ -154,7 +154,7 @@ Capabilities.MoveCapability = {};
 
 Capabilities.MoveUpwardsCapability = {};
 (function() {
-    this.cost = 10;
+    this.cost = 0;
     this.exercise = function(agent, level) {
         // TODO: Make these parameters of the level
 
@@ -191,7 +191,7 @@ Capabilities.MoveUpwardsCapability = {};
 
 Capabilities.MoveRandomlyCapability = {};
 (function() {
-    this.cost = 10;
+    this.cost = 0;
     this.exercise = function(agent, level) {
         // TODO: Make these parameters of the level
 
@@ -281,7 +281,7 @@ Capabilities.MoveRandomlyCapability = {};
 
 Capabilities.MoveTowardsNearestExitCapability = {};
 (function() {
-    this.cost = 10;
+    this.cost = -0;
     this.exercise = function(agent, level) {
         // TODO: Make these parameters of the level
 
@@ -425,7 +425,7 @@ Capabilities.MoveTowardsNearestExitCapability = {};
 
 Capabilities.MoveWithMemoryCapability = {};
 (function() {
-    this.cost = -10;
+    this.cost = -0;
     this.exercise = function(agent, level) {
         // TODO: Make these parameters of the level
 

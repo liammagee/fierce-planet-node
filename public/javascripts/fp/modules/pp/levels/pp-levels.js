@@ -83,7 +83,7 @@ var PredatorPreyLevels = PredatorPreyLevels || new Campaign();
 
 
         // Prepare as a module
-        this.id = "Default";
+        this.id = "Predator-Prey";
         this.name = "Predator Prey";
         this.position = 1;
         this.levels = [this.predatorPreyLevel ];

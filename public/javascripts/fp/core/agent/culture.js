@@ -49,7 +49,7 @@ function Culture(name, color, healthCategories, speed, health, drawFunction, ini
  * @constructor
  * @param name
  * @param color
-function Culure(name, color, baseSize, speed, health, drawFunction) {
+function Culture(name, color, baseSize, speed, health, drawFunction) {
     this.name = name;
     this.color = color;
     this.baseSize = baseSize;

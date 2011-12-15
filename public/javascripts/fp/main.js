@@ -113,6 +113,7 @@ $LAB
        , 'fp/utils/comms.js'
        , 'fp/utils/log.js'
     , 'fp/utils/recording.js'
+    , 'fp/utils/url-params.js'
 
        , 'fp/game.js'
    ])
@@ -133,18 +134,30 @@ $LAB
    , 'fp/modules/pp/agents/pp-agent-types.js'
     ])
     .wait(function() {
-//            DefaultModule.init();
-        AgentConstants.DEFAULT_SPEED = 1;
-        Lifecycle.interval = 100;
-        World.settings.agentsCanCommunicate = false;
-        PredatorPreyModule.init();
-
-        })
-    .wait(function() {
-        FiercePlanet.Game.loadGame();
-        FiercePlanet.Orientation.adjustParameters(1200, 800);
-        FiercePlanet.Drawing.drawGame();
-    });
+        var m = urlParams.module;
+        if (typeof(m) != 'undefined') {
+            if (m == 'pp') {
+                AgentConstants.DEFAULT_SPEED = 1;
+                Lifecycle.interval = 100;
+                World.settings.agentsCanCommunicate = false;
+                PredatorPreyModule.init();
+                Lifecycle.currentLevelSetID = 'Predator-Prey';
+                Lifecycle.currentLevelNumber = localStorage.currentLevelNumber = 0;
+                Lifecycle.currentLevelPreset = true;
+                FiercePlanet.Game.loadGame();
+                FiercePlanet.Orientation.adjustParameters(1200, 800);
+                FiercePlanet.Drawing.drawGame();
+            }
+            else if (m == 'default') {
+                DefaultModule.init();
+                FiercePlanet.Game.loadGame();
+            }
+        }
+        else {
+            DefaultModule.init();
+            FiercePlanet.Game.loadGame();
+        }
+    })
 
 
 

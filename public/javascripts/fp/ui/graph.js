@@ -40,9 +40,6 @@ FiercePlanet.Graph = FiercePlanet.Graph || {};
         $('#graph-config').change(function() {
             var option = $("#graph-config option:selected")[0].getAttribute('name');
             plotStats = graphMap[option];
-            console.log(option);
-            console.log(graphMap);
-            console.log(graphMap[option]);
 
             plot = plotStats.setup();
         });
@@ -109,7 +106,7 @@ FiercePlanet.Graph = FiercePlanet.Graph || {};
     this.updateGraph = function() {
         if ($("#world-graph")[0] && World.settings.showGraph) {
 //            if (true) {
-            if (FiercePlanet.Game.inPlay) {
+            if (Lifecycle.inPlay) {
                 plotStats.update(plot);
                 counter++;
 
