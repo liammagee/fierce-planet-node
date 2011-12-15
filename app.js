@@ -6,9 +6,9 @@
 
 
 var express = require('express')
-    , everyauth = require('everyauth')
+//    , everyauth = require('everyauth')
     , conf = require('./conf')
-    , MongoStore = require('connect-mongodb');
+//    , MongoStore = require('connect-mongodb');
 //    , MongoStore = require('connect-mongo');
 
 //var jsdom = require('jsdom').jsdom
