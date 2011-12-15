@@ -15,7 +15,7 @@ var Connection = require('mongodb').Connection;
 var Server = require('mongodb').Server;
 var BSON = require('mongodb').BSON;
 var ObjectID = require('mongodb').ObjectID;
-var mongo = require('mongoskin');
+//var mongo = require('mongoskin');
 var username, password;
 
 FPProvider = function(name, host, port, u, p, callback){
