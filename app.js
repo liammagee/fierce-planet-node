@@ -28,8 +28,8 @@ var FPProvider = require('./FPProviderDB').FPProvider;
 var fpProvider;
 
 app.configure('development', function() {
-    fpProvider = new FPProvider('mongodb://127.0.0.1:27017/test?auto_reconnect=true', function(error, res) {
-//    fpProvider = new FPProvider('test', '127.0.0.1', '27017', function(error, res) {
+//    fpProvider = new FPProvider('mongodb://127.0.0.1:27017/test?auto_reconnect=true', function(error, res) {
+    fpProvider = new FPProvider('test', '127.0.0.1', '27017', function(error, res) {
 //    fpProvider = new FPProvider('app708577', 'staff.mongohq.com', '10089', 'heroku', 'password', function(error, res) {
 	    if( error ) console.log(error);
 	    else if (res) {
@@ -39,8 +39,8 @@ app.configure('development', function() {
 });
 
 app.configure('production', function() {
-    fpProvider = new FPProvider('mongodb://heroku:password@staff.mongohq.com:10089/app708577?auto_reconnect=true', function(error, res) {
-//	fpProvider = new FPProvider('app708577', 'staff.mongohq.com', '10089', 'heroku', 'password', function(error, res) {
+//    fpProvider = new FPProvider('mongodb://heroku:password@staff.mongohq.com:10089/app708577?auto_reconnect=true', function(error, res) {
+	fpProvider = new FPProvider('app708577', 'staff.mongohq.com', '10089', 'heroku', 'password', function(error, res) {
 	    if( error ) console.log(error);
 	    else if (res) {
 	    }

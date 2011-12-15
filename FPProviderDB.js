@@ -19,16 +19,14 @@ var ObjectID = require('mongodb').ObjectID;
 //var mongo = require('mongoskin');
 var username, password;
 
-//FPProvider = function(name, host, port, u, p, callback){
-FPProvider = function(url, callback){
-//  this.db = new Db(name, new Server(host, parseInt(port), {auto_reconnect: true}, {}));
-//    username = u, password = p;
-    var that = this;
-    connect(url, function(err, db) {
+FPProvider = function(name, host, port, u, p, callback){
+//FPProvider = function(url, callback){
+  this.db = new Db(name, new Server(host, parseInt(port), {auto_reconnect: true}, {}));
+    username = u, password = p;
+//    var that = this;
+//    connect(url, function(err, db) {
 //    this.db = mongo.db(url);
-//    this.db.open(function(err, db){
-        this.db = db;
-        that.db = db;
+    this.db.open(function(err, db){
       if (err) {
           console.log(err)
           callback(err);
@@ -38,14 +36,12 @@ FPProvider = function(url, callback){
       }
 
       // Authenticate
-        /*
       if (username && password) {
           db.authenticate(username, password, function(error, res) {
             if( error ) callback(error);
             else callback(null, res);
         });
       }
-      */
   });
 };
 FPProvider.prototype.levels = [];
