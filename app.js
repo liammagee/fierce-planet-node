@@ -27,6 +27,7 @@ var app = module.exports = express.createServer();
 var FPProvider = require('./FPProviderDB').FPProvider;
 var fpProvider;
 
+/*
 app.configure('development', function() {
 //    fpProvider = new FPProvider('mongodb://127.0.0.1:27017/test?auto_reconnect=true', function(error, res) {
     fpProvider = new FPProvider('test', '127.0.0.1', '27017', function(error, res) {
@@ -192,6 +193,7 @@ everyauth
 
     .loginSuccessRedirect('/')
     .registerSuccessRedirect('/');
+ */
 
 
 // Configuration stuff
@@ -209,10 +211,10 @@ app.configure(function(){
   app.use(express.bodyParser());
     app.use(express.methodOverride());
     app.use(express.cookieParser());
-    app.use(express.session({
-        secret: "very fierce planet"
-        , store: new MongoStore({ db: fpProvider.db })
-    }));
+//    app.use(express.session({
+//        secret: "very fierce planet"
+//        , store: new MongoStore({ db: fpProvider.db })
+//    }));
 //    , maxAge : new Date(Date.now() + 3600000) //1 Hour
 
     // Use mongo alternative?
@@ -222,7 +224,7 @@ app.configure(function(){
 //        secret: 'topsecret',
 //        store: new store({ db: app.set('m_database'), host: uri.host })
 //    }));
-    app.use(everyauth.middleware());
+//    app.use(everyauth.middleware());
 //    app.use(mongooseAuth.middleware());
 
         // IMPORTANT!!!!!!! Do not add app.router, to your middleware chain
@@ -250,8 +252,7 @@ app.configure('production', function(){
 //var everyone = require("now").initialize(app);
 
 // Everyauth stuff
-everyauth.helpExpress(app);
-
+//everyauth.helpExpress(app);
 
 // Routes
 app.get('/', function(req, res){
