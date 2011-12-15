@@ -1,6 +1,7 @@
 #login-dialog
-  h2 Sign in
-  div#localSignIn
+  - if (everyauth)
+    h2 Sign in
+    div#localSignIn
     form(action='/login', method='post')
       #login
         label(for=everyauth.password.loginFormFieldName) Login
@@ -10,7 +11,7 @@
         input(type='password', name=everyauth.password.passwordFormFieldName)
       #submit
         input(type='submit', value='Login')
-  div#remoteSignIn
+    div#remoteSignIn
     div Sign in with:
       div
         a(href='/auth/facebook')
@@ -21,9 +22,9 @@
           img(src='/images/intridea-authbuttons/png/google_32.png', alt='Google')
           span Google
     div
-  h2 Register
-  div Not registered?
-  div
+    h2 Register
+    div Not registered?
+    div
     a(href='/register') Click here to register
     //div Forget your password?
 

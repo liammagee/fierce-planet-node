@@ -8,7 +8,7 @@ style
       ul#errors
         - each error in errors
           li.error= error
-    - if (everyauth.user)
+    - if (everyauth && everyauth.user)
       .field-row
         label(for='profile-nickname') Nickname
         input.field#profile-nickname(name='nickname')

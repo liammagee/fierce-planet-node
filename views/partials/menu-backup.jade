@@ -1,8 +1,8 @@
 #menu
   #user-links
-    - if (!everyauth.user)
+    - if (everyauth && !everyauth.user)
       a#login(href='#') Login
-    - else
+    - else if (everyauth)
       a#welcome-link(href='#')= 'Welcome ' + everyauth.user.profile.nickname
       span= ' | '
       a#blog(href='http://blog.fierce-planet.com',target='_blank') Blog
