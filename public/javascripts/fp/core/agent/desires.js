@@ -38,7 +38,7 @@ Desires.Flee = {};
 (function() {
     this.name = 'Flee';
     this.evaluate = function(agent, level) {
-        var surroundingPositions = level.getSurroundingPositions(agent.x, agent.y, true);
+        var surroundingPositions = level.getVonNeumannNeighbourhood(agent.x, agent.y, true);
         var presenceOfThreat = false;
         surroundingPositions.forEach(function(position) {
             var agents = level.getAgentsAtContentMap(position.x, position.y);

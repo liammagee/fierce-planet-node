@@ -83,7 +83,7 @@ Beliefs.BeliefsAboutResources = {};
         var resources = level.resources;
 
         // Add neighbouring resources to memory
-        var positions = level.getSurroundingPositions(x, y, true);
+        var positions = level.getVonNeumannNeighbourhood(x, y, true);
         positions.forEach(function(position) {
             var resources = level.getResourcesAtContentMap(position.x, position.y);
             // TODO: Can only add one resource to memory
@@ -125,7 +125,7 @@ Beliefs.BeliefsAboutOtherAgents = {};
 
 
         // Add neighbouring resources to memory
-        var positions = level.getSurroundingPositions(x, y, true);
+        var positions = level.getVonNeumannNeighbourhood(x, y, true);
         positions.forEach(function(position) {
             var agents = level.getAgentsAtContentMap(position.x, position.y);
             // TODO: Can only add one resource to memory
@@ -176,7 +176,7 @@ Beliefs.BeliefsBasedOnOtherAgentsBeliefs = {};
         // Add agents on this tile to memory
 //        /*
         var neighbouringAgents = [];
-        var positions = level.getSurroundingPositions(x, y, true);
+        var positions = level.getVonNeumannNeighbourhood(x, y, true);
         positions.forEach(function(position) {
             var agents = level.getAgentsAtContentMap(position.x, position.y);
             if (agents && agents.length > 0) {

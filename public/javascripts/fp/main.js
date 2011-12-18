@@ -132,6 +132,9 @@ $LAB
     , 'fp/modules/pp/predator-prey-module.js'
     , 'fp/modules/pp/levels/pp-levels.js'
    , 'fp/modules/pp/agents/pp-agent-types.js'
+    , 'fp/modules/gol/game-of-life-module.js'
+    , 'fp/modules/gol/levels/gol-levels.js'
+   , 'fp/modules/gol/agents/gol-agent-types.js'
     ])
     .wait(function() {
         var m = urlParams.module;
@@ -149,6 +152,16 @@ $LAB
                 FiercePlanet.Game.loadGame();
                 FiercePlanet.Orientation.adjustParameters(1200, 800);
                 FiercePlanet.Drawing.drawGame();
+            }
+            else if (m == 'gol') {
+                GameOfLifeModule.init();
+                Lifecycle.currentLevelSetID = 'GOL';
+                Lifecycle.currentLevelNumber = localStorage.currentLevelNumber = 0;
+                Lifecycle.currentLevelPreset = true;
+                World.settings.scrollingImageVisible = localStorage.scrollingImageVisible = false;
+                World.settings.skewTiles = false;
+                World.settings.showGraph = true;
+                FiercePlanet.Game.loadGame();
             }
             else if (m == 'default') {
                 DefaultModule.init();

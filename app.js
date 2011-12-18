@@ -45,7 +45,6 @@ app.configure('production', function() {
 	    }
 	});
 });
-console.log(fpProvider.db)
 /*
 
 // Everyauth config

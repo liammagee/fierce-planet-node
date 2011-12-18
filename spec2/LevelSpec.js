@@ -9,7 +9,7 @@ describe("level-related classes", function() {
 
     describe("initial values", function() {
         it("should have the right dimensions", function() {
-            var surroundingPositions = level.getSurroundingPositions(0, 0);
+            var surroundingPositions = level.getVonNeumannNeighbourhood(0, 0);
             expect(level.cellsDown).toEqual(20);
             expect(level.cellsAcross).toEqual(20);
         });
@@ -18,19 +18,19 @@ describe("level-related classes", function() {
     describe("get surrounding cells", function() {
 
         it("should have the correct positions", function() {
-            var surroundingPositions = level.getSurroundingPositions(0, 0);
+            var surroundingPositions = level.getVonNeumannNeighbourhood(0, 0);
             expect(surroundingPositions.length).toEqual(2);
             expect(surroundingPositions[0]).toEqual({x: 1, y: 0});
             expect(surroundingPositions[1]).toEqual({x: 0, y: 1});
 
-            surroundingPositions = level.getSurroundingPositions(10, 10);
+            surroundingPositions = level.getVonNeumannNeighbourhood(10, 10);
             expect(surroundingPositions.length).toEqual(4);
             expect(surroundingPositions[0]).toEqual({x: 11, y: 10});
             expect(surroundingPositions[1]).toEqual({x: 10, y: 11});
             expect(surroundingPositions[2]).toEqual({x: 9, y: 10});
             expect(surroundingPositions[3]).toEqual({x: 10, y: 9});
 
-            surroundingPositions = level.getSurroundingPositions(19, 19);
+            surroundingPositions = level.getVonNeumannNeighbourhood(19, 19);
             expect(surroundingPositions.length).toEqual(2);
             expect(surroundingPositions[0]).toEqual({x: 18, y: 19});
             expect(surroundingPositions[1]).toEqual({x: 19, y: 18});
@@ -65,7 +65,7 @@ describe("level-related classes", function() {
             });
 
             it("should have a resource in the surrounding positions", function() {
-                var positions = level.getSurroundingPositions(10, 10);
+                var positions = level.getVonNeumannNeighbourhood(10, 10);
                 var allResources = [];
                 positions.forEach(function(position) {
                     var resources = level.getResourcesAtContentMap(position.x, position.y);
@@ -105,7 +105,7 @@ describe("level-related classes", function() {
             });
 
             it("should have an agent in the surrounding positions", function() {
-                var positions = level.getSurroundingPositions(11, 10);
+                var positions = level.getVonNeumannNeighbourhood(11, 10);
                 var allAgents = [];
                 positions.forEach(function(position) {
                     var agents = level.getAgentsAtContentMap(position.x, position.y);

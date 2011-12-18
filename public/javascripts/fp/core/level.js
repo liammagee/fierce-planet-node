@@ -51,6 +51,7 @@ function Level(id) {
 
     // Generation options
     this.randomiseAgents = false;
+    this.placeAgentsOnAllCells = false;
     this.randomiseResources = false;
 	this.generateWaveAgentsAutomatically = true;
 	this.incrementAgentsEachWave = true;
@@ -671,6 +672,16 @@ Level.prototype.generateAgents = function(culture, number) {
             agents.push(agent);
         }
     }
+    else if (this.placeAgentsOnAllCells) {
+        // Get pathway length
+        var pl = this.pathway.length;
+        for (var i = 0; i < pl; i ++) {
+            // Generate a random tile position
+            var tile = this.pathway[i];
+            var agent = this.generateAgentAtPoint(culture, tile[0], tile[1]);
+            agents.push(agent);
+        }
+    }
     else {
         for (var j = 0; j < this.entryPoints.length; j++) {
             var point = this.entryPoints[j];
@@ -1180,24 +1191,68 @@ Level.prototype.getDirections = function (cell, goal){
 };
 
 /**
- * Gets tiles surrounding a given co-ordinate
+ * Gets positions surrounding a given co-ordinate.
+ * The von Neumann neighbourhood returns only positions to the left, right, top and bottom of the current position.
+ * TODO: Fix for
+ *
  * @param x
  * @param y
+ * @param includeSelf
  */
-Level.prototype.getSurroundingPositions = function(x, y, includeSelf) {
+Level.prototype.getVonNeumannNeighbourhood = function(x, y, includeSelf) {
     var surroundingPositions = [];
 
     if (includeSelf)
         surroundingPositions.push({x: x, y: y});
 
-    if (x < this.cellsAcross - 1)
-        surroundingPositions.push({x: x + 1, y: y});
-    if (y < this.cellsDown - 1)
-        surroundingPositions.push({x: x, y: y + 1});
-    if (x > 0)
-        surroundingPositions.push({x: x - 1, y: y});
-    if (y > 0)
-        surroundingPositions.push({x: x, y: y - 1});
+    var extendRight = (x < this.cellsAcross - 1),
+        extendDown = (y < this.cellsDown - 1),
+        extendLeft = (x > 0),
+        extendUp = (y > 0);
+    var nextX = extendRight ? x + 1 : 0;
+    var nextY = extendDown ? y + 1 : 0;
+    var prevX = extendLeft ? x - 1 : this.cellsAcross - 1;
+    var prevY = extendUp ? y - 1 : this.cellsDown - 1;
+
+    surroundingPositions.push({x: nextX, y: y});
+    surroundingPositions.push({x: x, y: nextY});
+    surroundingPositions.push({x: prevX, y: y});
+    surroundingPositions.push({x: x, y: prevY});
+
+    return surroundingPositions;
+};
+
+/**
+ * Gets positions surrounding a given co-ordinate.
+ * THe Moore neighbourhood returns only positions to the left, right, top and bottom of the current position.
+ *
+ * @param x
+ * @param y
+ * @param includeSelf
+ */
+Level.prototype.getMooreNeighbourhood = function(x, y, includeSelf) {
+    var surroundingPositions = [];
+
+    if (includeSelf)
+        surroundingPositions.push({x: x, y: y});
+
+    var extendRight = (x < this.cellsAcross - 1),
+        extendDown = (y < this.cellsDown - 1),
+        extendLeft = (x > 0),
+        extendUp = (y > 0);
+    var nextX = extendRight ? x + 1 : 0;
+    var nextY = extendDown ? y + 1 : 0;
+    var prevX = extendLeft ? x - 1 : this.cellsAcross - 1;
+    var prevY = extendUp ? y - 1 : this.cellsDown - 1;
+
+    surroundingPositions.push({x: nextX, y: y});
+    surroundingPositions.push({x: nextX, y: nextY});
+    surroundingPositions.push({x: x, y: nextY});
+    surroundingPositions.push({x: prevX, y: nextY});
+    surroundingPositions.push({x: prevX, y: y});
+    surroundingPositions.push({x: prevX, y: prevY});
+    surroundingPositions.push({x: x, y: prevY});
+    surroundingPositions.push({x: nextX, y: prevY});
 
     return surroundingPositions;
 };

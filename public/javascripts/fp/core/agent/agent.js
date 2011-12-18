@@ -99,6 +99,10 @@ function Agent(culture, x, y) {
         return Math.floor(Math.random() * Math.pow(10, 10));
     }();
     this.culture = culture;
+    for (var characteristic in culture.characteristics) {
+        if (culture.characteristics.hasOwnProperty(characteristic))
+            this[characteristic] = culture.characteristics[characteristic];
+    }
     this.color = culture.color;
 
     // Position-related
