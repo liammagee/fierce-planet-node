@@ -95,7 +95,15 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
                     "Play": function() {
                         // Animation effect
                         // For spinning, try: http://www.zachstronaut.com/posts/2009/08/07/jquery-animate-css-rotate-scale.html
+
+                        FiercePlanet.Parameters = FiercePlanet.Parameters || {};
+                        var paramElements = $('.level-parameters');
+                        for (var i = 0; i < paramElements.length; i++) {
+                            var param = paramElements[i];
+                            FiercePlanet.Parameters[param.name] = param.value;
+                        }
                         $( this ).dialog( "close" );
+                        Lifecycle._initialiseGame();
                         Lifecycle.startLevel();
                     },
                     "Cancel": function() {

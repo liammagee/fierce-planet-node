@@ -50,9 +50,9 @@ var GameOfLifeLevels = GameOfLifeLevels || new Campaign();
             this.waveNumber = 1;
             this.expiryLimit = 1;
             this.initialResourceNumber = 0;
-            this.name = ("Totally experimental...");
+            this.name = ("Testing parameters...");
             this.isTerminalLevel = true;
-            this.introduction = "<p>This will never work.</p>";
+            this.introduction = "<p>Enter number of live agents to start with:</p><p><input class='level-parameters' name='NumberOfLiveAgents'/> </p>";
             this.conclusion = ("Well done.");
 
             this.setup = function () {
@@ -66,7 +66,7 @@ var GameOfLifeLevels = GameOfLifeLevels || new Campaign();
 
                 // Get pathway length
                 var pl = this.pathway.length;
-                for (var i = 0; i < 500; i ++) {
+                for (var i = 0; i < FiercePlanet.Parameters.NumberOfLiveAgents; i ++) {
                     // Generate a random tile position
                     var tp = Math.floor(Math.random() * pl);
                     var tile = this.pathway[tp];

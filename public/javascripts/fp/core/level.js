@@ -100,10 +100,10 @@ function Level(id) {
     this.soundSrc = null;
 
     this.initLevel = function() {
+        this.setCurrentAgents([]);
         this.generatePath();
         this.initContentMap();
         this.waves = undefined;
-        this.setCurrentAgents([]);
         this.expiredAgents = [];
         this.resetResources();
         if (this.catastrophe != undefined)

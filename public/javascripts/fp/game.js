@@ -232,10 +232,6 @@ FiercePlanet.Game = FiercePlanet.Game || {};
                     }
                 }
             }
-            else {
-                console.log('starting level')
-                //Lifecycle.newWave();
-            }
         };
         Lifecycle.postStartLevelCallback = function () {
 

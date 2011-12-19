@@ -81,7 +81,7 @@ var Lifecycle = Lifecycle || {};
         }
 
 
-        // Move agents
+        // Process agents
         var options = {"withNoRepeat": true, "withNoCollision": false};
         for (var i = 0; i < agents.length; i++) {
             agentCount++;
@@ -212,7 +212,6 @@ var Lifecycle = Lifecycle || {};
     	if (Lifecycle.currentLevel != undefined)
         	Lifecycle.currentLevel.setResources([]);
 
-
         Lifecycle._initialiseGame();
 
 		if (this.doNewLevelCallback)
@@ -248,7 +247,6 @@ var Lifecycle = Lifecycle || {};
     this.startLevel = function() {
 		if (this.preStartLevelCallback)
 			this.preStartLevelCallback();
-
 
 		Lifecycle.currentWaveNumber = 0;
 		Lifecycle.numAgents = Lifecycle.currentLevel.initialAgentNumber;
