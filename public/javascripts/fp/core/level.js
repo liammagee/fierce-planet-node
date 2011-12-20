@@ -101,13 +101,14 @@ function Level(id) {
 
     this.initLevel = function() {
         this.setCurrentAgents([]);
+        this.expiredAgents = [];
         this.generatePath();
         this.initContentMap();
         this.waves = undefined;
-        this.expiredAgents = [];
         this.resetResources();
         if (this.catastrophe != undefined)
             this.catastrophe.struck = false;
+
         this.initialiseWaves(this.waveNumber);
 
         // Set up level

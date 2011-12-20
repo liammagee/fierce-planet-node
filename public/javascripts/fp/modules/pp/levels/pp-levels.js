@@ -51,6 +51,25 @@ var PredatorPreyLevels = PredatorPreyLevels || new Campaign();
             this.name = ("Totally experimental...");
             this.isTerminalLevel = true;
             this.introduction = "<p>This will never work.</p>";
+            this.introduction =
+                "<h3>Resource Characteristics</h3>" +
+                "<p>Starting number of resources:</p><p><input class='level-parameters' name='InitialResourceNumber' value='50'/> </p>" +
+                "<h3>Prey Characteristics</h3>" +
+                "<p>Starting number of agents:</p><p><input class='level-parameters' name='PreyWaveNumber' value='50'/> </p>" +
+                "<p>Move cost:</p><p><input class='level-parameters' name='PreyMoveCost' value='-2'/> </p>" +
+                "<p>Birth probability:</p><p><input class='level-parameters' name='PreyBirthProbability' value='0.8'/> </p>" +
+                "<p>Reproduction age:</p><p><input class='level-parameters' name='PreyReproductionAge' value='15'/> </p>" +
+                "<h3>Predator Characteristics</h3>" +
+                "<p>Starting number of agents:</p><p><input class='level-parameters' name='PredatorWaveNumber' value='20'/> </p>" +
+                "<p>Move cost:</p><p><input class='level-parameters' name='PredatorMoveCost' value='-5'/> </p>" +
+                "<p>Birth probability:</p><p><input class='level-parameters' name='PredatorBirthProbability' value='-5'/> </p>" +
+                "<p>Reproduction age:</p><p><input class='level-parameters' name='PredatorReproductionAge' value='25'/> </p>" +
+                    "<h3>Predation Characteristics</h3>" +
+                "<p>Likelihood of successful predation:</p><p><input class='level-parameters' name='PredatorPreyProbability' value='0.2'/> </p>" +
+                "<p>Gain to predator:</p><p><input class='level-parameters' name='PredatorGain' value='20'/> </p>" +
+                "<p>Cost to prey:</p><p><input class='level-parameters' name='PreyCost' value='-10'/> </p>" +
+                ""
+            ;
             this.conclusion = ("Well done.");
 
             this.setup = function () {
@@ -63,15 +82,29 @@ var PredatorPreyLevels = PredatorPreyLevels || new Campaign();
                         this.terrainMap[[i, j]] = bg;
                     }
                 }
-                /*
-                 FiercePlanet.Drawing.zoom(1);
-                 FiercePlanet.Drawing.zoom(1);
-                 FiercePlanet.Drawing.zoom(1);
-                 FiercePlanet.Drawing.zoom(1);
-                 FiercePlanet.Drawing.zoom(1);
-                 FiercePlanet.Drawing.tilt(-0.35);
-                 */
+
+                PredatorPreyCultures.PREY_AGENT_TYPE.waveNumber = parseInt(FiercePlanet.Parameters.PreyWaveNumber);
+                PredatorPreyCultures.PREY_AGENT_TYPE.moveCost = parseInt(FiercePlanet.Parameters.PreyMoveCost);
+                PredatorPreyCultures.PREY_AGENT_TYPE.birthProbability = parseInt(FiercePlanet.Parameters.PreyBirthProbability);
+                PredatorPreyCultures.PREY_AGENT_TYPE.reproductionAge = parseInt(FiercePlanet.Parameters.PreyReproductionAge);
+
+                PredatorPreyCultures.PREDATOR_AGENT_TYPE.waveNumber = parseInt(FiercePlanet.Parameters.PredatorWaveNumber);
+                PredatorPreyCultures.PREDATOR_AGENT_TYPE.moveCost = parseInt(FiercePlanet.Parameters.PredatorMoveCost);
+                PredatorPreyCultures.PREDATOR_AGENT_TYPE.birthProbability = parseInt(FiercePlanet.Parameters.PredatorBirthProbability);
+                PredatorPreyCultures.PREDATOR_AGENT_TYPE.reproductionAge = parseInt(FiercePlanet.Parameters.PredatorReproductionAge);
+
+                PredatorPreyCultures.PREDATOR_AGENT_TYPE.preyProbability = parseInt(FiercePlanet.Parameters.PredatorPreyProbability);
+                PredatorPreyCultures.PREDATOR_AGENT_TYPE.predatorGain = parseInt(FiercePlanet.Parameters.PredatorGain);
+                PredatorPreyCultures.PREDATOR_AGENT_TYPE.preyCost = parseInt(FiercePlanet.Parameters.PreyCost);
+
+                this.initialResourceNumber = parseInt(FiercePlanet.Parameters.InitialResourceNumber);
+
+                // Re-initialise the waves
+                this.waves = [];
+                this.initialiseWaves(this.waveNumber);
                 this.generateLevelResources();
+
+
             };
 
             /* Google Map links */

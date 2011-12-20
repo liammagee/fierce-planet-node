@@ -73,22 +73,31 @@ var GameOfLifeCultures = GameOfLifeCultures || {};
             var __ret = FiercePlanet.Drawing.getDrawingPosition(agent, Lifecycle.waveCounter);
             var xPos = __ret.intX;
             var yPos = __ret.intY;
-            var nx = xPos * FiercePlanet.Orientation.cellWidth - (FiercePlanet.Orientation.worldWidth) / 2;
-            var ny = yPos * FiercePlanet.Orientation.cellHeight - (FiercePlanet.Orientation.worldHeight) / 2;
+            var nx = xPos * FiercePlanet.Orientation.cellWidth;
+            var ny = yPos * FiercePlanet.Orientation.cellHeight;
 
-
-//            var radius = (pieceWidth / 4);
-//
-//            ctx.lineWidth = 1.5;
-//            ctx.beginPath();
-//            ctx.arc(x + radius, y + radius, radius, 0, Math.PI * 2, false);
-//            ctx.closePath();
             var color = (agent.isLiving ? "#fff" : "#000");
-//            ctx.strokeStyle = color;
-//            ctx.stroke();
             ctx.fillStyle = color;
-            ctx.fillRect(nx, ny, FiercePlanet.Orientation.cellWidth, FiercePlanet.Orientation.cellHeight);
-//            ctx.fill();
+            if ((World.settings.skewTiles || Lifecycle.currentLevel.isometric)) {
+                var newOrigin = FiercePlanet.Isometric.doIsometricOffset(xPos, yPos);
+                nx = newOrigin.x;
+                ny = newOrigin.y;
+                var originXp = newOrigin.x + FiercePlanet.Orientation.cellWidth / 2;
+                var originYp = newOrigin.y + FiercePlanet.Orientation.cellHeight;
+
+                // Rotation logic here - TODO: Refactor out
+                originXp = originXp - (FiercePlanet.Orientation.halfWorldWidth);
+                originYp = originYp - (FiercePlanet.Orientation.halfWorldHeight);
+
+                FiercePlanet.Isometric.draw3DTile(ctx, [originXp, originYp], FiercePlanet.Orientation.cellHeight);
+                ctx.fill();
+            }
+            else {
+                nx = nx - (FiercePlanet.Orientation.worldWidth) / 2;
+                ny = ny - (FiercePlanet.Orientation.worldHeight) / 2;
+
+                ctx.fillRect(nx, ny, FiercePlanet.Orientation.cellWidth, FiercePlanet.Orientation.cellHeight);
+            }
 
         });
 

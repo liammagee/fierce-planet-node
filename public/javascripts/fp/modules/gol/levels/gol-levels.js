@@ -52,10 +52,20 @@ var GameOfLifeLevels = GameOfLifeLevels || new Campaign();
             this.initialResourceNumber = 0;
             this.name = ("Testing parameters...");
             this.isTerminalLevel = true;
-            this.introduction = "<p>Enter number of live agents to start with:</p><p><input class='level-parameters' name='NumberOfLiveAgents'/> </p>";
+            this.introduction =
+                "<p>Size of world:</p><p><input class='level-parameters' name='SizeOfWorld' value='50'/> </p>" +
+                "<p>Enter number of live agents to start with:</p><p><input class='level-parameters' name='NumberOfLiveAgents' value='200'/> </p>" +
+                ""
+            ;
             this.conclusion = ("Well done.");
 
             this.setup = function () {
+                if (FiercePlanet.Parameters.SizeOfWorld) {
+                    this.cellsAcross = this.cellsDown = parseInt(FiercePlanet.Parameters.SizeOfWorld);
+                    this.setCurrentAgents([]);
+                    this.expiredAgents = [];
+                }
+
                 var bg = new Terrain('#000', 0.9);
                 this.generatePath();
                 for (var i = 0; i < this.cellsAcross; i++) {
@@ -64,22 +74,27 @@ var GameOfLifeLevels = GameOfLifeLevels || new Campaign();
                     }
                 }
 
+                if (FiercePlanet.Parameters.SizeOfWorld) {
+                    this.initContentMap();
+                    this.waves = undefined;
+                    this.initialiseWaves(this.waveNumber);
+                }
+
                 // Get pathway length
                 var pl = this.pathway.length;
-                for (var i = 0; i < FiercePlanet.Parameters.NumberOfLiveAgents; i ++) {
-                    // Generate a random tile position
-                    var tp = Math.floor(Math.random() * pl);
-                    var tile = this.pathway[tp];
-                    var agents = this.getAgentsAtContentMap(tile[0], tile[1]);
-                    if (agents && agents.length > 0)
-                        agents[0].isLiving = true;
+                if (FiercePlanet.Parameters.NumberOfLiveAgents) {
+                    var nola = parseInt(FiercePlanet.Parameters.NumberOfLiveAgents);
+                    for (var i = 0; i < nola; i ++) {
+                        // Generate a random tile position
+                        var tp = Math.floor(Math.random() * pl);
+                        var tile = this.pathway[tp];
+                        var agents = this.getAgentsAtContentMap(tile[0], tile[1]);
+                        if (agents && agents.length > 0)
+                            agents[0].isLiving = true;
+                    }
                 }
             };
 
-            /* Google Map links */
-//            if (typeof(google) !== "undefined" && typeof(google.maps) !== "undefined") {
-//                this.mapOptions = ({mapTypeId:google.maps.MapTypeId.ROADMAP, center:new google.maps.LatLng(-37.81439, 144.96099), zoom:16, tilt:0, rotate:20}); // Budapest: 47.5153, 19.0782
-//            }
 
         }).apply(this.gameOfLifeLevel);
 

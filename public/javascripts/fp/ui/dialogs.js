@@ -82,7 +82,20 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
 
         // Dialogs
 
-        this.newLevelDialog = $('<div></div>')
+        var startNewLevel = function() {
+            // Animation effect
+            // For spinning, try: http://www.zachstronaut.com/posts/2009/08/07/jquery-animate-css-rotate-scale.html
+            FiercePlanet.Parameters = FiercePlanet.Parameters || {};
+            var paramElements = $('.level-parameters');
+            for (var i = 0; i < paramElements.length; i++) {
+                var param = paramElements[i];
+                FiercePlanet.Parameters[param.name] = param.value;
+            }
+            Lifecycle._initialiseGame();
+            this.newLevelDialog.dialog( "close" );
+            Lifecycle.startLevel();
+        }
+        this.newLevelDialog = $('<div id="newLevelDialog"></div>')
             .html('New Level')
             .dialog({
                 position: [dialogX, dialogY],
@@ -95,7 +108,6 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
                     "Play": function() {
                         // Animation effect
                         // For spinning, try: http://www.zachstronaut.com/posts/2009/08/07/jquery-animate-css-rotate-scale.html
-
                         FiercePlanet.Parameters = FiercePlanet.Parameters || {};
                         var paramElements = $('.level-parameters');
                         for (var i = 0; i < paramElements.length; i++) {

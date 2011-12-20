@@ -149,9 +149,8 @@ $LAB
                 Lifecycle.currentLevelPreset = true;
                 World.settings.skewTiles = false;
                 World.settings.showGraph = true;
+                Lifecycle.NEW_LEVEL_DELAY = 3000;
                 FiercePlanet.Game.loadGame();
-                FiercePlanet.Orientation.adjustParameters(1200, 800);
-                FiercePlanet.Drawing.drawGame();
             }
             else if (m == 'gol') {
                 GameOfLifeModule.init();
@@ -161,6 +160,7 @@ $LAB
                 World.settings.scrollingImageVisible = localStorage.scrollingImageVisible = false;
                 World.settings.skewTiles = false;
                 World.settings.showGraph = true;
+                Lifecycle.NEW_LEVEL_DELAY = 300;
                 FiercePlanet.Game.loadGame();
             }
             else if (m == 'default') {

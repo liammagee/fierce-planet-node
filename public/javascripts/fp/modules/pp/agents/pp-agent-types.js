@@ -21,18 +21,20 @@ var PredatorPreyCultures = PredatorPreyCultures || {};
         this.PREDATOR_AGENT_TYPE = new Culture("Predator", "f00", World.resourceCategories);
         this.TEST_AGENT_TYPE = new Culture("Test", "fbe53b", World.resourceCategories);
 
+        this.PREY_AGENT_TYPE.waveNumber = 50;
+        this.PREY_AGENT_TYPE.moveCost = -2;
         this.PREY_AGENT_TYPE.birthProbability = 0.8;
         this.PREY_AGENT_TYPE.reproductionAge = 15;
-        this.PREY_AGENT_TYPE.moveCost = -2;
-        this.PREY_AGENT_TYPE.waveNumber = 50;
+
+        this.PREDATOR_AGENT_TYPE.waveNumber = 20;
+        this.PREDATOR_AGENT_TYPE.moveCost = -5;
         this.PREDATOR_AGENT_TYPE.birthProbability = 0.2;
         this.PREDATOR_AGENT_TYPE.reproductionAge = 25;
+
         this.PREDATOR_AGENT_TYPE.preyProbability = 0.2;
         this.PREDATOR_AGENT_TYPE.predatorGain = 20;
         this.PREDATOR_AGENT_TYPE.preyCost = -10;
-        this.PREDATOR_AGENT_TYPE.moveCost = -5;
-        this.PREDATOR_AGENT_TYPE.waveNumber = 20;
-        //this.TEST_AGENT_TYPE.waveNumber = 1;
+
 
 
         this.PREY_AGENT_TYPE.characteristics = [
