@@ -2,6 +2,7 @@
 $LAB
     .setOptions({BasePath:'/javascripts/'})
 
+
     // Load JQuery
    .script("jquery/jquery.min.js")
     .wait()
@@ -52,19 +53,14 @@ $LAB
    .script("jpicker-1.1.6/jpicker-1.1.6.js")
    .script("jq-console/demo/jqconsole-min.js")
    .script("/socket.io/socket.io.js")
+   .script("CodeMirror-2.2/lib/codemirror.js")
+   .script("CodeMirror-2.2/mode/javascript/javascript.js")
     .wait()
 
         // Load FiercePlanet other plugins
    .script([
-        'fp/core/world.js'
-       , 'fp/core/catastrophe.js'
-
-       , 'fp/core/agent/agent.js'
-       , 'fp/core/agent/culture.js'
-        , 'fp/core/agent/beliefs.js'
-       , 'fp/core/agent/desires.js'
-       , 'fp/core/agent/capabilities.js'
-       , 'fp/core/agent/characteristics.js'
+        'fp/core/world.js', 'fp/core/catastrophe.js'
+       , 'fp/core/agent/agent.js' , 'fp/core/agent/culture.js' , 'fp/core/agent/beliefs.js' , 'fp/core/agent/desires.js' , 'fp/core/agent/capabilities.js' , 'fp/core/agent/characteristics.js'
 
        , 'fp/core/campaign.js'
        , 'fp/core/level.js'
@@ -104,6 +100,7 @@ $LAB
        , 'fp/ui/profile-ui.js'
        , 'fp/ui/resource-ui.js'
        , 'fp/ui/graph.js'
+       , 'fp/ui/module-editor.js'
        , 'fp/ui/parameters.js'
        , 'fp/ui/console.js'
        , 'fp/ui/storyboard.js'
@@ -129,50 +126,33 @@ $LAB
     ])
     .wait()
     .script([
-    , 'fp/modules/pp/predator-prey-module.js'
-    , 'fp/modules/pp/levels/pp-levels.js'
-   , 'fp/modules/pp/agents/pp-agent-types.js'
+    , 'fp/modules/pp/predator-prey-module.js' , 'fp/modules/pp/levels/pp-levels.js' , 'fp/modules/pp/agents/pp-agent-types.js'
+])
+    .script([
     , 'fp/modules/gol/game-of-life-module.js'
-    , 'fp/modules/gol/levels/gol-levels.js'
-   , 'fp/modules/gol/agents/gol-agent-types.js'
-    ])
+//    , 'fp/modules/gol/levels/gol-levels.js'
+//    , 'fp/modules/gol/agents/gol-agent-types.js'
+])
     .wait(function() {
         var m = urlParams.module;
         if (typeof(m) != 'undefined') {
             if (m == 'pp') {
-                AgentConstants.DEFAULT_SPEED = 1;
-                Lifecycle.interval = 100;
-                World.settings.agentsCanCommunicate = false;
                 PredatorPreyModule.init();
-                Lifecycle.currentLevelSetID = 'Predator-Prey';
-                Lifecycle.currentLevelNumber = localStorage.currentLevelNumber = 0;
-                Lifecycle.currentLevelPreset = true;
-                World.settings.skewTiles = false;
-                World.settings.showGraph = true;
-                Lifecycle.NEW_LEVEL_DELAY = 3000;
-                FiercePlanet.Game.loadGame();
             }
             else if (m == 'gol') {
+//                $('#moduleEditor').show();
                 GameOfLifeModule.init();
-                Lifecycle.currentLevelSetID = 'GOL';
-                Lifecycle.currentLevelNumber = localStorage.currentLevelNumber = 0;
-                Lifecycle.currentLevelPreset = true;
-                World.settings.scrollingImageVisible = localStorage.scrollingImageVisible = false;
-                World.settings.skewTiles = false;
-                World.settings.showGraph = true;
-                Lifecycle.NEW_LEVEL_DELAY = 300;
-                FiercePlanet.Game.loadGame();
             }
             else if (m == 'default') {
                 DefaultModule.init();
-                FiercePlanet.Game.loadGame();
             }
         }
         else {
             DefaultModule.init();
-            FiercePlanet.Game.loadGame();
         }
+        FiercePlanet.Game.loadGame();
     })
+//    .script("paperjs-0.22/lib/paper.js")
 
 
 

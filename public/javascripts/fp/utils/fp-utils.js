@@ -95,6 +95,7 @@ FiercePlanet.Utils = FiercePlanet.Utils || {};
         World.settings.hidePathBorder = World.settings.hidePathBorder || false;
         World.settings.hideLevelInfo = World.settings.hideLevelInfo || false;
         World.settings.showGraph = World.settings.showGraph || false;
+        World.settings.showModuleEditor = World.settings.showModuleEditor || false;
         World.settings.refreshGraphEveryWave = World.settings.refreshGraphEveryWave || false;
         World.settings.showChat = World.settings.showChat || false;
         World.settings.makeElementsMovable = World.settings.makeElementsMovable || false;
@@ -203,6 +204,10 @@ FiercePlanet.Utils = FiercePlanet.Utils || {};
         }
         else {
             FiercePlanet.Graph.clearGraph();
+        }
+
+        if (World.settings.showModuleEditor) {
+            FiercePlanet.ModuleEditor.openDialog();
         }
 
 

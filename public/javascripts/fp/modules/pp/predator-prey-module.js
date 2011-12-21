@@ -29,6 +29,13 @@ var PredatorPreyModule = PredatorPreyModule || {};
 		World.switchResourceSet(TBL);
 		World.settings.skewTiles = false;
         World.settings.agentsCanCommunicate = false;
+        AgentConstants.DEFAULT_SPEED = 1;
+        Lifecycle.interval = 100;
+        Lifecycle.currentLevelSetID = 'Predator-Prey';
+        Lifecycle.currentLevelNumber = localStorage.currentLevelNumber = 0;
+        Lifecycle.currentLevelPreset = true;
+        World.settings.showGraph = true;
+        Lifecycle.NEW_LEVEL_DELAY = 3000;
     };
 
 
