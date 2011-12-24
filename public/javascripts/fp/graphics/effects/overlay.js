@@ -6,7 +6,7 @@ var count = 150;
 var path = new Path.Circle(new Point(0, 0), 5);
 path.style = {
     fillColor: 'white',
-    strokeColor: 'black'
+    strokeColor: 'white'
 };
 
 var symbol = new Symbol(path);
@@ -21,7 +21,7 @@ function setupView() {
         placed.data = {};
         placed.data.vector = new Point({
             angle: Math.random() * 360,
-            length : (i / count) * Math.random() / 5
+            length : (i / count) * (Math.random()) / 5
         });
     }
 }
@@ -40,16 +40,18 @@ function onMouseMove(event) {
 
 // The onFrame function is called up to 60 times a second:
 function onFrame(event) {
-    vector = vector + (mouseVector - vector) / 30;
+    if (Lifecycle.inPlay) {
+        vector = vector + (mouseVector - vector) / 30;
 
-    // Run through the active layer's children list and change
-    // the position of the placed symbols:
-    for (var i = 0; i < count; i++) {
-        var item = project.activeLayer.children[i];
-        var size = item.bounds.size;
-        var length = vector.length / 10 * size.width / 10;
-        item.position += vector.normalize(length) + item.data.vector;
-        keepInView(item);
+        // Run through the active layer's children list and change
+        // the position of the placed symbols:
+        for (var i = 0; i < count; i++) {
+            var item = project.activeLayer.children[i];
+            var size = item.bounds.size;
+            var length = vector.length / 200 * size.width / 10;
+            item.position += vector.normalize(length) + item.data.vector;
+            keepInView(item);
+        }
     }
 }
 
