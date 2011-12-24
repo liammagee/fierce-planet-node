@@ -558,12 +558,12 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         var resources = Lifecycle.currentLevel.resources;
         var agents = Lifecycle.currentLevel.currentAgents;
         var entities = [];
-        for (var i in resources) {
-            entities.push(resources[i]);
-        }
-        for (var i in agents) {
-            entities.push(agents[i]);
-        }
+        resources.forEach(function(r) {
+            entities.push(r);
+        })
+        agents.forEach(function(a) {
+            entities.push(a);
+        })
 
         this.clearCanvas(canvasName);
         var len = FiercePlanet.Orientation.cellsAcross;
@@ -581,21 +581,6 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         ctx.save();
         ctx.translate(FiercePlanet.Orientation.halfWorldWidth, FiercePlanet.Orientation.halfWorldHeight);
         ctx.rotate(FiercePlanet.Orientation.rotationAngle);
-
-        /*
-        for (var i in agents) {
-            var agent = agents[i];
-            var x = agent.x, y = agent.y;
-            for (var j = 0; j < resources.length; j++) {
-                var resource = resources[j];
-                var rx = resource.x;
-                var ry = resource.y;
-                if (Math.abs(rx - x) <= 1 && Math.abs(ry - y) <= 1) {
-                    FiercePlanet.Drawing.drawResourceAgentInteraction(ctx, resource, agent);
-                }
-            }
-        }
-        */
 
         for (var i = 0; i < entities.length; i += 1) {
             var entity = entities[i];

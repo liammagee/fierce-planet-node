@@ -263,6 +263,7 @@ var Lifecycle = Lifecycle || {};
     this.newWave = function() {
 		if (this.preNewWaveCallback)
 			this.preNewWaveCallback();
+
 		Lifecycle.maxWaveMoves = 0;
 		Lifecycle.waveCounter = 0;
 		Lifecycle.waveDelayCounter = 0;

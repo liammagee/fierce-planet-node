@@ -224,7 +224,7 @@ FiercePlanet.LevelUI = FiercePlanet.LevelUI || {};
         $.get('/levels/' + levelID, function(tmpLevel) {
             if (tmpLevel) {
                 FiercePlanet.Utils.makeFromJSONObject(tmpLevel, Level.prototype);
-                for (var i in tmpLevel.resources) {
+                for (var i = 0, l = tmpLevel.resources.length; i < l; i++) {
                     FiercePlanet.Utils.makeFromJSONObject(tmpLevel.resources[i], Resource.prototype);
                 }
                 tmpLevel.levelResources = tmpLevel.resources;
@@ -247,7 +247,7 @@ FiercePlanet.LevelUI = FiercePlanet.LevelUI || {};
     this.makeLevelFromJSON =  function(tmpLevel) {
         // Retrieve level object from server
         FiercePlanet.Utils.makeFromJSONObject(tmpLevel, Level.prototype);
-        for (var i in tmpLevel.resources) {
+        for (var i = 0, l = tmpLevel.resources.length; i < l; i++) {
             FiercePlanet.Utils.makeFromJSONObject(tmpLevel.resources[i], Resource.prototype);
         }
         tmpLevel.levelResources = tmpLevel.resources;

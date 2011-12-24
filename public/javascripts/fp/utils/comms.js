@@ -48,7 +48,7 @@ FiercePlanet.Comms = FiercePlanet.Comms || {};
         else if (eventType == 'resources') {
 //            if (World.settings.spectate) {
                 var resources = obj;
-                for (var i in resources) {
+                for (var i = 0, l = resources.length; i < l; i++) {
                     FiercePlanet.Utils.makeFromJSONObject(resources[i], Resource.prototype);
                 }
 //                Lifecycle.currentLevel.addResource(resource);
@@ -66,7 +66,7 @@ FiercePlanet.Comms = FiercePlanet.Comms || {};
 //            FiercePlanet.Drawing.drawAgents('#alt_agentCanvas', agents);
 
             // Same screen
-            for (var i in agents) {
+            for (var i = 0, l = agents.length; i < l; i++) {
                 Lifecycle.currentLevel.currentAgents.push(agents[i]);
             }
             if (World.settings.spectate) {

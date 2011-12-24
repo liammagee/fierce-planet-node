@@ -158,7 +158,7 @@ initWorld = (function() {
         };
 
         this.updateRegisteredCultures = function() {
-            for (var i in this.cultures) {
+            for (var i = 0, l = this.cultures.length; i < l; i++) {
                 this.cultures[i].healthCategories = this.resourceCategories;
             }
         };
@@ -175,7 +175,7 @@ initWorld = (function() {
             }
             return undefined;
 */
-            for (var i in this.resourceTypes) {
+            for (var i = 0, l = this.resourceTypes.length; i < l; i++) {
                 var resourceType = this.resourceTypes[i];
                 if (resourceType.code == code)
                     return resourceType;

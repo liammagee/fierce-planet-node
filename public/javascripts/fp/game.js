@@ -225,7 +225,7 @@ FiercePlanet.Game = FiercePlanet.Game || {};
             if (World.settings.firstPerson) {
                 //            Lifecycle.currentLevel.generateAgents(AgentTypes.CITIZEN_AGENT_TYPE, 1);
                 var agentSets = ModuleManager.currentModule.allCultures();
-                for (var i in agentSets) {
+                for (var i = 0, l = agentSets.length; i < l; i++) {
                     var agentType = agentSets[i];
                     if (agentType.generateEachWave) {
                         Lifecycle.currentLevel.generateAgents(agentType, Lifecycle.numAgents);

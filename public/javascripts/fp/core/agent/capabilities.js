@@ -319,7 +319,7 @@ Capabilities.MoveTowardsNearestExitCapability = {};
         var horizontal = h || true;
 
         var shortestDistance = -1, shortistTrail;
-        for (var i in level.exitPoints) {
+        for (var i = 0, l = level.exitPoints.length; i < l; i++) {
             var ep = level.exitPoints[i];
             var tx = ep[0], ty = ep[1];
             var result = this.criticalPathToExitPoint(level, x, y, tx, ty);
@@ -344,7 +344,7 @@ Capabilities.MoveTowardsNearestExitCapability = {};
         candidates.push(cell);
         while (depth++ < this.MAX_DEPTH) {
             var newCandidates = [];
-            for (var i in candidates) {
+            for (var i = 0, l = candidates.length; i < l; i++) {
                 var candidate = candidates[i];
                 var x = candidate[0], y = candidate[1];
                 if (level.isSameCell(candidate, goal)) {
@@ -393,7 +393,7 @@ Capabilities.MoveTowardsNearestExitCapability = {};
                 }
             }
             candidates = [];
-            for (var i in newCandidates) {
+            for (var i = 0, l = newCandidates.length; i < l; i++) {
                 candidates.push(newCandidates[i]);
             }
         }

@@ -310,7 +310,7 @@ Level.prototype.removeFromPath = function(x, y) {
  */
 Level.prototype.addTerrainToPath = function(terrain) {
     this.terrainMap = {};
-    for (var i in this.pathway) {
+    for (var i = 0, l = this.pathway.length; i < l; i++) {
         var path = this.pathway[i];
         this.terrainMap[path] = terrain;
     }
@@ -586,13 +586,13 @@ Level.prototype.removeExitPoint = function(x, y) {
  * @param y
  */
 Level.prototype.isEntryOrExitPoint = function(x, y) {
-    for (var i in this.entryPoints) {
+    for (var i = 0, l = this.entryPoints.length; i < l; i++) {
         var point = this.entryPoints[i];
         if (point[0] == x && point[1]== y) {
             return true;
         }
     }
-    for (var i in this.exitPoints) {
+    for (var i = 0, l = this.exitPoints.length; i < l; i++) {
         var point = this.exitPoints[i];
         if (point[0] == x && point[1]== y) {
             return true;
@@ -622,7 +622,7 @@ Level.prototype.addWaveAgent = function(agent) { this.waveAgents.push(agent); };
  */
 Level.prototype.setCurrentAgents = function(currentAgents) {
     this.currentAgents = currentAgents;
-    for (var i in this.currentAgents) {
+    for (var i = 0; i < this.currentAgents.length; i++) {
         var agent = this.currentAgents[i];
         this.currentAgentsMap[[agent.x, agent.y]] = agent;
         this.addAgentToContentMap(agent);
@@ -794,11 +794,11 @@ Level.prototype.countAgentsAtPosition = function (x, y) {
  */
 Level.prototype.currentAgentHealthStats = function () {
 	var stats = {};
-	for (var i in World.resourceCategories) {
+    for (var i = 0, l = World.resourceCategories.length; i < l; i++) {
 		stats[World.resourceCategories[i].code] = 0;
 	}
 	stats.total = 0;
-    for (var i = 0; i < this.currentAgents.length; i++) {
+    for (var i = 0, l = this.currentAgents.length; i < l; i++) {
         var agent = this.currentAgents[i];
 		for (var j in agent.culture.healthCategories) {
             var h = agent.getHealthForResourceCategory(agent.culture.healthCategories[j]);
@@ -807,7 +807,7 @@ Level.prototype.currentAgentHealthStats = function () {
 		stats.total += agent.health;
     }
     // Average values
-    for (var i in World.resourceCategories) {
+    for (var i = 0, l = World.resourceCategories.length; i < l; i++) {
         stats[World.resourceCategories[i].code] /= this.currentAgents.length;
     }
     stats.total += this.currentAgents.length;
@@ -1056,25 +1056,25 @@ Level.prototype.calculateResourceEffect = function (resource, ignoreResourceMix,
  * @returns   The effect to apply
  */
 Level.prototype.calculateSurroundingResourcesEffects = function (resource) {
-        var x = resource.x;
-        var y = resource.y;
-        var resourceCategory = resource.category;
-        var baseEffect = 1;
-        for (var i in this.resources) {
-            var neighbour = this.resources[i];
-            var nx = neighbour.x;
-            var ny = neighbour.y;
-            if (nx == x && ny == y)
-                continue;
+    var x = resource.x;
+    var y = resource.y;
+    var resourceCategory = resource.category;
+    var baseEffect = 1;
+    for (var i = 0, l = this.resources.length; i < l; i++) {
+        var neighbour = this.resources[i];
+        var nx = neighbour.x;
+        var ny = neighbour.y;
+        if (nx == x && ny == y)
+            continue;
 //            if (Math.abs(nx - x) <= 1 && Math.abs(ny - y) <= 1) {
-            // Added global resource tension setting
-            if (World.settings.resourcesInTensionGlobally || Math.abs(nx - x) <= 1 && Math.abs(ny - y) <= 1) {
-                var neighbourCategory = neighbour.category;
-                baseEffect *= resourceCategory.doEvaluateOtherCategoryImpact(neighbourCategory);
-            }
+        // Added global resource tension setting
+        if (World.settings.resourcesInTensionGlobally || Math.abs(nx - x) <= 1 && Math.abs(ny - y) <= 1) {
+            var neighbourCategory = neighbour.category;
+            baseEffect *= resourceCategory.doEvaluateOtherCategoryImpact(neighbourCategory);
         }
-        return baseEffect;
-    };
+    }
+    return baseEffect;
+};
 
 /**
  * Resets all resource yields to their original values
@@ -1164,7 +1164,7 @@ Level.prototype.isCell = function (cell){
     return (this.getCell(x, y) == undefined);
 };
 Level.prototype.isInHistory = function (cell, history){
-    for (var i in history) {
+    for (var i = 0, l = history.length; i < l; i++) {
         var testCell = history[i]
         if (this.isSameCell(cell, testCell))
             return true;

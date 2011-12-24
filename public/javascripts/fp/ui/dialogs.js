@@ -234,7 +234,7 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
             });
 
 
-        FiercePlanet.LevelGallery.renderModules();
+        FiercePlanet.LevelGallery.renderCampaigns();
         this.levelGalleryDialog = $('#level-gallery-dialog')
             .dialog({
               position: [dialogX, dialogY],

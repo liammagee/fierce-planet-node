@@ -116,9 +116,9 @@ FiercePlanet.Parameters = FiercePlanet.Parameters || {};
                     yaxis: { min: 0, max: yAxisMax }
                 };
                 var seedData = [];
-                var agentSets = ModuleManager.currentModule.allCultures();
-                for (var i in agentSets) {
-                    var as = agentSets[i];
+                var cultures = ModuleManager.currentModule.allCultures();
+                for (var i = 0, l = cultures.length; i < l; i++) {
+                    var as = cultures[i];
                     seedData.push({ color: as.color, data: [[0, Lifecycle.numAgents]], lines: { show: true } });
                 }
                 return $.plot($("#world-graph"), seedData, options);
@@ -126,10 +126,10 @@ FiercePlanet.Parameters = FiercePlanet.Parameters || {};
             update: function(plot) {
                 var data = plot.getData();
                 if (Lifecycle.levelCounter > 0) {
-                    var agentSets = ModuleManager.currentModule.allCultures();
+                    var cultures = ModuleManager.currentModule.allCultures();
                     var j = 0;
-                    for (var i in agentSets) {
-                        var as = agentSets[i];
+                    for (var i = 0, l = cultures.length; i < l; i++) {
+                        var as = cultures[i];
                         var counter = 0;
                         Lifecycle.currentLevel.currentAgents.forEach(function(a) {if (a.culture.name == as.name) counter++} )
                         var d = [Lifecycle.levelCounter, counter];
@@ -149,7 +149,7 @@ FiercePlanet.Parameters = FiercePlanet.Parameters || {};
                     yaxis: { min: 0, max: totalSaveable }
                 };
                 var seedData = [];
-                for (var i in World.resourceCategories) {
+                for (var i = 0, l = World.resourceCategories.length; i < l; i++) {
                     var cat = World.resourceCategories[i];
                     seedData.push({ color: cat.color, data: [[0, 100]], lines: { show: true } });
                 }
@@ -162,9 +162,11 @@ FiercePlanet.Parameters = FiercePlanet.Parameters || {};
                     var stats = Lifecycle.currentLevel.currentAgentHealthStats();
                     var j = 0;
                     for (var i in stats) {
-                        var d = [Lifecycle.levelCounter, stats[i]];
-                        data[j].data.push(d);
-                        j++;
+                        if (stats.hasOwnProperty(i)) {
+                            var d = [Lifecycle.levelCounter, stats[i]];
+                            data[j].data.push(d);
+                            j++;
+                        }
                     }
 //                    data[j].data.push([FiercePlanet.levelCounter, stats.total])
                 }
@@ -207,7 +209,7 @@ FiercePlanet.Parameters = FiercePlanet.Parameters || {};
                     yaxis: { min: 0, max: totalSaveable }
                 };
                 var seedData = [];
-                for (var i in World.resourceCategories) {
+                for (var i = 0, l = World.resourceCategories.length; i < l; i++) {
                     var cat = World.resourceCategories[i];
                     seedData.push({ color: cat.color, data: [[0, 100]], lines: { show: true } });
                 }
@@ -220,9 +222,11 @@ FiercePlanet.Parameters = FiercePlanet.Parameters || {};
                     var stats = Lifecycle.currentLevel.currentAgentHealthStats();
                     var j = 0;
                     for (var i in stats) {
-                        var d = [Lifecycle.levelCounter, stats[i]];
-                        data[j].data.push(d);
-                        j++;
+                        if (stats.hasOwnProperty(i)) {
+                            var d = [Lifecycle.levelCounter, stats[i]];
+                            data[j].data.push(d);
+                            j++;
+                        }
                     }
 //                    data[j].data.push([FiercePlanet.levelCounter, stats.total])
                 }
@@ -248,9 +252,11 @@ FiercePlanet.Parameters = FiercePlanet.Parameters || {};
                     var stats = Lifecycle.currentLevel.currentAgentHealthStats();
                     var j = 0;
                     for (var i in stats) {
-                        var d = [Lifecycle.levelCounter, stats[i]];
-                        data[j].data.push(d);
-                        j++;
+                        if (stats.hasOwnProperty(i)) {
+                            var d = [Lifecycle.levelCounter, stats[i]];
+                            data[j].data.push(d);
+                            j++;
+                        }
                     }
 //                    data[j].data.push([FiercePlanet.levelCounter, stats.total])
                 }

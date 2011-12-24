@@ -30,17 +30,17 @@ FiercePlanet.LevelGallery = FiercePlanet.LevelGallery || {};
     /**
      * Renders modules and levels in the level gallery
      */
-    this.renderModules = function() {
-        var modules = ModuleManager.currentModule.allCampaigns();
-        for (var i in modules) {
-            var module = modules[i];
-            $('#level-gallery-tabs>ul').prepend('<li><a href="#' + module.id + '"> ' + module.name + '</a></li>');
-            var modHTML = $('<div class="quests" id="' + module.id + '"></div>');
+    this.renderCampaigns = function() {
+        var campaigns = ModuleManager.currentModule.allCampaigns();
+        for (var i = 0, l = campaigns.length; i < l; i++) {
+            var campaign = campaigns[i];
+            $('#level-gallery-tabs>ul').prepend('<li><a href="#' + campaign.id + '"> ' + campaign.name + '</a></li>');
+            var modHTML = $('<div class="quests" id="' + campaign.id + '"></div>');
             var tnHTML = $('<div class="thumbnails"></div>');
             $('#level-gallery-tabs').append(modHTML);
             modHTML.append(tnHTML);
-            for (var j in module.levels) {
-                var level = module.levels[j];
+            for (var j in campaign.levels) {
+                var level = campaign.levels[j];
                 var img = (level.thumbnail ? level.thumbnail : '/images/levels/level-thumbnail-default.png');
                 var thumbnail = $('<div class="thumbnail" id="'
                     + 'tn-' + i + '-' + j
@@ -54,7 +54,7 @@ FiercePlanet.LevelGallery = FiercePlanet.LevelGallery || {};
                     + level.name
                     + '</div>'
                     + '</div>');
-                thumbnail.data('set', module.id);
+                thumbnail.data('set', campaign.id);
                 thumbnail.data('level', j);
                 tnHTML.append(thumbnail);
             }
