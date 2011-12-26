@@ -8,10 +8,15 @@
 
 var Capabilities = Capabilities || {};
 
+function Capability() {
+    this.cost = 0;
+    this.exercise = function(agent, level) {};
+}
 
-Capabilities.ConsumeResourcesCapability = {};
+Capabilities.ConsumeResourcesCapability = new Capability();
 (function() {
-    this.exercise = function(agent, level) {
+    /*
+    this._exercise = function(agent, level) {
         var x = agent.x;
         var y = agent.y;
         for (var j = 0; j < level.resources.length; j++) {
@@ -21,12 +26,35 @@ Capabilities.ConsumeResourcesCapability = {};
             if (Math.abs(rx - x) <= 1 && Math.abs(ry - y) <= 1) {
                 var resourceEffect = level.calculateResourceEffect(resource);
                 resource.provideYield(agent, resourceEffect, !level.noSpeedChange);
+                console.log('PROVIDING YIELD ' + resourceEffect)
             }
+        }
+    };
+    */
+    this.exercise = function(agent, level) {
+        var x = agent.x;
+        var y = agent.y;
+        var surroundingPositions = level.getMooreNeighbourhood(x, y, true);
+        var resources = [];
+        for (var i = 0, l = surroundingPositions.length; i < l; i++) {
+            var position = surroundingPositions[i];
+            var cellResources = level.getResourcesAtContentMap(position.x, position.y);
+            if (cellResources) {
+                cellResources.forEach(function(resource){
+                    resources.push(resource);
+                })
+            }
+        }
+        // Provide yield
+        for (var i = 0, l = resources.length; i < l; i++) {
+            var resource = resources[i];
+            var resourceEffect = level.calculateResourceEffect(resource);
+            resource.provideYield(agent, resourceEffect, !level.noSpeedChange);
         }
     };
 }).apply(Capabilities.ConsumeResourcesCapability);
 
-Capabilities.ProduceResourcesCapability = {};
+Capabilities.ProduceResourcesCapability = new Capability();
 (function() {
     this.exercise = function(agent, level) {
         if (!level.isPositionOccupiedByResource(agent.x, agent.y)) {
@@ -40,15 +68,8 @@ Capabilities.ProduceResourcesCapability = {};
 }).apply(Capabilities.ProduceResourcesCapability);
 
 
-Capabilities.AdjustHealthCapability = {};
-(function() {
-    this.exercise = function(agent, level) {
-        if (!World.settings.godMode || World.settings.showHealthReductionInGodMode)
-            agent.adjustGeneralHealth(World.settings.agentCostPerMove);
-    };
-}).apply(Capabilities.AdjustHealthCapability);
 
-Capabilities.RegenerateCapability = {};
+Capabilities.RegenerateCapability = new Capability();
 (function() {
     this.exercise = function(agent, level) {
         if (agent.gender != 'f' || agent.age < agent.culture.reproductionAge)
@@ -84,7 +105,7 @@ Capabilities.RegenerateCapability = {};
     };
 }).apply(Capabilities.RegenerateCapability);
 
-Capabilities.PreyOnOtherAgentsCapability = {};
+Capabilities.PreyOnOtherAgentsCapability = new Capability();
 (function() {
     this.exercise = function(agent, level) {
         var x = agent.x;
@@ -133,7 +154,7 @@ Capabilities.MoveUtilities = {};
 
 }).apply(Capabilities.MoveUtilities);
 
-Capabilities.MoveCapability = {};
+Capabilities.MoveCapability = new Capability();
 (function() {
     this.cost = -3;
     this.exercise = function(agent, level) {
@@ -152,7 +173,7 @@ Capabilities.MoveCapability = {};
 
 }).apply(Capabilities.MoveCapability);
 
-Capabilities.MoveUpwardsCapability = {};
+Capabilities.MoveUpwardsCapability = new Capability();
 (function() {
     this.cost = 0;
     this.exercise = function(agent, level) {
@@ -189,7 +210,7 @@ Capabilities.MoveUpwardsCapability = {};
 }).apply(Capabilities.MoveUpwardsCapability);
 
 
-Capabilities.MoveRandomlyCapability = {};
+Capabilities.MoveRandomlyCapability = new Capability();
 (function() {
     this.cost = 0;
     this.exercise = function(agent, level) {
@@ -279,7 +300,7 @@ Capabilities.MoveRandomlyCapability = {};
 }).apply(Capabilities.MoveRandomlyCapability);
 
 
-Capabilities.MoveTowardsNearestExitCapability = {};
+Capabilities.MoveTowardsNearestExitCapability = new Capability();
 (function() {
     this.cost = -0;
     this.exercise = function(agent, level) {
@@ -423,7 +444,7 @@ Capabilities.MoveTowardsNearestExitCapability = {};
 }).apply(Capabilities.MoveTowardsNearestExitCapability);
 
 
-Capabilities.MoveWithMemoryCapability = {};
+Capabilities.MoveWithMemoryCapability = new Capability();
 (function() {
     this.cost = -0;
     this.exercise = function(agent, level) {
@@ -439,6 +460,7 @@ Capabilities.MoveWithMemoryCapability = {};
         // Set the position and add the move to the agent's memory
         agent.moveTo(position[0], position[1]);
     };
+
 
 
     /**
@@ -478,69 +500,18 @@ Capabilities.MoveWithMemoryCapability = {};
      * @param withOffscreenCycling
      */
     this.findPositionWithFreeNavigation = function(agent, level, withNoRepeat, withNoCollision, withOffscreenCycling) {
-        var x = agent.x, y = agent.y;
-        var newX = x, newY = y;
-        var lastX = agent.lastMemory.x, lastY = agent.lastMemory.y;
-        var candidateCells = [];
-        var directions = Capabilities.MoveUtilities.randomDirectionOrder();
-        var waitOnCurrentCell = false;
-        for (var i = 0; i < directions.length; i++) {
-            newX = x, newY = y;
-            var dir = directions[i];
 
-            var offscreenLeft = 0, offscreenTop = 0;
-            var offScreenWidth = level.cellsAcross - 1, offScreenHeight = level.cellsDown - 1;
-            var offset = 1;
-            var toContinue = false;
-            switch (dir) {
-                case 0:
-                    (x == offscreenLeft ? (withOffscreenCycling ? newX = offScreenWidth : toContinue = true) : newX = newX - offset);
-                    break;
-                case 1:
-                    (x == offScreenWidth ? (withOffscreenCycling ? newX = offscreenTop : toContinue = true) : newX = newX + offset);
-                    break;
-                case 2:
-                    (y == offscreenTop ? (withOffscreenCycling ? newY = offScreenHeight : toContinue = true) : newY = newY - offset);
-                    break;
-                case 3:
-                    (y == offScreenHeight ? (withOffscreenCycling ? newY = offscreenTop : toContinue = true) : newY = newY + offset);
-                    break;
-            }
-            // If we can't repeat and the candidate cell is the last visited cell, continue
-            if (level.isExitPoint(newX, newY))
-                return [newX, newY];
-
-            // If we can't repeat and the candidate cell is the last visited cell, continue
-            if ((withNoRepeat && lastX == newX && lastY == newY) || toContinue) {
-                continue;
-            }
-            // If the cell is occupied by another agent, don't allow this agent to move there
-            if (World.settings.agentsOwnTilesExclusively && level.isPositionOccupiedByAgent(newX, newY)) {
-                // Wait till the other agent has moved - don't backtrack if no other cells are available
-                waitOnCurrentCell = true;
-                continue;
-            }
-            // If the cell is occupied by a resource, don't allow the agent to move there
-            if ((World.settings.resourcesOwnTilesExclusively || level.resourcesOwnTilesExclusively) && level.isPositionOccupiedByResource(newX, newY)) {
-                continue;
-            }
-            // If the candidate cell is valid (part of the path), add it
-            if (level.getCell(newX, newY) == undefined) {
-                candidateCells.push([newX, newY]);
-            }
-        }
+        // Get candidate cells
+        var candidateCells = this.findCandidateCells(agent, level);
+        var x = agent.x, y = agent.y, lastX = agent.lastMemory.x, lastY = agent.lastMemory.y;
 
         // Allow for back-tracking, if there is no way forward
         if (candidateCells.length == 0) {
-            if (waitOnCurrentCell)
+            if (World.settings.agentsOwnTilesExclusively && level.getAgentsAtContentMap(lastX, lastY).length > 0)
                 return [x, y];
             else
                 return [lastX, lastY];
         }
-
-
-        // Here try to see if any agents encountered have zero unvisited cells in their memory, that the current agent also does not have in *its* memory.
-        // If not, backtrack
 
 
         // Find the first candidate which is either the goal, or not in the history.
@@ -579,9 +550,13 @@ Capabilities.MoveWithMemoryCapability = {};
         }
 
 
+        // Here try to see if any agents encountered have zero unvisited cells in their memory, that the current agent also does not have in *its* memory.
+        // If not, backtrack
+
         // But first add back the last visited cell as a candidate - it might be the best option
         if (x != lastX || y != lastY)
             candidateCells.push([lastX, lastY]);
+
         if (candidateCells.length > 1) {
             // Try to head in a direction where an unvisited tile can be found
 
@@ -773,6 +748,55 @@ Capabilities.MoveWithMemoryCapability = {};
         return candidateCells[0];
     };
 
+    this.findCandidateCells = function(agent, level) {
+        var x = agent.x, y = agent.y, lastX = agent.lastMemory.x, lastY = agent.lastMemory.y;
+        var candidateCells = [];
+        var newX = x, newY = y;
+        var directions = Capabilities.MoveUtilities.randomDirectionOrder();
+        var withNoRepeat = false;
+        var withOffscreenCycling = level.allowOffscreenCycling;
+        var waitOnCurrentCell = false;
+        for (var i = 0; i < directions.length; i++) {
+            var dir = directions[i];
+
+            var newX = x, newY = y, offscreenLeft = 0, offscreenTop = 0, offScreenWidth = level.cellsAcross - 1, offScreenHeight = level.cellsDown - 1, offset = 1, toContinue = false;
+            switch (dir) {
+                case 0:
+                    (x == offscreenLeft ? (withOffscreenCycling ? newX = offScreenWidth : toContinue = true) : newX = newX - offset);
+                    break;
+                case 1:
+                    (x == offScreenWidth ? (withOffscreenCycling ? newX = offscreenTop : toContinue = true) : newX = newX + offset);
+                    break;
+                case 2:
+                    (y == offscreenTop ? (withOffscreenCycling ? newY = offScreenHeight : toContinue = true) : newY = newY - offset);
+                    break;
+                case 3:
+                    (y == offScreenHeight ? (withOffscreenCycling ? newY = offscreenTop : toContinue = true) : newY = newY + offset);
+                    break;
+            }
+            // If we can't repeat and the candidate cell is the last visited cell, continue
+            if (level.isExitPoint(newX, newY))
+                return [newX, newY];
+
+            // If we can't repeat and the candidate cell is the last visited cell, continue
+            if ((withNoRepeat && lastX == newX && lastY == newY) || toContinue) {
+                continue;
+            }
+            // If the cell is occupied by another agent, don't allow this agent to move there
+            if (World.settings.agentsOwnTilesExclusively && level.getAgentsAtContentMap(newX, newY).length > 0)
+                continue;
+
+            // If the cell is occupied by a resource, don't allow the agent to move there
+            if ((World.settings.resourcesOwnTilesExclusively || level.resourcesOwnTilesExclusively) && level.isPositionOccupiedByResource(newX, newY)) {
+                continue;
+            }
+            // If the candidate cell is valid (part of the path), add it
+            if (level.getCell(newX, newY) == undefined) {
+                candidateCells.push([newX, newY]);
+            }
+        }
+        return candidateCells;
+    }
 
 }).apply(Capabilities.MoveWithMemoryCapability);
 

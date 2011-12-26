@@ -17,7 +17,7 @@ var Statistics = {};
 		if (Lifecycle.levelCounter > 0) {
             var cultures = ModuleManager.currentModule.allCultures();
             var j = 0;
-            for (var i = 0, l = this.cultures.length; i < l; i++) {
+            for (var i = 0, l = cultures.length; i < l; i++) {
                 var as = cultures[i];
                 var counter = 0;
                 Lifecycle.currentLevel.currentAgents.forEach(function(a) {if (a.culture.name == as.name) counter++} )

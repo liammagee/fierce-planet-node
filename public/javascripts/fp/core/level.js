@@ -1031,26 +1031,28 @@ Level.prototype.getResourceIndexAtPosition = function (x, y) {
  * @param   Whether tensions between resource categories should be factored in (TODO: should be moved to the World object)
  */
 Level.prototype.calculateResourceEffect = function (resource, ignoreResourceMix, resourcesInTension) {
-        // Allow this calculation to be ignored
-        if (ignoreResourceMix || World.settings.ignoreResourceBalance || World.settings.applyGeneralHealth || this.resources.length <= 1)
-            return 1;
+    // Allow this calculation to be ignored
+    if (ignoreResourceMix || World.settings.ignoreResourceBalance || World.settings.applyGeneralHealth || this.resources.length <= 1)
+        return 1;
 
-        var code = resource.category.code;
-        var totalResources = this.resources.length;
-        var resourceCategoryCount = this.getResourceCategoryCount(code);
-        var resourceTypeProportion = (resourceCategoryCount / totalResources) * totalResources;
-        var proportionOfIdeal = (resourceTypeProportion <= 1) ? resourceTypeProportion : ((totalResources - resourceTypeProportion) / (totalResources - 1));
-        var effect = proportionOfIdeal * proportionOfIdeal;
+    var code = resource.category.code;
+    var totalResources = this.resources.length;
+    var resourceCategoryCount = this.getResourceCategoryCount(code);
+    var resourceTypeProportion = (resourceCategoryCount / totalResources) * totalResources;
+    var proportionOfIdeal = (resourceTypeProportion <= 1) ? resourceTypeProportion : ((totalResources - resourceTypeProportion) / (totalResources - 1));
+    var effect = proportionOfIdeal * proportionOfIdeal;
 
-        // Further adjustment based on surrounding resources
-        if (resourcesInTension || World.settings.resourcesInTension) {
-            effect *= this.calculateSurroundingResourcesEffects(resource);
-        }
-        return effect;
-    };
+
+    // Further adjustment based on surrounding resources
+    if (resourcesInTension || World.settings.resourcesInTension) {
+        effect *= this.calculateSurroundingResourcesEffects(resource);
+    }
+    return effect;
+};
 
 /**
  * Calculates the effect of surrounding resources
+ * TODO: Allow for a variety of effects
  *
  * @param   A resource to calculate the effect for
  * @returns   The effect to apply

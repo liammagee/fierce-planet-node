@@ -32,6 +32,7 @@ var PredatorPreyModule = PredatorPreyModule || {};
         AgentConstants.DEFAULT_SPEED = 1;
         Lifecycle.interval = 100;
         Lifecycle.currentLevelSetID = 'Predator-Prey';
+        var localStorage = localStorage || {};
         Lifecycle.currentLevelNumber = localStorage.currentLevelNumber = 0;
         Lifecycle.currentLevelPreset = true;
         World.settings.showGraph = true;

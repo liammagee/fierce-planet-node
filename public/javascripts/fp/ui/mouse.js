@@ -74,10 +74,12 @@ FiercePlanet.Mouse = FiercePlanet.Mouse || {};
             FiercePlanet.Game.currentX = e.offsetX;
             FiercePlanet.Game.currentY = e.offsetY;
         }
+        /*
         else if (e.layerX || e.layerX == 0) { // Firefox
             FiercePlanet.Game.currentX = e.layerX;
             FiercePlanet.Game.currentY = e.layerY;
         }
+        */
     };
 
     /**
@@ -100,10 +102,12 @@ FiercePlanet.Mouse = FiercePlanet.Mouse || {};
                 ex = e.offsetX;
                 ey = e.offsetY;
             }
+            /*
             else if (e.layerX || e.layerX == 0) { // Firefox
                 ex = e.layerX;
                 ey = e.layerY;
             }
+            */
             var offsetX = ex - FiercePlanet.Game.currentX;
             var offsetY = ey - FiercePlanet.Game.currentY;
 

@@ -62,10 +62,12 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
                 ex = e.offsetX;
                 ey = e.offsetY;
             }
+            /*
             else if (e.layerX || e.layerX == 0) { // Firefox
                 ex = e.layerX;
                 ey = e.layerY;
             }
+            */
             if (ex >= x && ex <= x + w && ey >= y && ey <= y + h) {
                 FiercePlanet.Game.currentNotice = undefined;
                 FiercePlanet.Drawing.clearCanvas('#noticeCanvas');
@@ -84,10 +86,12 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
             x = e.offsetX;
             y = e.offsetY;
         }
+        /*
         else if (e.layerX || e.layerX == 0) { // Firefox, Opera
             x = e.layerX;
             y = e.layerY;
         }
+        */
         return {x:x, y:y};
     };
 

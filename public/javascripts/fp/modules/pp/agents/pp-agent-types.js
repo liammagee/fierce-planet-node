@@ -23,7 +23,7 @@ var PredatorPreyCultures = PredatorPreyCultures || {};
 
         this.PREY_AGENT_TYPE.waveNumber = 50;
         this.PREY_AGENT_TYPE.moveCost = -2;
-        this.PREY_AGENT_TYPE.birthProbability = 0.8;
+        this.PREY_AGENT_TYPE.birthProbability = 0.1;
         this.PREY_AGENT_TYPE.reproductionAge = 15;
 
         this.PREDATOR_AGENT_TYPE.waveNumber = 20;
@@ -33,7 +33,7 @@ var PredatorPreyCultures = PredatorPreyCultures || {};
 
         this.PREDATOR_AGENT_TYPE.preyProbability = 0.2;
         this.PREDATOR_AGENT_TYPE.predatorGain = 20;
-        this.PREDATOR_AGENT_TYPE.preyCost = -10;
+        this.PREDATOR_AGENT_TYPE.preyCost = -20;
 
 
 

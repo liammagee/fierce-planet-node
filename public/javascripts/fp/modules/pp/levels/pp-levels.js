@@ -83,21 +83,23 @@ var PredatorPreyLevels = PredatorPreyLevels || new Campaign();
                     }
                 }
 
-                PredatorPreyCultures.PREY_AGENT_TYPE.waveNumber = parseInt(FiercePlanet.Parameters.PreyWaveNumber);
-                PredatorPreyCultures.PREY_AGENT_TYPE.moveCost = parseInt(FiercePlanet.Parameters.PreyMoveCost);
-                PredatorPreyCultures.PREY_AGENT_TYPE.birthProbability = parseInt(FiercePlanet.Parameters.PreyBirthProbability);
-                PredatorPreyCultures.PREY_AGENT_TYPE.reproductionAge = parseInt(FiercePlanet.Parameters.PreyReproductionAge);
+                if (typeof(FiercePlanet) != 'undefined' && FiercePlanet.Parameters) {
+                    PredatorPreyCultures.PREY_AGENT_TYPE.waveNumber = parseInt(FiercePlanet.Parameters.PreyWaveNumber);
+                    PredatorPreyCultures.PREY_AGENT_TYPE.moveCost = parseInt(FiercePlanet.Parameters.PreyMoveCost);
+                    PredatorPreyCultures.PREY_AGENT_TYPE.birthProbability = parseInt(FiercePlanet.Parameters.PreyBirthProbability);
+                    PredatorPreyCultures.PREY_AGENT_TYPE.reproductionAge = parseInt(FiercePlanet.Parameters.PreyReproductionAge);
 
-                PredatorPreyCultures.PREDATOR_AGENT_TYPE.waveNumber = parseInt(FiercePlanet.Parameters.PredatorWaveNumber);
-                PredatorPreyCultures.PREDATOR_AGENT_TYPE.moveCost = parseInt(FiercePlanet.Parameters.PredatorMoveCost);
-                PredatorPreyCultures.PREDATOR_AGENT_TYPE.birthProbability = parseInt(FiercePlanet.Parameters.PredatorBirthProbability);
-                PredatorPreyCultures.PREDATOR_AGENT_TYPE.reproductionAge = parseInt(FiercePlanet.Parameters.PredatorReproductionAge);
+                    PredatorPreyCultures.PREDATOR_AGENT_TYPE.waveNumber = parseInt(FiercePlanet.Parameters.PredatorWaveNumber);
+                    PredatorPreyCultures.PREDATOR_AGENT_TYPE.moveCost = parseInt(FiercePlanet.Parameters.PredatorMoveCost);
+                    PredatorPreyCultures.PREDATOR_AGENT_TYPE.birthProbability = parseInt(FiercePlanet.Parameters.PredatorBirthProbability);
+                    PredatorPreyCultures.PREDATOR_AGENT_TYPE.reproductionAge = parseInt(FiercePlanet.Parameters.PredatorReproductionAge);
 
-                PredatorPreyCultures.PREDATOR_AGENT_TYPE.preyProbability = parseInt(FiercePlanet.Parameters.PredatorPreyProbability);
-                PredatorPreyCultures.PREDATOR_AGENT_TYPE.predatorGain = parseInt(FiercePlanet.Parameters.PredatorGain);
-                PredatorPreyCultures.PREDATOR_AGENT_TYPE.preyCost = parseInt(FiercePlanet.Parameters.PreyCost);
+                    PredatorPreyCultures.PREDATOR_AGENT_TYPE.preyProbability = parseInt(FiercePlanet.Parameters.PredatorPreyProbability);
+                    PredatorPreyCultures.PREDATOR_AGENT_TYPE.predatorGain = parseInt(FiercePlanet.Parameters.PredatorGain);
+                    PredatorPreyCultures.PREDATOR_AGENT_TYPE.preyCost = parseInt(FiercePlanet.Parameters.PreyCost);
 
-                this.initialResourceNumber = parseInt(FiercePlanet.Parameters.InitialResourceNumber);
+                    this.initialResourceNumber = parseInt(FiercePlanet.Parameters.InitialResourceNumber);
+                }
 
                 // Re-initialise the waves
                 this.waves = [];

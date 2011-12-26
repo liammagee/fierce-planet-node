@@ -61,7 +61,7 @@ Lifecycle.preProcessCallback = function() {
 }
 Lifecycle.postProcessCallback = function() {
     //console.log('Got htere');
-    console.log('Population: ' + Statistics.populationStats())
+    console.log('Population: ' + Statistics.populationStats() + ' at ' + Lifecycle.waveCounter)
 //    console.log('Life expectancy: ' + Statistics.lifeExpectancyStats())
     /*
 	console.log('=========================');
