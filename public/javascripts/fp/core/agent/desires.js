@@ -8,12 +8,12 @@
 
 var Desires = Desires || {};
 (function() {
-    this.rankDesires = function(agent) {
+    this.rankDesires = function(agent, level) {
         var desires = agent.culture.desires;
         return desires.sort(function(a, b) {
             if (typeof(a.evaluate) == 'undefined' || typeof(b.evaluate) == 'undefined')
                 return 0;
-            return  b.evaluate(agent) -  a.evaluate(agent);
+            return  b.evaluate(agent, level) -  a.evaluate(agent, level);
         });
     };
 }).apply(Desires);
@@ -21,7 +21,7 @@ var Desires = Desires || {};
 Desires.ImproveHealth = {};
 (function() {
     this.name = 'Improve Health';
-    this.evaluate = function(agent) {
+    this.evaluate = function(agent, level) {
         return 1.0 - (agent.health / AgentConstants.INITIAL_HEALTH);
     };
 }).apply(Desires.ImproveHealth);

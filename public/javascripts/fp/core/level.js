@@ -1211,16 +1211,20 @@ Level.prototype.getVonNeumannNeighbourhood = function(x, y, includeSelf) {
     var extendRight = (x < this.cellsAcross - 1),
         extendDown = (y < this.cellsDown - 1),
         extendLeft = (x > 0),
-        extendUp = (y > 0);
-    var nextX = extendRight ? x + 1 : 0;
-    var nextY = extendDown ? y + 1 : 0;
-    var prevX = extendLeft ? x - 1 : this.cellsAcross - 1;
-    var prevY = extendUp ? y - 1 : this.cellsDown - 1;
+        extendUp = (y > 0),
+        nextX = extendRight ? x + 1 : 0,
+        nextY = extendDown ? y + 1 : 0,
+        prevX = extendLeft ? x - 1 : this.cellsAcross - 1,
+        prevY = extendUp ? y - 1 : this.cellsDown - 1;
 
-    surroundingPositions.push({x: nextX, y: y});
-    surroundingPositions.push({x: x, y: nextY});
-    surroundingPositions.push({x: prevX, y: y});
-    surroundingPositions.push({x: x, y: prevY});
+    if (this.allowOffscreenCycling || (nextX > 0))
+        surroundingPositions.push({x: nextX, y: y});
+    if (this.allowOffscreenCycling || (nextY > 0))
+        surroundingPositions.push({x: x, y: nextY});
+    if (this.allowOffscreenCycling || (prevX < this.cellsAcross - 1))
+        surroundingPositions.push({x: prevX, y: y});
+    if (this.allowOffscreenCycling || (prevY < this.cellsDown - 1))
+        surroundingPositions.push({x: x, y: prevY});
 
     return surroundingPositions;
 };
@@ -1242,22 +1246,64 @@ Level.prototype.getMooreNeighbourhood = function(x, y, includeSelf) {
     var extendRight = (x < this.cellsAcross - 1),
         extendDown = (y < this.cellsDown - 1),
         extendLeft = (x > 0),
-        extendUp = (y > 0);
-    var nextX = extendRight ? x + 1 : 0;
-    var nextY = extendDown ? y + 1 : 0;
-    var prevX = extendLeft ? x - 1 : this.cellsAcross - 1;
-    var prevY = extendUp ? y - 1 : this.cellsDown - 1;
+        extendUp = (y > 0),
+        nextX = extendRight ? x + 1 : 0,
+        nextY = extendDown ? y + 1 : 0,
+        prevX = extendLeft ? x - 1 : this.cellsAcross - 1,
+        prevY = extendUp ? y - 1 : this.cellsDown - 1;
 
-    surroundingPositions.push({x: nextX, y: y});
-    surroundingPositions.push({x: nextX, y: nextY});
-    surroundingPositions.push({x: x, y: nextY});
-    surroundingPositions.push({x: prevX, y: nextY});
-    surroundingPositions.push({x: prevX, y: y});
-    surroundingPositions.push({x: prevX, y: prevY});
-    surroundingPositions.push({x: x, y: prevY});
-    surroundingPositions.push({x: nextX, y: prevY});
+    if (this.allowOffscreenCycling || (nextX > 0))
+        surroundingPositions.push({x: nextX, y: y});
+    if (this.allowOffscreenCycling || (nextX > 0 && nextY > 0))
+        surroundingPositions.push({x: nextX, y: nextY});
+    if (this.allowOffscreenCycling || (nextY > 0))
+        surroundingPositions.push({x: x, y: nextY});
+    if (this.allowOffscreenCycling || (prevX < this.cellsAcross - 1 && nextY > 0))
+        surroundingPositions.push({x: prevX, y: nextY});
+    if (this.allowOffscreenCycling || (prevX < this.cellsAcross - 1))
+        surroundingPositions.push({x: prevX, y: y});
+    if (this.allowOffscreenCycling || (prevX < this.cellsAcross - 1 && prevY < this.cellsDown - 1))
+        surroundingPositions.push({x: prevX, y: prevY});
+    if (this.allowOffscreenCycling || (prevY < this.cellsDown - 1))
+        surroundingPositions.push({x: x, y: prevY});
+    if (this.allowOffscreenCycling || (nextX > 0 && prevY < this.cellsDown - 1))
+        surroundingPositions.push({x: nextX, y: prevY});
 
     return surroundingPositions;
+};
+
+/**
+ */
+Level.prototype.getNeighbouringResources = function(x, y) {
+    var surroundingPositions = this.getMooreNeighbourhood(x, y, true);
+    var resources = [];
+    for (var i = 0, l = surroundingPositions.length; i < l; i++) {
+        var position = surroundingPositions[i];
+        var cellResources = this.getResourcesAtContentMap(position.x, position.y);
+        if (cellResources) {
+            cellResources.forEach(function(resource){
+                resources.push(resource);
+            })
+        }
+    }
+    return resources;
+};
+
+/**
+ */
+Level.prototype.getNeighbouringAgents = function(x, y) {
+    var surroundingPositions = this.getVonNeumannNeighbourhood(x, y, true);
+    var agents = [];
+    for (var i = 0, l = surroundingPositions.length; i < l; i++) {
+        var position = surroundingPositions[i];
+        var cellAgents = this.getAgentsAtContentMap(position.x, position.y);
+        if (cellAgents) {
+            cellAgents.forEach(function(agent){
+                agents.push(agent);
+            })
+        }
+    }
+    return agents;
 };
 
 

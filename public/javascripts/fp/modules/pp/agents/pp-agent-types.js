@@ -50,7 +50,7 @@ var PredatorPreyCultures = PredatorPreyCultures || {};
             , Desires.ImproveHealth
         ];
         this.PREY_AGENT_TYPE.capabilities = [
-            Capabilities.MoveRandomlyCapability
+            Capabilities.MoveWithMemoryCapability
             , Capabilities.ConsumeResourcesCapability
             , Capabilities.RegenerateCapability
         ];
