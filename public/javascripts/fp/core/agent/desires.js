@@ -24,6 +24,16 @@ Desires.ImproveHealth = {};
     this.evaluate = function(agent, level) {
         return 1.0 - (agent.health / AgentConstants.INITIAL_HEALTH);
     };
+    this.evaluateCandidate = function(agent, level, candidate) {
+        var satisfactionLevel = 0.0;
+        var resources = level.getNeighbouringResources(candidate[0], candidate[1]);
+        if (typeof(resources) != 'undefined' && resources.length > 0) {
+            // return a level equal to the quotient of the maximum
+            satisfactionLevel = resources.length / 8;
+        }
+        return satisfactionLevel
+    };
+
 }).apply(Desires.ImproveHealth);
 
 Desires.ExploreSpace = {};

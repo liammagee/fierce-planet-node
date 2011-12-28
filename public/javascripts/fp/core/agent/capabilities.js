@@ -9,7 +9,8 @@
 var Capabilities = Capabilities || {};
 
 function Capability() {
-    this.cost = 0;
+    this.cost = 0.0;
+    this.probability = 1.0;
     this.exercise = function(agent, level) {};
 }
 
@@ -25,6 +26,15 @@ Capabilities.ConsumeResourcesCapability = new Capability();
             var resourceEffect = level.calculateResourceEffect(resource);
             resource.provideYield(agent, resourceEffect, !level.noSpeedChange);
         }
+    };
+
+    /**
+     */
+    this.getCapabilities = function(agent, level) {
+        var x = agent.x;
+        var y = agent.y;
+        var resources = level.getNeighbouringResources(x, y);
+        return { capability: this, arguments: resources };
     };
 }).apply(Capabilities.ConsumeResourcesCapability);
 
@@ -732,45 +742,71 @@ Capabilities.MoveWithMemoryCapability = new Capability();
 
 
     /**
-     <div>
-     Uses a series of heuristics to find an available adjacent cell to move to:
-     </div>
-
-     <div>
-     <ol>
-     <li>Find all adjacent candidate (non-tile) cells, excluding the last visited cell. The order of the candidate
-     cells (which maximally include the cells immediately above, right, below and left to the current cell) is randomised,
-     to ensure no prejudice in the selected direction, all else being equal.</li>
-     <li>If the previously visited cell is the only viable alternative, i.e. there are no candidates, move to that cell.
-     <li>If one of the candidate (non-tile) cells is an exit point, move to that cell.</li>
-     <li>Create a refined candidate list based on whether any cells have not yet been visited by this agent.
-     If the 'level.agentsCanCommunicate' property is true, then the memories of other agents met by this agent (AS AT THE TIME THEY MET)
-     are also shared. (Hereafter, when this property is true, additional conditions are included in square brackets).</li>
-     <li>The refined candidate list, including just those cells not in this [or other met] agent's memory is then searched.
-     If any of these candidates in turn have a neighbouring resource, then the first of those candidates is selected.
-     Otherwise the first of the whole refined candidate list is returned.</li>
-     <li>If no match has been found so far, then the *unrefined* candidate list is re-processed.
-     The last visited cell is added back to the list.</li>
-     <li>The memories of these candidates of this agent [and of other met agents] are compiled into a new list.</li>
-     <li>For each candidate, the memory list is then iterated through.
-     For each memory, the most recent visit to the memorised cell is then compared with the *age* of all memories of *unvisited* cells
-     of this agent [and of other met agents].
-     The candidate with the shortest distance between this agent's [or a met agent's] memory of it and its memory of an unvisited cell
-     is then selected. [If other agents' memory paths are shorter than this agent's, their candidate is preferred].</li>
-     <li>If no candidate cells have a shortest distance to an unvisited cell for this agent [or any other met agent],
-     the first candidate cell is selected.</li>
-     </ol>
-     </div>
-     *
-     * @param level
-     * @param withNoRepeat
-     * @param withNoCollision
-     * @param withOffscreenCycling
      */
-    this.findPositionsWithFreeNavigation = function(agent, level, withNoRepeat, withNoCollision, withOffscreenCycling) {
-
+    this.getCapabilities = function(agent, level) {
         // Get candidate cells
         var candidateCells = this.findCandidateCells(agent, level);
+        return { capability: this, arguments: candidateCells };
+    };
+
+    /**
+     *
+     * @param agent
+     * @param level
+     */
+    this.findCandidateCells = function(agent, level) {
+        var x = agent.x, y = agent.y, lastX = agent.lastMemory.x, lastY = agent.lastMemory.y;
+        var candidateCells = [];
+        var newX = x, newY = y;
+        var directions = Capabilities.MoveUtilities.randomDirectionOrder();
+        var withNoRepeat = false;
+        var withOffscreenCycling = level.allowOffscreenCycling;
+        var waitOnCurrentCell = false;
+        for (var i = 0; i < directions.length; i++) {
+            var dir = directions[i];
+
+            var newX = x, newY = y, offscreenLeft = 0, offscreenTop = 0, offScreenWidth = level.cellsAcross - 1, offScreenHeight = level.cellsDown - 1, offset = 1, toContinue = false;
+            switch (dir) {
+                case 0:
+                    (x == offscreenLeft ? (withOffscreenCycling ? newX = offScreenWidth : toContinue = true) : newX = newX - offset);
+                    break;
+                case 1:
+                    (x == offScreenWidth ? (withOffscreenCycling ? newX = offscreenTop : toContinue = true) : newX = newX + offset);
+                    break;
+                case 2:
+                    (y == offscreenTop ? (withOffscreenCycling ? newY = offScreenHeight : toContinue = true) : newY = newY - offset);
+                    break;
+                case 3:
+                    (y == offScreenHeight ? (withOffscreenCycling ? newY = offscreenTop : toContinue = true) : newY = newY + offset);
+                    break;
+            }
+            // If we can't repeat and the candidate cell is the last visited cell, continue
+            if (level.isExitPoint(newX, newY))
+                return [newX, newY];
+
+            // If we can't repeat and the candidate cell is the last visited cell, continue
+            if ((withNoRepeat && lastX == newX && lastY == newY) || toContinue) {
+                continue;
+            }
+            // If the cell is occupied by another agent, don't allow this agent to move there
+            if (World.settings.agentsOwnTilesExclusively && level.getAgentsAtContentMap(newX, newY).length > 0)
+                continue;
+
+            // If the cell is occupied by a resource, don't allow the agent to move there
+            if ((World.settings.resourcesOwnTilesExclusively || level.resourcesOwnTilesExclusively) && level.isPositionOccupiedByResource(newX, newY)) {
+                continue;
+            }
+            // If the candidate cell is valid (part of the path), add it
+            if (level.getCell(newX, newY) == undefined) {
+                candidateCells.push([newX, newY]);
+            }
+        }
+        return candidateCells;
+    }
+
+    /**
+     */
+    this.evaluateCandidates = function(agent, level, candidateCells) {
         var x = agent.x, y = agent.y, lastX = agent.lastMemory.x, lastY = agent.lastMemory.y;
 
         var bestCandidate;
@@ -787,6 +823,15 @@ Capabilities.MoveWithMemoryCapability = new Capability();
                 bestCandidates[bestCandidate] = 1.0;
             }
         }
+
+        for (var i = 0; i < candidateCells.length; i++) {
+            var candidate = candidateCells[i];
+            for (var j = 0; j < agent.culture.desires; j++) {
+                var desire = agent.culture.desires[j];
+                var satisfactionLevel = desire.evaluateCandidate(agent, level, candidate);
+            }
+        }
+
 
         // Find the first candidate which is either the goal, or not in the history.
         var candidatesNotInHistory = [];
@@ -817,9 +862,12 @@ Capabilities.MoveWithMemoryCapability = new Capability();
                 var candidate = candidatesNotInHistory[i];
                 var resources = level.getNeighbouringResources(candidate[0], candidate[1]);
                 if (typeof(resources) != 'undefined' && resources.length > 0) {
-                    bestCandidate = candidate;
-                    bestCandidates[bestCandidate] = 1.0;
-                    break;
+                    //bestCandidate = candidate;
+                    bestCandidates[candidate] = 1.0;
+                    //break;
+                }
+                else {
+                    bestCandidates[candidate] = 0.0;
                 }
             }
         }
@@ -1006,68 +1054,9 @@ Capabilities.MoveWithMemoryCapability = new Capability();
             bestCandidates[bestCandidate] = 1.0;
         }
 
-        for (var i in bestCandidates) {
-            if (bestCandidates.hasOwnProperty(i)) {
-                console.log(i + ": " + bestCandidates[i])
-            }
-        }
-        return bestCandidate;
+        return bestCandidates;
     };
 
-    /**
-     *
-     * @param agent
-     * @param level
-     */
-    this.findCandidateCells = function(agent, level) {
-        var x = agent.x, y = agent.y, lastX = agent.lastMemory.x, lastY = agent.lastMemory.y;
-        var candidateCells = [];
-        var newX = x, newY = y;
-        var directions = Capabilities.MoveUtilities.randomDirectionOrder();
-        var withNoRepeat = false;
-        var withOffscreenCycling = level.allowOffscreenCycling;
-        var waitOnCurrentCell = false;
-        for (var i = 0; i < directions.length; i++) {
-            var dir = directions[i];
-
-            var newX = x, newY = y, offscreenLeft = 0, offscreenTop = 0, offScreenWidth = level.cellsAcross - 1, offScreenHeight = level.cellsDown - 1, offset = 1, toContinue = false;
-            switch (dir) {
-                case 0:
-                    (x == offscreenLeft ? (withOffscreenCycling ? newX = offScreenWidth : toContinue = true) : newX = newX - offset);
-                    break;
-                case 1:
-                    (x == offScreenWidth ? (withOffscreenCycling ? newX = offscreenTop : toContinue = true) : newX = newX + offset);
-                    break;
-                case 2:
-                    (y == offscreenTop ? (withOffscreenCycling ? newY = offScreenHeight : toContinue = true) : newY = newY - offset);
-                    break;
-                case 3:
-                    (y == offScreenHeight ? (withOffscreenCycling ? newY = offscreenTop : toContinue = true) : newY = newY + offset);
-                    break;
-            }
-            // If we can't repeat and the candidate cell is the last visited cell, continue
-            if (level.isExitPoint(newX, newY))
-                return [newX, newY];
-
-            // If we can't repeat and the candidate cell is the last visited cell, continue
-            if ((withNoRepeat && lastX == newX && lastY == newY) || toContinue) {
-                continue;
-            }
-            // If the cell is occupied by another agent, don't allow this agent to move there
-            if (World.settings.agentsOwnTilesExclusively && level.getAgentsAtContentMap(newX, newY).length > 0)
-                continue;
-
-            // If the cell is occupied by a resource, don't allow the agent to move there
-            if ((World.settings.resourcesOwnTilesExclusively || level.resourcesOwnTilesExclusively) && level.isPositionOccupiedByResource(newX, newY)) {
-                continue;
-            }
-            // If the candidate cell is valid (part of the path), add it
-            if (level.getCell(newX, newY) == undefined) {
-                candidateCells.push([newX, newY]);
-            }
-        }
-        return candidateCells;
-    }
 
 }).apply(Capabilities.MoveWithMemoryCapability);
 

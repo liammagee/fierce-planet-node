@@ -215,6 +215,16 @@ function Agent(culture, x, y) {
     };
 
     /**
+     Determines current capabilities
+     */
+    this.currentCapabilities = function(level) {
+        var myCapabilities = [];
+        this.culture.capabilities.forEach(function(capability) {
+            var actualCapabilities = capability.getCapabilities(this, level);
+        });
+    };
+
+    /**
      * Calls the agent type initialise function
      */
     this.init = function(level) {

@@ -37,13 +37,33 @@ describe("agent-related classes", function() {
         });
         describe("an agent's capabilities", function() {
             beforeEach(function(){
-                agent.culture.capabilities = [Capabilities.MoveWithMemoryCapability]
+                agent.culture.capabilities = [Capabilities.MoveWithMemoryCapability];
+                agent.reviseBeliefs(level);
             });
             it("should have capabilities", function() {
                 expect(agent.culture.capabilities.length).toEqual(1);
             });
-            it("should have a move capability", function() {
-                var candidates = agent.culture.capabilities[0].evaluate(agent, level);
+            it("should be able to generate a series of arguments", function() {
+                var moveCapability = agent.culture.capabilities[0];
+                var capabilities = moveCapability.getCapabilities(agent, level);
+                var testCapability = capabilities.capability;
+                var testArguments = capabilities.arguments;
+                expect(testCapability).toEqual(moveCapability);
+                expect(testArguments.length).toEqual(2);
+            });
+            it("should be able to evaluate capabilities", function() {
+                var moveCapability = agent.culture.capabilities[0];
+                var capabilities = moveCapability.getCapabilities(agent, level);
+                var testArguments = capabilities.arguments;
+                var candidates = moveCapability.evaluateCandidates(agent, level, testArguments);
+                for (var i in candidates) {
+                    if (candidates.hasOwnProperty(i)) {
+                        console.log(i + ": " + candidates[i])
+                    }
+                }
+
+                //expect(testCapability).toEqual(moveCapability);
+                //expect(testArguments.length).toEqual(2);
             });
         });
 
