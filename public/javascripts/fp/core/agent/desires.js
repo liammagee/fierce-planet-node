@@ -31,7 +31,7 @@ Desires.ImproveHealth = {};
             // return a level equal to the quotient of the maximum
             satisfactionLevel = resources.length / 8;
         }
-        return satisfactionLevel
+        return satisfactionLevel;
     };
 
 }).apply(Desires.ImproveHealth);

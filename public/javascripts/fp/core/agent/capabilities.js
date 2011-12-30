@@ -16,10 +16,10 @@ function Capability() {
 
 Capabilities.ConsumeResourcesCapability = new Capability();
 (function() {
+    this.name = 'ConsumeResourcesCapability';
     this.exercise = function(agent, level) {
-        var x = agent.x;
-        var y = agent.y;
-        var resources = level.getNeighbouringResources(x, y);
+        var x = agent.x, y = agent.y,
+            resources = level.getNeighbouringResources(x, y);
         // Provide yield
         for (var i = 0, l = resources.length; i < l; i++) {
             var resource = resources[i];
@@ -31,15 +31,15 @@ Capabilities.ConsumeResourcesCapability = new Capability();
     /**
      */
     this.getCapabilities = function(agent, level) {
-        var x = agent.x;
-        var y = agent.y;
-        var resources = level.getNeighbouringResources(x, y);
+        var x = agent.x, y = agent.y,
+            resources = level.getNeighbouringResources(x, y);
         return { capability: this, arguments: resources };
     };
 }).apply(Capabilities.ConsumeResourcesCapability);
 
 Capabilities.ProduceResourcesCapability = new Capability();
 (function() {
+    this.name = 'ProduceResourcesCapability';
     this.exercise = function(agent, level) {
         if (!level.isPositionOccupiedByResource(agent.x, agent.y)) {
             var rt = World.resourceTypes[Math.floor(Math.random() * World.resourceTypes.length)];
@@ -49,18 +49,27 @@ Capabilities.ProduceResourcesCapability = new Capability();
             }
         }
     };
+
+    /**
+     */
+    this.getCapabilities = function(agent, level) {
+        var x = agent.x, y = agent.y,
+            resources = level.getNeighbouringResources(x, y);
+        return { capability: this, arguments: resources };
+    };
 }).apply(Capabilities.ProduceResourcesCapability);
 
 
 
 Capabilities.RegenerateCapability = new Capability();
 (function() {
+    this.name = 'RegenerateCapability';
     this.exercise = function(agent, level) {
         if (agent.gender != 'f' || agent.age < agent.culture.reproductionAge)
             return;
 
         var x = agent.x, y = agent.y;
-        var agents = level.currentAgents;
+        var agents = level.getNeighbouringAgents(x, y);
         for (var j = 0; j < agents.length; j++) {
             var a = agents[j];
             var ax = a.x;
@@ -87,33 +96,70 @@ Capabilities.RegenerateCapability = new Capability();
             }
         }
     };
+
+    /**
+     */
+    this.getCapabilities = function(agent, level) {
+        if (agent.gender != 'f' || agent.age < agent.culture.reproductionAge)
+            return undefined;
+
+        var x = agent.x, y = agent.y,
+            agents = [],
+            candidateAgents = level.getNeighbouringAgents(x, y);
+        candidateAgents.forEach(function(candidate) {
+            if (candidate.gender == 'm' && candidate.culture.name == agent.culture.name && candidate.age > candidate.culture.reproductionAge) {
+                agents.push(candidate);
+            }
+        });
+        return { capability: this, arguments: agents };
+    };
 }).apply(Capabilities.RegenerateCapability);
 
 Capabilities.PreyOnOtherAgentsCapability = new Capability();
 (function() {
+    this.name = 'PreyOnOtherAgentsCapability';
     this.exercise = function(agent, level) {
-        var x = agent.x;
-        var y = agent.y;
-        var agents = level.currentAgents;
-        var foundPrey = false;
-        for (var j = 0; j < agents.length; j++) {
-            var a = agents[j];
-            var ax = a.x;
-            var ay = a.y;
-            if (Math.abs(ax - x) <= 1 && Math.abs(ay - y) <= 1) {
-                if (a.culture.name != agent.culture.name) {
-                    if (Math.random() < agent.culture.preyProbability) {
-                        a.adjustGeneralHealth(agent.culture.preyCost);
-                        agent.adjustGeneralHealth(agent.culture.predatorGain);
-                        foundPrey = true;
-                        break;
-                    }
-
+        var x = agent.x, y = agent.y,
+            candidateAgents = level.getNeighbouringAgents(x, y)
+            foundPrey = false;
+        for (var j = 0; j < candidateAgents.length; j++) {
+            var candidateAgent = candidateAgents[j];
+            var ax = candidateAgent.x, ay = candidateAgent.y;
+            if (candidateAgent.culture.name != agent.culture.name) {
+                if (Math.random() < agent.culture.preyProbability) {
+                    candidateAgent.adjustGeneralHealth(agent.culture.preyCost);
+                    agent.adjustGeneralHealth(agent.culture.predatorGain);
+                    foundPrey = true;
+                    break;
                 }
+
             }
         }
         if (!foundPrey)
             agent.adjustGeneralHealth(agent.culture.moveCost);
+    };
+
+    /**
+     */
+    this.getCapabilities = function(agent, level) {
+        if (agent.gender != 'f' || agent.age < agent.culture.reproductionAge)
+            return undefined;
+
+        var x = agent.x, y = agent.y,
+            agents = [],
+            candidateAgents = level.getNeighbouringAgents(x, y);
+        var x = agent.x, y = agent.y,
+            candidateAgents = level.getNeighbouringAgents(x, y)
+        for (var j = 0; j < candidateAgents.length; j++) {
+            var candidateAgent = candidateAgents[j];
+            if (candidateAgent.culture.name != agent.culture.name) {
+                if (Math.random() < agent.culture.preyProbability) {
+                    agents.push(candidateAgent);
+                }
+
+            }
+        }
+        return { capability: this, arguments: agents };
     };
 }).apply(Capabilities.PreyOnOtherAgentsCapability);
 
@@ -140,6 +186,7 @@ Capabilities.MoveUtilities = {};
 
 Capabilities.MoveCapability = new Capability();
 (function() {
+    this.name = 'MoveCapability';
     this.cost = -3;
     this.exercise = function(agent, level) {
         if (level.agentGoToNearestExit || World.settings.agentGoToNearestExit) {
@@ -159,6 +206,7 @@ Capabilities.MoveCapability = new Capability();
 
 Capabilities.MoveUpwardsCapability = new Capability();
 (function() {
+    this.name = 'MoveUpwardsCapability';
     this.cost = 0;
     this.exercise = function(agent, level) {
         // TODO: Make these parameters of the level
@@ -196,6 +244,7 @@ Capabilities.MoveUpwardsCapability = new Capability();
 
 Capabilities.MoveRandomlyCapability = new Capability();
 (function() {
+    this.name = 'MoveRandomlyCapability';
     this.cost = 0;
     this.exercise = function(agent, level) {
         // TODO: Make these parameters of the level
@@ -286,6 +335,7 @@ Capabilities.MoveRandomlyCapability = new Capability();
 
 Capabilities.MoveTowardsNearestExitCapability = new Capability();
 (function() {
+    this.name = 'MoveTowardsNearestExitCapability';
     this.cost = -0;
     this.exercise = function(agent, level) {
         // TODO: Make these parameters of the level
@@ -430,6 +480,7 @@ Capabilities.MoveTowardsNearestExitCapability = new Capability();
 
 Capabilities.MoveWithMemoryCapability = new Capability();
 (function() {
+    this.name = 'MoveWithMemoryCapability';
     this.cost = -0;
     this.exercise = function(agent, level) {
         // TODO: Make these parameters of the level
@@ -748,6 +799,7 @@ Capabilities.MoveWithMemoryCapability = new Capability();
         var candidateCells = this.findCandidateCells(agent, level);
         return { capability: this, arguments: candidateCells };
     };
+
 
     /**
      *

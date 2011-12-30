@@ -13,6 +13,8 @@ Beliefs.BeliefsAboutPaths = {};
     this.name = 'Beliefs About Paths';
     this.makeBelief = function(agent, level) {
         // Initialise belief variables
+        if (typeof(agent.beliefs) == 'undefined')
+            agent.beliefs = {};
         if (typeof(agent.chronologicalMemory) == 'undefined')
             agent.chronologicalMemory = [];
         if (typeof(agent.memoriesOfPlacesVisited) == 'undefined')

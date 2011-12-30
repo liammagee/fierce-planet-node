@@ -26,8 +26,12 @@ describe("agent-related classes", function() {
           expect(agent.y).toEqual(0);
         });
 
-        describe("an agent", function() {
-            it("should have desires", function() {
+        describe("an agent's beliefs", function() {
+            it("should have beliefs", function() {
+
+            });
+
+            it("should be able to rank desires", function() {
                 var rankedDesires = Desires.rankDesires(agent, level);
                 expect(rankedDesires[0].name).toEqual('Explore');
                 agent.health = 1;
@@ -35,6 +39,21 @@ describe("agent-related classes", function() {
                 expect(rankedDesires[0].name).toEqual('Improve Health');
             });
         });
+
+        describe("an agent's desires", function() {
+            it("should have desires", function() {
+                expect(agent.culture.desires.length).toEqual(3);
+            });
+
+            it("should be able to rank desires", function() {
+                var rankedDesires = Desires.rankDesires(agent, level);
+                expect(rankedDesires[0].name).toEqual('Explore');
+                agent.health = 1;
+                rankedDesires = Desires.rankDesires(agent, level);
+                expect(rankedDesires[0].name).toEqual('Improve Health');
+            });
+        });
+
         describe("an agent's capabilities", function() {
             beforeEach(function(){
                 agent.culture.capabilities = [Capabilities.MoveWithMemoryCapability];
@@ -44,27 +63,35 @@ describe("agent-related classes", function() {
                 expect(agent.culture.capabilities.length).toEqual(1);
             });
             it("should be able to generate a series of arguments", function() {
-                var moveCapability = agent.culture.capabilities[0];
-                var capabilities = moveCapability.getCapabilities(agent, level);
-                var testCapability = capabilities.capability;
-                var testArguments = capabilities.arguments;
+                var moveCapability = agent.culture.capabilities[0],
+                    capabilities = moveCapability.getCapabilities(agent, level),
+                    testCapability = capabilities.capability,
+                    testArguments = capabilities.arguments;
                 expect(testCapability).toEqual(moveCapability);
                 expect(testArguments.length).toEqual(2);
             });
-            it("should be able to evaluate capabilities", function() {
-                var moveCapability = agent.culture.capabilities[0];
-                var capabilities = moveCapability.getCapabilities(agent, level);
-                var testArguments = capabilities.arguments;
-                var candidates = moveCapability.evaluateCandidates(agent, level, testArguments);
-                for (var i in candidates) {
-                    if (candidates.hasOwnProperty(i)) {
-                        console.log(i + ": " + candidates[i])
-                    }
-                }
 
-                //expect(testCapability).toEqual(moveCapability);
-                //expect(testArguments.length).toEqual(2);
+            it("should be able to obtain a list of currently exercisable capabilities", function() {
+                var capabilities = agent.currentCapabilities(level),
+                    first = capabilities[0],
+                    second = capabilities[1],
+                    possibleCells = [[0, 1], [1, 0]];
+                expect(first.capability.name).toEqual('MoveWithMemoryCapability');
+                expect(possibleCells).toContain(first.arguments);
+                expect(second.capability.name).toEqual('MoveWithMemoryCapability');
+                expect(possibleCells).toContain(second.arguments);
             });
+        });
+
+        describe("an agent planning", function() {
+            beforeEach(function(){
+                agent.culture.capabilities = [Capabilities.MoveWithMemoryCapability];
+                agent.reviseBeliefs(level);
+            });
+            it("should have capabilities", function() {
+                agent.plan();
+            });
+
         });
 
 
