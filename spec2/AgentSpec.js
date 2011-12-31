@@ -89,7 +89,7 @@ describe("agent-related classes", function() {
                 agent.reviseBeliefs(level);
             });
             it("should have capabilities", function() {
-                agent.plan();
+                agent.plan(level);
             });
 
         });

@@ -8,13 +8,20 @@
 
 var Beliefs = Beliefs || {};
 
+function Belief() {
+    this.time, this.x, this.y, this.source, this.object;
+
+    this.exercise = function(agent, level) {};
+}
+
+
 Beliefs.BeliefsAboutPaths = {};
 (function() {
     this.name = 'Beliefs About Paths';
     this.makeBelief = function(agent, level) {
         // Initialise belief variables
         if (typeof(agent.beliefs) == 'undefined')
-            agent.beliefs = {};
+            agent.beliefs = [];
         if (typeof(agent.chronologicalMemory) == 'undefined')
             agent.chronologicalMemory = [];
         if (typeof(agent.memoriesOfPlacesVisited) == 'undefined')

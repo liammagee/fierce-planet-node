@@ -482,7 +482,7 @@ function Agent(culture, x, y) {
 
     // Need alternative theories of mind
     this.characteristics = {};
-    this.beliefs = {};
+    this.beliefs = [];
     this.desires = [];
     this.capabilities = [];
 

@@ -21,6 +21,7 @@ var Desires = Desires || {};
 Desires.ImproveHealth = {};
 (function() {
     this.name = 'Improve Health';
+    this.dependsOnBeliefs = 'Improve Health';
     this.evaluate = function(agent, level) {
         return 1.0 - (agent.health / AgentConstants.INITIAL_HEALTH);
     };
@@ -39,6 +40,7 @@ Desires.ImproveHealth = {};
 Desires.ExploreSpace = {};
 (function() {
     this.name = 'Explore';
+    this.dependsOnBeliefs = 'Improve Health';
     this.evaluate = function(agent, level) {
         return 0.5;
     };
@@ -47,6 +49,7 @@ Desires.ExploreSpace = {};
 Desires.Flee = {};
 (function() {
     this.name = 'Flee';
+    this.dependsOnBeliefs = 'Improve Health';
     this.evaluate = function(agent, level) {
         var surroundingPositions = level.getVonNeumannNeighbourhood(agent.x, agent.y, true);
         var presenceOfThreat = false;
