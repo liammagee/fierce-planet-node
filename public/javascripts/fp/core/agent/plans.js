@@ -27,6 +27,7 @@ var Plans = Plans || {};
 
     this.MAX_DEPTH = 1000;
 
+
     /**
      * Find the critical path to the nearest exit point
      */
