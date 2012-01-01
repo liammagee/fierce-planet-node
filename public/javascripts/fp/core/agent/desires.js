@@ -25,16 +25,21 @@ Desires.ImproveHealth = {};
     this.evaluate = function(agent, level) {
         return 1.0 - (agent.health / AgentConstants.INITIAL_HEALTH);
     };
-    this.evaluateCandidate = function(agent, level, candidate) {
-        var satisfactionLevel = 0.0;
-        var resources = level.getNeighbouringResources(candidate[0], candidate[1]);
-        if (typeof(resources) != 'undefined' && resources.length > 0) {
-            // return a level equal to the quotient of the maximum
-            satisfactionLevel = resources.length / 8;
+    this.findSatisfyingObjects = function(agent) {
+        if (typeof(agent.memoriesOfResources) === 'undefined')
+            return null;
+        var satisfyingObjects = [];
+        for (var i in agent.memoriesOfResources) {
+            if (agent.memoriesOfResources.hasOwnProperty(i)) {
+                var belief = agent.memoriesOfResources[i];
+                satisfyingObjects.push([belief.x, belief.y]);
+            }
         }
-        return satisfactionLevel;
+        return satisfyingObjects;
     };
-
+    this.satisfy = function(agent, level) {
+        Capabilities.ConsumeResourcesCapability.exercise(agent, level);
+    };
 }).apply(Desires.ImproveHealth);
 
 Desires.ExploreSpace = {};
@@ -43,6 +48,21 @@ Desires.ExploreSpace = {};
     this.dependsOnBeliefs = 'Improve Health';
     this.evaluate = function(agent, level) {
         return 0.5;
+    };
+    this.findSatisfyingObjects = function(agent) {
+        if (typeof(agent.memoriesOfPathsUntried) === 'undefined')
+            return null;
+        var satisfyingObjects = [];
+        for (var i in agent.memoriesOfPathsUntried) {
+            if (agent.memoriesOfPathsUntried.hasOwnProperty(i)) {
+                var belief = agent.memoriesOfPathsUntried[i];
+                satisfyingObjects.push([belief.x, belief.y]);
+            }
+        }
+        return satisfyingObjects;
+    };
+    this.satisfy = function(agent, level) {
+        // Do nothing - assume desire is satisfied by moving.
     };
 }).apply(Desires.ExploreSpace);
 
@@ -70,7 +90,47 @@ Desires.Flee = {};
         else
             return 0.0;
     };
+    this.findSatisfyingObjects = function(agent) {
+        if (typeof(agent.memoriesOfAgents) === 'undefined')
+            return null;
+        var satisfyingObjects = [];
+        for (var i in agent.memoriesOfAgents) {
+            if (agent.memoriesOfAgents.hasOwnProperty(i)) {
+                var belief = agent.memoriesOfAgents[i];
+                satisfyingObjects.push([belief.x, belief.y]);
+            }
+        }
+        return satisfyingObjects;
+    };
+    this.satisfy = function(agent, level) {
+        // Do nothing - assume desire is satisfied by moving.
+    };
+
 }).apply(Desires.Flee);
+
+Desires.Reproduce = {};
+(function() {
+    this.name = 'Reproduce';
+    this.evaluate = function(agent, level) {
+        return 0.1;
+    };
+    this.findSatisfyingObjects = function(agent) {
+        if (typeof(agent.memoriesOfAgents) === 'undefined')
+            return null;
+        var satisfyingObjects = [];
+        for (var i in agent.memoriesOfAgents) {
+            if (agent.memoriesOfAgents.hasOwnProperty(i)) {
+                var belief = agent.memoriesOfAgents[i];
+                satisfyingObjects.push([belief.x, belief.y]);
+            }
+        }
+        return satisfyingObjects;
+    };
+    this.satisfy = function(agent, level) {
+        // Do nothing - assume desire is satisfied by moving.
+    };
+
+}).apply(Desires.Reproduce);
 
 if (typeof(exports) != "undefined")
     exports.Desires = Desires;

@@ -446,13 +446,54 @@ function Agent(culture, x, y) {
 
     /**
      */
-    this.plan = function(level) {
+    this.developPlan = function(level) {
+        var agent = this,
+            rankedDesires = Desires.rankDesires(agent, level);
+        if (rankedDesires && rankedDesires.length > 0) {
+            var rankedDesires = Desires.rankDesires(agent, level),
+                desireToExplore = rankedDesires[0],
+                satisfyingObjects = desireToExplore.findSatisfyingObjects(agent);
+            var plans = Plans.getBestPlans(agent, level, satisfyingObjects),
+                len = plans.length,
+                index = Math.floor(Math.random() * len);
+
+            this.currentPlan = plans[index];
+            this.currentPlanStep = 1;
+
+            // TODO: Need more planning here
+            /*
+            rankedDesires.forEach(function(desire) {
+                // Now get beliefs
+                //desire.findSatisfyingObjects(agent);
+            });
+            */
+        }
+    };
+
+
+    /**
+     */
+    this.executePlan = function(level) {
+        if (typeof(this.currentPlan) == 'undefined' || this.currentPlanStep >= this.currentPlan.distance)
+            this.developPlan(level);
+        if (typeof(this.currentPlan) == 'undefined')
+            return;
+        var point = this.currentPlan.trail[this.currentPlanStep];
+        this.moveTo(point[0], point[1]);
+        this.currentPlanStep++;
+    };
+
+
+
+    /**
+     */
+    this.scopeOfWorld = function() {
         var agent = this;
         var rankedDesires = Desires.rankDesires(agent, level);
         if (rankedDesires && rankedDesires.length > 0) {
             rankedDesires.forEach(function(desire) {
                 // Now get beliefs
-
+                //desire.findSatisfyingObjects(agent);
             });
         }
     };
@@ -517,6 +558,10 @@ function Agent(culture, x, y) {
     this.memoriesOfPlacesVisitedByOtherAgents = [];
     this.memoriesOfPathsUntriedByOtherAgents = [];
 
+
+    // PLANNING
+    this.currentPlan;
+    this.currentPlanStep;
 
     this.reviseBeliefs(undefined);
 

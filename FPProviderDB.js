@@ -19,7 +19,7 @@ var ObjectID = require('mongodb').ObjectID;
 //var mongo = require('mongoskin');
 var username, password;
 
-FPProvider = function(name, host, port, u, p, callback){
+FPProvider = function(name, host, port, callback, u, p){
 //FPProvider = function(url, callback){
   this.db = new Db(name, new Server(host, parseInt(port), {auto_reconnect: true}, {}));
     username = u, password = p;

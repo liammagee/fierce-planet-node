@@ -34,7 +34,7 @@ var DefaultCultures = DefaultCultures || {};
             , Desires.ImproveHealth
         ];
         this.CITIZEN_AGENT_TYPE.capabilities = [
-            Capabilities.MoveCapability
+//            Capabilities.MoveCapability
             , Capabilities.ConsumeResourcesCapability
         ];
 

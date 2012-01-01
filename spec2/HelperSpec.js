@@ -19,6 +19,7 @@ if (typeof(global) != "undefined") {
     Beliefs = require('./../public/javascripts/fp/core/agent/beliefs.js').Beliefs;
     Capabilities = require('./../public/javascripts/fp/core/agent/capabilities.js').Capabilities;
     Desires = require('./../public/javascripts/fp/core/agent/desires.js').Desires;
+    Plans = require('./../public/javascripts/fp/core/agent/plans.js').Plans;
 
     Campaign = require('./../public/javascripts/fp/core/campaign.js').Campaign;
     Level = require('./../public/javascripts/fp/core/level.js').Level;

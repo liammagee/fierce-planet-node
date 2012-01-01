@@ -32,9 +32,11 @@ Beliefs.BeliefsAboutPaths = {};
         var x = agent.x, y = agent.y;
 
         var memory = null;
+
         if (agent.memoriesOfPlacesVisited[[x, y]] != undefined) {
             memory = agent.memoriesOfPlacesVisited[[x, y]];
             memory.addVisit(agent.id, agent.age);
+
         }
         else {
             memory = new Memory(agent.id, agent.age, x, y);
@@ -83,15 +85,21 @@ Beliefs.BeliefsAboutResources = {};
         if (level == undefined)
             return;
 
+        var x = agent.x, y = agent.y;
+        if (typeof(x) === 'undefined' || typeof(y) === 'undefined')
+            return;
+
         // Initialise belief variables
+        if (typeof(agent.beliefs) == 'undefined')
+            agent.beliefs = [];
         if (typeof(agent.memoriesOfResources) == 'undefined')
             agent.memoriesOfResources = [];
 
-        var x = agent.x, y = agent.y;
 
         var resources = level.resources;
 
         // Add neighbouring resources to memory
+
         var positions = level.getVonNeumannNeighbourhood(x, y, true);
         positions.forEach(function(position) {
             var resources = level.getResourcesAtContentMap(position.x, position.y);
@@ -125,11 +133,15 @@ Beliefs.BeliefsAboutOtherAgents = {};
         if (level == undefined)
             return;
 
+        var x = agent.x, y = agent.y;
+        if (typeof(x) === 'undefined' || typeof(y) === 'undefined')
+            return;
+
         // Initialise belief variables
+        if (typeof(agent.beliefs) == 'undefined')
+            agent.beliefs = [];
         if (typeof(agent.memoriesOfAgents) == 'undefined')
             agent.memoriesOfAgents = [];
-
-        var x = agent.x, y = agent.y;
 
 
 
@@ -173,13 +185,15 @@ Beliefs.BeliefsBasedOnOtherAgentsBeliefs = {};
         if (level == undefined)
             return;
 
+        var x = agent.x, y = agent.y;
+        if (typeof(x) === 'undefined' || typeof(y) === 'undefined')
+            return;
+
         // Initialise belief variables
         if (typeof(agent.memoriesOfPlacesVisitedByOtherAgents) == 'undefined')
             agent.memoriesOfPlacesVisitedByOtherAgents = [];
         if (typeof(agent.memoriesOfPathsUntriedByOtherAgents) == 'undefined')
             agent.memoriesOfPathsUntriedByOtherAgents = [];
-
-        var x = agent.x, y = agent.y;
 
 
         // Add agents on this tile to memory

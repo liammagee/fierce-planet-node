@@ -50,7 +50,7 @@ var PredatorPreyCultures = PredatorPreyCultures || {};
             , Desires.ImproveHealth
         ];
         this.PREY_AGENT_TYPE.capabilities = [
-            Capabilities.MoveWithMemoryCapability
+//            Capabilities.MoveWithMemoryCapability
             , Capabilities.ConsumeResourcesCapability
             , Capabilities.RegenerateCapability
         ];
@@ -313,7 +313,7 @@ var PredatorPreyCultures = PredatorPreyCultures || {};
             agent.gender = (r < 0.5 ? 'm' : 'f');
         }
         this.PREDATOR_AGENT_TYPE.capabilities = [
-            Capabilities.MoveRandomlyCapability
+//            Capabilities.MoveRandomlyCapability
             , Capabilities.PreyOnOtherAgentsCapability
             , Capabilities.RegenerateCapability
         ];

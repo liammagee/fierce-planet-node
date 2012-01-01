@@ -13,6 +13,10 @@ describe("agent-related classes", function() {
   });
 
     describe("an agent", function() {
+        beforeEach(function(){
+            agent.reviseBeliefs(level);
+        });
+
         it("should have a type", function() {
           expect(agent.culture).toEqual(World.cultures[0]);
         });
@@ -27,17 +31,17 @@ describe("agent-related classes", function() {
         });
 
         describe("an agent's beliefs", function() {
-            it("should have beliefs", function() {
 
+            it("should have beliefs about unvisited cells", function() {
+                var possibleCells = [[0, 1], [1, 0]];
+                for (var i in agent.memoriesOfPathsUntried) {
+                    if (agent.memoriesOfPathsUntried.hasOwnProperty(i)) {
+                        var belief = agent.memoriesOfPathsUntried[i];
+                        expect(possibleCells).toContain([belief.x, belief.y]);
+                    }
+                }
             });
 
-            it("should be able to rank desires", function() {
-                var rankedDesires = Desires.rankDesires(agent, level);
-                expect(rankedDesires[0].name).toEqual('Explore');
-                agent.health = 1;
-                rankedDesires = Desires.rankDesires(agent, level);
-                expect(rankedDesires[0].name).toEqual('Improve Health');
-            });
         });
 
         describe("an agent's desires", function() {
@@ -52,12 +56,22 @@ describe("agent-related classes", function() {
                 rankedDesires = Desires.rankDesires(agent, level);
                 expect(rankedDesires[0].name).toEqual('Improve Health');
             });
+
+            it("should be possible for one of the desires ('Explore') to find satisfying objects", function() {
+                var rankedDesires = Desires.rankDesires(agent, level),
+                    desireToExplore = rankedDesires[0],
+                    satisfyingObjects = desireToExplore.findSatisfyingObjects(agent),
+                    possibleCells = [[0, 1], [1, 0]];
+                satisfyingObjects.forEach(function(obj) {
+                    expect(possibleCells).toContain(obj);
+
+                });
+            });
         });
 
         describe("an agent's capabilities", function() {
             beforeEach(function(){
                 agent.culture.capabilities = [Capabilities.MoveWithMemoryCapability];
-                agent.reviseBeliefs(level);
             });
             it("should have capabilities", function() {
                 expect(agent.culture.capabilities.length).toEqual(1);
@@ -86,12 +100,133 @@ describe("agent-related classes", function() {
         describe("an agent planning", function() {
             beforeEach(function(){
                 agent.culture.capabilities = [Capabilities.MoveWithMemoryCapability];
-                agent.reviseBeliefs(level);
-            });
-            it("should have capabilities", function() {
-                agent.plan(level);
             });
 
+            it("should be able to develop a list of desireable objects", function() {
+                var rankedDesires = Desires.rankDesires(agent, level),
+                    desireToExplore = rankedDesires[0],
+                    satisfyingObjects = desireToExplore.findSatisfyingObjects(agent),
+                    possibleCells = [[0, 1], [1, 0]];
+                var ret = Plans.getAllPlans(agent, level, satisfyingObjects);
+                expect(possibleCells).toContain(ret[0].point);
+                expect(possibleCells).toContain(ret[1].point);
+            });
+
+            describe("plan evaluation after some sequence of moves", function() {
+                beforeEach(function() {
+                    agent.moveTo(0, 1);
+                    agent.reviseBeliefs(level);
+                    agent.moveTo(0, 2);
+                    agent.reviseBeliefs(level);
+                    agent.moveTo(0, 3);
+                    agent.reviseBeliefs(level);
+                });
+
+                it("should be possible for one of the desires ('Explore') to find satisfying objects", function() {
+                    var rankedDesires = Desires.rankDesires(agent, level),
+                        desireToExplore = rankedDesires[0],
+                        satisfyingObjects = desireToExplore.findSatisfyingObjects(agent),
+                        possibleCells = [[1, 0], [ 1, 1], [1, 2], [1, 3], [0, 4]];
+                    satisfyingObjects.forEach(function(obj) {
+                        expect(possibleCells).toContain(obj);
+
+                    });
+                });
+
+                it("should be possible to generate a series of plans", function() {
+                    var rankedDesires = Desires.rankDesires(agent, level),
+                        desireToExplore = rankedDesires[0],
+                        satisfyingObjects = desireToExplore.findSatisfyingObjects(agent),
+                        possibleCells = [[1, 0], [ 1, 1], [1, 2], [1, 3], [0, 4]];
+                    var ret = Plans.getAllPlans(agent, level, satisfyingObjects);
+                    expect(possibleCells.length).toEqual(ret.length);
+                    expect(possibleCells).toContain(ret[0].point);
+                    expect(possibleCells).toContain(ret[1].point);
+                    expect(possibleCells).toContain(ret[2].point);
+                    expect(possibleCells).toContain(ret[3].point);
+                    expect(possibleCells).toContain(ret[4].point);
+                });
+
+                it("should be possible to evaluate the best plans", function() {
+                    var rankedDesires = Desires.rankDesires(agent, level),
+                        desireToExplore = rankedDesires[0],
+                        satisfyingObjects = desireToExplore.findSatisfyingObjects(agent),
+                        possibleCells = [ [1, 3], [0, 4]];
+                    var ret = Plans.getBestPlans(agent, level, satisfyingObjects);
+                    expect(possibleCells.length).toEqual(ret.length);
+                    expect(possibleCells).toContain(ret[0].point);
+                    expect(possibleCells).toContain(ret[1].point);
+                });
+
+            });
+
+            describe("plan evaluation after some sequence of moves, with a cell removed", function() {
+                beforeEach(function() {
+                    if (level.getTile(1, 2) == undefined)
+                        level.addDefaultTile(1, 2);
+                    agent.moveTo(0, 1);
+                    agent.reviseBeliefs(level);
+                    agent.moveTo(0, 2);
+                    agent.reviseBeliefs(level);
+                    agent.moveTo(0, 3);
+                    agent.reviseBeliefs(level);
+                });
+
+                it("should be possible for one of the desires ('Explore') to find satisfying objects", function() {
+                    var rankedDesires = Desires.rankDesires(agent, level),
+                        desireToExplore = rankedDesires[0],
+                        satisfyingObjects = desireToExplore.findSatisfyingObjects(agent),
+                        possibleCells = [[1, 0], [ 1, 1], [1, 3], [0, 4]];
+                    satisfyingObjects.forEach(function(obj) {
+                        expect(possibleCells).toContain(obj);
+
+                    });
+                });
+
+                it("should be possible to generate a series of plans", function() {
+                    var rankedDesires = Desires.rankDesires(agent, level),
+                        desireToExplore = rankedDesires[0],
+                        satisfyingObjects = desireToExplore.findSatisfyingObjects(agent),
+                        possibleCells = [[1, 0], [ 1, 1], [1, 3], [0, 4]];
+                    var ret = Plans.getAllPlans(agent, level, satisfyingObjects);
+                    expect(possibleCells.length).toEqual(ret.length);
+                    expect(possibleCells).toContain(ret[0].point);
+                    expect(possibleCells).toContain(ret[1].point);
+                    expect(possibleCells).toContain(ret[2].point);
+                    expect(possibleCells).toContain(ret[3].point);
+                });
+
+                it("should be possible to evaluate the best plans", function() {
+                    var rankedDesires = Desires.rankDesires(agent, level),
+                        desireToExplore = rankedDesires[0],
+                        satisfyingObjects = desireToExplore.findSatisfyingObjects(agent),
+                        possibleCells = [ [1, 3], [0, 4]];
+                    var ret = Plans.getBestPlans(agent, level, satisfyingObjects);
+                    expect(possibleCells.length).toEqual(ret.length);
+                    expect(possibleCells).toContain(ret[0].point);
+                    expect(possibleCells).toContain(ret[1].point);
+                });
+
+                it("should be possible to select one of the plans, and execute", function() {
+                    var possibleCells = [ [1, 3], [0, 4]];
+                    agent.developPlan(level);
+                    var plan = agent.currentPlan, step = agent.currentPlanStep;
+                    expect([agent.x, agent.y]).toEqual([0, 3]);
+                    expect(possibleCells).toContain(plan.trail[1]);
+                    expect(step).toEqual(1);
+                });
+
+                it("should be possible to select one of the plans, and execute", function() {
+                    var possibleCells = [ [1, 3], [0, 4]];
+                    expect([0, 3]).toEqual([agent.lastMemory.x, agent.lastMemory.y]);
+                    agent.executePlan(level);
+                    expect(possibleCells).toContain([agent.x, agent.y]);
+                    expect([0, 3]).toEqual([agent.lastMemory.x, agent.lastMemory.y]);
+                    agent.reviseBeliefs(level);
+                    expect(possibleCells).toContain([agent.lastMemory.x, agent.lastMemory.y]);
+                });
+
+            });
         });
 
 
