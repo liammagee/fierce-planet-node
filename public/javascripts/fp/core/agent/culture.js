@@ -31,6 +31,8 @@ function Culture(name, color, healthCategories, speed, health, drawFunction, ini
     this.drawFunction = drawFunction || function(){};
     this.initFunction = initFunction || function(){};
     this.defaultUpdateFunction = function(agent, level){
+
+
         this.capabilities.forEach(function(capability) {
             capability.exercise(agent, level);
             if (typeof(capability.cost) !== 'undefined')

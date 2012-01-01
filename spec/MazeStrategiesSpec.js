@@ -62,7 +62,7 @@ describe("Maze Strategies", function() {
 //            var a = level.criticalPath(0, 9)
 //            var a = level.criticalPath(0, 0)
 //            var b = level.criticalPath(1, 0)
-            var c = FiercePlanet.Framework.MazeStrategies.criticalPath(level, 0, 8)
+            var c = FiercePlanet.Framework.MazeStrategies.getAllPlans(level, 0, 8)
 //            var d = level.criticalPath(2, 2)
 //            var e = level.criticalPath(3, 0)
 //          console.log(a);

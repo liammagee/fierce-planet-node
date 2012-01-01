@@ -450,9 +450,28 @@ function Agent(culture, x, y) {
         var agent = this;
         var rankedDesires = Desires.rankDesires(agent, level);
         if (rankedDesires && rankedDesires.length > 0) {
+            var rankedDesires = Desires.rankDesires(agent, level),
+                desireToExplore = rankedDesires[0],
+                satisfyingObjects = desireToExplore.findSatisfyingObjects(agent);
+            var plans = Plans.getBestPlans(agent, level, satisfyingObjects);
+            this.currentPlan = plans[0];
+            // TODO: Need more planning here
             rankedDesires.forEach(function(desire) {
                 // Now get beliefs
+                //desire.findSatisfyingObjects(agent);
+            });
+        }
+    };
 
+    /**
+     */
+    this.scopeOfWorld = function() {
+        var agent = this;
+        var rankedDesires = Desires.rankDesires(agent, level);
+        if (rankedDesires && rankedDesires.length > 0) {
+            rankedDesires.forEach(function(desire) {
+                // Now get beliefs
+                //desire.findSatisfyingObjects(agent);
             });
         }
     };
@@ -517,6 +536,10 @@ function Agent(culture, x, y) {
     this.memoriesOfPlacesVisitedByOtherAgents = [];
     this.memoriesOfPathsUntriedByOtherAgents = [];
 
+
+    // PLANNING
+    this.currentPlan;
+    this.currentPlanStep;
 
     this.reviseBeliefs(undefined);
 
