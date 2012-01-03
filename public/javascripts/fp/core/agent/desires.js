@@ -56,10 +56,52 @@ Desires.ExploreSpace = {};
         for (var i in agent.memoriesOfPathsUntried) {
             if (agent.memoriesOfPathsUntried.hasOwnProperty(i)) {
                 var belief = agent.memoriesOfPathsUntried[i];
-                satisfyingObjects.push([belief.x, belief.y]);
+                if (typeof(belief.x) !== 'undefined' && typeof(belief.y) !== 'undefined')
+                    satisfyingObjects.push([belief.x, belief.y]);
             }
         }
-        return satisfyingObjects;
+        for (var i in agent.memoriesOfPathsUntriedByOtherAgents) {
+            if (agent.memoriesOfPathsUntriedByOtherAgents.hasOwnProperty(i)) {
+                var otherAgentsBeliefs = agent.memoriesOfPathsUntriedByOtherAgents[i];
+                for (var j in otherAgentsBeliefs) {
+                    if (otherAgentsBeliefs.hasOwnProperty(j)) {
+                        var belief = otherAgentsBeliefs[j];
+                        if (typeof(belief.x) !== 'undefined' && typeof(belief.y) !== 'undefined')
+                            satisfyingObjects.push([belief.x, belief.y]);
+                    }
+                }
+            }
+        }
+        for (var i in agent.memoriesOfPlacesVisited) {
+            if (agent.memoriesOfPlacesVisited.hasOwnProperty(i)) {
+                var belief = agent.memoriesOfPlacesVisited[i],
+                    index = -1;
+                satisfyingObjects.forEach(function(obj, i) {
+                    if (obj[0] == belief.x && obj[1] == belief.y)
+                        index = i;
+                });
+                if (index > -1)
+                    satisfyingObjects.splice(index, 1)
+            }
+        }
+        for (var i in agent.memoriesOfPlacesVisitedByOtherAgents) {
+            if (agent.memoriesOfPlacesVisitedByOtherAgents.hasOwnProperty(i)) {
+                var otherAgentsBeliefs = agent.memoriesOfPlacesVisitedByOtherAgents[i];
+                for (var j in otherAgentsBeliefs) {
+                    if (otherAgentsBeliefs.hasOwnProperty(j)) {
+                        var belief = otherAgentsBeliefs[j],
+                            index = -1;
+                        satisfyingObjects.forEach(function(obj, i) {
+                            if (obj[0] == belief.x && obj[1] == belief.y)
+                                index = i;
+                        });
+                        if (index > -1)
+                            satisfyingObjects.splice(index, 1)
+                    }
+                }
+            }
+        }
+        return $.unique(satisfyingObjects);
     };
     this.satisfy = function(agent, level) {
         // Do nothing - assume desire is satisfied by moving.

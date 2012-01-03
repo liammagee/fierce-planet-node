@@ -191,26 +191,28 @@ Beliefs.BeliefsBasedOnOtherAgentsBeliefs = {};
 
         // Initialise belief variables
         if (typeof(agent.memoriesOfPlacesVisitedByOtherAgents) == 'undefined')
-            agent.memoriesOfPlacesVisitedByOtherAgents = [];
+            agent.memoriesOfPlacesVisitedByOtherAgents = {};
         if (typeof(agent.memoriesOfPathsUntriedByOtherAgents) == 'undefined')
-            agent.memoriesOfPathsUntriedByOtherAgents = [];
+            agent.memoriesOfPathsUntriedByOtherAgents = {};
 
 
         // Add agents on this tile to memory
 //        /*
         var neighbouringAgents = [];
-        var positions = level.getVonNeumannNeighbourhood(x, y, true);
+//        var positions = level.getVonNeumannNeighbourhood(x, y, true);
+        var positions = [{x: x, y: y}];
         positions.forEach(function(position) {
             var agents = level.getAgentsAtContentMap(position.x, position.y);
             if (agents && agents.length > 0) {
                 agents.forEach(function(otherAgent) {
-                    if (otherAgent.id != agent.id)
+                    if (otherAgent.id != agent.id && otherAgent.age > 0)
                         neighbouringAgents.push(otherAgent);
                 });
             }
         });
+
         neighbouringAgents.forEach(function(otherAgent) {
-            if (otherAgent.lastMemory.x != agent.lastMemory.x || otherAgent.lastMemory.y != agent.lastMemory.y) {
+            if ((otherAgent.lastMemory.x != agent.lastMemory.x || otherAgent.lastMemory.y != agent.lastMemory.y)) {
                 // Premature optimisation...
 //                         if (agent.memoriesOfPlacesVisitedByOtherAgents.length > 10)
 //                         agent.memoriesOfPlacesVisitedByOtherAgents = [];
@@ -226,6 +228,7 @@ Beliefs.BeliefsBasedOnOtherAgentsBeliefs = {};
                         mpv[[m.x, m.y]] = new Memory(m.agentID, m.age, m.x, m.y);
                 }
                 agent.memoriesOfPlacesVisitedByOtherAgents[otherAgent.id] = mpv;
+
 
                 var mpu = [];
                 for (var j in otherAgent.memoriesOfPathsUntried) {

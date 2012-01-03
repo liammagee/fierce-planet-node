@@ -476,7 +476,7 @@ function Agent(culture, x, y) {
     this.executePlan = function(level) {
         if (typeof(this.currentPlan) == 'undefined' || this.currentPlanStep >= this.currentPlan.distance)
             this.developPlan(level);
-        if (typeof(this.currentPlan) == 'undefined')
+        if (typeof(this.currentPlan) == 'undefined' || this.currentPlanStep >= this.currentPlan.distance)
             return;
         var point = this.currentPlan.trail[this.currentPlanStep];
         this.moveTo(point[0], point[1]);
@@ -560,8 +560,7 @@ function Agent(culture, x, y) {
 
 
     // PLANNING
-    this.currentPlan;
-    this.currentPlanStep;
+    this.currentPlan, this.currentPlanStep, this.needToRevisePlan;
 
     this.reviseBeliefs(undefined);
 

@@ -459,7 +459,7 @@ Level.prototype.removeAgentFromContentMap = function(agent) {
 };
 Level.prototype.changeAgentInContentMap = function(agent, lastX, lastY) {
     var x = agent.x, y = agent.y;
-    if (typeof(lastX) === 'undefined' || typeof(lastY) === 'undefined') {
+    if (typeof(lastX) !== 'undefined' && typeof(lastY) !== 'undefined') {
         var lastContents = this.contentMap[[lastX, lastY]];
         var foundIndex = -1;
         for (var i = 0; i < lastContents.agents.length; i++) {
@@ -626,7 +626,6 @@ Level.prototype.setCurrentAgents = function(currentAgents) {
     for (var i = 0; i < this.currentAgents.length; i++) {
         var agent = this.currentAgents[i];
         this.currentAgentsMap[[agent.x, agent.y]] = agent;
-        console.log('a')
         this.addAgentToContentMap(agent);
     }
 };
@@ -710,7 +709,6 @@ Level.prototype.generateAgents = function(culture, number) {
  * @param numAgents
  */
 Level.prototype.generateAgentAtPoint = function(culture, x, y, j) {
-    console.log(x, y)
     var agent = new Agent(culture, x, y);
     var colorSeed = j % 3;
     var colorScheme = (colorSeed == 0 ? "000" : (colorSeed == 1 ? "0f0" : "00f"));

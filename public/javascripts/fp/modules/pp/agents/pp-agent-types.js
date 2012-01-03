@@ -40,9 +40,9 @@ var PredatorPreyCultures = PredatorPreyCultures || {};
         this.PREY_AGENT_TYPE.characteristics = [
         ];
         this.PREY_AGENT_TYPE.beliefs = [
-            Beliefs.BeliefsAboutPaths
+            Beliefs.BeliefsBasedOnOtherAgentsBeliefs
             , Beliefs.BeliefsAboutResources
-            , Beliefs.BeliefsBasedOnOtherAgentsBeliefs
+            , Beliefs.BeliefsAboutPaths
         ];
         this.PREY_AGENT_TYPE.desires = [
             Desires.ExploreSpace

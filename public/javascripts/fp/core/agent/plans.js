@@ -108,12 +108,33 @@ var Plans = Plans || {};
                     }
                     var newCell = [nx, ny];
 
-                    // Main difference from capability - ignore if this cell has not been visited
-                    if ( typeof(agent.memoriesOfPlacesVisited[newCell]) === 'undefined' &&
-                        typeof(agent.memoriesOfPlacesVisitedByOtherAgents[newCell]) === 'undefined' &&
-                        typeof(agent.memoriesOfPathsUntried[newCell]) === 'undefined' &&
-                        typeof(agent.memoriesOfPathsUntriedByOtherAgents[newCell]) === 'undefined'
-                        )
+                    // Main difference from capability - ignore if this cell has not been visited or viewed by this agent (or an agent it has met)
+                    var memoryNotFound = true;
+                    if ( typeof(agent.memoriesOfPlacesVisited[newCell]) !== 'undefined' ||
+                        typeof(agent.memoriesOfPathsUntried[newCell]) !== 'undefined')
+                        memoryNotFound = false;
+                    // Check if other agents' memories contain this cell
+                    if (memoryNotFound) {
+                        if (typeof(agent.memoriesOfPlacesVisitedByOtherAgents) !== 'undefined') {
+                            for (var k in agent.memoriesOfPlacesVisitedByOtherAgents) {
+                                if (agent.memoriesOfPlacesVisitedByOtherAgents.hasOwnProperty(k)) {
+                                    var otherAgentsMemories = agent.memoriesOfPlacesVisitedByOtherAgents[k];
+                                    if (typeof(otherAgentsMemories[newCell]) !== 'undefined')
+                                        memoryNotFound = false;
+                                }
+                            }
+                        }
+                        if (typeof(agent.memoriesOfPathsUntriedByOtherAgents) !== 'undefined') {
+                            for (var k in agent.memoriesOfPathsUntriedByOtherAgents) {
+                                if (agent.memoriesOfPathsUntriedByOtherAgents.hasOwnProperty(k)) {
+                                    var otherAgentsMemories = agent.memoriesOfPathsUntriedByOtherAgents[k];
+                                    if (typeof(otherAgentsMemories[newCell]) !== 'undefined')
+                                        memoryNotFound = false;
+                                }
+                            }
+                        }
+                    }
+                    if (memoryNotFound)
                         continue;
 
 
