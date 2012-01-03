@@ -199,13 +199,13 @@ Beliefs.BeliefsBasedOnOtherAgentsBeliefs = {};
         // Add agents on this tile to memory
 //        /*
         var neighbouringAgents = [];
-//        var positions = level.getVonNeumannNeighbourhood(x, y, true);
-        var positions = [{x: x, y: y}];
+        var positions = level.getVonNeumannNeighbourhood(x, y, true);
+//        var positions = [{x: x, y: y}];
         positions.forEach(function(position) {
             var agents = level.getAgentsAtContentMap(position.x, position.y);
             if (agents && agents.length > 0) {
                 agents.forEach(function(otherAgent) {
-                    if (otherAgent.id != agent.id && otherAgent.age > 0)
+                    if (otherAgent.id != agent.id && otherAgent.age > 0 && otherAgent.alive)
                         neighbouringAgents.push(otherAgent);
                 });
             }

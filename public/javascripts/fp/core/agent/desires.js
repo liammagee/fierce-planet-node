@@ -66,7 +66,7 @@ Desires.ExploreSpace = {};
                 for (var j in otherAgentsBeliefs) {
                     if (otherAgentsBeliefs.hasOwnProperty(j)) {
                         var belief = otherAgentsBeliefs[j];
-                        if (typeof(belief.x) !== 'undefined' && typeof(belief.y) !== 'undefined')
+                        if (typeof(belief.x) !== 'undefined' && typeof(belief.y) !== 'undefined' && !(belief.x == agent.x && belief.y == agent.y))
                             satisfyingObjects.push([belief.x, belief.y]);
                     }
                 }
