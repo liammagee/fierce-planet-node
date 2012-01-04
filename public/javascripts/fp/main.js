@@ -52,7 +52,7 @@ $LAB
    .script("jstat-1.0.0/js/jstat.js")
    .script("jpicker-1.1.6/jpicker-1.1.6.js")
    .script("jq-console/demo/jqconsole-min.js")
-   .script("/socket.io/socket.io.js")
+   // .script("/socket.io/socket.io.js")
    .script("CodeMirror-2.2/lib/codemirror.js")
    .script("CodeMirror-2.2/mode/javascript/javascript.js")
     .wait()
@@ -107,7 +107,7 @@ $LAB
     , 'fp/ui/google-map.js'
 
        , 'fp/utils/fp-utils.js'
-       , 'fp/utils/comms.js'
+       // , 'fp/utils/comms.js'
        , 'fp/utils/log.js'
     , 'fp/utils/recording.js'
     , 'fp/utils/url-params.js'

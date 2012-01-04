@@ -101,7 +101,17 @@ Desires.ExploreSpace = {};
                 }
             }
         }
-        return $.unique(satisfyingObjects);
+        satisfyingObjects.sort(function(obj1, obj2) {
+            if (obj1[1] != obj2[1])
+                return obj1[1] - obj2[1];
+            return obj1[0] - obj2[0];
+        });
+        for (var i = 1; i < satisfyingObjects.length; i ++) {
+            if ( satisfyingObjects[i][0] === satisfyingObjects[ i - 1 ][0] &&  satisfyingObjects[i][1] === satisfyingObjects[ i - 1 ][1]) {
+                satisfyingObjects.splice( i--, 1 );
+            }
+        }
+        return satisfyingObjects;
     };
     this.satisfy = function(agent, level) {
         // Do nothing - assume desire is satisfied by moving.

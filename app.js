@@ -378,6 +378,7 @@ app.listen(port);
 
 
 // Socket IO stuff
+/*
 var sio = require('socket.io');
 var io = sio.listen(app);
 var nicknames = {};
@@ -455,5 +456,5 @@ io.sockets.on('connection', function (socket) {
   });
 });
 
-
+*/
 console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
