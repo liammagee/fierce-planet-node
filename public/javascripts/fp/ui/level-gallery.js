@@ -39,7 +39,9 @@ FiercePlanet.LevelGallery = FiercePlanet.LevelGallery || {};
             var tnHTML = $('<div class="thumbnails"></div>');
             $('#level-gallery-tabs').append(modHTML);
             modHTML.append(tnHTML);
-            for (var j in campaign.levels) {
+            console.log(campaign.levels)
+//            for (var j in campaign.levels) {
+            for (var j = 0, len = campaign.levels.length; j < len; j ++) {
                 var level = campaign.levels[j];
                 var img = (level.thumbnail ? level.thumbnail : '/images/levels/level-thumbnail-default.png');
                 var thumbnail = $('<div class="thumbnail" id="'

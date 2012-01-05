@@ -130,6 +130,7 @@ $LAB
 ])
     .script([
     , 'fp/modules/gol/game-of-life-module.js'
+    , 'fp/modules/wolfram/wolfram-module.js'
 //    , 'fp/modules/gol/levels/gol-levels.js'
 //    , 'fp/modules/gol/agents/gol-agent-types.js'
 ])
@@ -140,6 +141,14 @@ $LAB
                 PredatorPreyModule.init();
             }
             else if (m == 'gol') {
+//                $('#moduleEditor').show();
+                GameOfLifeModule.init();
+            }
+            else if (m == 'wolfram') {
+//                $('#moduleEditor').show();
+                WolframModule.init();
+            }
+            else if (m == 'rpg') {
 //                $('#moduleEditor').show();
                 GameOfLifeModule.init();
             }

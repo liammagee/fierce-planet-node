@@ -354,7 +354,6 @@ var Lifecycle = Lifecycle || {};
         if (typeof console != "undefined")
             console.log("Initialising world...");
 
-
         // Stop any existing timers
         Lifecycle._stopAgents();
 
