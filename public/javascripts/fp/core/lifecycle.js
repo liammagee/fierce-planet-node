@@ -209,8 +209,11 @@ var Lifecycle = Lifecycle || {};
 
         Lifecycle.levelDelayCounter = 0;
         Lifecycle.levelCounter = 0;
-    	if (Lifecycle.currentLevel != undefined)
-        	Lifecycle.currentLevel.setResources([]);
+    	if (Lifecycle.currentLevel != undefined) {
+            Lifecycle.currentLevel.setResources([]);
+            if (Lifecycle.currentLevel.teardown)
+                Lifecycle.currentLevel.teardown();
+        }
 
         Lifecycle._initialiseGame();
 

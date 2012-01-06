@@ -49,13 +49,14 @@ if (typeof(global) != "undefined") {
 //NormalDistribution = require('./../public/javascripts/jstat-1.0.0/js/jstat-1.0.0.js').NormalDistribution;
     jStat = require('./../public/javascripts/jstat-1.0.0/js/jstat.js').jStat;
 
+    /*
     jsdom = require('jsdom').jsdom
         , myWindow = jsdom().createWindow()
         , $ = require('jquery')
         , jq = require('jquery').create()
         , jQuery = require('jquery').create(myWindow)
         ;
-
+    */
 
 }
 

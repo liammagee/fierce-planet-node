@@ -123,7 +123,6 @@ FiercePlanet.Game = FiercePlanet.Game || {};
             if (World.settings.noticesVisible && FiercePlanet.Game.currentNotice != undefined) {
                 FiercePlanet.Drawing.drawNotice(FiercePlanet.Game.currentNotice);
             }
-
         };
         Lifecycle.processSavedCallback = function () {
             FiercePlanet.Game.currentProfile.processSavedAgent(Lifecycle.currentWaveNumber);

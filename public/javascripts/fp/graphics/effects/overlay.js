@@ -1,3 +1,7 @@
+/**
+ * Note: assumes
+ */
+
 
 // The amount of symbol we want to place;
 var count = 150;
@@ -12,7 +16,7 @@ path.style = {
 var symbol = new Symbol(path);
 
 function setupView() {
-// Place the instances of the symbol:
+    // Place the instances of the symbol:
     for (var i = 0; i < count; i++) {
         // The center position is a random point in the view:
         var center = Point.random() * view.size;
@@ -25,7 +29,7 @@ function setupView() {
         });
     }
 }
-setupView()
+
 
 var vector = new Point({
     angle: 45,
@@ -40,7 +44,7 @@ function onMouseMove(event) {
 
 // The onFrame function is called up to 60 times a second:
 function onFrame(event) {
-    if (Lifecycle.inPlay) {
+    if (Lifecycle.inPlay && World.settings.scrollingImageVisible) {
         vector = vector + (mouseVector - vector) / 30;
 
         // Run through the active layer's children list and change
@@ -75,3 +79,5 @@ function keepInView(item) {
         position.y = bounds.height  + itemBounds.height / 2;
     }
 }
+
+setupView();

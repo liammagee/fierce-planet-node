@@ -47,8 +47,8 @@ var WolframModule = WolframModule || {};
             this.name = ("Testing parameters...");
             this.isTerminalLevel = true;
             this.introduction =
-                "<p>Size of world:</p><p><input class='level-parameters' name='SizeOfWorld' value='101'/> </p>" +
                 "<p>Cellular Automata rule:</p><p><input class='level-parameters' name='AutomataNumber' value='110'/> </p>" +
+                    "<p>Size of world:</p><p><input class='level-parameters' name='SizeOfWorld' value='101'/> </p>" +
                     ""
             ;
             this.conclusion = ("Well done.");
@@ -137,13 +137,13 @@ var WolframModule = WolframModule || {};
         World.settings.scrollingImageVisible = localStorage.scrollingImageVisible = false;
         World.settings.showGraph = true;
         World.settings.showEditor = true;
+        World.settings.store();
         Lifecycle.currentLevelSetID = 'Wolfram';
         Lifecycle.currentLevelNumber = localStorage.currentLevelNumber = 0;
         Lifecycle.currentLevelPreset = true;
         AgentConstants.DEFAULT_SPEED = 1;
-        Lifecycle.interval = 100;
+        Lifecycle.interval = 50;
         Lifecycle.NEW_LEVEL_DELAY = 300;
-
 
         FiercePlanet.ModuleEditor.buildEditorFromUrl('/javascripts/fp/modules/wolfram/wolfram-module.js', 'WolframModule.init(); FiercePlanet.Game.loadGame();');
     };

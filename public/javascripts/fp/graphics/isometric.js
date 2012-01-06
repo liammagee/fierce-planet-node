@@ -6,13 +6,6 @@
  */
 
 
-var FiercePlanet = FiercePlanet || {};
-
-
-/**
- * @namespace Contains isometric utility functions
- */
-FiercePlanet.Isometric = FiercePlanet.Isometric || {};
 
 
 (function() {

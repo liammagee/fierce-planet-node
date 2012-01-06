@@ -223,8 +223,8 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
      */
     this.refreshSwatch = function() {
         // Make all capabilities inactive
-        for (var i = 0; i < FiercePlanet.GENIUS_CAPABILITIES.length; i++) {
-            var capability = $.trim(FiercePlanet.GENIUS_CAPABILITIES[i]);
+        for (var i = 0; i < FiercePlanet.Profile.GENIUS_CAPABILITIES.length; i++) {
+            var capability = $.trim(FiercePlanet.Profile.GENIUS_CAPABILITIES[i]);
             try {
                 var el = $('#' + capability);
                 el.addClass("inactive");

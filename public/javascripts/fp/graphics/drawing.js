@@ -1441,19 +1441,20 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
                     return;
                 }
             }
-    
-            if ((FiercePlanet.Game.scrollingImageX + FiercePlanet.Game.scrollingImageOffset) < (480 - FiercePlanet.Game.scrollingImageOffset)) {
-                FiercePlanet.Game.scrollingImageX += FiercePlanet.Game.scrollingImageOffset;
-            }
-            else {
-                FiercePlanet.Game.scrollingImageX = 1;
-            }
-            // Need exception handling for Safari
-            try {
-                ctx.drawImage(FiercePlanet.Game.scrollingImage, FiercePlanet.Game.scrollingImageX, 1, 480, 400, 0, 0, 480, 400);
-            }
-            catch(err) {
-            }
+
+            // TODO: Now uses Paper.js (graphics/effects/overlay.js) for this effect
+//            if ((FiercePlanet.Game.scrollingImageX + FiercePlanet.Game.scrollingImageOffset) < (480 - FiercePlanet.Game.scrollingImageOffset)) {
+//                FiercePlanet.Game.scrollingImageX += FiercePlanet.Game.scrollingImageOffset;
+//            }
+//            else {
+//                FiercePlanet.Game.scrollingImageX = 1;
+//            }
+//            // Need exception handling for Safari
+//            try {
+//                ctx.drawImage(FiercePlanet.Game.scrollingImage, FiercePlanet.Game.scrollingImageX, 1, 480, 400, 0, 0, 480, 400);
+//            }
+//            catch(err) {
+//            }
         }
     };
     

@@ -225,6 +225,7 @@ var GameOfLifeModule = GameOfLifeModule || {};
         World.settings.scrollingImageVisible = localStorage.scrollingImageVisible = false;
         World.settings.showGraph = true;
         World.settings.showEditor = true;
+        World.settings.store();
         Lifecycle.currentLevelSetID = 'GOL';
         Lifecycle.currentLevelNumber = localStorage.currentLevelNumber = 0;
         Lifecycle.currentLevelPreset = true;
