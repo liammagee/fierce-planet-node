@@ -44,7 +44,7 @@ function onMouseMove(event) {
 
 // The onFrame function is called up to 60 times a second:
 function onFrame(event) {
-    if (Lifecycle.inPlay && World.settings.scrollingImageVisible) {
+    if (Lifecycle.inPlay && (typeof(Lifecycle.currentLevel.scrollingImageVisible) === 'undefined' || Lifecycle.currentLevel.scrollingImageVisible)) {
         vector = vector + (mouseVector - vector) / 30;
 
         // Run through the active layer's children list and change

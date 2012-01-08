@@ -48,6 +48,7 @@ if (typeof(global) != "undefined") {
 //jstat = require('./../public/javascripts/jstat-1.0.0/js/jstat-1.0.0.js').jstat;
 //NormalDistribution = require('./../public/javascripts/jstat-1.0.0/js/jstat-1.0.0.js').NormalDistribution;
     jStat = require('./../public/javascripts/jstat-1.0.0/js/jstat.js').jStat;
+    _ = require('underscore');
 
     /*
     jsdom = require('jsdom').jsdom

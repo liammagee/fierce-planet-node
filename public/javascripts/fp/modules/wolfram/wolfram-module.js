@@ -46,6 +46,8 @@ var WolframModule = WolframModule || {};
             this.initialResourceNumber = 0;
             this.name = ("Testing parameters...");
             this.isTerminalLevel = true;
+            this.dontClearCanvas = true;
+            this.scrollingImageVisible = false;
             this.introduction =
                 "<p>Cellular Automata rule:</p><p><input class='level-parameters' name='AutomataNumber' value='110'/> </p>" +
                     "<p>Size of world:</p><p><input class='level-parameters' name='SizeOfWorld' value='101'/> </p>" +
@@ -53,6 +55,11 @@ var WolframModule = WolframModule || {};
             ;
             this.conclusion = ("Well done.");
 
+            this.currentAgentsFunction = function(agent) {
+                if (agent.y > 0 && agent.y == Lifecycle.waveCounter - 3) {
+                    return agent;
+                }
+            }
             this.setup = function () {
                 if (FiercePlanet.Parameters.SizeOfWorld) {
                     this.cellsAcross = this.cellsDown = parseInt(FiercePlanet.Parameters.SizeOfWorld);
@@ -134,6 +141,8 @@ var WolframModule = WolframModule || {};
         World.switchResourceSet(TBL);
         World.settings.skewTiles = false;
         World.settings.agentsCanCommunicate = false;
+        World.settings.hidePathBorder = true;
+
         World.settings.scrollingImageVisible = localStorage.scrollingImageVisible = false;
         World.settings.showGraph = true;
         World.settings.showEditor = true;

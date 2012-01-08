@@ -16,7 +16,6 @@ describe("level-related classes", function() {
     });
 
     describe("get surrounding cells", function() {
-
         it("should have the correct positions", function() {
             var surroundingPositions = level.getVonNeumannNeighbourhood(0, 0);
             expect(surroundingPositions.length).toEqual(2);
@@ -117,6 +116,33 @@ describe("level-related classes", function() {
                 expect(allAgents[0]).toEqual(agent);
             });
         });
+    });
+
+    describe("obtaining agents from a level", function() {
+        it("should have the right number of agents", function() {
+            expect(level.currentAgents.length).toEqual(50);
+            expect(level.getCurrentAgents().length).toEqual(50);
+        });
+        describe("returning a subset of current agents from a level", function() {
+            var agent;
+            beforeEach(function() {
+                agent = new Agent(World.cultures[0], 10, 10);
+                level.currentAgents.push(agent);
+                level.addAgentToContentMap(agent);
+                level.currentAgentsFunction = function(agent) { if (agent.x == 10 && agent.y == 10) { return agent; } };
+            });
+
+            it("should have the right number of agents when a function is provided", function() {
+                expect(level.currentAgents.length).toEqual(51);
+                expect(level.getCurrentAgents().length).toEqual(1);
+            });
+
+            it("should have the right number of agents when no function is provided", function() {
+                level.currentAgentsFunction = undefined;
+                expect(level.getCurrentAgents().length).toEqual(51);
+            });
+        });
+
     });
 
 });

@@ -316,11 +316,5 @@ describe("agent-related classes", function() {
                 expect(step).toEqual(1);
             });
         });
-
-
-
-
-
     });
-
 });

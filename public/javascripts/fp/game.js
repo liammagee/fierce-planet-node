@@ -143,7 +143,7 @@ FiercePlanet.Game = FiercePlanet.Game || {};
             }
 
 
-            if (Lifecycle.currentLevel.currentAgents.length > 0) {
+            if (Lifecycle.currentLevel.getCurrentAgents().length > 0) {
                 FiercePlanet.Drawing.drawResourceAndAgents();
             }
 
@@ -289,20 +289,17 @@ FiercePlanet.Game = FiercePlanet.Game || {};
         };
         Lifecycle.postInitialiseGameCallback = function () {
             if (FiercePlanet.Game.waveOverride > 0) {
-                Lifecycle.currentLevel.waveNumber = (FiercePlanet.Game.waveOverride);
+                Lifecycle.currentLevel.waveNumber = FiercePlanet.Game.waveOverride;
                 FiercePlanet.Game.waveOverride = 0;
             }
 
-            // Start the audio
+            // Stop the audio
             FiercePlanet.Game._stopAudio();
 
-            //    score = 0;
             FiercePlanet.Game.currentProfile.resetCurrentStats();
             FiercePlanet.Graph.refreshGraph();
 
-
             Lifecycle.resourceRecoveryCycle = Math.pow(World.settings.rateOfResourceRecovery, FiercePlanet.Game.levelOfDifficulty - 1);
-
             Lifecycle.numAgents = Lifecycle.currentLevel.initialAgentNumber;
             FiercePlanet.Orientation.cellsAcross = Lifecycle.currentLevel.cellsAcross;
             FiercePlanet.Orientation.cellsDown = Lifecycle.currentLevel.cellsDown;
@@ -310,7 +307,6 @@ FiercePlanet.Game = FiercePlanet.Game || {};
             FiercePlanet.Orientation.cellHeight = Math.round(FiercePlanet.Orientation.worldHeight / FiercePlanet.Orientation.cellsDown);
             FiercePlanet.Orientation.pieceWidth = Math.round(FiercePlanet.Orientation.cellWidth * 0.5);
             FiercePlanet.Orientation.pieceHeight = Math.round(FiercePlanet.Orientation.cellHeight * 0.5);
-            FiercePlanet.Game.scrollingImage.src = "/images/yellow-rain.png";
 
             // Draw the game
             FiercePlanet.Drawing.drawGame();
@@ -327,7 +323,6 @@ FiercePlanet.Game = FiercePlanet.Game || {};
             // Make sure button is on pause
             $('#playAgents').removeClass('pausing');
             $('#playAgents').addClass('playing');
-
         };
         Lifecycle.postStopAgentsCallback = function () {
             // Make sure button is on play

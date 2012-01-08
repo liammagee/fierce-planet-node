@@ -53,51 +53,43 @@ var GameOfLifeModule = GameOfLifeModule || {};
         };
         this.CELLULAR_AGENT_TYPE.beliefs = [
             Beliefs.BeliefsAboutPaths
-//            , Beliefs.BeliefsAboutResources
-//            , Beliefs.BeliefsBasedOnOtherAgentsBeliefs
         ];
         this.CELLULAR_AGENT_TYPE.desires = [
-//            Desires.ExploreSpace
-//            , Desires.Flee
-//            , Desires.ImproveHealth
         ];
         this.CELLULAR_AGENT_TYPE.capabilities = [
             switchStateCapability
-//            Capabilities.MoveRandomlyCapability
-//            , Capabilities.ConsumeResourcesCapability
-//            , Capabilities.RegenerateCapability
         ];
         this.CELLULAR_AGENT_TYPE.drawFunction = (function (ctx, agent, x, y, pieceWidth, pieceHeight, newColor, counter, direction) {
+            if (agent.isLiving) {
+                var __ret = FiercePlanet.Drawing.getDrawingPosition(agent, Lifecycle.waveCounter);
+                var xPos = __ret.intX;
+                var yPos = __ret.intY;
+                var nx = xPos * FiercePlanet.Orientation.cellWidth;
+                var ny = yPos * FiercePlanet.Orientation.cellHeight;
 
-            var __ret = FiercePlanet.Drawing.getDrawingPosition(agent, Lifecycle.waveCounter);
-            var xPos = __ret.intX;
-            var yPos = __ret.intY;
-            var nx = xPos * FiercePlanet.Orientation.cellWidth;
-            var ny = yPos * FiercePlanet.Orientation.cellHeight;
+                var color = (agent.isLiving ? "#fff" : "#000");
+                ctx.fillStyle = color;
+                if ((World.settings.skewTiles || Lifecycle.currentLevel.isometric)) {
+                    var newOrigin = FiercePlanet.Isometric.doIsometricOffset(xPos, yPos);
+                    nx = newOrigin.x;
+                    ny = newOrigin.y;
+                    var originXp = newOrigin.x + FiercePlanet.Orientation.cellWidth / 2;
+                    var originYp = newOrigin.y + FiercePlanet.Orientation.cellHeight;
 
-            var color = (agent.isLiving ? "#fff" : "#000");
-            ctx.fillStyle = color;
-            if ((World.settings.skewTiles || Lifecycle.currentLevel.isometric)) {
-                var newOrigin = FiercePlanet.Isometric.doIsometricOffset(xPos, yPos);
-                nx = newOrigin.x;
-                ny = newOrigin.y;
-                var originXp = newOrigin.x + FiercePlanet.Orientation.cellWidth / 2;
-                var originYp = newOrigin.y + FiercePlanet.Orientation.cellHeight;
+                    // Rotation logic here - TODO: Refactor out
+                    originXp = originXp - (FiercePlanet.Orientation.halfWorldWidth);
+                    originYp = originYp - (FiercePlanet.Orientation.halfWorldHeight);
 
-                // Rotation logic here - TODO: Refactor out
-                originXp = originXp - (FiercePlanet.Orientation.halfWorldWidth);
-                originYp = originYp - (FiercePlanet.Orientation.halfWorldHeight);
+                    FiercePlanet.Isometric.draw3DTile(ctx, [originXp, originYp], FiercePlanet.Orientation.cellHeight);
+                    ctx.fill();
+                }
+                else {
+                    nx = nx - (FiercePlanet.Orientation.worldWidth) / 2;
+                    ny = ny - (FiercePlanet.Orientation.worldHeight) / 2;
 
-                FiercePlanet.Isometric.draw3DTile(ctx, [originXp, originYp], FiercePlanet.Orientation.cellHeight);
-                ctx.fill();
+                    ctx.fillRect(nx, ny, FiercePlanet.Orientation.cellWidth, FiercePlanet.Orientation.cellHeight);
+                }
             }
-            else {
-                nx = nx - (FiercePlanet.Orientation.worldWidth) / 2;
-                ny = ny - (FiercePlanet.Orientation.worldHeight) / 2;
-
-                ctx.fillRect(nx, ny, FiercePlanet.Orientation.cellWidth, FiercePlanet.Orientation.cellHeight);
-            }
-
         });
 
         this.CELLULAR_AGENT_TYPE.initFunction = function (agent, level) {
@@ -149,6 +141,8 @@ var GameOfLifeModule = GameOfLifeModule || {};
             this.initialResourceNumber = 0;
             this.name = ("Testing parameters...");
             this.isTerminalLevel = true;
+            this.dontClearCanvas = true;
+            this.scrollingImageVisible = false;
             this.introduction =
                 "<p>Size of world:</p><p><input class='level-parameters' name='SizeOfWorld' value='50'/> </p>" +
                     "<p>Enter number of live agents to start with:</p><p><input class='level-parameters' name='NumberOfLiveAgents' value='200'/> </p>" +
@@ -221,6 +215,7 @@ var GameOfLifeModule = GameOfLifeModule || {};
 		World.registerCultures(module.allCultures());
 		World.switchResourceSet(TBL);
 		World.settings.skewTiles = false;
+        World.settings.hidePathBorder = true;
         World.settings.agentsCanCommunicate = false;
         World.settings.scrollingImageVisible = localStorage.scrollingImageVisible = false;
         World.settings.showGraph = true;
@@ -231,9 +226,7 @@ var GameOfLifeModule = GameOfLifeModule || {};
         Lifecycle.currentLevelPreset = true;
         Lifecycle.NEW_LEVEL_DELAY = 300;
 
-
         FiercePlanet.ModuleEditor.buildEditorFromUrl('/javascripts/fp/modules/gol/game-of-life-module.js', 'GameOfLifeModule.init(); FiercePlanet.Game.loadGame();');
-
     };
 }).apply(GameOfLifeModule);
 

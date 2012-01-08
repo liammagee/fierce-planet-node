@@ -98,7 +98,7 @@ Profile.prototype._initialise = function() {
 /**
  * Resets the current statistics 
  */
-Profile.prototype.resetCurrentStats = function(initialStore) {
+Profile.prototype.resetCurrentStats = function() {
     this.currentLevelSaved = 0;
     this.currentLevelExpired = 0;
 

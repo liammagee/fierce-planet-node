@@ -582,22 +582,22 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
         var purchasableItems = [];
 
         if (FiercePlanet.profileClass == FiercePlanet.Profile.PROFILE_CLASSES[0]) {
-            accessibleCapabilities = FiercePlanet.NOVICE_CAPABILITIES;
+            accessibleCapabilities = FiercePlanet.Profile.NOVICE_CAPABILITIES;
         }
         else if (FiercePlanet.profileClass == FiercePlanet.Profile.PROFILE_CLASSES[1]) {
-            accessibleCapabilities = FiercePlanet.PLANNER_CAPABILITIES;
+            accessibleCapabilities = FiercePlanet.Profile.PLANNER_CAPABILITIES;
         }
         else if (FiercePlanet.profileClass == FiercePlanet.Profile.PROFILE_CLASSES[2]) {
-            accessibleCapabilities = FiercePlanet.EXPERT_CAPABILITIES;
+            accessibleCapabilities = FiercePlanet.Profile.EXPERT_CAPABILITIES;
         }
         else if (FiercePlanet.profileClass == FiercePlanet.Profile.PROFILE_CLASSES[3]) {
-            accessibleCapabilities = FiercePlanet.VISIONARY_CAPABILITIES;
+            accessibleCapabilities = FiercePlanet.Profile.VISIONARY_CAPABILITIES;
         }
         else if (FiercePlanet.profileClass == FiercePlanet.Profile.PROFILE_CLASSES[4]) {
-            accessibleCapabilities = FiercePlanet.GENIUS_CAPABILITIES;
+            accessibleCapabilities = FiercePlanet.Profile.GENIUS_CAPABILITIES;
         }
         // TODO: Temporarily enable all capabilities
-        accessibleCapabilities = FiercePlanet.GENIUS_CAPABILITIES;
+        accessibleCapabilities = FiercePlanet.Profile.GENIUS_CAPABILITIES;
 
 
         // Evaluate available capabilities
@@ -607,16 +607,16 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
             var id = purchasableItem.id;
             var itemName = id.split("-purchase")[0];
             var cost = 0;
-            if ($.inArray(itemName, FiercePlanet.PLANNER_CAPABILITIES) > -1) {
+            if ($.inArray(itemName, FiercePlanet.Profile.PLANNER_CAPABILITIES) > -1) {
                 cost = FiercePlanet.Profile.CAPABILITY_COSTS [1];
             }
-            else if ($.inArray(itemName, FiercePlanet.EXPERT_CAPABILITIES) > -1) {
+            else if ($.inArray(itemName, FiercePlanet.Profile.EXPERT_CAPABILITIES) > -1) {
                 cost = FiercePlanet.Profile.CAPABILITY_COSTS [2];
             }
-            else if ($.inArray(itemName, FiercePlanet.VISIONARY_CAPABILITIES) > -1) {
+            else if ($.inArray(itemName, FiercePlanet.Profile.VISIONARY_CAPABILITIES) > -1) {
                 cost = FiercePlanet.Profile.CAPABILITY_COSTS [3];
             }
-            else if ($.inArray(itemName, FiercePlanet.GENIUS_CAPABILITIES) > -1) {
+            else if ($.inArray(itemName, FiercePlanet.Profile.GENIUS_CAPABILITIES) > -1) {
                 cost = FiercePlanet.Profile.CAPABILITY_COSTS [4];
             }
             // Make item available for purchase if: (1) the player's level permits it; (2) it is not among existing capabilities and (3) there is enough money
@@ -633,16 +633,16 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
             var id = purchasableItem.id;
             var itemName = id.split("-purchase")[0];
             var cost = 0;
-            if ($.inArray(itemName, FiercePlanet.PLANNER_CAPABILITIES)) {
+            if ($.inArray(itemName, FiercePlanet.Profile.PLANNER_CAPABILITIES)) {
                 cost = FiercePlanet.Profile.CAPABILITY_COSTS [1];
             }
-            else if ($.inArray(itemName, FiercePlanet.EXPERT_CAPABILITIES)) {
+            else if ($.inArray(itemName, FiercePlanet.Profile.EXPERT_CAPABILITIES)) {
                 cost = FiercePlanet.Profile.CAPABILITY_COSTS [2];
             }
-            else if ($.inArray(itemName, FiercePlanet.VISIONARY_CAPABILITIES)) {
+            else if ($.inArray(itemName, FiercePlanet.Profile.VISIONARY_CAPABILITIES)) {
                 cost = FiercePlanet.Profile.CAPABILITY_COSTS [3];
             }
-            else if ($.inArray(itemName, FiercePlanet.GENIUS_CAPABILITIES)) {
+            else if ($.inArray(itemName, FiercePlanet.Profile.GENIUS_CAPABILITIES)) {
                 cost = FiercePlanet.Profile.CAPABILITY_COSTS [4];
             }
 

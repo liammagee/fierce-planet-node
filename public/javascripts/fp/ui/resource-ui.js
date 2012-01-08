@@ -35,12 +35,18 @@ FiercePlanet.ResourceUI = FiercePlanet.ResourceUI || {};
                         helper: "clone",
                         zIndex: 1000,
                         start: function(event, ui) {
+                            if (event.originalEvent)
+                                event = event.originalEvent;
                             FiercePlanet.Game.currentResourceId = this.id;
                         },
 	                    drag: function(event, ui) {
+                            if (event.originalEvent)
+                                event = event.originalEvent;
 	                        FiercePlanet.Drawing.drawGuideCell(event);
 	                    },
 						stop: function(event, ui) {
+                            if (event.originalEvent)
+                                event = event.originalEvent;
 							FiercePlanet.Drawing.clearGuide();
 						}
                     });
@@ -51,6 +57,8 @@ FiercePlanet.ResourceUI = FiercePlanet.ResourceUI || {};
             }
             topMostCanvas.droppable({
                 drop: function( event, ui ) {
+                    if (event.originalEvent)
+                        event = event.originalEvent;
                     var position = $(this).offset();
                     var x = event.pageX - position.left;
                     var y = event.pageY - position.top;

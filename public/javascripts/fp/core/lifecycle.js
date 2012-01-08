@@ -64,7 +64,9 @@ var Lifecycle = Lifecycle || {};
         Lifecycle.levelCounter++;
         Lifecycle.worldCounter++;
 
-        var agents = Lifecycle.currentLevel.currentAgents, nullifiedAgents = [], agentCount = 0;
+        var agents = Lifecycle.currentLevel.getCurrentAgents(),
+//        var agents = Lifecycle.currentLevel.currentAgents,
+            nullifiedAgents = [], agentCount = 0;
 
         // Pre-movement processing - memorises current position
         for (var i = 0; i < agents.length; i++) {
@@ -175,7 +177,6 @@ var Lifecycle = Lifecycle || {};
                 }
             }
 		}
-
 
         // Invoke pre process callback
 		if (Lifecycle.postProcessCallback)

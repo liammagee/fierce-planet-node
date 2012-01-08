@@ -4,45 +4,20 @@ $LAB
 
 
     // Load JQuery
-   .script("jquery/jquery.min.js")
+   .script("jquery-1.7.1.min.js")
     .wait()
 
     // Load JQuery UI
-    .script(['jquery-jquery-ui-fe1b0dc/ui/jquery.ui.core.js'
-    , 'jquery-jquery-ui-fe1b0dc/ui/jquery.ui.widget.js'
-    , 'jquery-jquery-ui-fe1b0dc/ui/jquery.ui.mouse.js'
-    , 'jquery-jquery-ui-fe1b0dc/ui/jquery.ui.accordion.js'
-    , 'jquery-jquery-ui-fe1b0dc/ui/jquery.ui.autocomplete.js'
-    , 'jquery-jquery-ui-fe1b0dc/ui/jquery.ui.button.js'
-    , 'jquery-jquery-ui-fe1b0dc/ui/jquery.ui.datepicker.js'
-    , 'jquery-jquery-ui-fe1b0dc/ui/jquery.ui.dialog.js'
-    , 'jquery-jquery-ui-fe1b0dc/ui/jquery.ui.draggable.js'
-    , 'jquery-jquery-ui-fe1b0dc/ui/jquery.ui.droppable.js'
-    , 'jquery-jquery-ui-fe1b0dc/ui/jquery.ui.position.js'
-    , 'jquery-jquery-ui-fe1b0dc/ui/jquery.ui.progressbar.js'
-    , 'jquery-jquery-ui-fe1b0dc/ui/jquery.ui.resizable.js'
-    , 'jquery-jquery-ui-fe1b0dc/ui/jquery.ui.selectable.js'
-    , 'jquery-jquery-ui-fe1b0dc/ui/jquery.ui.slider.js'
-    , 'jquery-jquery-ui-fe1b0dc/ui/jquery.ui.sortable.js'
-    , 'jquery-jquery-ui-fe1b0dc/ui/jquery.ui.tabs.js'
-    , 'jquery-jquery-ui-fe1b0dc/ui/jquery.effects.core.js'
-    , 'jquery-jquery-ui-fe1b0dc/ui/jquery.effects.blind.js'
-    , 'jquery-jquery-ui-fe1b0dc/ui/jquery.effects.bounce.js'
-    , 'jquery-jquery-ui-fe1b0dc/ui/jquery.effects.clip.js'
-    , 'jquery-jquery-ui-fe1b0dc/ui/jquery.effects.drop.js'
-    , 'jquery-jquery-ui-fe1b0dc/ui/jquery.effects.explode.js'
-    , 'jquery-jquery-ui-fe1b0dc/ui/jquery.effects.fold.js'
-    , 'jquery-jquery-ui-fe1b0dc/ui/jquery.effects.highlight.js'
-    , 'jquery-jquery-ui-fe1b0dc/ui/jquery.effects.pulsate.js'
-    , 'jquery-jquery-ui-fe1b0dc/ui/jquery.effects.scale.js'
-    , 'jquery-jquery-ui-fe1b0dc/ui/jquery.effects.shake.js'
-    , 'jquery-jquery-ui-fe1b0dc/ui/jquery.effects.slide.js'
-    , 'jquery-jquery-ui-fe1b0dc/ui/jquery.effects.transfer.js'])
+    .script([
+        'jquery-ui-1.8.16.custom/js/jquery-ui-1.8.16.custom.min.js'
+    ])
 
     // Load JQuery Plug-ins
    .script("jquery.mousewheel.3.0.2/jquery.mousewheel.js")
    .script("jquery-animate-css-rotate-scale.js")
    .script("jquery/jquery.zoom.js")
+
+   .script("underscore/underscore-min.js")
 
     // Load other plugins
    .script("spin.js/spin.min.js")

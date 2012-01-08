@@ -13,6 +13,24 @@
  * @param id
  */
 function Level(id) {
+
+    this.initLevel = function() {
+        this.setCurrentAgents([]);
+        this.expiredAgents = [];
+        this.generatePath();
+        this.initContentMap();
+        this.waves = undefined;
+        this.resetResources();
+        if (this.catastrophe != undefined)
+            this.catastrophe.struck = false;
+
+        this.initialiseWaves(this.waveNumber);
+
+        // Set up level
+        if (this.setup)
+            this.setup();
+    };
+
     // Sets the id, if passed in; otherwise default to 1001
     this.id = id || 1001;
 
@@ -44,7 +62,7 @@ function Level(id) {
     this.customLevel = false;
     this.noWander = false;
     this.noSpeedChange = false;
-	this.resourcesOwnTilesExclusively = false;
+    this.resourcesOwnTilesExclusively = false;
 
     // Rendering options
     this.isometric = false;
@@ -53,9 +71,9 @@ function Level(id) {
     this.randomiseAgents = false;
     this.placeAgentsOnAllCells = false;
     this.randomiseResources = false;
-	this.generateWaveAgentsAutomatically = true;
-	this.incrementAgentsEachWave = true;
-	this.generateWaveAgentsAutomatically = true;
+    this.generateWaveAgentsAutomatically = true;
+    this.incrementAgentsEachWave = true;
+    this.generateWaveAgentsAutomatically = true;
     this.distributeAgentsNormally = false;
     this.distributeAgentsSigma = 0;
     this.distributeAgentsHealthNormally = false;
@@ -68,7 +86,7 @@ function Level(id) {
     // Agent variables
     this.levelAgents = [];
     this.waveAgents = [];
-    this.currentAgents = [], this.currentAgentsMap = {};
+    this.currentAgents = [], this.currentAgentsMap = {}, this.currentAgentsFunction = function(agent) {return agent};
     this.expiredAgents = [];
     this.savedAgents = [];
 
@@ -90,7 +108,7 @@ function Level(id) {
     this.conclusion = "Congratulations! You have completed level " + this.id + ".";
     this.catastrophe = null;
 
-    
+
     // Google map, image and sound options
     this.backgroundTerrain = null;
     this.mapOptions = null;
@@ -98,26 +116,18 @@ function Level(id) {
     this.image = null;
     this.imageAttribution = null;
     this.soundSrc = null;
-
-    this.initLevel = function() {
-        this.setCurrentAgents([]);
-        this.expiredAgents = [];
-        this.generatePath();
-        this.initContentMap();
-        this.waves = undefined;
-        this.resetResources();
-        if (this.catastrophe != undefined)
-            this.catastrophe.struck = false;
-
-        this.initialiseWaves(this.waveNumber);
-
-        // Set up level
-        if (this.setup)
-            this.setup();
-    };
-
 }
 
+
+/**
+ * Retrieves current agents - will filter if a filter agent is available (requires Underscore to be loaded)
+ */
+Level.prototype.getCurrentAgents = function() {
+    if (typeof(this.currentAgentsFunction) === 'undefined' || typeof(_) === 'undefined')
+        return this.currentAgents;
+    else
+        return _.filter(this.currentAgents, this.currentAgentsFunction);
+};
 
 // Tile functions
 /**
