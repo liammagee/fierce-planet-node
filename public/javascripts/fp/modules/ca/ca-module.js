@@ -6,14 +6,14 @@
  */
 
 
-var WolframLevels = WolframLevels || new Campaign();
-var WolframModule = WolframModule || {};
+var CellularAutomataLevels = CellularAutomataLevels || new Campaign();
+var CellularAutomataModule = CellularAutomataModule || {};
 
 
 (function () {
 
     this.init = function () {
-        this.wolframLevel  = new Level(1);
+        this.cellularAutomataLevel  = new Level(1);
         (function () {
             this.isometric = false;
             this.allowResourcesOnPath = true;
@@ -94,18 +94,18 @@ var WolframModule = WolframModule || {};
                     agents[0].isLiving = true;
             };
 
-        }).apply(this.wolframLevel);
+        }).apply(this.cellularAutomataLevel);
 
 
         // Prepare as a module
-        this.id = "Wolfram";
-        this.name = "Wolfram";
+        this.id = "CA";
+        this.name = "Cellular Automata";
         this.position = 1;
-        this.levels = [this.wolframLevel ];
+        this.levels = [this.cellularAutomataLevel ];
     }
 
     this.init();
-}).apply(WolframLevels);
+}).apply(CellularAutomataLevels);
 
 
 (function() {
@@ -130,9 +130,9 @@ var WolframModule = WolframModule || {};
         GameOfLifeCultures.CELLULAR_AGENT_TYPE.capabilities = [ switchStateCapability ];
 
         var module = new Module();
-        module.id = 'Wolfram';
+        module.id = 'CA';
 
-        module.registerCampaign(WolframLevels);
+        module.registerCampaign(CellularAutomataLevels);
         module.registerCulture(GameOfLifeCultures.CELLULAR_AGENT_TYPE);
         module.registerResourceSet(TBL);
         module.register();
@@ -147,21 +147,21 @@ var WolframModule = WolframModule || {};
         World.settings.showGraph = true;
         World.settings.showEditor = true;
         World.settings.store();
-        Lifecycle.currentLevelSetID = 'Wolfram';
+        Lifecycle.currentLevelSetID = 'CA';
         Lifecycle.currentLevelNumber = localStorage.currentLevelNumber = 0;
         Lifecycle.currentLevelPreset = true;
         AgentConstants.DEFAULT_SPEED = 1;
         Lifecycle.interval = 50;
         Lifecycle.NEW_LEVEL_DELAY = 300;
 
-        FiercePlanet.ModuleEditor.buildEditorFromUrl('/javascripts/fp/modules/wolfram/wolfram-module.js', 'WolframModule.init(); FiercePlanet.Game.loadGame();');
+        FiercePlanet.ModuleEditor.buildEditorFromUrl('/javascripts/fp/modules/ca/ca-module.js', 'CellularAutomataModule.init(); FiercePlanet.Game.loadGame();');
     };
 
-}).apply(WolframModule);
+}).apply(CellularAutomataModule);
 
 
 if (typeof(exports) != "undefined") {
-    exports.WolframLevels = WolframLevels;
-    exports.WolframModule = WolframModule;
+    exports.CellularAutomataLevels = CellularAutomataLevels;
+    exports.CellularAutomataModule = CellularAutomataModule;
 }
 

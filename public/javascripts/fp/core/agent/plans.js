@@ -94,16 +94,16 @@ var Plans = Plans || {};
                     var nx = x, ny = y;
                     switch(directions[j]) {
                         case 0:
-                            nx++;
+                            nx = (x == level.cellsAcross - 1 && level.allowOffscreenCycling) ? 0 : nx + 1;
                             break;
                         case 1:
-                            ny++;
+                            ny = (y == level.cellsDown - 1 && level.allowOffscreenCycling) ? 0 : ny + 1;
                             break;
                         case 2:
-                            nx--;
+                            nx = (x == 0 && level.allowOffscreenCycling) ? level.cellsAcross - 1 : nx - 1;
                             break;
                         case 3:
-                            ny--;
+                            ny = (y == 0 && level.allowOffscreenCycling) ? level.cellsDown - 1 : ny - 1;
                             break;
                     }
                     var newCell = [nx, ny];
@@ -158,9 +158,6 @@ var Plans = Plans || {};
                     for (var k = 0, len = candidateTrail.length; k < len; k++) {
                         newCandidateTrail.push(candidateTrail[k]);
                     }
-//                    for (var k in candidateTrail) {
-//                        newCandidateTrail.push(candidateTrail[k]);
-//                    }
                     newCandidateTrail.push(newCell);
                     trails[newCandidateKey] = newCandidateTrail;
                 }

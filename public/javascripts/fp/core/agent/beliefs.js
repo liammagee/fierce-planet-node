@@ -70,9 +70,39 @@ Beliefs.BeliefsAboutPaths = {};
                 agent.memoriesOfPathsUntried[[x, y - 1]] = agent.lastUntriedPathMemory;
             }
             if (y + 1 < level.cellsDown && level.getTile(x, y + 1) == undefined && agent.memoriesOfPlacesVisited[[x, y + 1]] == undefined) {
-                // Add path cell to memory
                 agent.lastUntriedPathMemory = new Memory(agent.id, agent.age, x, y + 1);
                 agent.memoriesOfPathsUntried[[x, y + 1]] = agent.lastUntriedPathMemory;
+            }
+            if (level.allowOffscreenCycling) {
+                if (x == 0) {
+                    var newX = level.cellsAcross - 1;
+                    if (level.getTile(newX, y) == undefined && agent.memoriesOfPlacesVisited[[newX, y]] == undefined) {
+                        agent.lastUntriedPathMemory = new Memory(agent.id, agent.age, newX, y);
+                        agent.memoriesOfPathsUntried[[newX, y]] = agent.lastUntriedPathMemory;
+                    }
+                }
+                else if (x == level.cellsAcross - 1) {
+                    var newX = 0;
+                    if (level.getTile(newX, y) == undefined && agent.memoriesOfPlacesVisited[[newX, y]] == undefined) {
+                        agent.lastUntriedPathMemory = new Memory(agent.id, agent.age, newX, y);
+                        agent.memoriesOfPathsUntried[[newX, y]] = agent.lastUntriedPathMemory;
+                    }
+                }
+                if (y == 0) {
+                    var newY = level.cellsDown - 1;
+                    if (level.getTile(x, newY) == undefined && agent.memoriesOfPlacesVisited[[x, newY]] == undefined) {
+                        agent.lastUntriedPathMemory = new Memory(agent.id, agent.age, x, newY);
+                        agent.memoriesOfPathsUntried[[x, newY]] = agent.lastUntriedPathMemory;
+                    }
+                }
+                else if (y == level.cellsDown - 1) {
+                    var newY = 0;
+                    if (level.getTile(x, newY) == undefined && agent.memoriesOfPlacesVisited[[x, newY]] == undefined) {
+                        agent.lastUntriedPathMemory = new Memory(agent.id, agent.age, x, newY);
+                        agent.memoriesOfPathsUntried[[x, newY]] = agent.lastUntriedPathMemory;
+                    }
+                }
+
             }
         }
     };

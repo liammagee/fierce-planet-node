@@ -50,8 +50,7 @@ var PredatorPreyCultures = PredatorPreyCultures || {};
             , Desires.ImproveHealth
         ];
         this.PREY_AGENT_TYPE.capabilities = [
-//            Capabilities.MoveWithMemoryCapability
-            , Capabilities.ConsumeResourcesCapability
+             Capabilities.ConsumeResourcesCapability
             , Capabilities.RegenerateCapability
         ];
         this.PREY_AGENT_TYPE.drawFunction = (function (ctx, agent, x, y, pieceWidth, pieceHeight, newColor, counter, direction) {
@@ -313,8 +312,7 @@ var PredatorPreyCultures = PredatorPreyCultures || {};
             agent.gender = (r < 0.5 ? 'm' : 'f');
         }
         this.PREDATOR_AGENT_TYPE.capabilities = [
-//            Capabilities.MoveRandomlyCapability
-            , Capabilities.PreyOnOtherAgentsCapability
+            Capabilities.PreyOnOtherAgentsCapability
             , Capabilities.RegenerateCapability
         ];
 

@@ -9,7 +9,6 @@ describe("level-related classes", function() {
 
     describe("initial values", function() {
         it("should have the right dimensions", function() {
-            var surroundingPositions = level.getVonNeumannNeighbourhood(0, 0);
             expect(level.cellsDown).toEqual(20);
             expect(level.cellsAcross).toEqual(20);
         });
@@ -35,6 +34,23 @@ describe("level-related classes", function() {
             expect(surroundingPositions[1]).toEqual({x: 19, y: 18});
         });
 
+        describe("get surrounding cells, when grid is toroidal", function() {
+            beforeEach(function() {
+                level.allowOffscreenCycling = true;
+            });
+            it("should have the correct positions", function() {
+                var surroundingPositions = level.getVonNeumannNeighbourhood(0, 0);
+                expect(surroundingPositions.length).toEqual(4);
+                expect(surroundingPositions[0]).toEqual({x: 1, y: 0});
+                expect(surroundingPositions[1]).toEqual({x: 0, y: 1});
+                expect(surroundingPositions[2]).toEqual({x: 19, y: 0});
+                expect(surroundingPositions[3]).toEqual({x: 0, y: 19});
+            });
+            afterEach(function() {
+                level.allowOffscreenCycling = false;
+            });
+
+        });
     });
 
     describe("get objects in the environment", function() {

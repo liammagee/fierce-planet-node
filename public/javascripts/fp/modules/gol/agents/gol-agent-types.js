@@ -54,22 +54,14 @@ var GameOfLifeCultures = GameOfLifeCultures || {};
         };
         this.CELLULAR_AGENT_TYPE.beliefs = [
             Beliefs.BeliefsAboutPaths
-//            , Beliefs.BeliefsAboutResources
-//            , Beliefs.BeliefsBasedOnOtherAgentsBeliefs
         ];
         this.CELLULAR_AGENT_TYPE.desires = [
-//            Desires.ExploreSpace
-//            , Desires.Flee
-//            , Desires.ImproveHealth
         ];
         this.CELLULAR_AGENT_TYPE.capabilities = [
             switchStateCapability
-//            Capabilities.MoveRandomlyCapability
-//            , Capabilities.ConsumeResourcesCapability
-//            , Capabilities.RegenerateCapability
         ];
-        this.CELLULAR_AGENT_TYPE.drawFunction = (function (ctx, agent, x, y, pieceWidth, pieceHeight, newColor, counter, direction) {
 
+        this.CELLULAR_AGENT_TYPE.drawFunction = (function (ctx, agent, x, y, pieceWidth, pieceHeight, newColor, counter, direction) {
             var __ret = FiercePlanet.Drawing.getDrawingPosition(agent, Lifecycle.waveCounter);
             var xPos = __ret.intX;
             var yPos = __ret.intY;
