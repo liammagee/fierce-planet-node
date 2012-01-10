@@ -217,7 +217,6 @@ describe("agent-related classes", function() {
                     possibleCells = [[1, 0], [ 1, 1], [1, 3], [0, 4]];
                 satisfyingObjects.forEach(function(obj) {
                     expect(possibleCells).toContain(obj);
-
                 });
             });
 
