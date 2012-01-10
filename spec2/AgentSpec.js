@@ -197,6 +197,7 @@ describe("agent-related classes", function() {
             });
         });
 
+
         describe("plan evaluation after some sequence of moves, with a cell removed", function() {
             beforeEach(function() {
                 if (level.getTile(1, 2) == undefined)
