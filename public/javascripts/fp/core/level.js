@@ -280,7 +280,7 @@ Level.prototype.generatePath = function() {
     for (var i = 0; i < this.cellsDown; i++) {
         for (var j = 0; j < this.cellsAcross; j++) {
             var tilePosition = i * this.cellsAcross + j;
-            if (this.tiles[tilePosition] == undefined)
+            if (_.isUndefined(this.tiles[tilePosition]))
                 pathCells.push([j, i]);
         }
 
@@ -370,7 +370,8 @@ Level.prototype.assignCells = function() {
     this.cells = [];
     for (var i = 0; i < this.tiles.length; i++) {
         var tile = this.tiles[i];
-        if (tile != undefined)
+//        if (tile != undefined)
+        if (_.isUndefined(tile))
             this.addCell(tile.x, tile.y, tile);
     }
 };
@@ -378,7 +379,6 @@ Level.prototype.assignCells = function() {
 // Object functions
 Level.prototype.initContentMap = function() {
     this.contentMap = {};
-
     for (var i = 0; i < this.cellsAcross; i++) {
         for (var j = 0; j < this.cellsDown; j++) {
             this.addNewContentToMap(i, j);
