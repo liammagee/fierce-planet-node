@@ -577,6 +577,7 @@ function Agent(culture, x, y) {
 
 
 
+
 /**
  * Mock agent - intentionally simplified for network transmission
  * @param culture
