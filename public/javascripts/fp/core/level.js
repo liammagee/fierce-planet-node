@@ -686,12 +686,12 @@ Level.prototype.generateAgents = function(culture, number) {
     }
     else if (this.placeAgentsOnAllCells) {
         // Get pathway length
-        var pl = this.pathway.length;
-        for (var i = 0; i < pl; i ++) {
+        for (var i = 0, pl = this.pathway.length; i < pl; i ++) {
             // Generate a random tile position
             var tile = this.pathway[i];
-            var agent = this.generateAgentAtPoint(culture, tile[0], tile[1]);
-            agents.push(agent);
+//            var agent = this.generateAgentAtPoint(culture, tile[0], tile[1]);
+//            agents.push(agent);
+            agents.push(new SimpleAgent(culture, tile[0], tile[1]));
         }
     }
     else {
@@ -1121,13 +1121,13 @@ Level.prototype.recoverResources = function () {
  * Initialise waves
  */
 Level.prototype.initialiseWaves = function(waveNumber) {
-	if (typeof(this.waves) === "undefined" || this.waves.length == 0) {
+	if (_.isUndefined(this.waves) || this.waves.length == 0) {
 		this.waves = [];
 		for (var i = 0; i < waveNumber; i++) {
             var wave = new Wave();
             wave.agents = [];
             var cultures = ModuleManager.currentModule.allCultures();
-            for (var j in cultures) {
+            for (var j = 0, len = cultures.length; j < len; j++) {
                 var culture = cultures[j];
                 if (culture.generateEachWave && this.generateWaveAgentsAutomatically) {
                     var thisWaveNumber = (culture.waveNumber ? culture.waveNumber : Lifecycle.currentLevel.initialAgentNumber);
@@ -1140,7 +1140,8 @@ Level.prototype.initialiseWaves = function(waveNumber) {
                     if (this.incrementAgentsEachWave)
                         thisWaveNumber += (this.incrementAgentsEachWave * i);
                     var agents = this.generateAgents(culture, thisWaveNumber);
-                    agents.forEach(function(a) {wave.agents.push(a);})
+                    wave.agents = agents;
+//                    agents.forEach(function(a) {wave.agents.push(a);})
                 }
             }
             this.waves.push(wave);

@@ -509,6 +509,7 @@ function Agent(culture, x, y) {
 
 
     this.culture = culture;
+    // TODO: Put this in the initialisation logic
     for (var characteristic in culture.characteristics) {
         if (culture.characteristics.hasOwnProperty(characteristic))
             this[characteristic] = culture.characteristics[characteristic];
@@ -528,8 +529,7 @@ function Agent(culture, x, y) {
     this.capabilities = [];
 
     // Current age of the agent
-    this.age = 0, this.bornAt = 0, this.diedAt = 0;
-    this.alive = true;
+    this.age = 0, this.bornAt = 0, this.diedAt = 0, this.alive = true;
 
     // CHARACTERISTICS
 
@@ -542,7 +542,6 @@ function Agent(culture, x, y) {
     // Health related
     this.health = AgentConstants.INITIAL_HEALTH;
     this.healthCategoryStats = {};
-    this.registerHealthStats();
 
     this.canCommunicateWithOtherAgents = true;
 
@@ -562,8 +561,6 @@ function Agent(culture, x, y) {
     // PLANNING
     this.currentPlan, this.currentPlanStep, this.needToRevisePlan;
 
-    this.reviseBeliefs(undefined);
-
     // IMPORTED ABM FEATURES - EXPERIMENTAL
     /* Gender: UNSPECIFIED: 0, MALE: -1; FEMALE:1 */
     this.gender = 0;
@@ -573,6 +570,8 @@ function Agent(culture, x, y) {
 
 
     // Initialise the agent here, to handle custom type behaviour
+    this.registerHealthStats();
+    this.reviseBeliefs(undefined);
     this.init();
 }
 
@@ -580,15 +579,15 @@ function Agent(culture, x, y) {
 
 /**
  * Mock agent - intentionally simplified for network transmission
- * @param agentType
+ * @param culture
  * @param x
  * @param y
  * @param color
  * @param health
  * @param speed
  */
-function SimpleAgent(agentType, x, y, color, speed, health, wanderX, wanderY, lastMemory, delay, countdownToMove, healthCategoryStats) {
-    this.culture = agentType;
+function SimpleAgent(culture, x, y, color, speed, health, wanderX, wanderY, lastMemory, delay, countdownToMove, healthCategoryStats) {
+    this.culture = culture;
     this.x = x;
     this.y = y;
     this.color = color;
@@ -596,10 +595,32 @@ function SimpleAgent(agentType, x, y, color, speed, health, wanderX, wanderY, la
     this.speed = speed;
     this.wanderX = wanderX;
     this.wanderY = wanderY;
-    this.lastMemory = lastMemory;
+    this.lastMemory = new Memory(0, 0, x, y);
     this.delay = delay;
     this.countdownToMove = countdownToMove;
     this.healthCategoryStats = healthCategoryStats;
+    this.incrementCountdownToMove = function() { this.countdownToMove ++; };
+    this.age = 0, this.bornAt = 0, this.diedAt = 0, this.alive = true;
+    /**
+     * Calls the agent type initialise function
+     */
+    this.init = function(level) {
+        for (var characteristic in culture.characteristics) {
+            if (culture.characteristics.hasOwnProperty(characteristic))
+                this[characteristic] = culture.characteristics[characteristic];
+        }
+        if (this.culture.initFunction)
+            this.culture.initFunction(this, level);
+    };
+
+    /**
+     * Updates the agent
+     */
+    this.update = function(level) {
+        if (this.culture.updateFunction)
+            this.culture.updateFunction(this, level);
+    };
+    this.init()
 }
 
 if (typeof exports !== "undefined") {

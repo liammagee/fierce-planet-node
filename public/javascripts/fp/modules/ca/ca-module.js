@@ -56,7 +56,7 @@ var CellularAutomataModule = CellularAutomataModule || {};
             this.conclusion = ("Well done.");
 
             this.currentAgentsFunction = function(agent) {
-                if (agent.y > 0 && agent.y == Lifecycle.waveCounter - 3) {
+                if (agent.y > 0 && agent.y == Lifecycle.waveCounter - 100) {
                     return agent;
                 }
             }
@@ -117,7 +117,7 @@ var CellularAutomataModule = CellularAutomataModule || {};
             var x = agent.x;
             var y = agent.y;
 
-            if (y > 0 && y == Lifecycle.waveCounter - 3) {
+            if (y > 0 && y == Lifecycle.waveCounter - 100) {
                 var left = (x <= 0) ? false : level.getAgentsAtContentMap(x - 1, y - 1)[0].isLiving;
                 var center = level.getAgentsAtContentMap(x, y - 1)[0].isLiving;
                 var right = (x >= level.cellsAcross - 1) ? false : level.getAgentsAtContentMap(x + 1, y - 1)[0].isLiving;

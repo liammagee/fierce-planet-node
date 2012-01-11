@@ -494,6 +494,10 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
 
         var resources = Lifecycle.currentLevel.resources;
         var agents = Lifecycle.currentLevel.getCurrentAgents();
+        var entities = _.union(resources, agents).sort(function(a, b) {
+            return (((a.y * len) - a.x > (b.y * len) - b.x) ? 1 : ((a.y * len) - a.x < (b.y * len) - b.x) ? -1 : 0);
+        });
+        /*
         var entities = [];
         resources.forEach(function(r) {
             entities.push(r);
@@ -501,13 +505,14 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         agents.forEach(function(a) {
             entities.push(a);
         })
+        */
 
-        if (!_.isUndefined(Lifecycle.currentLevel.dontClearCanvas) || !Lifecycle.currentLevel.dontClearCanvas)
+        if (_.isUndefined(Lifecycle.currentLevel.dontClearCanvas) || !Lifecycle.currentLevel.dontClearCanvas)
             this.clearCanvas(canvasName);
         var len = FiercePlanet.Orientation.cellsAcross;
-        entities.sort(function(a, b) {
-            return (((a.y * len) - a.x > (b.y * len) - b.x) ? 1 : ((a.y * len) - a.x < (b.y * len) - b.x) ? -1 : 0);
-        });
+//        entities.sort(function(a, b) {
+//            return (((a.y * len) - a.x > (b.y * len) - b.x) ? 1 : ((a.y * len) - a.x < (b.y * len) - b.x) ? -1 : 0);
+//        });
 
 //        for (var i = 0; i < resources.length; i += 1) {
 //            this.drawResource(resources[i]);
@@ -1245,11 +1250,14 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         y = y - (FiercePlanet.Orientation.worldHeight) / 2;
 
         var direction = this.getAgentDirection(agent);
+        /*
         var blueH = agent.healthCategoryStats[World.resourceCategories[0].code];
         var greenH = agent.healthCategoryStats[World.resourceCategories[1].code];
         var redH = agent.healthCategoryStats[World.resourceCategories[2].code];
         var c = agent.color.toString();
         var newColor = this.diluteColour(redH, greenH, blueH, c);
+        */
+        var newColor = '#fff';
 
         try {
             eval(agent.culture.drawFunction)(ctx, agent, x, y, FiercePlanet.Orientation.pieceWidth, FiercePlanet.Orientation.pieceHeight, newColor, Lifecycle.waveCounter, direction);
