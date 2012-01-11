@@ -2,6 +2,8 @@
 // Running in Node?
 if (typeof(global) != "undefined") {
 
+    _ = require('underscore');
+
     var FiercePlanet = {};
     ModuleManager = require('./../public/javascripts/fp/core/module-manager.js').ModuleManager;
     Lifecycle = require('./../public/javascripts/fp/core/lifecycle.js').Lifecycle;
@@ -48,7 +50,6 @@ if (typeof(global) != "undefined") {
 //jstat = require('./../public/javascripts/jstat-1.0.0/js/jstat-1.0.0.js').jstat;
 //NormalDistribution = require('./../public/javascripts/jstat-1.0.0/js/jstat-1.0.0.js').NormalDistribution;
     jStat = require('./../public/javascripts/jstat-1.0.0/js/jstat.js').jStat;
-    _ = require('underscore');
 
     /*
     jsdom = require('jsdom').jsdom

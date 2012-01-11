@@ -285,7 +285,7 @@ var Additional = Additional || new Campaign();
     
 
         // Checked and authorised
-        if (!_.isUndefined(google) && !_.isUndefined(google.maps)) {
+        if (typeof google !== "undefined" && typeof google.maps !== "undefined") {
 	        this.level12.mapOptions = ({mapTypeId: google.maps.MapTypeId.SATELLITE, center: new google.maps.LatLng(40.75537849652072, -73.98745089769363), zoom: 19}); // The World
 	        this.level13.mapOptions = ({mapTypeId: google.maps.MapTypeId.SATELLITE, center: new google.maps.LatLng(33.30839307429315, 44.388874769210815), zoom: 18}); // The World
 	        this.level14.mapOptions = ({mapTypeId: google.maps.MapTypeId.SATELLITE, center: new google.maps.LatLng(19.04721318329498, 72.85507321357727), zoom: 18}); // The World
