@@ -51,5 +51,5 @@ var ResourceTypes = ResourceTypes || {};
 	
 }).apply(ResourceTypes);
 
-if (typeof(exports) !== "undefined")
+if (typeof exports !== "undefined")
 	exports.ResourceTypes = ResourceTypes;

@@ -443,6 +443,6 @@ var Lifecycle = Lifecycle || {};
 
 }).apply(Lifecycle);
 
-if (typeof(exports) != "undefined")
+if (typeof exports !== "undefined")
     exports.Lifecycle = Lifecycle;
 

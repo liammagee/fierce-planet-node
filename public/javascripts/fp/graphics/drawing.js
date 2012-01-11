@@ -502,7 +502,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
             entities.push(a);
         })
 
-        if (typeof(Lifecycle.currentLevel.dontClearCanvas) === 'undefined' || !Lifecycle.currentLevel.dontClearCanvas)
+        if (!_.isUndefined(Lifecycle.currentLevel.dontClearCanvas) || !Lifecycle.currentLevel.dontClearCanvas)
             this.clearCanvas(canvasName);
         var len = FiercePlanet.Orientation.cellsAcross;
         entities.sort(function(a, b) {

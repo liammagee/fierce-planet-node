@@ -54,7 +54,7 @@ Catastrophe.prototype.strike = function() {
 };
 
 
-if (typeof(exports) != "undefined")
+if (typeof exports !== "undefined")
     exports.Catastrophe = Catastrophe;
 
 

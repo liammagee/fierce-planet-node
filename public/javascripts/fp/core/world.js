@@ -196,6 +196,6 @@ initWorld = (function() {
 initWorld.apply(World);
 
 
-if (typeof(exports) != "undefined")
+if (typeof exports !== "undefined")
     exports.World = World;
 

@@ -106,5 +106,5 @@ var GameOfLifeCultures = GameOfLifeCultures || {};
 }).apply(GameOfLifeCultures);
 
 
-if (typeof(exports) != "undefined")
+if (typeof exports !== "undefined")
     exports.GameOfLifeCultures = GameOfLifeCultures;

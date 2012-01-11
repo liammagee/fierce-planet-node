@@ -27,5 +27,5 @@ Wave.prototype = {
 };
 
 
-if (typeof(exports) != "undefined")
+if (typeof exports !== "undefined")
     exports.Wave = Wave;

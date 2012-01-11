@@ -280,5 +280,5 @@ Profile.makeProfile = function(proxyProfile) {
 
 };
 
-if (typeof(exports) != "undefined")
+if (typeof exports !== "undefined")
     exports.Profile = Profile;

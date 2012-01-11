@@ -67,5 +67,5 @@ var ModuleManager = ModuleManager || {};
 }).apply(ModuleManager);
 
 
-if (typeof(exports) != "undefined")
+if (typeof exports !== "undefined")
     exports.ModuleManager = ModuleManager;

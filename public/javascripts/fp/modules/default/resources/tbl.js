@@ -103,5 +103,5 @@ TBL.doSetup = function() {
 };
 
 
-if (typeof(exports) != "undefined") 
+if (typeof exports !== "undefined")
     exports.TBL = TBL;

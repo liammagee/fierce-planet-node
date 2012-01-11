@@ -1319,5 +1319,5 @@ Level.prototype.getNeighbouringAgents = function(x, y) {
 
 
 
-if (typeof(exports) != "undefined")
+if (typeof exports !== "undefined")
     exports.Level = Level;

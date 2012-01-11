@@ -81,7 +81,7 @@ $LAB
     ])
     .wait(function() {
         var m = urlParams.module;
-        if (typeof(m) != 'undefined') {
+        if (!_.isUndefined(m)) {
             if (m == 'pp') {
                 PredatorPreyModule.init();
             }

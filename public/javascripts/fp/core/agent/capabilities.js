@@ -859,6 +859,6 @@ Capabilities.PreyOnOtherAgentsCapability = new Capability();
 //
 //}).apply(Capabilities.MoveWithMemoryCapability);
 
-if (typeof(exports) != "undefined")
+if (typeof exports !== "undefined")
     exports.Capabilities = Capabilities;
 

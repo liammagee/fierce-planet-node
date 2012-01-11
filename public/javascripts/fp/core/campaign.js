@@ -25,5 +25,5 @@ Campaign.prototype = {
 };
 
 
-if (typeof(exports) != "undefined")
+if (typeof exports !== "undefined")
     exports.Campaign = Campaign;

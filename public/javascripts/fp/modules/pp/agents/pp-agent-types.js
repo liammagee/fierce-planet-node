@@ -323,5 +323,5 @@ var PredatorPreyCultures = PredatorPreyCultures || {};
 }).apply(PredatorPreyCultures);
 
 
-if (typeof(exports) != "undefined")
+if (typeof exports !== "undefined")
     exports.PredatorPreyCultures = PredatorPreyCultures;

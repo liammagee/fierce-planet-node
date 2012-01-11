@@ -64,7 +64,7 @@ var DefaultModule = DefaultModule || {};
 }).apply(DefaultModule);
 
 
-if (typeof(exports) != "undefined")
+if (typeof exports !== "undefined")
     exports.DefaultModule = DefaultModule;
 
 

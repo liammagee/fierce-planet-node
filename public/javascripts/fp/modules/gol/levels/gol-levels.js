@@ -110,5 +110,5 @@ var GameOfLifeLevels = GameOfLifeLevels || new Campaign();
 
 }).apply(GameOfLifeLevels);
 
-if (typeof(exports) != "undefined")
+if (typeof exports !== "undefined")
     exports.GameOfLifeLevels = GameOfLifeLevels;

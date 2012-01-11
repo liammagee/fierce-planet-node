@@ -20,8 +20,6 @@ FiercePlanet.Recording = FiercePlanet.Recording || {};
      */
     this.recordWorld = function() {
             if (Lifecycle.currentLevel != undefined) {
-                if (typeof console != "undefined")
-                    console.log("Recording at: " + FiercePlanet.Game.globalRecordingCounter);
                 try {
                     var level = new Level(Lifecycle.currentLevel.id);
                     var agents = [];
@@ -75,8 +73,6 @@ FiercePlanet.Recording = FiercePlanet.Recording || {};
      */
     this.replayStep = function () {
             var level = FiercePlanet.Game.recordedLevels[FiercePlanet.Game.globalRecordingCounter];
-            if (typeof console != "undefined")
-                console.log("Replaying at: " + FiercePlanet.Game.globalRecordingCounter);
             if (level == undefined) {
                 this.replayStop();
             }

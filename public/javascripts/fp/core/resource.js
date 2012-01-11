@@ -142,7 +142,7 @@ Resource.prototype.provideYield = function(agent, resourceEffect, adjustSpeedToY
     }
 };
 
-if (typeof(exports) != "undefined") {
+if (typeof exports !== "undefined") {
     exports.ResourceCategory = ResourceCategory;
     exports.ResourceType = ResourceType;
     exports.Resource = Resource;

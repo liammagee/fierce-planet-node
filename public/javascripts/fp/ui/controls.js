@@ -92,7 +92,7 @@ FiercePlanet.Controls = FiercePlanet.Controls || {};
             $('#close-map').click(FiercePlanet.Editor.closeMap);
         }
         catch (err){
-            if (typeof console != "undefined")
+            if (!_.isUndefined(console))
                 console.log(err);
         }
 
