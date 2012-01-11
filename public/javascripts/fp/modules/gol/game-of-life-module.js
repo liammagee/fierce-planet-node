@@ -230,7 +230,7 @@ var GameOfLifeModule = GameOfLifeModule || {};
     };
 }).apply(GameOfLifeModule);
 
-if (typeof(exports) != "undefined") {
+if (typeof exports !== "undefined") {
     exports.GameOfLifeCultures = GameOfLifeCultures;
     exports.GameOfLifeLevels = GameOfLifeLevels;
     exports.GameOfLifeModule = GameOfLifeModule;

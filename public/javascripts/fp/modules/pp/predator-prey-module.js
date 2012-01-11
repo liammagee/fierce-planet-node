@@ -43,6 +43,6 @@ var PredatorPreyModule = PredatorPreyModule || {};
 
 }).apply(PredatorPreyModule);
 
-if (typeof(exports) != "undefined")
+if (typeof exports !== "undefined")
     exports.PredatorPreyModule = PredatorPreyModule;
 

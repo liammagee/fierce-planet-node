@@ -493,7 +493,7 @@ $(function() {
     }
 
     var passwordHandler = function(command) {
-        if (typeof(jqconsole.userCredentials) === 'undefined') {
+        if (_.isUndefined(jqconsole.userCredentials)) {
             jqconsole.Write("Please enter your login details:\n");
         }
         else {

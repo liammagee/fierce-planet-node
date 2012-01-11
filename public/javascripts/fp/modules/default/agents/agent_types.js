@@ -254,6 +254,6 @@ var DefaultCultures = DefaultCultures || {};
 }).apply(DefaultCultures);
 
 
-if (typeof(exports) != "undefined") 
+if (typeof exports !== "undefined")
     exports.DefaultCultures = DefaultCultures;
 

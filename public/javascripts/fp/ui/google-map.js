@@ -279,7 +279,7 @@ FiercePlanet.GoogleMapUtils = FiercePlanet.GoogleMapUtils || {};
         var canvasName = altCanvasName || '#actual_map';
 
         // If the map needs rotation, rotate the underlying div
-        if (options && typeof(options.rotate) !== "undefined") {
+        if (options && !_.isUndefined(options.rotate)) {
             $('#actual_map').css({'-webkit-transform': 'rotate(' + options.rotate + 'deg)'});
             //'-webkit-transform': 'rotate(' + this.mapRotationAngle + 'deg)',
         }
@@ -299,7 +299,7 @@ FiercePlanet.GoogleMapUtils = FiercePlanet.GoogleMapUtils || {};
 
         // handle maptypeid_changed event to set the credit line
         google.maps.event.addListener(map, 'maptypeid_changed', function() {
-            if (typeof mapTypes[map.getMapTypeId()] != "undefined")
+            if (!_.isUndefined(map.getMapTypeId()))
                 setCredit(mapTypes[map.getMapTypeId()].credit);
         });
         return map;

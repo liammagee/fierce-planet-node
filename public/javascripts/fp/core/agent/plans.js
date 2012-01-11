@@ -110,25 +110,26 @@ var Plans = Plans || {};
 
                     // Main difference from capability - ignore if this cell has not been visited or viewed by this agent (or an agent it has met)
                     var memoryNotFound = true;
-                    if ( typeof(agent.memoriesOfPlacesVisited[newCell]) !== 'undefined' ||
-                        typeof(agent.memoriesOfPathsUntried[newCell]) !== 'undefined')
+
+                    if (!_.isUndefined(agent.memoriesOfPlacesVisited[newCell]) ||
+                        !_.isUndefined(agent.memoriesOfPathsUntried[newCell]))
                         memoryNotFound = false;
                     // Check if other agents' memories contain this cell
                     if (memoryNotFound) {
-                        if (typeof(agent.memoriesOfPlacesVisitedByOtherAgents) !== 'undefined') {
+                        if (!_.isUndefined(agent.memoriesOfPlacesVisitedByOtherAgents)) {
                             for (var k in agent.memoriesOfPlacesVisitedByOtherAgents) {
                                 if (agent.memoriesOfPlacesVisitedByOtherAgents.hasOwnProperty(k)) {
                                     var otherAgentsMemories = agent.memoriesOfPlacesVisitedByOtherAgents[k];
-                                    if (typeof(otherAgentsMemories[newCell]) !== 'undefined')
+                                    if (!_.isUndefined(otherAgentsMemories[newCell]))
                                         memoryNotFound = false;
                                 }
                             }
                         }
-                        if (typeof(agent.memoriesOfPathsUntriedByOtherAgents) !== 'undefined') {
+                        if (!_.isUndefined(agent.memoriesOfPathsUntriedByOtherAgents)) {
                             for (var k in agent.memoriesOfPathsUntriedByOtherAgents) {
                                 if (agent.memoriesOfPathsUntriedByOtherAgents.hasOwnProperty(k)) {
                                     var otherAgentsMemories = agent.memoriesOfPathsUntriedByOtherAgents[k];
-                                    if (typeof(otherAgentsMemories[newCell]) !== 'undefined')
+                                    if (!_.isUndefined(otherAgentsMemories[newCell]))
                                         memoryNotFound = false;
                                 }
                             }
@@ -193,6 +194,6 @@ var Plans = Plans || {};
 }).apply(Plans);
 
 
-if (typeof(exports) != "undefined")
+if (typeof exports !== "undefined")
     exports.Plans = Plans;
 

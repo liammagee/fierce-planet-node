@@ -23,7 +23,7 @@ function Tile(color, x, y) {
 Tile.prototype.getPosition = function() { return [this.x, this.y]; };
 Tile.prototype.moveTo = function(x, y) { this.x = x; this.y = y; };
 
-if (typeof(exports) != "undefined") {
+if (typeof exports !== "undefined") {
     exports.DEFAULT_TILE_COLOR = DEFAULT_TILE_COLOR;
     exports.Tile = Tile;
 }

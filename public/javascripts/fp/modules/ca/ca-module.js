@@ -160,7 +160,7 @@ var CellularAutomataModule = CellularAutomataModule || {};
 }).apply(CellularAutomataModule);
 
 
-if (typeof(exports) != "undefined") {
+if (typeof exports !== "undefined") {
     exports.CellularAutomataLevels = CellularAutomataLevels;
     exports.CellularAutomataModule = CellularAutomataModule;
 }

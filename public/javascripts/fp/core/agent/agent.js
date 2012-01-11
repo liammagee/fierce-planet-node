@@ -182,7 +182,7 @@ function Agent(culture, x, y) {
 
         var agent = this;
         this.culture.beliefs.forEach(function(belief) {
-            if (belief && typeof(belief.makeBelief) !== 'undefined')
+            if (!_.isUndefined(belief) && !_.isUndefined(belief.makeBelief))
                 belief.makeBelief(agent, level);
         });
     };
@@ -474,9 +474,9 @@ function Agent(culture, x, y) {
     /**
      */
     this.executePlan = function(level) {
-        if (typeof(this.currentPlan) == 'undefined' || this.currentPlanStep >= this.currentPlan.distance)
+        if (_.isUndefined(this.currentPlan) || this.currentPlanStep >= this.currentPlan.distance)
             this.developPlan(level);
-        if (typeof(this.currentPlan) == 'undefined' || this.currentPlanStep >= this.currentPlan.distance)
+        if (_.isUndefined(this.currentPlan) || this.currentPlanStep >= this.currentPlan.distance)
             return;
         var point = this.currentPlan.trail[this.currentPlanStep];
         this.moveTo(point[0], point[1]);
@@ -602,7 +602,7 @@ function SimpleAgent(agentType, x, y, color, speed, health, wanderX, wanderY, la
     this.healthCategoryStats = healthCategoryStats;
 }
 
-if (typeof(exports) != "undefined") {
+if (typeof exports !== "undefined") {
     exports.Agent = Agent;
     exports.Memory = Memory;
     exports.MemoryOfAgent = MemoryOfAgent;

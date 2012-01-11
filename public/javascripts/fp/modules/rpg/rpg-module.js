@@ -34,6 +34,6 @@ var RpgModule = RpgModule || {};
 
 }).apply(RpgModule);
 
-if (typeof(exports) != "undefined")
+if (typeof exports !== "undefined")
     exports.RpgModule = RpgModule;
 

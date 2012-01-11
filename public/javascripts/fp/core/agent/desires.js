@@ -11,7 +11,7 @@ var Desires = Desires || {};
     this.rankDesires = function(agent, level) {
         var desires = agent.culture.desires;
         return desires.sort(function(a, b) {
-            if (typeof(a.evaluate) == 'undefined' || typeof(b.evaluate) == 'undefined')
+            if (_.isUndefined(a.evaluate) || _.isUndefined(b.evaluate))
                 return 0;
             return  b.evaluate(agent, level) -  a.evaluate(agent, level);
         });
@@ -26,7 +26,7 @@ Desires.ImproveHealth = {};
         return 1.0 - (agent.health / AgentConstants.INITIAL_HEALTH);
     };
     this.findSatisfyingObjects = function(agent) {
-        if (typeof(agent.memoriesOfResources) === 'undefined')
+        if (_.isUndefined(agent.memoriesOfResources))
             return null;
         var satisfyingObjects = [];
         for (var i in agent.memoriesOfResources) {
@@ -50,13 +50,13 @@ Desires.ExploreSpace = {};
         return 0.5;
     };
     this.findSatisfyingObjects = function(agent) {
-        if (typeof(agent.memoriesOfPathsUntried) === 'undefined')
+        if (_.isUndefined(agent.memoriesOfPathsUntried))
             return null;
         var satisfyingObjects = [];
         for (var i in agent.memoriesOfPathsUntried) {
             if (agent.memoriesOfPathsUntried.hasOwnProperty(i)) {
                 var belief = agent.memoriesOfPathsUntried[i];
-                if (typeof(belief.x) !== 'undefined' && typeof(belief.y) !== 'undefined')
+                if (!_.isUndefined(belief.x) && !_.isUndefined(belief.y))
                     satisfyingObjects.push([belief.x, belief.y]);
             }
         }
@@ -66,7 +66,7 @@ Desires.ExploreSpace = {};
                 for (var j in otherAgentsBeliefs) {
                     if (otherAgentsBeliefs.hasOwnProperty(j)) {
                         var belief = otherAgentsBeliefs[j];
-                        if (typeof(belief.x) !== 'undefined' && typeof(belief.y) !== 'undefined' && !(belief.x == agent.x && belief.y == agent.y))
+                        if (!_.isUndefined(belief.x) && !_.isUndefined(belief.y) && !(belief.x == agent.x && belief.y == agent.y))
                             satisfyingObjects.push([belief.x, belief.y]);
                     }
                 }
@@ -143,7 +143,7 @@ Desires.Flee = {};
             return 0.0;
     };
     this.findSatisfyingObjects = function(agent) {
-        if (typeof(agent.memoriesOfAgents) === 'undefined')
+        if (_.isUndefined(agent.memoriesOfAgents))
             return null;
         var satisfyingObjects = [];
         for (var i in agent.memoriesOfAgents) {
@@ -167,7 +167,7 @@ Desires.Reproduce = {};
         return 0.1;
     };
     this.findSatisfyingObjects = function(agent) {
-        if (typeof(agent.memoriesOfAgents) === 'undefined')
+        if (_.isUndefined(agent.memoriesOfAgents))
             return null;
         var satisfyingObjects = [];
         for (var i in agent.memoriesOfAgents) {
@@ -184,6 +184,6 @@ Desires.Reproduce = {};
 
 }).apply(Desires.Reproduce);
 
-if (typeof(exports) != "undefined")
+if (typeof exports !== "undefined")
     exports.Desires = Desires;
 

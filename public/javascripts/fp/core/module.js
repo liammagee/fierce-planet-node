@@ -152,6 +152,6 @@ function Module() {};
     };
 
 
-	if (typeof(exports) != "undefined")
-	    exports.Module = Module;
+if (typeof exports !== "undefined")
+    exports.Module = Module;
 

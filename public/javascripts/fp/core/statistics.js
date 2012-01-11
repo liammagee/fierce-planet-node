@@ -191,5 +191,5 @@ var Statistics = {};
 	
 }).apply(Statistics);
 
-if (typeof(exports) !== "undefined")
+if (typeof exports !== "undefined")
 	exports.Statistics = Statistics;

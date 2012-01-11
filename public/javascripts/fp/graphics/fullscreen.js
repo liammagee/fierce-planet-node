@@ -12,16 +12,15 @@
         browserPrefixes = 'webkit moz o ms khtml'.split(' ');
  
     // check for native support
-    if (typeof document.cancelFullScreen != 'undefined') {
+    if (!_.isUndefined(document.cancelFullScreen)) {
         fullScreenApi.supportsFullScreen = true;
     } else {
         // check for fullscreen support by vendor prefix
         for (var i = 0, il = browserPrefixes.length; i < il; i++ ) {
             fullScreenApi.prefix = browserPrefixes[i];
- 
-            if (typeof document[fullScreenApi.prefix + 'CancelFullScreen' ] != 'undefined' ) {
+
+            if (!_.isUndefined(document[fullScreenApi.prefix + 'CancelFullScreen' ])) {
                 fullScreenApi.supportsFullScreen = true;
- 
                 break;
             }
         }
@@ -50,7 +49,7 @@
     }
  
     // jQuery plugin
-    if (typeof jQuery != 'undefined') {
+    if (!_.isUndefined(jQuery)) {
         jQuery.fn.requestFullScreen = function() {
  
             return this.each(function() {

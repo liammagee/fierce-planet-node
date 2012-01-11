@@ -24,9 +24,6 @@ FiercePlanet.Mouse = FiercePlanet.Mouse || {};
     this.bindGameMouseEvents = function() {
         var topMostCanvas = FiercePlanet.GeneralUI.getTopMostCanvas();
 
-        if (typeof console != "undefined")
-            console.log('Binding mouse events');
-
         topMostCanvas.click(FiercePlanet.GeneralUI.handleNoticeEvents);
         topMostCanvas.click(FiercePlanet.ResourceUI.processResourceCanvasClick);
 

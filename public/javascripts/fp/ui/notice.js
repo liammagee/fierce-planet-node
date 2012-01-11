@@ -37,7 +37,7 @@ function Notice(text, x, y, start, duration, width, height, backgroundColor, for
     this.font = font || '500 14px/2 Unknown Font, sans-serif';
 }
 
-if (typeof(exports) != "undefined")
+if (typeof exports !== "undefined")
     exports.Notice = Notice;
 
 

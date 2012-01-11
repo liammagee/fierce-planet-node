@@ -82,8 +82,7 @@ var PredatorPreyLevels = PredatorPreyLevels || new Campaign();
                         this.terrainMap[[i, j]] = bg;
                     }
                 }
-
-                if (typeof(FiercePlanet) != 'undefined' && FiercePlanet.Parameters) {
+                if (!_.isUndefined(FiercePlanet) && !_.isUndefined(FiercePlanet.Parameters)) {
                     PredatorPreyCultures.PREY_AGENT_TYPE.waveNumber = parseInt(FiercePlanet.Parameters.PreyWaveNumber);
                     PredatorPreyCultures.PREY_AGENT_TYPE.moveCost = parseInt(FiercePlanet.Parameters.PreyMoveCost);
                     PredatorPreyCultures.PREY_AGENT_TYPE.birthProbability = parseInt(FiercePlanet.Parameters.PreyBirthProbability);
@@ -110,7 +109,7 @@ var PredatorPreyLevels = PredatorPreyLevels || new Campaign();
             };
 
             /* Google Map links */
-            if (typeof(google) !== "undefined" && typeof(google.maps) !== "undefined") {
+            if (!_.isUndefined(google) && !_.isUndefined(google.maps)) {
                 this.mapOptions = ({mapTypeId:google.maps.MapTypeId.ROADMAP, center:new google.maps.LatLng(-37.81439, 144.96099), zoom:16, tilt:0, rotate:20}); // Budapest: 47.5153, 19.0782
             }
 
@@ -128,5 +127,5 @@ var PredatorPreyLevels = PredatorPreyLevels || new Campaign();
 
 }).apply(PredatorPreyLevels);
 
-if (typeof(exports) != "undefined")
+if (typeof exports !== "undefined")
     exports.PredatorPreyLevels = PredatorPreyLevels;

@@ -20,23 +20,22 @@ Beliefs.BeliefsAboutPaths = {};
     this.name = 'Beliefs About Paths';
     this.makeBelief = function(agent, level) {
         // Initialise belief variables
-        if (typeof(agent.beliefs) == 'undefined')
+        if (_.isUndefined(agent.beliefs))
             agent.beliefs = [];
-        if (typeof(agent.chronologicalMemory) == 'undefined')
+        if (_.isUndefined(agent.chronologicalMemory))
             agent.chronologicalMemory = [];
-        if (typeof(agent.memoriesOfPlacesVisited) == 'undefined')
+        if (_.isUndefined(agent.memoriesOfPlacesVisited))
             agent.memoriesOfPlacesVisited = [];
-        if (typeof(agent.memoriesOfPathsUntried) == 'undefined')
+        if (_.isUndefined(agent.memoriesOfPathsUntried))
             agent.memoriesOfPathsUntried = [];
 
         var x = agent.x, y = agent.y;
 
         var memory = null;
 
-        if (agent.memoriesOfPlacesVisited[[x, y]] != undefined) {
+        if (!_.isUndefined(agent.memoriesOfPlacesVisited[[x, y]])) {
             memory = agent.memoriesOfPlacesVisited[[x, y]];
             memory.addVisit(agent.id, agent.age);
-
         }
         else {
             memory = new Memory(agent.id, agent.age, x, y);
@@ -112,18 +111,16 @@ Beliefs.BeliefsAboutResources = {};
 (function() {
     this.name = 'Beliefs About Resources';
     this.makeBelief = function(agent, level) {
-        if (level == undefined)
+        if (_.isUndefined(level))
             return;
 
         var x = agent.x, y = agent.y;
-        if (typeof(x) === 'undefined' || typeof(y) === 'undefined')
+        if (_.isUndefined(x) || _.isUndefined(y))
             return;
 
         // Initialise belief variables
-        if (typeof(agent.beliefs) == 'undefined')
-            agent.beliefs = [];
-        if (typeof(agent.memoriesOfResources) == 'undefined')
-            agent.memoriesOfResources = [];
+        agent.beliefs = agent.beliefs || [];
+        agent.memoriesOfResources = agent.memoriesOfResources || [];
 
 
         var resources = level.resources;
@@ -160,18 +157,16 @@ Beliefs.BeliefsAboutOtherAgents = {};
 (function() {
     this.name = 'Beliefs About Other Agents';
     this.makeBelief = function(agent, level) {
-        if (level == undefined)
+        if (_.isUndefined(level))
             return;
 
         var x = agent.x, y = agent.y;
-        if (typeof(x) === 'undefined' || typeof(y) === 'undefined')
+        if (_.isUndefined(x) || _.isUndefined(y))
             return;
 
         // Initialise belief variables
-        if (typeof(agent.beliefs) == 'undefined')
-            agent.beliefs = [];
-        if (typeof(agent.memoriesOfAgents) == 'undefined')
-            agent.memoriesOfAgents = [];
+        agent.beliefs = agent.beliefs || [];
+        agent.memoriesOfAgents = agent.memoriesOfAgents || [];
 
 
 
@@ -212,18 +207,17 @@ Beliefs.BeliefsBasedOnOtherAgentsBeliefs = {};
 (function() {
     this.name = 'Beliefs Based On Other Agents\' Beliefs';
     this.makeBelief = function(agent, level) {
-        if (level == undefined)
+        if (_.isUndefined(level))
             return;
 
         var x = agent.x, y = agent.y;
-        if (typeof(x) === 'undefined' || typeof(y) === 'undefined')
+        if (_.isUndefined(x) || _.isUndefined(y))
             return;
 
         // Initialise belief variables
-        if (typeof(agent.memoriesOfPlacesVisitedByOtherAgents) == 'undefined')
-            agent.memoriesOfPlacesVisitedByOtherAgents = {};
-        if (typeof(agent.memoriesOfPathsUntriedByOtherAgents) == 'undefined')
-            agent.memoriesOfPathsUntriedByOtherAgents = {};
+        agent.beliefs = agent.beliefs || [];
+        agent.memoriesOfAgents = agent.memoriesOfAgents || [];
+
 
 
         // Add agents on this tile to memory
@@ -351,6 +345,6 @@ Beliefs.BeliefsBasedOnOtherAgentsBeliefs = {};
 
 
 
-if (typeof(exports) != "undefined")
+if (typeof exports !== "undefined")
     exports.Beliefs = Beliefs;
 

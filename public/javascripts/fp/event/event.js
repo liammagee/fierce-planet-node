@@ -57,7 +57,7 @@ EventTarget.prototype = {
     constructor: EventTarget,
 
     addListener: function(type, listener){
-        if (typeof this.listeners[type] == "undefined"){
+        if (_.isUndefined(this.listeners[type])) {
             this.listeners[type] = [];
         }
 
@@ -114,7 +114,7 @@ FiercePlanet.Event = FiercePlanet.Event || {};
 
         // Add logging event listeners
         FiercePlanet.Game.eventTarget.addListener("game", function(e) {
-            if (typeof console != "undefined")
+            if (_.isUndefined(console))
                console.log("Game event " + e.event + " logged at:" + e.time);
         });
 
