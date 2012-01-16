@@ -11,17 +11,17 @@ var level = new Level();
 
 
 LevelProvider = function(){};
-LevelProvider.prototype.levels = [];
+LevelProvider.prototype.worlds = [];
 
 LevelProvider.prototype.findAll = function(callback) {
-  callback( null, this.levels )
+  callback( null, this.worlds )
 };
 
 LevelProvider.prototype.findById = function(id, callback) {
   var result = null;
-  for(var i =0;i<this.levels.length;i++) {
-    if( this.levels[i]._id == id ) {
-      result = this.levels[i];
+  for(var i =0;i<this.worlds.length;i++) {
+    if( this.worlds[i]._id == id ) {
+      result = this.worlds[i];
       break;
     }
   }
@@ -44,7 +44,7 @@ LevelProvider.prototype.save = function(levels, callback) {
 //    for(var j =0;j< article.comments.length; j++) {
 //      article.comments[j].created_at = new Date();
 //    }
-    this.levels[this.levels.length]= level;
+    this.worlds[this.worlds.length]= level;
   }
   callback(null, levels);
 };

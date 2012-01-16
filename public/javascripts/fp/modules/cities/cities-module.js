@@ -44,7 +44,15 @@ var CitiesModule = CitiesModule || {};
             ctx.fillRect(nx, ny, FiercePlanet.Orientation.cellWidth, FiercePlanet.Orientation.cellHeight);
         });
         this.CELLULAR_AGENT_TYPE.initFunction = function (agent, world) {
-            agent.potential = Math.random();
+            if (FiercePlanet.Parameters.DistributeNormally) {
+                var pot = jStat.normal.sample(0.5, 0.15);
+                pot = (pot < 0 ? 0 : (pot > 1 ? 1 : pot));
+                agent.potential = pot;
+            }
+            // Otherwise, assume uniform distribution
+            else {
+                agent.potential = Math.random();
+            }
         }
     };
 
@@ -65,6 +73,7 @@ var CitiesModule = CitiesModule || {};
             this.introduction =
                 "<p>Scale Factor</p><p><input class='world-parameters' name='ScaleFactor' value='2'/> </p>" +
                     "<p>Rate of growth:</p><p><input class='world-parameters' name='RateOfGrowth' value='1.05'/> </p>" +
+                    "<p>Distribute potential normally:</p><p><input type='checkbox' class='world-parameters' name='DistributeNormally' checked='checked'/> </p>" +
                     ""
             ;
             this.conclusion = "Well done.";
@@ -79,16 +88,11 @@ var CitiesModule = CitiesModule || {};
                 this.initialiseWaves(1);
             };
             this.tickFunction = function () {
-                var potentials = _.map(this.currentAgents, function(agent) { return agent.potential; });
-                var min = _.min(potentials);
-                var max = _.max(potentials);
-                var range = max - min;
-                FiercePlanet.Parameters.TotalPotential = _.reduce(potentials, function(memo, num) { return memo + num}, 0);
-                FiercePlanet.Parameters.TotalAgents = this.currentAgents.length;
-                FiercePlanet.Parameters.Max = max;
-                FiercePlanet.Parameters.Min = min;
+                var potentials = _.map(this.currentAgents, function(agent) { return agent.potential; }),
+                    min = _.min(potentials),
+                    max = _.max(potentials),
+                    range = max - min;
                 FiercePlanet.Parameters.Range =  range;
-                console.log(FiercePlanet.Parameters.Range);
             };
         }).apply(this.citiesWorld1);
 
@@ -103,6 +107,7 @@ var CitiesModule = CitiesModule || {};
             this.introduction =
                 "<p>Scale Factor</p><p><input class='world-parameters' name='ScaleFactor' value='2'/> </p>" +
                     "<p>Rate of growth:</p><p><input class='world-parameters' name='RateOfGrowth' value='1.05'/> </p>" +
+                    "<p>Distribute potential normally:</p><p><input type='checkbox' class='world-parameters' name='DistributeNormally' checked='checked'/> </p>" +
                     ""
             ;
             this.conclusion = "Well done.";
@@ -122,11 +127,20 @@ var CitiesModule = CitiesModule || {};
                     });
                     totalPotential = totalPotential / counter;
 
-                    agent.potential = Math.pow(totalPotential * FiercePlanet.Parameters.RateOfGrowth, FiercePlanet.Parameters.ScaleFactor);
+                    var normalisedPotential = (totalPotential / FiercePlanet.Parameters.Range);
+                    agent.potential = FiercePlanet.Parameters.RateOfGrowth * Math.pow(normalisedPotential, FiercePlanet.Parameters.ScaleFactor);// * FiercePlanet.Parameters.TotalPotential;
                     if (agent.potential > 1)
                         agent.potential = 1;
                 };
                 this.initialiseWaves(1);
+            };
+            this.tickFunction = function () {
+                var potentials = _.map(this.currentAgents, function(agent) { return agent.potential; }),
+                    min = _.min(potentials),
+                    max = _.max(potentials),
+                    range = max - min;
+                console.log(FiercePlanet.Parameters.Range)
+                FiercePlanet.Parameters.Range =  range;
             };
         }).apply(this.citiesWorld2);
 

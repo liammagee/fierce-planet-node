@@ -1,0 +1,12 @@
+h3= title
+
+#worlds
+  - each world in worlds
+    div.world
+      div.title
+        a.customWorld(id='worldSelect' + world._id,href='#')!= world.name
+
+script(type='text/javascript')
+  $(document).ready(function() {
+    $('.customWorld').click(FiercePlanet.GeneralUI.changeWorldDirectly);
+  });

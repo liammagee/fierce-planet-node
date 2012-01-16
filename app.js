@@ -268,29 +268,29 @@ app.get('/mobile', function(req, res){
     });
 });
 
-app.get('/levels/gallery', function(req, res){
-  fpProvider.findAll(function(error, levels){
-      res.render('levels/gallery.jade', { locals: {
-          title: 'Levels',
+app.get('/worlds/gallery', function(req, res){
+  fpProvider.findAll(function(error, worlds){
+      res.render('worlds/gallery.jade', { locals: {
+          title: 'Worlds',
           layout: false,
-          levels: levels
+          worlds: worlds
           }
       });
-//      res.send(levels);
+//      res.send(worlds);
   });
 });
 
-app.get('/levels/list', function(req, res){
-  fpProvider.findAllByUser(req.user, function(error, levels){
-      res.send(levels);
+app.get('/worlds/list', function(req, res){
+  fpProvider.findAllByUser(req.user, function(error, worlds){
+      res.send(worlds);
   });
 });
 
-app.get('/levels/:id', function(req, res){
+app.get('/worlds/:id', function(req, res){
     var id = req.params.id;
     if (id) {
-        fpProvider.findById(id, function(error, level){
-            res.send(level);
+        fpProvider.findById(id, function(error, world){
+            res.send(world);
         });
     }
     else {
@@ -298,13 +298,13 @@ app.get('/levels/:id', function(req, res){
     }
 });
 
-app.get('/levels/share/:id', function(req, res){
+app.get('/worlds/share/:id', function(req, res){
     var id = req.params.id;
     if (id) {
-        fpProvider.findById(id, function(error, level){
+        fpProvider.findById(id, function(error, world){
             res.render('index', {
                 title: 'Fierce Planet',
-                locals: {serverLevel: level }
+                locals: {serverWorld: world }
             });
         });
     }
@@ -316,30 +316,30 @@ app.get('/levels/share/:id', function(req, res){
     }
 });
 
-app.get('/levels/destroy/:id', function(req, res){
+app.get('/worlds/destroy/:id', function(req, res){
     var id = req.params.id;
     if (id) {
-        fpProvider.deleteById(id, function(error, level){
+        fpProvider.deleteById(id, function(error, world){
             if (error) res.send([]);
             else {
-                fpProvider.findAllByUser(req.user, function(err, levels){
+                fpProvider.findAllByUser(req.user, function(err, worlds){
                     if (err) res.send([]);
-                    else res.send(levels);
+                    else res.send(worlds);
                 });
             }
         });
     }
 });
 
-app.post('/levels/save', function(req, res){
-    if (req.body.level && req.user) {
-        var level = JSON.parse(req.body.level);
-        if (! level.user_id)
-            level.user_id = req.user._id;
-        fpProvider.updateLevel(level, function(error, result){
+app.post('/worlds/save', function(req, res){
+    if (req.body.world && req.user) {
+        var world = JSON.parse(req.body.world);
+        if (! world.user_id)
+            world.user_id = req.user._id;
+        fpProvider.updateWorld(world, function(error, result){
             if (error) res.send(error);
             else  {
-                res.send({_id: level._id});
+                res.send({_id: world._id});
             }
         });
     }

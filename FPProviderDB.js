@@ -1,7 +1,7 @@
-var levelCounter = 1;
+var worldCounter = 1;
 
-World = require('./public/javascripts/fp/core/Universe.js').World;
-Level = require('./public/javascripts/fp/core/level.js').Level;
+Universe = require('./public/javascripts/fp/core/universe.js').Universe;
+World = require('./public/javascripts/fp/core/world.js').World;
 require('./public/javascripts/fp/core/agent/agent.js');
 require('./public/javascripts/fp/core/resource.js');
 require('./public/javascripts/fp/core/tile.js');
@@ -44,21 +44,21 @@ FPProvider = function(name, host, port, callback, u, p){
       }
   });
 };
-FPProvider.prototype.levels = [];
+FPProvider.prototype.worlds = [];
 
 
 FPProvider.prototype.getCollection= function(callback) {
-    this.db.collection('levels', function(error, level_collection) {
+    this.db.collection('worlds', function(error, world_collection) {
       if( error ) callback(error);
-      else callback(null, level_collection);
+      else callback(null, world_collection);
     });
 };
 
 FPProvider.prototype.findAll = function(callback) {
-    this.getCollection(function(error, level_collection) {
+    this.getCollection(function(error, world_collection) {
       if( error ) callback(error)
       else {
-        level_collection.find().toArray(function(error, results) {
+        world_collection.find().toArray(function(error, results) {
           if( error ) callback(error)
           else callback(null, results)
         });
@@ -66,11 +66,11 @@ FPProvider.prototype.findAll = function(callback) {
     });};
 
 FPProvider.prototype.findAllByUser = function(user, callback) {
-    this.getCollection(function(error, level_collection) {
+    this.getCollection(function(error, world_collection) {
       if( error ) callback(error)
       else {
-//        level_collection.find({user_id: level_collection.db.bson_serializer.ObjectID.createFromHexString(user._id)}).toArray(function(error, results) {
-        level_collection.find({user_id: user._id}).toArray(function(error, results) {
+//        world_collection.find({user_id: world_collection.db.bson_serializer.ObjectID.createFromHexString(user._id)}).toArray(function(error, results) {
+        world_collection.find({user_id: user._id}).toArray(function(error, results) {
           if( error ) callback(error)
           else callback(null, results)
         });
@@ -78,10 +78,10 @@ FPProvider.prototype.findAllByUser = function(user, callback) {
     });};
 
 FPProvider.prototype.findById = function(id, callback) {
-    this.getCollection(function(error, level_collection) {
+    this.getCollection(function(error, world_collection) {
       if( error ) callback(error)
       else {
-        level_collection.findOne({_id: level_collection.db.bson_serializer.ObjectID.createFromHexString(id)}, function(error, result) {
+        world_collection.findOne({_id: world_collection.db.bson_serializer.ObjectID.createFromHexString(id)}, function(error, result) {
           if( error ) callback(error)
           else callback(null, result)
         });
@@ -89,40 +89,40 @@ FPProvider.prototype.findById = function(id, callback) {
     });};
 
 FPProvider.prototype.deleteById = function(id, callback) {
-    this.getCollection(function(error, level_collection) {
+    this.getCollection(function(error, world_collection) {
       if( error ) callback(error)
       else {
-          level_collection.remove({_id: level_collection.db.bson_serializer.ObjectID.createFromHexString(id)}, function(err, r) {
+          world_collection.remove({_id: world_collection.db.bson_serializer.ObjectID.createFromHexString(id)}, function(err, r) {
             if( error ) callback(error)
             else callback(null, r)
           });
       }
     });};
 
-FPProvider.prototype.updateLevel = function(level, callback) {
-    this.getCollection(function(error, level_collection) {
+FPProvider.prototype.updateWorld = function(world, callback) {
+    this.getCollection(function(error, world_collection) {
         if( error ) callback(error);
         else {
-			console.log("level id: " + level._id)
-            if (level._id && typeof(level._id) === 'string')
-                level._id = level_collection.db.bson_serializer.ObjectID.createFromHexString(level._id)
-	        if (level.user_id && typeof(level.user_id) === 'string')
-	                level.user_id = level_collection.db.bson_serializer.ObjectID.createFromHexString(level.user_id)
-            level_collection.save(level, {safe:true}, function(error, result) {
+			console.log("world id: " + world._id)
+            if (world._id && typeof(world._id) === 'string')
+                world._id = world_collection.db.bson_serializer.ObjectID.createFromHexString(world._id)
+	        if (world.user_id && typeof(world.user_id) === 'string')
+	                world.user_id = world_collection.db.bson_serializer.ObjectID.createFromHexString(world.user_id)
+            world_collection.save(world, {safe:true}, function(error, result) {
                 callback(error, result);
             });
         }
     });
 };
-FPProvider.prototype.loadLevels = function(levels, callback) {
-    this.getCollection(function(error, level_collection) {
+FPProvider.prototype.loadWorlds = function(worlds, callback) {
+    this.getCollection(function(error, world_collection) {
       if( error ) callback(error)
       else {
-        if( typeof(levels.length)=="undefined")
-          levels = [levels];
+        if( typeof(worlds.length)=="undefined")
+          worlds = [worlds];
 
-        for( var i =0;i< levels.length;i++ ) {
-          level = levels[i];
+        for( var i =0;i< worlds.length;i++ ) {
+          var world = worlds[i];
 //          article.created_at = new Date();
 //          if( article.comments === undefined ) article.comments = [];
 //          for(var j =0;j< article.comments.length; j++) {
@@ -130,9 +130,9 @@ FPProvider.prototype.loadLevels = function(levels, callback) {
 //          }
         }
 
-        level_collection.remove({}, function(err, r) {
-            level_collection.insert(levels, function() {
-              callback(error, levels);
+        world_collection.remove({}, function(err, r) {
+            world_collection.insert(worlds, function() {
+              callback(error, worlds);
             });
         });
       }
@@ -155,10 +155,10 @@ FPProvider.prototype.findHighScores = function(callback) {
 };
 
 FPProvider.prototype.deleteAll = function(callback) {
-    this.getCollection(function(error, level_collection) {
+    this.getCollection(function(error, world_collection) {
       if( error ) callback(error)
       else {
-        level_collection.remove()
+        world_collection.remove()
                 .toArray(function(error, results) {
           if( error ) callback(error)
           else callback(null, results)
@@ -166,14 +166,6 @@ FPProvider.prototype.deleteAll = function(callback) {
       }
     });};
 
-/* Lets bootstrap with dummy data */
-//new LevelProvider().save([
-//    new Level(1),
-//    new Level(2),
-//    new Level(3)
-//], function(error, levels){
-//    console.log(error);
-//});
 
 
 FPProvider.prototype.getUserCollection= function(callback) {
