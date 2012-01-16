@@ -13,7 +13,7 @@ var CellularAutomataModule = CellularAutomataModule || {};
 (function () {
 
     this.init = function () {
-        this.cellularAutomataLevel  = new Level(1);
+        this.citiesLevel1  = new Level(1);
         (function () {
             this.isometric = false;
             this.allowResourcesOnPath = true;
@@ -56,7 +56,7 @@ var CellularAutomataModule = CellularAutomataModule || {};
             this.conclusion = ("Well done.");
 
             this.currentAgentsFunction = function(agent) {
-                if (agent.y > 0 && agent.y == Lifecycle.waveCounter - 100) {
+                if (agent.y > 0 && agent.y == Lifecycle.waveCounter - 10) {
                     return agent;
                 }
             }
@@ -94,14 +94,14 @@ var CellularAutomataModule = CellularAutomataModule || {};
                     agents[0].isLiving = true;
             };
 
-        }).apply(this.cellularAutomataLevel);
+        }).apply(this.citiesLevel1);
 
 
         // Prepare as a module
         this.id = "CA";
         this.name = "Cellular Automata";
         this.position = 1;
-        this.levels = [this.cellularAutomataLevel ];
+        this.levels = [this.citiesLevel1 ];
     }
 
     this.init();
@@ -117,7 +117,7 @@ var CellularAutomataModule = CellularAutomataModule || {};
             var x = agent.x;
             var y = agent.y;
 
-            if (y > 0 && y == Lifecycle.waveCounter - 100) {
+            if (y > 0 && y == Lifecycle.waveCounter - 10) {
                 var left = (x <= 0) ? false : level.getAgentsAtContentMap(x - 1, y - 1)[0].isLiving;
                 var center = level.getAgentsAtContentMap(x, y - 1)[0].isLiving;
                 var right = (x >= level.cellsAcross - 1) ? false : level.getAgentsAtContentMap(x + 1, y - 1)[0].isLiving;
@@ -128,6 +128,7 @@ var CellularAutomataModule = CellularAutomataModule || {};
             }
         };
         GameOfLifeCultures.CELLULAR_AGENT_TYPE.capabilities = [ switchStateCapability ];
+        GameOfLifeCultures.CELLULAR_AGENT_TYPE.updateFunction = void 0;
 
         var module = new Module();
         module.id = 'CA';

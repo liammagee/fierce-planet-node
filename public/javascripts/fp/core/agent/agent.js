@@ -147,8 +147,6 @@ function Agent(culture, x, y) {
 
 
         // Executes plans
-
-
         if (this.culture.updateFunction)
             this.culture.updateFunction(this, level);
     };
@@ -502,6 +500,12 @@ function Agent(culture, x, y) {
      * Calls the agent type initialise function
      */
     this.init = function(level) {
+        // TODO: Put this in the initialisation logic
+        for (var characteristic in this.culture.characteristics) {
+            if (this.culture.characteristics.hasOwnProperty(characteristic))
+                this[characteristic] = this.culture.characteristics[characteristic];
+        }
+        this.speed = _.isUndefined(this.culture.speed) ? this.speed : this.culture.speed;
         if (this.culture.initFunction)
             this.culture.initFunction(this, level);
     };
@@ -509,11 +513,6 @@ function Agent(culture, x, y) {
 
 
     this.culture = culture;
-    // TODO: Put this in the initialisation logic
-    for (var characteristic in culture.characteristics) {
-        if (culture.characteristics.hasOwnProperty(characteristic))
-            this[characteristic] = culture.characteristics[characteristic];
-    }
     this.color = culture.color;
 
     // Position-related
@@ -547,7 +546,7 @@ function Agent(culture, x, y) {
 
 
     // BELIEFS - TODO: Check if redundant now
-    this.lastMemory = null;
+    this.lastMemory = new Memory(this.id, this.age, x, y);
     this.lastUntriedPathMemory = null;
     this.chronologicalMemory = [];
     this.memoriesOfPlacesVisited = [];
@@ -593,15 +592,18 @@ function SimpleAgent(culture, x, y, color, speed, health, wanderX, wanderY, last
     this.y = y;
     this.color = color;
     this.health = health;
-    this.speed = speed;
+    this.speed = AgentConstants.DEFAULT_SPEED;
     this.wanderX = wanderX;
     this.wanderY = wanderY;
     this.lastMemory = new Memory(0, 0, x, y);
-    this.delay = delay;
-    this.countdownToMove = countdownToMove;
+    this.delay = 0;
+    this.countdownToMove = 0;
     this.healthCategoryStats = healthCategoryStats;
-    this.incrementCountdownToMove = function() { this.countdownToMove ++; };
     this.age = 0, this.bornAt = 0, this.diedAt = 0, this.alive = true;
+    this.reviseBeliefs = function() {};
+    this.incrementCountdownToMove = function() { this.countdownToMove ++; };
+    this.resetCountdownToMove = function() { this.countdownToMove = 0; };
+    this.executePlan = function(level) {};
     /**
      * Calls the agent type initialise function
      */

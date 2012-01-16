@@ -7,6 +7,10 @@
 
 
 
+/**
+ * @namespace Contains orientation properties and methods
+ */
+FiercePlanet.Isometric = FiercePlanet.Isometric || {};
 
 (function() {
     // Adapted from Danko Kozar, http://www.flashperfection.com/tutorials/Isometric-Transformations-15818.html

@@ -146,7 +146,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
             var y = yPos * FiercePlanet.Orientation.cellHeight;
 
             var terrain = Lifecycle.currentLevel.terrainMap[pathTile];
-            var pathColor = terrain ? this.insertAlpha(terrain.color, terrain.alpha) : "#fff";
+            var pathColor = terrain ? this.insertAlpha(terrain.color, terrain.alpha) : "#000";
 
             if ((World.settings.skewTiles || Lifecycle.currentLevel.isometric)) {
                 var newOrigin = FiercePlanet.Isometric.doIsometricOffset(xPos, yPos);
@@ -494,29 +494,11 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
 
         var resources = Lifecycle.currentLevel.resources;
         var agents = Lifecycle.currentLevel.getCurrentAgents();
-        var entities = _.union(resources, agents).sort(function(a, b) {
-            return (((a.y * len) - a.x > (b.y * len) - b.x) ? 1 : ((a.y * len) - a.x < (b.y * len) - b.x) ? -1 : 0);
-        });
-        /*
-        var entities = [];
-        resources.forEach(function(r) {
-            entities.push(r);
-        })
-        agents.forEach(function(a) {
-            entities.push(a);
-        })
-        */
+        var start = Date.now();
 
         if (_.isUndefined(Lifecycle.currentLevel.dontClearCanvas) || !Lifecycle.currentLevel.dontClearCanvas)
             this.clearCanvas(canvasName);
         var len = FiercePlanet.Orientation.cellsAcross;
-//        entities.sort(function(a, b) {
-//            return (((a.y * len) - a.x > (b.y * len) - b.x) ? 1 : ((a.y * len) - a.x < (b.y * len) - b.x) ? -1 : 0);
-//        });
-
-//        for (var i = 0; i < resources.length; i += 1) {
-//            this.drawResource(resources[i]);
-//        }
 
         // Inlined version
         var canvas = $(canvasName)[0];
@@ -525,26 +507,51 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         ctx.translate(FiercePlanet.Orientation.halfWorldWidth, FiercePlanet.Orientation.halfWorldHeight);
         ctx.rotate(FiercePlanet.Orientation.rotationAngle);
 
-        for (var i = 0; i < entities.length; i += 1) {
-            var entity = entities[i];
+        // Handle this special case by merging/sorting resources and agents, so top-most entities are not rendered with overlap
+        if ((World.settings.skewTiles || Lifecycle.currentLevel.isometric) && resources.length > 0) {
+            var entities = _.union(resources, agents)
+                .sort(function(a, b) {
+                    return (((a.y * len) - a.x > (b.y * len) - b.x) ? 1 : ((a.y * len) - a.x < (b.y * len) - b.x) ? -1 : 0);
+                });
+            for (var i = 0; i < entities.length; i += 1) {
+                var entity = entities[i];
 
-            if (/(\w+)\(/.exec(entity.constructor.toString())[1] == 'Resource') {
-                FiercePlanet.Drawing.drawJustResource(ctx, entity);
+                if (/(\w+)\(/.exec(entity.constructor.toString())[1] == 'Resource') {
+                    FiercePlanet.Drawing.drawJustResource(ctx, entity);
+                }
+                else {
+                    var x = entity.x, y = entity.y;
+                    for (var j = 0; j < resources.length; j++) {
+                        var resource = resources[j];
+                        var rx = resource.x;
+                        var ry = resource.y;
+                        if (Math.abs(rx - x) <= 1 && Math.abs(ry - y) <= 1) {
+                            FiercePlanet.Drawing.drawResourceAgentInteraction(ctx, resource, entity);
+                        }
+                    }
+                    FiercePlanet.Drawing.drawAgent(ctx, entity);
+                }
             }
-            else {
-                var x = entity.x, y = entity.y;
+        }
+        else {
+            resources.forEach(function(resource) {
+                FiercePlanet.Drawing.drawJustResource(ctx, resource);
+            })
+            agents.forEach(function(agent) {
+                var x = agent.x, y = agent.y;
                 for (var j = 0; j < resources.length; j++) {
                     var resource = resources[j];
-                    var rx = resource.x;
-                    var ry = resource.y;
+                    var rx = resource.x, ry = resource.y;
                     if (Math.abs(rx - x) <= 1 && Math.abs(ry - y) <= 1) {
-                        FiercePlanet.Drawing.drawResourceAgentInteraction(ctx, resource, entity);
+                        FiercePlanet.Drawing.drawResourceAgentInteraction(ctx, resource, agent);
                     }
                 }
-                FiercePlanet.Drawing.drawAgent(ctx, entity);
-            }
+                FiercePlanet.Drawing.drawAgent(ctx, agent);
+            })
 
         }
+
+//        console.log(Date.now() - start)
 
         ctx.restore();
     };

@@ -29,30 +29,32 @@ var GameOfLifeModule = GameOfLifeModule || {};
                 if (agents && agents.length > 0 && agents[0].isLiving)
                     agentCounter++;
             })
+            agent.isDirty = false;
             if (! agent.isLiving) {
-                if (agentCounter == 3)
+                if (agentCounter == 3) {
                     agent.isLiving = true;
+                    agent.isDirty = true;
+                }
             }
             else  {
                 if (agentCounter < 2 || agentCounter > 3) {
                     agent.isLiving = false;
+                    agent.isDirty = true;
                 }
             }
         };
 
         this.CELLULAR_AGENT_TYPE = new Culture("Cell", "000", World.resourceCategories);
-
         this.CELLULAR_AGENT_TYPE.birthProbability = 0.0;
         this.CELLULAR_AGENT_TYPE.reproductionAge = 15;
         this.CELLULAR_AGENT_TYPE.moveCost = 0;
         this.CELLULAR_AGENT_TYPE.waveNumber = 50;
-
-
+        this.CELLULAR_AGENT_TYPE.speed = 1;
         this.CELLULAR_AGENT_TYPE.characteristics = {
-            isLiving: false
+            isLiving: false, isDirty: true
         };
         this.CELLULAR_AGENT_TYPE.beliefs = [
-            Beliefs.BeliefsAboutPaths
+//            Beliefs.BeliefsAboutPaths
         ];
         this.CELLULAR_AGENT_TYPE.desires = [
         ];
@@ -86,12 +88,13 @@ var GameOfLifeModule = GameOfLifeModule || {};
                 else {
                     nx = nx - (FiercePlanet.Orientation.worldWidth) / 2;
                     ny = ny - (FiercePlanet.Orientation.worldHeight) / 2;
+                    nx = Math.floor(nx);
+                    ny = Math.floor(ny);
 
                     ctx.fillRect(nx, ny, FiercePlanet.Orientation.cellWidth, FiercePlanet.Orientation.cellHeight);
                 }
             }
         });
-
         this.CELLULAR_AGENT_TYPE.initFunction = function (agent, level) {
             var r = Math.random();
             agent.gender = (r < 0.5 ? 'm' : 'f');
@@ -141,14 +144,17 @@ var GameOfLifeModule = GameOfLifeModule || {};
             this.initialResourceNumber = 0;
             this.name = ("Testing parameters...");
             this.isTerminalLevel = true;
-            this.dontClearCanvas = true;
+            this.dontClearCanvas = false;
             this.scrollingImageVisible = false;
             this.introduction =
-                "<p>Size of world:</p><p><input class='level-parameters' name='SizeOfWorld' value='50'/> </p>" +
-                    "<p>Enter number of live agents to start with:</p><p><input class='level-parameters' name='NumberOfLiveAgents' value='200'/> </p>" +
+                "<p>Size of world:</p><p><input class='level-parameters' name='SizeOfWorld' value='130'/> </p>" +
+                    "<p>Enter number of live agents to start with:</p><p><input class='level-parameters' name='NumberOfLiveAgents' value='2000'/> </p>" +
                     ""
             ;
             this.conclusion = ("Well done.");
+            this.currentAgentsFunction = function(agent) {
+                return agent;//.isDirty;
+            };
 
             this.setup = function () {
                 if (FiercePlanet.Parameters.SizeOfWorld) {
@@ -224,6 +230,7 @@ var GameOfLifeModule = GameOfLifeModule || {};
         Lifecycle.currentLevelSetID = 'GOL';
         Lifecycle.currentLevelNumber = localStorage.currentLevelNumber = 0;
         Lifecycle.currentLevelPreset = true;
+        Lifecycle.interval = 10;
         Lifecycle.NEW_LEVEL_DELAY = 300;
 
         FiercePlanet.ModuleEditor.buildEditorFromUrl('/javascripts/fp/modules/gol/game-of-life-module.js', 'GameOfLifeModule.init(); FiercePlanet.Game.loadGame();');

@@ -77,7 +77,7 @@ $LAB
        , 'fp/modules/default/resources/resource_types.js'
        , 'fp/modules/default/agents/agent_types.js'
     , 'fp/modules/pp/predator-prey-module.js' , 'fp/modules/pp/levels/pp-levels.js' , 'fp/modules/pp/agents/pp-agent-types.js'
-    , 'fp/modules/gol/game-of-life-module.js', 'fp/modules/ca/ca-module.js'
+    , 'fp/modules/gol/game-of-life-module.js', 'fp/modules/ca/ca-module.js', 'fp/modules/cities/cities-module.js'
     ])
     .wait(function() {
         var m = urlParams.module;
@@ -92,6 +92,10 @@ $LAB
             else if (m == 'ca') {
 //                $('#moduleEditor').show();
                 CellularAutomataModule.init();
+            }
+            else if (m == 'cities') {
+//                $('#moduleEditor').show();
+                CitiesModule.init();
             }
             else if (m == 'rpg') {
 //                $('#moduleEditor').show();

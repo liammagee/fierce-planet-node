@@ -44,13 +44,10 @@ function Level(id) {
     this.exitPoints = [];
 
     // Dimensions
-    this.cellsAcross = 10;
-    this.cellsDown = 10;
+    this.cellsAcross = 10, this.cellsDown = 10;
 
     // Parameters
-    this.initialAgentNumber = 1;
-    this.waveNumber = 10;
-    this.expiryLimit = 20;
+    this.initialAgentNumber = 1, this.waveNumber = 1, this.expiryLimit = 1;
 
     this.initialResourceStore = 100;
     this.currentResourceStore = 100;
@@ -80,10 +77,8 @@ function Level(id) {
     this.distributeAgentsHealthSigma = 0;
 
 
-    // Current level state
-    this.tiles = [];
-
     // Agent variables
+    this.cultures = undefined;
     this.levelAgents = [];
     this.waveAgents = [];
     this.currentAgents = [], this.currentAgentsMap = {}, this.currentAgentsFunction = function(agent) {return agent};
@@ -98,16 +93,14 @@ function Level(id) {
     /** Object for storing tiles, resources and other level entities for co-ordinate based look-up */
     this.contentMap = {};
     this.cells = {};
-
-
     this.terrainMap = {};
+    this.tiles = [];
 
     // User interface elements
     this.tip = null;
     this.introduction = "Welcome to level " + this.id + ".";
     this.conclusion = "Congratulations! You have completed level " + this.id + ".";
     this.catastrophe = null;
-
 
     // Google map, image and sound options
     this.backgroundTerrain = null;
@@ -123,7 +116,7 @@ function Level(id) {
  * Retrieves current agents - will filter if a filter agent is available (requires Underscore to be loaded)
  */
 Level.prototype.getCurrentAgents = function() {
-    if (typeof(this.currentAgentsFunction) === 'undefined' || typeof(_) === 'undefined')
+    if (typeof(_) === 'undefined' || _.isUndefined(this.currentAgentsFunction))
         return this.currentAgents;
     else
         return _.filter(this.currentAgents, this.currentAgentsFunction);
@@ -689,9 +682,9 @@ Level.prototype.generateAgents = function(culture, number) {
         for (var i = 0, pl = this.pathway.length; i < pl; i ++) {
             // Generate a random tile position
             var tile = this.pathway[i];
-//            var agent = this.generateAgentAtPoint(culture, tile[0], tile[1]);
-//            agents.push(agent);
-            agents.push(new SimpleAgent(culture, tile[0], tile[1]));
+            var agent = this.generateAgentAtPoint(culture, tile[0], tile[1]);
+            agents.push(agent);
+//            agents.push(new SimpleAgent(culture, tile[0], tile[1]));
         }
     }
     else {
@@ -1126,7 +1119,7 @@ Level.prototype.initialiseWaves = function(waveNumber) {
 		for (var i = 0; i < waveNumber; i++) {
             var wave = new Wave();
             wave.agents = [];
-            var cultures = ModuleManager.currentModule.allCultures();
+            var cultures = this.cultures || ModuleManager.currentModule.allCultures();
             for (var j = 0, len = cultures.length; j < len; j++) {
                 var culture = cultures[j];
                 if (culture.generateEachWave && this.generateWaveAgentsAutomatically) {

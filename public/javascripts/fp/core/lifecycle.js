@@ -42,7 +42,6 @@ var Lifecycle = Lifecycle || {};
      */
     this.processAgents = function() {
       var recordableChangeMade = false;
-
         // Invoke pre process callback
 		if (Lifecycle.preProcessCallback)
         	Lifecycle.preProcessCallback();
@@ -64,8 +63,12 @@ var Lifecycle = Lifecycle || {};
         Lifecycle.levelCounter++;
         Lifecycle.worldCounter++;
 
-        var agents = Lifecycle.currentLevel.getCurrentAgents(),
-//        var agents = Lifecycle.currentLevel.currentAgents,
+        // Do any level-specific computation here
+        if (Lifecycle.currentLevel.tickFunction)
+            Lifecycle.currentLevel.tickFunction();
+
+//        var agents = Lifecycle.currentLevel.getCurrentAgents(),
+        var agents = Lifecycle.currentLevel.currentAgents,
             nullifiedAgents = [], agentCount = 0;
 
         // Pre-movement processing - memorises current position
@@ -81,6 +84,7 @@ var Lifecycle = Lifecycle || {};
             if (countDown == 0)
                 agent.reviseBeliefs(Lifecycle.currentLevel);
         }
+
 
 
         // Process agents
