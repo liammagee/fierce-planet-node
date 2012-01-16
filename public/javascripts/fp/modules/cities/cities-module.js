@@ -12,6 +12,7 @@ var CitiesModule = CitiesModule || {};
 
 
 
+
 (function() {
     this.init = function() {
         var switchStateCapability = {} ;
