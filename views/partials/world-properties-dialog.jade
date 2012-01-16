@@ -1,0 +1,121 @@
+#world-properties-dialog
+  #edit-properties-tabs
+    ul
+      li
+        a(href='#core-fields') Basic
+      li
+        a(href='#advanced-fields') Advanced
+    form#world-properties(method='post')
+      #core-fields
+        .world-field
+          label(for='world-name') Name of world:
+          input#world-name(type='text', name='name')
+        hr
+          div Level dimensions (Note: changing these values may break your maze!)
+        .world-field
+          label(for='world-width') Level width:
+          select#world-width(name='cellsAcross')
+            option(name='5') 5
+            option(name='6') 6
+            option(name='7') 7
+            option(name='8') 8
+            option(name='9') 9
+            option(name='10') 10
+            option(name='11') 11
+            option(name='12') 12
+            option(name='13') 13
+            option(name='14') 14
+            option(name='15') 15
+            option(name='16') 16
+            option(name='17') 17
+            option(name='18') 18
+            option(name='19') 19
+            option(name='20') 20
+            option(name='25') 25
+            option(name='30') 30
+            option(name='40') 40
+            option(name='50') 50
+            option(name='100') 100
+        .world-field
+          label(for='world-height') Level height:
+          select#world-height(name='cellsDown')
+            option(name='5') 5
+            option(name='6') 6
+            option(name='7') 7
+            option(name='8') 8
+            option(name='9') 9
+            option(name='10') 10
+            option(name='11') 11
+            option(name='12') 12
+            option(name='13') 13
+            option(name='14') 14
+            option(name='15') 15
+            option(name='16') 16
+            option(name='17') 17
+            option(name='18') 18
+            option(name='19') 19
+            option(name='20') 20
+            option(name='25') 25
+            option(name='30') 30
+            option(name='40') 40
+            option(name='50') 50
+            option(name='100') 100
+        hr
+        .world-field
+          label(for='world-initial-agent-number') Starting number of agents:
+          br
+          select#world-initial-agent-number(name='initialAgentNumber')
+            option(name='1') 1
+            option(name='2') 2
+            option(name='3') 3
+            option(name='4') 4
+            option(name='5') 5
+            option(name='10') 10
+            option(name='20') 20
+            option(name='50') 50
+            option(name='100') 100
+        .world-field
+          label(for='world-wave-number') Number of waves:
+          br
+          select#world-wave-number(name='waveNumber')
+            option(name='1') 1
+            option(name='2') 2
+            option(name='3') 3
+            option(name='4') 4
+            option(name='5') 5
+            option(name='10') 10
+            option(name='20') 20
+            option(name='50') 50
+            option(name='100') 100
+        .world-field
+          label(for='world-expiry-limit') Maximum expired citizens:
+          br
+          select#world-expiry-limit(name='expiryLimit')
+            option(name='1') 1
+            option(name='2') 2
+            option(name='3') 3
+            option(name='4') 4
+            option(name='5') 5
+            option(name='10') 10
+            option(name='20') 20
+            option(name='50') 50
+            option(name='100') 100
+      #advanced-fields
+        .world-field
+          label(for='world-notice') Level introduction
+          br
+          textarea#world-notice(rows='5', name='notice')
+        .world-field
+          input#world-allow-offscreen-cycling(type='checkbox', name='allowOffscreenCycling')
+          label(for='world-allow-offscreen-cycling') Can citizens run offscreen?
+        .world-field
+          input#world-allow_patches-on-path(type='checkbox', name='allowPatchesOnPath')
+          label(for='world-allow-patches-on-path') Can resources go on the path?
+        hr
+        div Sharing
+        div
+          label(for='world-url-display') URL:
+          input#world-url-display(size='60', name='url')
+        div
+          a#world-url(target='_blank', href='', style='font-size:0.9em') (Open in new window)
+

@@ -50,8 +50,8 @@ var ModuleManager = ModuleManager || {};
     /**
      * Retrieves  a module
      */
-    this.getModuleLevel = function(levelSetID, level) {
-        return this.currentModule.getLevel(moduleID).levels[level]
+    this.getModuleWorld = function(worldSetID, world) {
+        return this.currentModule.getWorld(moduleID).worlds[world]
     };
 
 

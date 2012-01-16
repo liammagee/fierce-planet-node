@@ -16,18 +16,18 @@ var RpgModule = RpgModule || {};
 
         var module = new Module();
         module.id = 'GOL';
-        module.registerCampaign(GameOfLifeLevels);
+        module.registerCampaign(GameOfLifeWorlds);
         //module.registerAgentSet(AgentTypes.CITIZEN_AGENT_TYPE);
         module.registerCulture(GameOfLifeCultures.CELLULAR_AGENT_TYPE);
 //        module.registerCulture(PredatorPreyCultures.TEST_AGENT_TYPE);
         module.registerResourceSet(TBL);
         module.register();
 
-		World.registerCultures(module.allCultures());
-		//        World.registerAgentTypes(DefaultModule.AgentTypes.agentTypes);
-		World.switchResourceSet(TBL);
-		World.settings.skewTiles = false;
-        World.settings.agentsCanCommunicate = false;
+		Universe.registerCultures(module.allCultures());
+		//        Universe.registerAgentTypes(DefaultModule.AgentTypes.agentTypes);
+		Universe.switchResourceSet(TBL);
+		Universe.settings.skewTiles = false;
+        Universe.settings.agentsCanCommunicate = false;
     };
 
 

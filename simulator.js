@@ -20,7 +20,7 @@ Level = require('./public/javascripts/fp/core/level.js').Level;
 Tile = require('./public/javascripts/fp/core/tile.js').Tile;
 DEFAULT_TILE_COLOR = require('./public/javascripts/fp/core/tile.js').DEFAULT_TILE_COLOR;
 Terrain = require('./public/javascripts/fp/core/terrain.js').Terrain;
-World = require('./public/javascripts/fp/core/world.js').World;
+World = require('./public/javascripts/fp/core/Universe.js').World;
 Module = require('./public/javascripts/fp/core/module.js').Module;
 Catastrophe = require('./public/javascripts/fp/core/catastrophe.js').Catastrophe;
 Notice = require('./public/javascripts/fp/ui/notice.js').Notice;
@@ -32,12 +32,12 @@ DefaultCultures = require('./public/javascripts/fp/modules/default/agents/agent_
 ResourceTypes = require('./public/javascripts/fp/modules/default/resources/resource_types.js').ResourceTypes;
 CoS = require('./public/javascripts/fp/modules/default/resources/cos.js').CoS;
 TBL = require('./public/javascripts/fp/modules/default/resources/tbl.js').TBL;
-Basic = require('./public/javascripts/fp/modules/default/levels/basic.js').Basic;
-Additional = require('./public/javascripts/fp/modules/default/levels/additional.js').Additional;
+Basic = require('./public/javascripts/fp/modules/default/worlds/basic.js').Basic;
+Additional = require('./public/javascripts/fp/modules/default/worlds/additional.js').Additional;
 DefaultModule = require('./public/javascripts/fp/modules/default/default-module.js').DefaultModule;
 
 PredatorPreyCultures = require('./public/javascripts/fp/modules/pp/agents/pp-agent-types.js').PredatorPreyCultures;
-PredatorPreyLevels = require('./public/javascripts/fp/modules/pp/levels/pp-levels.js').PredatorPreyLevels;
+PredatorPreyLevels = require('./public/javascripts/fp/modules/pp/worlds/pp-levels.js').PredatorPreyLevels;
 PredatorPreyModule = require('./public/javascripts/fp/modules/pp/predator-prey-module.js').PredatorPreyModule;
 //jstat = require('./public/javascripts/jstat-1.0.0/js/jstat-1.0.0.js').jstat;
 //NormalDistribution = require('./public/javascripts/jstat-1.0.0/js/jstat-1.0.0.js').NormalDistribution;
@@ -54,10 +54,10 @@ console.log(w.agents)
 */
 //DefaultModule.init();
 PredatorPreyModule.init();
-World.settings.agentsCanAdjustWander = false;
-World.settings.noGameOver = true;
+Universe.settings.agentsCanAdjustWander = false;
+Universe.settings.noGameOver = true;
 Lifecycle.preProcessCallback = function() {
-	//console.log('Got here ' + Lifecycle.currentLevel.currentAgents.length);
+	//console.log('Got here ' + Lifecycle.currentWorld.currentAgents.length);
 }
 Lifecycle.postProcessCallback = function() {
     //console.log('Got htere');
@@ -68,7 +68,7 @@ Lifecycle.postProcessCallback = function() {
 	console.log('Level: ' + Lifecycle.currentLevelNumber)
 	console.log('Wave: ' + Lifecycle.currentWaveNumber)
 	console.log('Counter: ' + Lifecycle.levelCounter + '; ' + Lifecycle.waveCounter)
-	if (Lifecycle.currentLevel.currentAgents && Lifecycle.currentLevel.currentAgents.length > 0) {
+	if (Lifecycle.currentWorld.currentAgents && Lifecycle.currentWorld.currentAgents.length > 0) {
 		console.log('Population: ' + Statistics.populationStats())
 		console.log('Health: ' + Statistics.healthStats())
 		console.log('Saved & expired: ' + Statistics.savedAndExpiredStats())
@@ -81,11 +81,11 @@ Lifecycle.preCompleteWaveCallback = function() {
 	console.log('Completed wave')
 }
 Lifecycle.postNewLevelCallback = function() {
-	console.log('Campaign: ' + Lifecycle.currentLevelSetID)
-	console.log('Level: ' + Lifecycle.currentLevel.name)
+	console.log('Campaign: ' + Lifecycle.currentCampaignID)
+	console.log('Level: ' + Lifecycle.currentWorld.name)
 }
 Lifecycle.currentLevelNumber = 0;
-Lifecycle.NEW_LEVEL_DELAY = 0;
+Lifecycle.NEW_WORLD_DELAY = 0;
 Lifecycle.NEW_WAVE_DELAY = 20;
 Lifecycle.interval = 5;
 //var cs = ModuleManager.currentModule.allCultures();

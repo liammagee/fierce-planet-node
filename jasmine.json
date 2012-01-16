@@ -6,7 +6,7 @@
      , "/public/javascripts/jstat-1.0.0/js/jstat-0.1.0.min.js"
      , "/public/javascripts/sylvester/sylvester.js"
      , "/public/javascripts/fp/utils/log.js"
-     , "/public/javascripts/fp/core/world.js"
+     , "/public/javascripts/fp/core/Universe.js"
      , "/public/javascripts/fp/core/resource.js"
      , "/public/javascripts/fp/core/level.js"
      , "/public/javascripts/fp/core/agent.js"

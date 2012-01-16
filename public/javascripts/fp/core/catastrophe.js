@@ -30,7 +30,7 @@ function Catastrophe(kind, start, duration, effect, notice) {
 Catastrophe.prototype.strike = function() {
     if (! this.struck) {
         // Apply catastrophe effects
-        var resources = Lifecycle.currentLevel.resources;
+        var resources = Lifecycle.currentWorld.resources;
         var lod = FiercePlanet.Game.levelOfDifficulty;
         var newResources = [];
         for (var i = 0, len = resources.length; i < len; i++) {
@@ -45,7 +45,7 @@ Catastrophe.prototype.strike = function() {
             }
         }
 //        FiercePlanet.levelOfDifficulty
-        Lifecycle.currentLevel.setResources(newResources);
+        Lifecycle.currentWorld.setResources(newResources);
 //        FiercePlanet.clearCanvas('resourceCanvas');
 //        FiercePlanet.drawResources();
 //        FiercePlanet.Game.currentNotice = new Notice("RESOURCES WIPED OUT!");

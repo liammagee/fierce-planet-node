@@ -28,7 +28,7 @@ FiercePlanet.Mouse = FiercePlanet.Mouse || {};
         topMostCanvas.click(FiercePlanet.ResourceUI.processResourceCanvasClick);
 
         topMostCanvas.mousemove(FiercePlanet.Mouse.registerMouseMove);
-        if (World.settings.allowInlinePanning) {
+        if (Universe.settings.allowInlinePanning) {
             topMostCanvas.mousedown(FiercePlanet.Mouse.registerMouseDown);
             topMostCanvas.mouseup(FiercePlanet.Mouse.registerMouseUp);
         }
@@ -83,7 +83,7 @@ FiercePlanet.Mouse = FiercePlanet.Mouse || {};
      *  Register mouse move event
      */
     this.registerMouseMove = function(e) {
-        if (FiercePlanet.Game.isMouseDown && World.settings.allowInlinePanning) {
+        if (FiercePlanet.Game.isMouseDown && Universe.settings.allowInlinePanning) {
             FiercePlanet.Game.isMouseMoving = true;
             FiercePlanet.Mouse.doMove(e);
         }
@@ -118,7 +118,7 @@ FiercePlanet.Mouse = FiercePlanet.Mouse || {};
 			var nt = Math.atan2(ny, nx);
 			var dt = (nt - ct) * ((Math.abs(nx) / midX) + (Math.abs(ny) / midY));
 
-            if ((!World.settings.reverseMouseClickEffects && e.which != 1) || (World.settings.reverseMouseClickEffects && e.which == 1)) {
+            if ((!Universe.settings.reverseMouseClickEffects && e.which != 1) || (Universe.settings.reverseMouseClickEffects && e.which == 1)) {
                 FiercePlanet.Orientation.rotationAngle = FiercePlanet.Orientation.rotationAngle + dt;
                 FiercePlanet.Orientation.perspectiveAngle = FiercePlanet.Orientation.perspectiveAngle + (offsetY / (FiercePlanet.Orientation.halfWorldHeight));
             }

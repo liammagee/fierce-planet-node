@@ -19,26 +19,26 @@ var FiercePlanet = FiercePlanet || {};
  *  - Notifying
  *
  *  Event structure:
- *  - Source (game, level, agent, resource)
+ *  - Source (game, world, agent, resource)
  *  - Event (new, complete, change)
  *  - Data
  *  - Time (gameCounter)
- *  - Context (currentLevel)
+ *  - Context (currentWorld)
  *
  * @constructor
  * @param type
  * @param source
  * @param event
  * @param time
- * @param levelContext
+ * @param worldContext
  * @param data
  */
-function Event(type, source, event, time, levelContext, data){
+function Event(type, source, event, time, worldContext, data){
     this.type = type;
     this.source = source;
     this.event = event;
     this.time = time;
-    this.levelContext = levelContext;
+    this.worldContext = worldContext;
     this.data = data;
 }
 
@@ -121,20 +121,20 @@ FiercePlanet.Event = FiercePlanet.Event || {};
         // Add notice event listeners
     //    FiercePlanet.eventTarget.addListener("game", function(e) {
     //        if (e._event == "newWave" && e._time == 0) {
-    //            FiercePlanet.Game.currentNotice = e._levelContext.getTip();
+    //            FiercePlanet.Game.currentNotice = e._worldContext.getTip();
     //        }
     //    });
 
         // Add resource listener
         FiercePlanet.Game.eventTarget.addListener("resource", function(e) {
             var resource = e.source;
-            var level = e.levelContext;
-            if (level.id == 1) {
+            var world = e.worldContext;
+            if (world.id == 1) {
                 var resourceCategory = resource.category;
                 var resourceCategoryName = resourceCategory.name;
                 var resourceCategoryColor = resourceCategory.color;
                 var resourceCategoryCode = resourceCategory.code;
-                var categoryCount = Lifecycle.currentLevel.getResourceCategoryCount(resourceCategoryCode);
+                var categoryCount = Lifecycle.currentWorld.getResourceCategoryCount(resourceCategoryCode);
                 if (categoryCount == 1) {
                     FiercePlanet.Game.currentNotice = new Notice("Well done! You've added your first " + resourceCategoryName + " resource!");
                     FiercePlanet.Game.currentNotice.height = 80;

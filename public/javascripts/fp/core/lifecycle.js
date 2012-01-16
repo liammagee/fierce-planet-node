@@ -18,24 +18,24 @@ var Lifecycle = Lifecycle || {};
 
 (function() {
     /** @constant The time to wait before starting the first wave */
-    this.NEW_LEVEL_DELAY = 3000;
+    this.NEW_WORLD_DELAY = 3000;
     /** @constant The time to wait between waves */
     this.NEW_WAVE_DELAY = 200;
     // Delay variables
-    this.levelDelayCounter = 0, this.waveDelayCounter = 0;
+    this.worldDelayCounter = 0, this.waveDelayCounter = 0;
     // Counter variables
-    this.waveCounter = 0, this.levelCounter = 0, this.worldCounter = 0;
+    this.waveCounter = 0, this.worldCounter = 0, this.universeCounter = 0;
     // Game play variables
-    this.waveOverride = 0, this.maxWaveMoves = 0, this.maxLevelMoves = 0;
+    this.waveOverride = 0, this.maxWaveMoves = 0, this.maxWorldMoves = 0;
     // Game interval variables
     this.resourceRecoveryCycle = 5, this.interval = 40, this.agentTimerId = 0, this.inPlay = false;
-    // Level state variables
-    this.currentLevel = null, this.currentLevelSetID = 'Default', this.currentLevelNumber = 1, this.currentLevelPreset = true, this.existingCurrentLevel = null;
+    // World state variables
+    this.currentWorld = null, this.currentCampaignID = 'Default', this.currentWorldNumber = 1, this.currentWorldPreset = true, this.existingCurrentWorld = null;
     // Wave state variables
     this.currentWave = 1, this.currentWaveNumber = 0;
     this.numAgents = 1;
 	// Callbacks
-    this.preNewGameCallback, this.postNewGameCallback, this.preNewLevelCallback, this.postNewLevelCallback = null, this.preNewWaveCallback = null, this.postNewWaveCallback = null, this.preProcessCallback = null, this.postProcessCallback = null;
+    this.preNewGameCallback, this.postNewGameCallback, this.preNewWorldCallback, this.postNewWorldCallback = null, this.preNewWaveCallback = null, this.postNewWaveCallback = null, this.preProcessCallback = null, this.postProcessCallback = null;
 
     /**
      * Core logic loop: processes agents.
@@ -47,8 +47,8 @@ var Lifecycle = Lifecycle || {};
         	Lifecycle.preProcessCallback();
 
         // Delay, until we are ready for the first wave
-        if (Lifecycle.levelDelayCounter < Lifecycle.NEW_LEVEL_DELAY / Lifecycle.interval) {
-            Lifecycle.levelDelayCounter++;
+        if (Lifecycle.worldDelayCounter < Lifecycle.NEW_WORLD_DELAY / Lifecycle.interval) {
+            Lifecycle.worldDelayCounter++;
             return;
         }
 
@@ -60,15 +60,15 @@ var Lifecycle = Lifecycle || {};
 
         // Increment counters
         Lifecycle.waveCounter++;
-        Lifecycle.levelCounter++;
         Lifecycle.worldCounter++;
+        Lifecycle.universeCounter++;
 
-        // Do any level-specific computation here
-        if (Lifecycle.currentLevel.tickFunction)
-            Lifecycle.currentLevel.tickFunction();
+        // Do any world-specific computation here
+        if (Lifecycle.currentWorld.tickFunction)
+            Lifecycle.currentWorld.tickFunction();
 
-//        var agents = Lifecycle.currentLevel.getCurrentAgents(),
-        var agents = Lifecycle.currentLevel.currentAgents,
+//        var agents = Lifecycle.currentWorld.getCurrentAgents(),
+        var agents = Lifecycle.currentWorld.currentAgents,
             nullifiedAgents = [], agentCount = 0;
 
         // Pre-movement processing - memorises current position
@@ -82,7 +82,7 @@ var Lifecycle = Lifecycle || {};
 
             // TODO: Constrain memory usage - expensive for large simulations
             if (countDown == 0)
-                agent.reviseBeliefs(Lifecycle.currentLevel);
+                agent.reviseBeliefs(Lifecycle.currentWorld);
         }
 
 
@@ -102,28 +102,28 @@ var Lifecycle = Lifecycle || {};
                 recordableChangeMade = true;
 
                 // TODO: move this logic elsewhere
-                if (Lifecycle.currentLevel.isExitPoint(agent.x, agent.y)) {
+                if (Lifecycle.currentWorld.isExitPoint(agent.x, agent.y)) {
                     if (Lifecycle.processSavedCallback)
                         Lifecycle.processSavedCallback();
-                    Lifecycle.currentLevel.addSavedAgent(agent, Lifecycle.levelCounter)
+                    Lifecycle.currentWorld.addSavedAgent(agent, Lifecycle.worldCounter)
                     nullifiedAgents.push(i);
                 }
 
                 // Do for all agents
-//                agent.evaluateMove(Lifecycle.currentLevel, options);
+//                agent.evaluateMove(Lifecycle.currentWorld, options);
 
                 // Reset countdown
                 agent.resetCountdownToMove();
 
 
                 // Adjust speed
-                if (!Lifecycle.currentLevel.noSpeedChange && World.settings.agentsCanAdjustSpeed)
+                if (!Lifecycle.currentWorld.noSpeedChange && Universe.settings.agentsCanAdjustSpeed)
                     agent.adjustSpeed();
 
                 // Adjust wander
-                if (!Lifecycle.currentLevel.noWander && World.settings.agentsCanAdjustWander) {
+                if (!Lifecycle.currentWorld.noWander && Universe.settings.agentsCanAdjustWander) {
                     // Make sure agents don't wander over boxes in 3D view
-                    if (World.settings.showResourcesAsBoxes && World.settings.skewTiles) {
+                    if (Universe.settings.showResourcesAsBoxes && Universe.settings.skewTiles) {
                         agent.adjustWander(FiercePlanet.Orientation.cellWidth, 0);
                     }
                     else {
@@ -135,46 +135,46 @@ var Lifecycle = Lifecycle || {};
                     Lifecycle.maxWaveMoves = agent.age;
 
                 // Exercises all of the agent's capabilities
-                agent.update(Lifecycle.currentLevel);
+                agent.update(Lifecycle.currentWorld);
 
                 // TODO: should be in-lined?
-                if (agent.health <= 0 && !World.settings.godMode) {
+                if (agent.health <= 0 && !Universe.settings.godMode) {
                     nullifiedAgents.push(i);
-                    Lifecycle.currentLevel.addExpiredAgent(agent, Lifecycle.levelCounter);
+                    Lifecycle.currentWorld.addExpiredAgent(agent, Lifecycle.worldCounter);
                     // TODO: needs to be moved
                     if (agent.culture == DefaultCultures.CITIZEN_AGENT_TYPE)
 						if (typeof(FiercePlanet) !== "undefined")
-                        	FiercePlanet.Game.currentProfile.currentLevelExpired++;
+                        	FiercePlanet.Game.currentProfile.currentWorldExpired++;
                 }
             }
             agent.incrementCountdownToMove();
         }
 
-        Lifecycle.currentLevel.recoverResources();
+        Lifecycle.currentWorld.recoverResources();
 
         // Check whether we have too many
         for (var i = nullifiedAgents.length - 1; i >= 0; i-= 1) {
             var nullIndex = nullifiedAgents[i];
-            var nullifiedAgent = Lifecycle.currentLevel.currentAgents[nullIndex];
-            Lifecycle.currentLevel.currentAgents.splice(nullIndex, 1);
+            var nullifiedAgent = Lifecycle.currentWorld.currentAgents[nullIndex];
+            Lifecycle.currentWorld.currentAgents.splice(nullIndex, 1);
             // Remove the agent from the map
-            Lifecycle.currentLevel.removeAgentFromContentMap(agent);
+            Lifecycle.currentWorld.removeAgentFromContentMap(agent);
         }
 
-        if (Lifecycle.currentLevel.expiredAgents.length >= Lifecycle.currentLevel.expiryLimit && ! World.settings.noGameOver) {
+        if (Lifecycle.currentWorld.expiredAgents.length >= Lifecycle.currentWorld.expiryLimit && ! Universe.settings.noGameOver) {
             return Lifecycle.gameOver();
         }
 		else {
             // No agents left? End of wave
-            if (Lifecycle.currentLevel.currentAgents.length == 0) {
+            if (Lifecycle.currentWorld.currentAgents.length == 0) {
                 // Start a new wave
-                if (Lifecycle.currentWaveNumber < Lifecycle.currentLevel.waveNumber - 1) {
+                if (Lifecycle.currentWaveNumber < Lifecycle.currentWorld.waveNumber - 1) {
                     Lifecycle.completeWave();
                     Lifecycle.newWave();
                 }
-                else if (Lifecycle.currentLevel.isPresetLevel && ! Lifecycle.currentLevel.isTerminalLevel) {
-                    Lifecycle.completeLevel();
-                    Lifecycle.levelDelayCounter = 0;
+                else if (Lifecycle.currentWorld.isPresetWorld && ! Lifecycle.currentWorld.isTerminalWorld) {
+                    Lifecycle.completeWorld();
+                    Lifecycle.worldDelayCounter = 0;
                 }
                 else {
                     return Lifecycle.completeGame();
@@ -195,8 +195,8 @@ var Lifecycle = Lifecycle || {};
 		if (this.preNewGameCallback)
 			this.preNewGameCallback();
 
-        Lifecycle.worldCounter = 0;
-        Lifecycle.newLevel();
+        Lifecycle.universeCounter = 0;
+        Lifecycle.newWorld();
 
         // Post new game
 		if (this.postNewGameCallback)
@@ -205,64 +205,64 @@ var Lifecycle = Lifecycle || {};
 
 
     /**
-     * Called when a new level is begun
+     * Called when a new world is begun
      */
-    this.newLevel = function() {
-        // Pre new level
-		if (this.preNewLevelCallback)
-			this.preNewLevelCallback();
+    this.newWorld = function() {
+        // Pre new world
+		if (this.preNewWorldCallback)
+			this.preNewWorldCallback();
 
-        Lifecycle.levelDelayCounter = 0;
-        Lifecycle.levelCounter = 0;
-    	if (Lifecycle.currentLevel != undefined) {
-            Lifecycle.currentLevel.setResources([]);
-            if (Lifecycle.currentLevel.teardown)
-                Lifecycle.currentLevel.teardown();
+        Lifecycle.worldDelayCounter = 0;
+        Lifecycle.worldCounter = 0;
+    	if (Lifecycle.currentWorld != undefined) {
+            Lifecycle.currentWorld.setResources([]);
+            if (Lifecycle.currentWorld.teardown)
+                Lifecycle.currentWorld.teardown();
         }
 
         Lifecycle._initialiseGame();
 
-		if (this.doNewLevelCallback)
-			this.doNewLevelCallback();
+		if (this.doNewWorldCallback)
+			this.doNewWorldCallback();
 		else
-        	Lifecycle.startLevel();
+        	Lifecycle.startWorld();
 
-        // Post new level
-		if (this.postNewLevelCallback)
-			this.postNewLevelCallback();
+        // Post new world
+		if (this.postNewWorldCallback)
+			this.postNewWorldCallback();
     };
 
 
     /**
      * Called when a game is restarted
      */
-    this.restartLevel = function() {
-		if (this.preRestartLevelCallback)
-			this.preRestartLevelCallback();
+    this.restartWorld = function() {
+		if (this.preRestartWorldCallback)
+			this.preRestartWorldCallback();
 
-        // Start a new level
-        Lifecycle.newLevel();
+        // Start a new world
+        Lifecycle.newWorld();
 
-		if (this.postRestartLevelCallback)
-			this.postRestartLevelCallback();
+		if (this.postRestartWorldCallback)
+			this.postRestartWorldCallback();
     };
 
 
 
     /**
-     * Called when a level is started
+     * Called when a world is started
      */
-    this.startLevel = function() {
-		if (this.preStartLevelCallback)
-			this.preStartLevelCallback();
+    this.startWorld = function() {
+		if (this.preStartWorldCallback)
+			this.preStartWorldCallback();
 
 		Lifecycle.currentWaveNumber = 0;
-		Lifecycle.numAgents = Lifecycle.currentLevel.initialAgentNumber;
+		Lifecycle.numAgents = Lifecycle.currentWorld.initialAgentNumber;
 		
         Lifecycle.newWave();
 
-		if (this.postStartLevelCallback)
-			this.postStartLevelCallback();
+		if (this.postStartWorldCallback)
+			this.postStartWorldCallback();
     };
 
     /**
@@ -276,8 +276,8 @@ var Lifecycle = Lifecycle || {};
 		Lifecycle.waveCounter = 0;
 		Lifecycle.waveDelayCounter = 0;
 
-		if (this.currentLevel.waves[this.currentWaveNumber])
-			Lifecycle.currentLevel.currentAgents = this.currentLevel.waves[this.currentWaveNumber].agents;
+		if (this.currentWorld.waves[this.currentWaveNumber])
+			Lifecycle.currentWorld.currentAgents = this.currentWorld.waves[this.currentWaveNumber].agents;
 
 		this._startAgents();
 
@@ -287,7 +287,7 @@ var Lifecycle = Lifecycle || {};
 
 
     /**
-     * Called when a level is completed
+     * Called when a world is completed
      */
     this.completeWave = function() {
 		if (this.preCompleteWaveCallback)
@@ -304,20 +304,20 @@ var Lifecycle = Lifecycle || {};
 
 
     /**
-     * Called when a level is completed
+     * Called when a world is completed
      */
-    this.completeLevel = function() {
-		if (this.preCompleteLevelCallback)
-			this.preCompleteLevelCallback();
+    this.completeWorld = function() {
+		if (this.preCompleteWorldCallback)
+			this.preCompleteWorldCallback();
 
-        if (Lifecycle.currentLevel.teardown)
-            Lifecycle.currentLevel.teardown();
-        if (Lifecycle.currentLevel.isPresetLevel)
-            Lifecycle.currentLevelNumber++;
+        if (Lifecycle.currentWorld.teardown)
+            Lifecycle.currentWorld.teardown();
+        if (Lifecycle.currentWorld.isPresetWorld)
+            Lifecycle.currentWorldNumber++;
         Lifecycle._finaliseGame();
 
-		if (this.postCompleteLevelCallback)
-			this.postCompleteLevelCallback();
+		if (this.postCompleteWorldCallback)
+			this.postCompleteWorldCallback();
     };
 
 
@@ -328,8 +328,8 @@ var Lifecycle = Lifecycle || {};
 		if (this.preCompleteGameCallback)
 			this.preCompleteGameCallback();
 
-        if (Lifecycle.currentLevel.teardown)
-            Lifecycle.currentLevel.teardown();
+        if (Lifecycle.currentWorld.teardown)
+            Lifecycle.currentWorld.teardown();
         Lifecycle._finaliseGame();
 
 		if (this.postCompleteGameCallback)
@@ -344,8 +344,8 @@ var Lifecycle = Lifecycle || {};
 		if (this.preGameOverCallback)
 			this.preGameOverCallback();
 
-        if (Lifecycle.currentLevel.teardown)
-            Lifecycle.currentLevel.teardown();
+        if (Lifecycle.currentWorld.teardown)
+            Lifecycle.currentWorld.teardown();
         Lifecycle._finaliseGame();
 		if (this.postGameOverCallback)
 			this.postGameOverCallback();
@@ -353,40 +353,40 @@ var Lifecycle = Lifecycle || {};
 
 
     /**
-     * Initialises level data
+     * Initialises world data
      */
     this._initialiseGame = function () {
 		if (this.preInitialiseGameCallback)
 			this.preInitialiseGameCallback();
 			
         if (typeof console != "undefined")
-            console.log("Initialising world...");
+            console.log("Initialising Universe...");
 
         // Stop any existing timers
         Lifecycle._stopAgents();
 
-        if (Lifecycle.currentLevelPreset && (Lifecycle.currentLevelNumber < 0 || Lifecycle.currentLevelNumber > 1000))
-            Lifecycle.currentLevelNumber = 1;
-        Lifecycle.currentLevelSetID = Lifecycle.currentLevelSetID || 'Default';
+        if (Lifecycle.currentWorldPreset && (Lifecycle.currentWorldNumber < 0 || Lifecycle.currentWorldNumber > 1000))
+            Lifecycle.currentWorldNumber = 1;
+        Lifecycle.currentCampaignID = Lifecycle.currentCampaignID || 'Default';
 
-        if (Lifecycle.currentLevelPreset) {
+        if (Lifecycle.currentWorldPreset) {
             try {
-                Lifecycle.currentLevel = ModuleManager.currentModule.getLevel(Lifecycle.currentLevelSetID, Lifecycle.currentLevelNumber);
-                //eval("FiercePlanet.Modules.Basic.level" + Lifecycle.currentLevelNumber.toString());
+                Lifecycle.currentWorld = ModuleManager.currentModule.getWorld(Lifecycle.currentCampaignID, Lifecycle.currentWorldNumber);
+                //eval("FiercePlanet.Modules.Basic.world" + Lifecycle.currentWorldNumber.toString());
             }
             catch(err) {
-                Lifecycle.currentLevel = ModuleManager.currentModule.getLevel(Lifecycle.currentLevelSetID, 1);
-//                Lifecycle.currentLevel = eval("FiercePlanet.Modules.Basic.level1");
+                Lifecycle.currentWorld = ModuleManager.currentModule.getWorld(Lifecycle.currentCampaignID, 1);
+//                Lifecycle.currentWorld = eval("FiercePlanet.Modules.Basic.world1");
             }
         }
-        else if (Lifecycle.currentLevel == undefined) {
-            Lifecycle.currentLevel = ModuleManager.currentModule.getLevel(Lifecycle.currentLevelSetID, 1);
-//            Lifecycle.currentLevel = eval("FiercePlanet.Modules.Basic.level1");
+        else if (Lifecycle.currentWorld == undefined) {
+            Lifecycle.currentWorld = ModuleManager.currentModule.getWorld(Lifecycle.currentCampaignID, 1);
+//            Lifecycle.currentWorld = eval("FiercePlanet.Modules.Basic.world1");
         }
 
         Lifecycle.currentWave = 1;
         Lifecycle.currentWaveNumber = 0;
-        Lifecycle.currentLevel.initLevel();
+        Lifecycle.currentWorld.initWorld();
 
 		if (this.postInitialiseGameCallback)
 			this.postInitialiseGameCallback();

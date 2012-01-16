@@ -7,13 +7,13 @@
 
 
 var DefaultModule = DefaultModule || {};
-//FiercePlanet.PresetLevels = FiercePlanet.PresetLevels || {};
+//FiercePlanet.PresetWorlds = FiercePlanet.PresetWorlds || {};
 
 
 (function() {
 
 	/**
-	 * @constant The number of preset levels
+	 * @constant The number of preset worlds
 	 */
 	this.MAX_DEFAULT_LEVELS = 1000;
 
@@ -36,22 +36,22 @@ var DefaultModule = DefaultModule || {};
 
         module.register();
 
-		World.registerCultures(module.allCultures());
-		//        World.registerAgentTypes(DefaultModule.AgentTypes.agentTypes);
-		World.switchResourceSet(TBL);
+		Universe.registerCultures(module.allCultures());
+		//        Universe.registerAgentTypes(DefaultModule.AgentTypes.agentTypes);
+		Universe.switchResourceSet(TBL);
 		/*
-        World.resourceTypeNamespace = TBL;
-//        if (World.resourceTypeNamespace.doSetup)
-//            World.resourceTypeNamespace.doSetup();
+        Universe.resourceTypeNamespace = TBL;
+//        if (Universe.resourceTypeNamespace.doSetup)
+//            Universe.resourceTypeNamespace.doSetup();
         //TBL
-        World.registerResourceCategories([TBL.ECO_CATEGORY, TBL.ENV_CATEGORY, TBL.SOC_CATEGORY]);
-        World.registerResourceTypes(TBL.ECONOMIC_RESOURCE_TYPES.concat(TBL.ENVIRONMENTAL_RESOURCE_TYPES.concat(TBL.SOCIAL_RESOURCE_TYPES)));
+        Universe.registerResourceCategories([TBL.ECO_CATEGORY, TBL.ENV_CATEGORY, TBL.SOC_CATEGORY]);
+        Universe.registerResourceTypes(TBL.ECONOMIC_RESOURCE_TYPES.concat(TBL.ENVIRONMENTAL_RESOURCE_TYPES.concat(TBL.SOCIAL_RESOURCE_TYPES)));
 		*/
         //FiercePlanet.Game.currentProfile.capabilities = ["farm", "water", "clinic"];
         //COS
         /*
-        World.registerResourceCategories([CoS.ECO_CATEGORY, CoS.ENV_CATEGORY, CoS.POL_CATEGORY, CoS.CUL_CATEGORY]);
-        World.registerResourceTypes(CoS.ECONOMIC_RESOURCE_TYPES.concat(CoS.ECOLOGICAL_RESOURCE_TYPES.concat(CoS.POLITICAL_RESOURCE_TYPES.concat(CoS.CULTURAL_RESOURCE_TYPES))));
+        Universe.registerResourceCategories([CoS.ECO_CATEGORY, CoS.ENV_CATEGORY, CoS.POL_CATEGORY, CoS.CUL_CATEGORY]);
+        Universe.registerResourceTypes(CoS.ECONOMIC_RESOURCE_TYPES.concat(CoS.ECOLOGICAL_RESOURCE_TYPES.concat(CoS.POLITICAL_RESOURCE_TYPES.concat(CoS.CULTURAL_RESOURCE_TYPES))));
         FiercePlanet.Game.currentProfile.capabilities = ["farm", "water", "clinic", "legal"];
         */
 

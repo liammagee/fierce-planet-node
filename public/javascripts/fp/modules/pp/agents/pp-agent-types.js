@@ -17,9 +17,9 @@ var PredatorPreyCultures = PredatorPreyCultures || {};
 (function () {
 
     this.init = function () {
-        this.PREY_AGENT_TYPE = new Culture("Prey", "000", World.resourceCategories);
-        this.PREDATOR_AGENT_TYPE = new Culture("Predator", "f00", World.resourceCategories);
-        this.TEST_AGENT_TYPE = new Culture("Test", "fbe53b", World.resourceCategories);
+        this.PREY_AGENT_TYPE = new Culture("Prey", "000", Universe.resourceCategories);
+        this.PREDATOR_AGENT_TYPE = new Culture("Predator", "f00", Universe.resourceCategories);
+        this.TEST_AGENT_TYPE = new Culture("Test", "fbe53b", Universe.resourceCategories);
 
         this.PREY_AGENT_TYPE.waveNumber = 50;
         this.PREY_AGENT_TYPE.moveCost = -2;
@@ -260,7 +260,7 @@ var PredatorPreyCultures = PredatorPreyCultures || {};
             }
         };
 
-        this.PREY_AGENT_TYPE.initFunction = function (agent, level) {
+        this.PREY_AGENT_TYPE.initFunction = function (agent, world) {
             var r = Math.random();
             agent.gender = (r < 0.5 ? 'm' : 'f');
         }
@@ -307,7 +307,7 @@ var PredatorPreyCultures = PredatorPreyCultures || {};
                 ctx.fill();
             }
         });
-        this.PREDATOR_AGENT_TYPE.initFunction = function (agent, level) {
+        this.PREDATOR_AGENT_TYPE.initFunction = function (agent, world) {
             var r = Math.random();
             agent.gender = (r < 0.5 ? 'm' : 'f');
         }

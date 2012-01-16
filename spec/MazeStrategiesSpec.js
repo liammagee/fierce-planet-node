@@ -38,11 +38,11 @@ describe("Maze Strategies", function() {
             */
             level.addExitPoint(WORLD_SIZE_A - 1, 8);
 //            level.addExitPoint(WORLD_SIZE_A - 1, WORLD_SIZE_D - 1);
-            resource = new Resource(World.resourceTypes[0], 8, 8);
-            var resource2 = new Resource(World.resourceTypes[0], 8, 5);
-            var resource3 = new Resource(World.resourceTypes[0], 8, 7);
+            resource = new Resource(Universe.resourceTypes[0], 8, 8);
+            var resource2 = new Resource(Universe.resourceTypes[0], 8, 5);
+            var resource3 = new Resource(Universe.resourceTypes[0], 8, 7);
             level.setResources([resource, resource2, resource3]);
-            World.settings.resourcesOwnTilesExclusively = true;
+            Universe.settings.resourcesOwnTilesExclusively = true;
         });
 
         it("should have 1 resource", function() {

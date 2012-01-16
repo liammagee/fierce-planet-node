@@ -37,9 +37,9 @@ $LAB
 
         // Load FiercePlanet other plugins
    .script([
-        'fp/core/world.js', 'fp/core/catastrophe.js'
+        'fp/core/universe.js', 'fp/core/catastrophe.js'
        , 'fp/core/agent/agent.js' , 'fp/core/agent/culture.js' , 'fp/core/agent/beliefs.js' , 'fp/core/agent/desires.js' , 'fp/core/agent/capabilities.js' , 'fp/core/agent/characteristics.js' , 'fp/core/agent/plans.js'
-    , 'fp/core/campaign.js', 'fp/core/level.js', 'fp/core/wave.js', 'fp/core/resource.js', 'fp/core/species.js', 'fp/core/terrain.js', 'fp/core/tile.js'
+    , 'fp/core/campaign.js', 'fp/core/world.js', 'fp/core/wave.js', 'fp/core/resource.js', 'fp/core/species.js', 'fp/core/terrain.js', 'fp/core/tile.js'
     , 'fp/core/module-manager.js' , 'fp/core/module.js', 'fp/core/lifecycle.js', 'fp/core/statistics.js'
 
        , 'fp/profile/profile.js', 'fp/profile/profile_class.js', 'fp/event/event.js'
@@ -52,8 +52,8 @@ $LAB
        , 'fp/ui/mouse.js'
        , 'fp/ui/editor.js'
        , 'fp/ui/general-ui.js'
-        , 'fp/ui/level-gallery.js'
-       , 'fp/ui/level-ui.js'
+        , 'fp/ui/world-gallery.js'
+       , 'fp/ui/world-ui.js'
        , 'fp/ui/notice.js'
        , 'fp/ui/profile-ui.js'
        , 'fp/ui/resource-ui.js'
@@ -70,13 +70,13 @@ $LAB
     .wait()
     .script([
         'fp/modules/default/default-module.js'
-        , 'fp/modules/default/levels/basic.js'
-        , 'fp/modules/default/levels/additional.js'
+        , 'fp/modules/default/worlds/basic.js'
+        , 'fp/modules/default/worlds/additional.js'
         , 'fp/modules/default/resources/tbl.js'
         , 'fp/modules/default/resources/cos.js'
        , 'fp/modules/default/resources/resource_types.js'
        , 'fp/modules/default/agents/agent_types.js'
-    , 'fp/modules/pp/predator-prey-module.js' , 'fp/modules/pp/levels/pp-levels.js' , 'fp/modules/pp/agents/pp-agent-types.js'
+    , 'fp/modules/pp/predator-prey-module.js' , 'fp/modules/pp/worlds/pp-worlds.js' , 'fp/modules/pp/agents/pp-agent-types.js'
     , 'fp/modules/gol/game-of-life-module.js', 'fp/modules/ca/ca-module.js', 'fp/modules/cities/cities-module.js'
     ])
     .wait(function() {
@@ -117,11 +117,11 @@ $LAB
 // For RequireJS
 /*
 require([
-    'fp/core/world.js'
+    'fp/core/Universe.js'
     , 'fp/core/agent.js'
     , 'fp/core/catastrophe.js'
     , 'fp/core/culture.js'
-    , 'fp/core/level.js'
+    , 'fp/core/world.js'
     , 'fp/core/resource.js'
     , 'fp/core/species.js'
     , 'fp/core/terrain.js'
@@ -142,13 +142,13 @@ require([
 
     , 'fp/dev.js'
 
-    , 'fp/data/levels.js'
+    , 'fp/data/worlds.js'
 
     , 'fp/ui/dialogs.js'
     , 'fp/ui/drawing.js'
     , 'fp/ui/editor.js'
     , 'fp/ui/general-ui.js'
-    , 'fp/ui/level-ui.js'
+    , 'fp/ui/world-ui.js'
     , 'fp/ui/orientation.js'
     , 'fp/ui/profile-ui.js'
     , 'fp/ui/resource-ui.js'
@@ -165,8 +165,8 @@ require([
 
 ], function() {
     //This function is called when all the scripts are loaded
-        $('.thumbnail, .customLevel').click(FiercePlanet.GeneralUI.changePresetLevelDirectly);
-        FiercePlanet.GeneralUI.highlightGalleryItem(Lifecycle.currentLevelNumber);
+        $('.thumbnail, .customWorld').click(FiercePlanet.GeneralUI.changePresetWorldDirectly);
+        FiercePlanet.GeneralUI.highlightGalleryItem(Lifecycle.currentWorldNumber);
         $('#difficulty-input-' + FiercePlanet.levelOfDifficulty).attr('checked', 'checked');
         $(".difficultyInput").click(FiercePlanet.GeneralUI.changeDifficulty);
 
@@ -181,10 +181,10 @@ require([
           // document.onmousedown = function() {return false;} // mozilla
 
           // Default to 3d
-          World.settings.skewTiles = true;
+          Universe.settings.skewTiles = true;
           $('#3d')[0].innerHTML = 'View 2D';
           FiercePlanet.Drawing.drawGame();
-          FiercePlanet.LevelUI.makeLevelFromJSON(!{JSON.stringify(serverLevel)});
+          FiercePlanet.WorldUI.makeWorldFromJSON(!{JSON.stringify(serverWorld)});
 
 });
 */

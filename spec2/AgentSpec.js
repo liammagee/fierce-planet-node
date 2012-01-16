@@ -5,7 +5,7 @@ describe("agent-related classes", function() {
   var culture, agent, level;
 
   beforeEach(function() {
-      culture = World.cultures[0];
+      culture = Universe.cultures[0];
       culture.beliefs = [
           Beliefs.BeliefsAboutResources
           , Beliefs.BeliefsBasedOnOtherAgentsBeliefs
@@ -13,7 +13,7 @@ describe("agent-related classes", function() {
       ];
       culture.desires = [Desires.ExploreSpace, Desires.Flee, Desires.ImproveHealth];
       agent = new Agent(culture, 0, 0);
-      Lifecycle.currentLevel = level = ModuleManager.currentModule.getLevel(Lifecycle.currentLevelSetID, 0);
+      Lifecycle.currentWorld = level = ModuleManager.currentModule.getLevel(Lifecycle.currentCampaignID, 0);
       level.initLevel();
   });
 
@@ -23,7 +23,7 @@ describe("agent-related classes", function() {
         });
 
         it("should have a type", function() {
-          expect(agent.culture).toEqual(World.cultures[0]);
+          expect(agent.culture).toEqual(Universe.cultures[0]);
         });
 
         it("should have a id", function() {

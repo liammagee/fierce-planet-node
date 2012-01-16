@@ -24,7 +24,7 @@ FiercePlanet.Keyboard = FiercePlanet.Keyboard || {};
      */
     this.handleKeyboardShortcuts = function(e) {
 
-        if (World.settings.disableKeyboardShortcuts)
+        if (Universe.settings.disableKeyboardShortcuts)
             return;
 
         // Return if command keys are selected
@@ -32,8 +32,8 @@ FiercePlanet.Keyboard = FiercePlanet.Keyboard || {};
             return;
 
 
-        if (World.settings.firstPerson) {
-            var myAgent = Lifecycle.currentLevel.currentAgents[0];
+        if (Universe.settings.firstPerson) {
+            var myAgent = Lifecycle.currentWorld.currentAgents[0];
             if (myAgent) {
                 switch (e.which) {
                     // +, -, 0: Zoom functions
@@ -66,7 +66,7 @@ FiercePlanet.Keyboard = FiercePlanet.Keyboard || {};
                         }
                         break;
                 }
-//                FiercePlanet.Drawing.panByDrag(- FiercePlanet.Orientation.offsetX / FiercePlanet.Orientation.zoomLevel, - FiercePlanet.Orientation.offsetY / FiercePlanet.Orientation.zoomLevel);
+//                FiercePlanet.Drawing.panByDrag(- FiercePlanet.Orientation.offsetX / FiercePlanet.Orientation.zoomWorld, - FiercePlanet.Orientation.offsetY / FiercePlanet.Orientation.zoomWorld);
 
 //                FiercePlanet.Drawing.panByDrag(myAgent.x - FiercePlanet.Orientation.cellsAcross / 2, myAgent.y - FiercePlanet.Orientation.cellsDown / 2);
                 myAgent.lastMemory.x = myAgent.x;
@@ -133,7 +133,7 @@ FiercePlanet.Keyboard = FiercePlanet.Keyboard || {};
                     break;
                 // 'r': Restart game
                 case 82:
-                    Lifecycle.restartLevel();
+                    Lifecycle.restartWorld();
                     break;
                 // 'w': Rewind
                 case 87:
@@ -149,7 +149,7 @@ FiercePlanet.Keyboard = FiercePlanet.Keyboard || {};
                     break;
                 // 'g': Gallery
                 case 71:
-                    $('#level-gallery').click();
+                    $('#world-gallery').click();
                     break;
                 // 's': Settings
                 case 83:

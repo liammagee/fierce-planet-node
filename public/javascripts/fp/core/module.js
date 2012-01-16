@@ -29,7 +29,7 @@ function Module() {};
     };
 
 
-    // Level sets
+    // World sets
 
     /**
      * Registers a module
@@ -43,14 +43,14 @@ function Module() {};
     };
 
     /**
-     * Retrieves  a level set
+     * Retrieves  a world set
      */
     Module.prototype.getCampaign = function(campaignID) {
         return this._campaigns[campaignID];
     };
 
     /**
-     * Retrieves  a level set
+     * Retrieves  a world set
      */
     Module.prototype.allCampaigns = function() {
         var campaignArray = [];
@@ -71,8 +71,8 @@ function Module() {};
     /**
      * Retrieves  a module
      */
-    Module.prototype.getLevel = function(campaignID, level) {
-        return this.getCampaign(campaignID).levels[level]
+    Module.prototype.getWorld = function(campaignID, world) {
+        return this.getCampaign(campaignID).worlds[world]
     };
 
 

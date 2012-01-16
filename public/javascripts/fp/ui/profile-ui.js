@@ -56,8 +56,8 @@ FiercePlanet.ProfileUI = FiercePlanet.ProfileUI || {};
         $('#profile-totalResourcesSpent').innerHTML = (FiercePlanet.Game.currentProfile.totalResourcesSpent);
         $('#profile-currentScore').innerHTML = (FiercePlanet.Game.currentProfile.currentScore);
         $('#profile-highestScore').innerHTML = (FiercePlanet.Game.currentProfile.highestScore);
-        $('#profile-currentLevel').innerHTML = (FiercePlanet.Game.currentProfile.currentLevel);
-        $('#profile-highestLevel').innerHTML = (FiercePlanet.Game.currentProfile.highestLevel);
+        $('#profile-currentWorld').innerHTML = (FiercePlanet.Game.currentProfile.currentWorld);
+        $('#profile-highestWorld').innerHTML = (FiercePlanet.Game.currentProfile.highestWorld);
         FiercePlanet.Dialogs.profileDialog.dialog('open');
     };
 
@@ -65,8 +65,8 @@ FiercePlanet.ProfileUI = FiercePlanet.ProfileUI || {};
      * Loads available settings from local storage
      */
     this.loadProfileSettingsFromStorage = function () {
-        Lifecycle.currentLevelNumber = (localStorage.currentLevelNumber != undefined ? parseInt(localStorage.currentLevelNumber) : Lifecycle.currentLevelNumber);
-        Lifecycle.currentLevelPreset = (localStorage.currentLevelPreset != undefined ? (localStorage.currentLevelPreset === 'true') : Lifecycle.currentLevelPreset);
+        Lifecycle.currentWorldNumber = (localStorage.currentWorldNumber != undefined ? parseInt(localStorage.currentWorldNumber) : Lifecycle.currentWorldNumber);
+        Lifecycle.currentWorldPreset = (localStorage.currentWorldPreset != undefined ? (localStorage.currentWorldPreset === 'true') : Lifecycle.currentWorldPreset);
         FiercePlanet.Game.currentScore = (localStorage.currentScore != undefined ? parseInt(localStorage.currentScore) : FiercePlanet.Game.currentScore);
         if (localStorage.currentProfile) {
             var cp = localStorage.currentProfile;
@@ -79,17 +79,17 @@ FiercePlanet.ProfileUI = FiercePlanet.ProfileUI || {};
      * Stores relevant profile data in local storage
      */
     this.storeProfileData = function() {
-        localStorage.currentLevelNumber = Lifecycle.currentLevelNumber;
-        if (Lifecycle.currentLevelSetID)
-            localStorage.currentLevelSetID = Lifecycle.currentLevelSetID;
-        if (Lifecycle.currentLevel)
-            localStorage.currentLevelPreset = Lifecycle.currentLevel.isPresetLevel;
+        localStorage.currentWorldNumber = Lifecycle.currentWorldNumber;
+        if (Lifecycle.currentCampaignID)
+            localStorage.currentCampaignID = Lifecycle.currentCampaignID;
+        if (Lifecycle.currentWorld)
+            localStorage.currentWorldPreset = Lifecycle.currentWorld.isPresetWorld;
         localStorage.currentProfile = JSON.stringify(FiercePlanet.Game.currentProfile);
     };
 
 
     /**
-     * Compiles statistics for this level
+     * Compiles statistics for this world
      */
     this.serializeProfile = function() {
         return { profile: JSON.stringify(FiercePlanet.Game.currentProfile)};
@@ -129,13 +129,13 @@ FiercePlanet.ProfileUI = FiercePlanet.ProfileUI || {};
     };
 
     /**
-     * Generates statistics for the current level
+     * Generates statistics for the current world
      */
     this.generateStats = function() {
         var stats = "<table>" +
                 "<tr>" +
-                "<td>Level:</td>" +
-                "<td>" + Lifecycle.currentLevel.id + "</td>" +
+                "<td>World:</td>" +
+                "<td>" + Lifecycle.currentWorld.id + "</td>" +
                 "</tr>" +
                 "<tr>" +
                 "<td>Waves survived:</td>" +
@@ -147,19 +147,19 @@ FiercePlanet.ProfileUI = FiercePlanet.ProfileUI || {};
                 "</tr>" +
                 "<tr>" +
                 "<td>Citizens saved:</td>" +
-                "<td>" + FiercePlanet.Game.currentProfile.currentLevelSaved + "</td>" +
+                "<td>" + FiercePlanet.Game.currentProfile.currentWorldSaved + "</td>" +
                 "</tr>" +
                 "<tr>" +
                 "<td>Citizens expired:</td>" +
-                "<td>" + FiercePlanet.Game.currentProfile.currentLevelExpired + "</td>" +
+                "<td>" + FiercePlanet.Game.currentProfile.currentWorldExpired + "</td>" +
                 "</tr>" +
                 "<tr>" +
                 "<td>Resources spent:</td>" +
-                "<td>" + FiercePlanet.Game.currentProfile.currentLevelResourcesSpent + "</td>" +
+                "<td>" + FiercePlanet.Game.currentProfile.currentWorldResourcesSpent + "</td>" +
                 "</tr>" +
                 "<tr>" +
                 "<td>Resources remaining:</td>" +
-                "<td>" + FiercePlanet.Game.currentProfile.currentLevelResourcesInStore + "</td>" +
+                "<td>" + FiercePlanet.Game.currentProfile.currentWorldResourcesInStore + "</td>" +
                 "</tr>" +
                 "<tr>" +
                 "<td></td>" +

@@ -1,7 +1,7 @@
 h1= title
-#levels
-    - each level in levels
-      div.level
+#worlds
+    - each world in worlds
+      div.world
         div.title
-            a.thumbnail(id='levelSelect' + level.id)!= level.name
-        div.body= level.tiles
+            a.thumbnail(id='worldSelect' + world.id)!= world.name
+        div.body= world.tiles

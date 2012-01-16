@@ -1,10 +1,10 @@
 h3= title
 
-#levels
-  - each level in levels
-    div.level
+#worlds
+  - each world in worlds
+    div.world
       div.title
-        a.customLevel(id='levelSelect' + level._id,href='#')!= level.name
+        a.customLevel(id='worldSelect' + world._id,href='#')!= world.name
 
 script(type='text/javascript')
   $(document).ready(function() {

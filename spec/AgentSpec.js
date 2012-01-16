@@ -4,16 +4,16 @@ describe("agent-related classes", function() {
   var agent;
 
   beforeEach(function() {
-      agent = new Agent(World.cultures[0], 0, 0);
+      agent = new Agent(Universe.cultures[0], 0, 0);
   });
 
     describe("an agent", function() {
         it("should have a type", function() {
-          expect(agent.culture).toEqual(World.cultures[0]);
+          expect(agent.culture).toEqual(Universe.cultures[0]);
         });
 
         it("should have a unique id", function() {
-          expect(agent.id).toNotEqual((new Agent(World.cultures[0], 0, 0).id));
+          expect(agent.id).toNotEqual((new Agent(Universe.cultures[0], 0, 0).id));
         });
 
         describe("health functions", function() {
@@ -21,9 +21,9 @@ describe("agent-related classes", function() {
                 var healthStats = agent.healthCategoryStats;
 
                 expect(healthStats.length).toEqual(3);
-                expect(healthStats[World.resourceCategories[0].code]).toEqual(INITIAL_HEALTH);
-                expect(healthStats[World.resourceCategories[1].code]).toEqual(INITIAL_HEALTH);
-                expect(healthStats[World.resourceCategories[2].code]).toEqual(INITIAL_HEALTH);
+                expect(healthStats[Universe.resourceCategories[0].code]).toEqual(INITIAL_HEALTH);
+                expect(healthStats[Universe.resourceCategories[1].code]).toEqual(INITIAL_HEALTH);
+                expect(healthStats[Universe.resourceCategories[2].code]).toEqual(INITIAL_HEALTH);
             });
 
             describe("when general health is adjusted", function() {
@@ -40,9 +40,9 @@ describe("agent-related classes", function() {
                 it("should also adjust specific health statistics", function() {
                     var healthStats = agent.healthCategoryStats;
 
-                    expect(healthStats[World.resourceCategories[0].code]).toEqual(INITIAL_HEALTH + adjustment);
-                    expect(healthStats[World.resourceCategories[1].code]).toEqual(INITIAL_HEALTH + adjustment);
-                    expect(healthStats[World.resourceCategories[2].code]).toEqual(INITIAL_HEALTH + adjustment);
+                    expect(healthStats[Universe.resourceCategories[0].code]).toEqual(INITIAL_HEALTH + adjustment);
+                    expect(healthStats[Universe.resourceCategories[1].code]).toEqual(INITIAL_HEALTH + adjustment);
+                    expect(healthStats[Universe.resourceCategories[2].code]).toEqual(INITIAL_HEALTH + adjustment);
                 });
             });
 
@@ -51,22 +51,22 @@ describe("agent-related classes", function() {
                 var adjustment = -10;
 
                 beforeEach(function() {
-                    agent.adjustHealthForResourceCategory(adjustment, World.resourceCategories[0]);
+                    agent.adjustHealthForResourceCategory(adjustment, Universe.resourceCategories[0]);
                 });
 
                 it("should adjust health for just that category", function() {
                     var healthStats = agent.healthCategoryStats;
-                    expect(healthStats[World.resourceCategories[0].code]).toEqual(INITIAL_HEALTH + adjustment);
-                    expect(healthStats[World.resourceCategories[1].code]).toEqual(INITIAL_HEALTH);
-                    expect(healthStats[World.resourceCategories[2].code]).toEqual(INITIAL_HEALTH);
+                    expect(healthStats[Universe.resourceCategories[0].code]).toEqual(INITIAL_HEALTH + adjustment);
+                    expect(healthStats[Universe.resourceCategories[1].code]).toEqual(INITIAL_HEALTH);
+                    expect(healthStats[Universe.resourceCategories[2].code]).toEqual(INITIAL_HEALTH);
                 });
 
                 it("should also adjust general health by a third of that amount (when there are three resource categories)", function() {
-                    expect(agent.health).toEqual(INITIAL_HEALTH + (adjustment / World.resourceCategories.length));
+                    expect(agent.health).toEqual(INITIAL_HEALTH + (adjustment / Universe.resourceCategories.length));
                 });
 
                 it("should also return the correct result when health for a given resource is queried", function() {
-                    expect(agent.getHealthForResourceCategory(World.resourceCategories[0])).toEqual(INITIAL_HEALTH + adjustment);
+                    expect(agent.getHealthForResourceCategory(Universe.resourceCategories[0])).toEqual(INITIAL_HEALTH + adjustment);
                 });
             });
 
@@ -101,7 +101,7 @@ describe("agent-related classes", function() {
                 level.removeTiles(65, 1);
 
                 // Place the agent at a co-ordinate on the path
-                agent = new Agent(World.cultures[0], 4, 5);
+                agent = new Agent(Universe.cultures[0], 4, 5);
                 defaultSpeed = agent.speed;
             });
 
@@ -199,11 +199,11 @@ describe("agent-related classes", function() {
                     level.removeTiles(45, 1);
                     level.removeTiles(53, 4);
                     level.removeTiles(65, 1);
-                    resource = new Resource(World.resourceTypes[0], 3, 4);
-                    level.addResource(new Resource(World.resourceTypes[0], 3, 4));
+                    resource = new Resource(Universe.resourceTypes[0], 3, 4);
+                    level.addResource(new Resource(Universe.resourceTypes[0], 3, 4));
 
                     // Place the agent at a co-ordinate on the path
-                    agent = new Agent(World.cultures[0], 4, 5);
+                    agent = new Agent(Universe.cultures[0], 4, 5);
                     agent.adjustGeneralHealth(-50);
                 });
 
@@ -236,7 +236,7 @@ describe("agent-related classes", function() {
                 level.removeTiles(65, 1);
 
                 // Place the agent at a co-ordinate on the path
-                agent = new Agent(World.cultures[0], 4, 5);
+                agent = new Agent(Universe.cultures[0], 4, 5);
             });
 
             it("should have a memory", function() {
@@ -335,7 +335,7 @@ describe("agent-related classes", function() {
                 level.removeTiles(65, 1);
 
                 // Place the agent at a co-ordinate on the path
-                agent = new Agent(World.cultures[0], 3, 5);
+                agent = new Agent(Universe.cultures[0], 3, 5);
             });
 
             it("should find a position", function() {
@@ -397,7 +397,7 @@ describe("agent-related classes", function() {
                         var resource;
 
                         beforeEach(function() {
-                            resource = new Resource(World.resourceTypes[0], 4, 4);
+                            resource = new Resource(Universe.resourceTypes[0], 4, 4);
                             level.addResource(resource);
                         });
 

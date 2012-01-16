@@ -6,20 +6,21 @@
  */
 
 
-var CellularAutomataLevels = CellularAutomataLevels || new Campaign();
+var CellularAutomataWorlds = CellularAutomataWorlds || new Campaign();
 var CellularAutomataModule = CellularAutomataModule || {};
 
 
 (function () {
 
     this.init = function () {
-        this.citiesLevel1  = new Level(1);
+        this.citiesWorld1  = new World();
         (function () {
+            this.id = 1;
             this.isometric = false;
             this.allowResourcesOnPath = true;
             this.allowOffscreenCycling = true;
             this.initialResourceStore = 10000;
-            this.isPresetLevel = true;
+            this.isPresetWorld = true;
             this.placeAgentsOnAllCells = true;
 //            this.randomiseAgents = true;
             this.randomiseResources = true;
@@ -45,12 +46,12 @@ var CellularAutomataModule = CellularAutomataModule || {};
             this.expiryLimit = 1;
             this.initialResourceNumber = 0;
             this.name = ("Testing parameters...");
-            this.isTerminalLevel = true;
+            this.isTerminalWorld = true;
             this.dontClearCanvas = true;
             this.scrollingImageVisible = false;
             this.introduction =
-                "<p>Cellular Automata rule:</p><p><input class='level-parameters' name='AutomataNumber' value='110'/> </p>" +
-                    "<p>Size of world:</p><p><input class='level-parameters' name='SizeOfWorld' value='101'/> </p>" +
+                "<p>Cellular Automata rule:</p><p><input class='world-parameters' name='AutomataNumber' value='110'/> </p>" +
+                    "<p>Size of world:</p><p><input class='world-parameters' name='SizeOfWorld' value='101'/> </p>" +
                     ""
             ;
             this.conclusion = ("Well done.");
@@ -94,18 +95,18 @@ var CellularAutomataModule = CellularAutomataModule || {};
                     agents[0].isLiving = true;
             };
 
-        }).apply(this.citiesLevel1);
+        }).apply(this.citiesWorld1);
 
 
         // Prepare as a module
         this.id = "CA";
         this.name = "Cellular Automata";
         this.position = 1;
-        this.levels = [this.citiesLevel1 ];
+        this.worlds = [this.citiesWorld1 ];
     }
 
     this.init();
-}).apply(CellularAutomataLevels);
+}).apply(CellularAutomataWorlds);
 
 
 (function() {
@@ -113,18 +114,18 @@ var CellularAutomataModule = CellularAutomataModule || {};
         GameOfLifeCultures.init();
         var switchStateCapability = {} ;
         switchStateCapability.counter = 0;
-        switchStateCapability.exercise = function(agent, level) {
+        switchStateCapability.exercise = function(agent, world) {
             var x = agent.x;
             var y = agent.y;
 
             if (y > 0 && y == Lifecycle.waveCounter - 10) {
-                var left = (x <= 0) ? false : level.getAgentsAtContentMap(x - 1, y - 1)[0].isLiving;
-                var center = level.getAgentsAtContentMap(x, y - 1)[0].isLiving;
-                var right = (x >= level.cellsAcross - 1) ? false : level.getAgentsAtContentMap(x + 1, y - 1)[0].isLiving;
-                level.AutomataNumber = level.AutomataNumber || 110;
+                var left = (x <= 0) ? false : world.getAgentsAtContentMap(x - 1, y - 1)[0].isLiving;
+                var center = world.getAgentsAtContentMap(x, y - 1)[0].isLiving;
+                var right = (x >= world.cellsAcross - 1) ? false : world.getAgentsAtContentMap(x + 1, y - 1)[0].isLiving;
+                world.AutomataNumber = world.AutomataNumber || 110;
                 var state = parseInt( (left & 1).toString() + (center & 1).toString() +  (right & 1).toString(), 2) + 1;
                 var mask = Math.pow(2, state) / 2;
-                agent.isLiving = (level.AutomataNumber & mask) > 0;
+                agent.isLiving = (world.AutomataNumber & mask) > 0;
             }
         };
         GameOfLifeCultures.CELLULAR_AGENT_TYPE.capabilities = [ switchStateCapability ];
@@ -133,27 +134,27 @@ var CellularAutomataModule = CellularAutomataModule || {};
         var module = new Module();
         module.id = 'CA';
 
-        module.registerCampaign(CellularAutomataLevels);
+        module.registerCampaign(CellularAutomataWorlds);
         module.registerCulture(GameOfLifeCultures.CELLULAR_AGENT_TYPE);
         module.registerResourceSet(TBL);
         module.register();
 
-        World.registerCultures(module.allCultures());
-        World.switchResourceSet(TBL);
-        World.settings.skewTiles = false;
-        World.settings.agentsCanCommunicate = false;
-        World.settings.hidePathBorder = true;
+        Universe.registerCultures(module.allCultures());
+        Universe.switchResourceSet(TBL);
+        Universe.settings.skewTiles = false;
+        Universe.settings.agentsCanCommunicate = false;
+        Universe.settings.hidePathBorder = true;
 
-        World.settings.scrollingImageVisible = localStorage.scrollingImageVisible = false;
-        World.settings.showGraph = true;
-        World.settings.showEditor = true;
-        World.settings.store();
-        Lifecycle.currentLevelSetID = 'CA';
-        Lifecycle.currentLevelNumber = localStorage.currentLevelNumber = 0;
-        Lifecycle.currentLevelPreset = true;
+        Universe.settings.scrollingImageVisible = localStorage.scrollingImageVisible = false;
+        Universe.settings.showGraph = true;
+        Universe.settings.showEditor = true;
+        Universe.settings.store();
+        Lifecycle.currentCampaignID = 'CA';
+        Lifecycle.currentWorldNumber = localStorage.currentWorldNumber = 0;
+        Lifecycle.currentWorldPreset = true;
         AgentConstants.DEFAULT_SPEED = 1;
         Lifecycle.interval = 50;
-        Lifecycle.NEW_LEVEL_DELAY = 300;
+        Lifecycle.NEW_WORLD_DELAY = 300;
 
         FiercePlanet.ModuleEditor.buildEditorFromUrl('/javascripts/fp/modules/ca/ca-module.js', 'CellularAutomataModule.init(); FiercePlanet.Game.loadGame();');
     };
@@ -162,7 +163,7 @@ var CellularAutomataModule = CellularAutomataModule || {};
 
 
 if (typeof exports !== "undefined") {
-    exports.CellularAutomataLevels = CellularAutomataLevels;
+    exports.CellularAutomataWorlds = CellularAutomataWorlds;
     exports.CellularAutomataModule = CellularAutomataModule;
 }
 

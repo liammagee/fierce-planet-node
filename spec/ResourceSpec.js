@@ -3,23 +3,23 @@ describe("resource-related classes", function() {
   var resource;
 
   beforeEach(function() {
-      resource = new Resource(World.resourceTypes[0], 0, 0);
+      resource = new Resource(Universe.resourceTypes[0], 0, 0);
   });
 
     describe("a resource type", function() {
         it("should have a category", function() {
-          expect(World.resourceTypes[0].category).toEqual(World.resourceCategories[0]);
+          expect(Universe.resourceTypes[0].category).toEqual(Universe.resourceCategories[0]);
         });
 
     });
 
     describe("a resource", function() {
         it("should have a category", function() {
-          expect(resource.category).toEqual(World.resourceCategories[0]);
+          expect(resource.category).toEqual(Universe.resourceCategories[0]);
         });
 
         it("should have a type", function() {
-          expect(resource.kind).toEqual(World.resourceTypes[0]);
+          expect(resource.kind).toEqual(Universe.resourceTypes[0]);
         });
 
         it("should have a per agent yield of 20", function() {
@@ -34,7 +34,7 @@ describe("resource-related classes", function() {
             var agent;
 
             beforeEach(function() {
-                agent = new Agent(World.cultures[0], 0, 0);
+                agent = new Agent(Universe.cultures[0], 0, 0);
             });
 
             it("should not yield anything to an agent in full health", function() {

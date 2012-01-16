@@ -11,28 +11,28 @@ var Capabilities = Capabilities || {};
 function Capability() {
     this.cost = 0.0;
     this.probability = 1.0;
-    this.exercise = function(agent, level) {};
+    this.exercise = function(agent, world) {};
 }
 
 Capabilities.ConsumeResourcesCapability = new Capability();
 (function() {
     this.name = 'ConsumeResourcesCapability';
-    this.exercise = function(agent, level) {
+    this.exercise = function(agent, world) {
         var x = agent.x, y = agent.y,
-            resources = level.getNeighbouringResources(x, y);
+            resources = world.getNeighbouringResources(x, y);
         // Provide yield
         for (var i = 0, l = resources.length; i < l; i++) {
             var resource = resources[i];
-            var resourceEffect = level.calculateResourceEffect(resource);
-            resource.provideYield(agent, resourceEffect, !level.noSpeedChange);
+            var resourceEffect = world.calculateResourceEffect(resource);
+            resource.provideYield(agent, resourceEffect, !world.noSpeedChange);
         }
     };
 
     /**
      */
-    this.getCapabilities = function(agent, level) {
+    this.getCapabilities = function(agent, world) {
         var x = agent.x, y = agent.y,
-            resources = level.getNeighbouringResources(x, y);
+            resources = world.getNeighbouringResources(x, y);
         return { capability: this, arguments: resources };
     };
 }).apply(Capabilities.ConsumeResourcesCapability);
@@ -40,21 +40,21 @@ Capabilities.ConsumeResourcesCapability = new Capability();
 Capabilities.ProduceResourcesCapability = new Capability();
 (function() {
     this.name = 'ProduceResourcesCapability';
-    this.exercise = function(agent, level) {
-        if (!level.isPositionOccupiedByResource(agent.x, agent.y)) {
-            var rt = World.resourceTypes[Math.floor(Math.random() * World.resourceTypes.length)];
+    this.exercise = function(agent, world) {
+        if (!world.isPositionOccupiedByResource(agent.x, agent.y)) {
+            var rt = Universe.resourceTypes[Math.floor(Math.random() * Universe.resourceTypes.length)];
             var buildChance = Math.random();
-            if (buildChance < 0.1 && level.currentResourceStore > rt.cost) {
-                level.addResource(new Resource(rt, agent.x, agent.y));
+            if (buildChance < 0.1 && world.currentResourceStore > rt.cost) {
+                world.addResource(new Resource(rt, agent.x, agent.y));
             }
         }
     };
 
     /**
      */
-    this.getCapabilities = function(agent, level) {
+    this.getCapabilities = function(agent, world) {
         var x = agent.x, y = agent.y,
-            resources = level.getNeighbouringResources(x, y);
+            resources = world.getNeighbouringResources(x, y);
         return { capability: this, arguments: resources };
     };
 }).apply(Capabilities.ProduceResourcesCapability);
@@ -64,12 +64,12 @@ Capabilities.ProduceResourcesCapability = new Capability();
 Capabilities.RegenerateCapability = new Capability();
 (function() {
     this.name = 'RegenerateCapability';
-    this.exercise = function(agent, level) {
+    this.exercise = function(agent, world) {
         if (agent.gender != 'f' || agent.age < agent.culture.reproductionAge)
             return;
 
         var x = agent.x, y = agent.y;
-        var agents = level.getNeighbouringAgents(x, y);
+        var agents = world.getNeighbouringAgents(x, y);
         for (var j = 0; j < agents.length; j++) {
             var a = agents[j];
             var ax = a.x;
@@ -79,17 +79,17 @@ Capabilities.RegenerateCapability = new Capability();
                         // Some random chance a new agent is born
                     var birthChance = Math.random();
                     if (birthChance < agent.culture.birthProbability) {
-                        if (level.countAgentsAtPosition(x, y) <= 1 && (World.settings.agentsOwnTilesExclusively || level.agentsOwnTilesExclusively)) {
+                        if (world.countAgentsAtPosition(x, y) <= 1 && (Universe.settings.agentsOwnTilesExclusively || world.agentsOwnTilesExclusively)) {
                             var childAgent = new Agent(agent.culture, agent.x, agent.y);
                             childAgent.delay = parseInt(Math.random() * AgentConstants.DEFAULT_SPEED * 5);
-                            childAgent.canCommunicateWithOtherAgents = (World.settings.agentsCanCommunicate);
-                            childAgent.bornAt = (Lifecycle.levelCounter);
+                            childAgent.canCommunicateWithOtherAgents = (Universe.settings.agentsCanCommunicate);
+                            childAgent.bornAt = (Lifecycle.worldCounter);
                             childAgent.parents = [agent, a];
                             agent.children.push(childAgent);
                             a.children.push(childAgent);
-                            Lifecycle.currentLevel.currentAgents.push(childAgent);
-                            Lifecycle.currentLevel.addAgentToContentMap(childAgent);
-                            Lifecycle.currentLevel.currentResourceStore += 10;
+                            Lifecycle.currentWorld.currentAgents.push(childAgent);
+                            Lifecycle.currentWorld.addAgentToContentMap(childAgent);
+                            Lifecycle.currentWorld.currentResourceStore += 10;
                         }
                     }
                 }
@@ -99,13 +99,13 @@ Capabilities.RegenerateCapability = new Capability();
 
     /**
      */
-    this.getCapabilities = function(agent, level) {
+    this.getCapabilities = function(agent, world) {
         if (agent.gender != 'f' || agent.age < agent.culture.reproductionAge)
             return undefined;
 
         var x = agent.x, y = agent.y,
             agents = [],
-            candidateAgents = level.getNeighbouringAgents(x, y);
+            candidateAgents = world.getNeighbouringAgents(x, y);
         candidateAgents.forEach(function(candidate) {
             if (candidate.gender == 'm' && candidate.culture.name == agent.culture.name && candidate.age > candidate.culture.reproductionAge) {
                 agents.push(candidate);
@@ -118,9 +118,9 @@ Capabilities.RegenerateCapability = new Capability();
 Capabilities.PreyOnOtherAgentsCapability = new Capability();
 (function() {
     this.name = 'PreyOnOtherAgentsCapability';
-    this.exercise = function(agent, level) {
+    this.exercise = function(agent, world) {
         var x = agent.x, y = agent.y,
-            candidateAgents = level.getNeighbouringAgents(x, y)
+            candidateAgents = world.getNeighbouringAgents(x, y)
             foundPrey = false;
         for (var j = 0; j < candidateAgents.length; j++) {
             var candidateAgent = candidateAgents[j];
@@ -141,15 +141,15 @@ Capabilities.PreyOnOtherAgentsCapability = new Capability();
 
     /**
      */
-    this.getCapabilities = function(agent, level) {
+    this.getCapabilities = function(agent, world) {
         if (agent.gender != 'f' || agent.age < agent.culture.reproductionAge)
             return undefined;
 
         var x = agent.x, y = agent.y,
             agents = [],
-            candidateAgents = level.getNeighbouringAgents(x, y);
+            candidateAgents = world.getNeighbouringAgents(x, y);
         var x = agent.x, y = agent.y,
-            candidateAgents = level.getNeighbouringAgents(x, y)
+            candidateAgents = world.getNeighbouringAgents(x, y)
         for (var j = 0; j < candidateAgents.length; j++) {
             var candidateAgent = candidateAgents[j];
             if (candidateAgent.culture.name != agent.culture.name) {
@@ -188,17 +188,17 @@ Capabilities.PreyOnOtherAgentsCapability = new Capability();
 //(function() {
 //    this.name = 'MoveCapability';
 //    this.cost = -3;
-//    this.exercise = function(agent, level) {
-//        if (level.agentGoToNearestExit || World.settings.agentGoToNearestExit) {
+//    this.exercise = function(agent, world) {
+//        if (world.agentGoToNearestExit || Universe.settings.agentGoToNearestExit) {
 //            try {
-//                Capabilities.MoveTowardsNearestExitCapability.exercise(agent, level);
+//                Capabilities.MoveTowardsNearestExitCapability.exercise(agent, world);
 //            }
 //            catch (e) {
-//                Capabilities.MoveWithMemoryCapability.exercise(agent, level);
+//                Capabilities.MoveWithMemoryCapability.exercise(agent, world);
 //            }
 //        }
 //        else {
-//            Capabilities.MoveWithMemoryCapability.exercise(agent, level);
+//            Capabilities.MoveWithMemoryCapability.exercise(agent, world);
 //        }
 //    };
 //
@@ -208,15 +208,15 @@ Capabilities.PreyOnOtherAgentsCapability = new Capability();
 //(function() {
 //    this.name = 'MoveUpwardsCapability';
 //    this.cost = 0;
-//    this.exercise = function(agent, level) {
-//        // TODO: Make these parameters of the level
+//    this.exercise = function(agent, world) {
+//        // TODO: Make these parameters of the world
 //
 //        var options = options || {};
 //        var withNoRepeat = options ? options["withNoRepeat"] : false;
 //        var withNoCollision = options ? options["withNoCollision"] : false;
 //        var withOffscreenCycling = options ? options["withOffscreenCycling"] : false;
 //
-//        var position = this.findPositionUp(agent, level, withNoRepeat, withNoCollision, withOffscreenCycling)
+//        var position = this.findPositionUp(agent, world, withNoRepeat, withNoCollision, withOffscreenCycling)
 //
 //        // Set the position and add the move to the agent's memory
 //        agent.moveTo(position[0], position[1]);
@@ -224,15 +224,15 @@ Capabilities.PreyOnOtherAgentsCapability = new Capability();
 //
 //
 //    /**
-//     * @param level
+//     * @param world
 //     * @param withNoRepeat
 //     * @param withNoCollision
 //     * @param withOffscreenCycling
 //     */
-//    this.findPositionUp = function(agent, level, withNoRepeat, withNoCollision, withOffscreenCycling) {
+//    this.findPositionUp = function(agent, world, withNoRepeat, withNoCollision, withOffscreenCycling) {
 //        var x = agent.x, y = agent.y;
 //        if (y < 0)
-//            return [x, level.cellsDown];
+//            return [x, world.cellsDown];
 //        else
 //            return [x, y - 1];
 //    }
@@ -246,15 +246,15 @@ Capabilities.PreyOnOtherAgentsCapability = new Capability();
 //(function() {
 //    this.name = 'MoveRandomlyCapability';
 //    this.cost = 0;
-//    this.exercise = function(agent, level) {
-//        // TODO: Make these parameters of the level
+//    this.exercise = function(agent, world) {
+//        // TODO: Make these parameters of the world
 //
 //        var options = options || {};
 //        var withNoRepeat = options ? options["withNoRepeat"] : false;
 //        var withNoCollision = options ? options["withNoCollision"] : false;
 //        var withOffscreenCycling = options ? options["withOffscreenCycling"] : false;
 //
-//        var position = this.findPositionRandomly(agent, level, withNoRepeat, withNoCollision, withOffscreenCycling)
+//        var position = this.findPositionRandomly(agent, world, withNoRepeat, withNoCollision, withOffscreenCycling)
 //
 ////        console.log(agent.x + ':' +agent.y + ':' +position[0] + ':' +position[1])
 //        // Set the position and add the move to the agent's memory
@@ -264,12 +264,12 @@ Capabilities.PreyOnOtherAgentsCapability = new Capability();
 //
 //
 //    /**
-//     * @param level
+//     * @param world
 //     * @param withNoRepeat
 //     * @param withNoCollision
 //     * @param withOffscreenCycling
 //     */
-//    this.findPositionRandomly = function(agent, level, withNoRepeat, withNoCollision, withOffscreenCycling) {
+//    this.findPositionRandomly = function(agent, world, withNoRepeat, withNoCollision, withOffscreenCycling) {
 //        var x = agent.x;
 //        var y = agent.y;
 //        var newX = x;
@@ -285,8 +285,8 @@ Capabilities.PreyOnOtherAgentsCapability = new Capability();
 //            var dir = directions[i];
 //
 //            var offScreen1 = 0;
-//            var offScreenWidth = level.cellsAcross - 1;
-//            var offScreenHeight = level.cellsDown - 1;
+//            var offScreenWidth = world.cellsAcross - 1;
+//            var offScreenHeight = world.cellsDown - 1;
 //            var offset = 1;
 //            var toContinue = false;
 //            switch (dir) {
@@ -304,24 +304,24 @@ Capabilities.PreyOnOtherAgentsCapability = new Capability();
 //                    break;
 //            }
 //            // If we can't repeat and the candidate cell is the last visited cell, continue
-//            if (level.isExitPoint(newX, newY))
+//            if (world.isExitPoint(newX, newY))
 //                return [newX, newY];
 //            // If we can't repeat and the candidate cell is the last visited cell, continue
 //            if ((withNoRepeat && lastX == newX && lastY == newY) || toContinue) {
 //                continue;
 //            }
 //            // If the cell is occupied by another agent, don't allow this agent to move there
-//            if (World.settings.agentsOwnTilesExclusively && level.isPositionOccupiedByAgent(newX, newY)) {
+//            if (Universe.settings.agentsOwnTilesExclusively && world.isPositionOccupiedByAgent(newX, newY)) {
 //                // Wait till the other agent has moved - don't backtrack if no other cells are available
 //                waitOnCurrentCell = true;
 //                continue;
 //            }
 //            // If the cell is occupied by a resource, don't allow the agent to move there
-//            if ((World.settings.resourcesOwnTilesExclusively || level.resourcesOwnTilesExclusively) && level.isPositionOccupiedByResource(newX, newY)) {
+//            if ((Universe.settings.resourcesOwnTilesExclusively || world.resourcesOwnTilesExclusively) && world.isPositionOccupiedByResource(newX, newY)) {
 //                continue;
 //            }
 //            // If the candidate cell is valid (part of the path), add it
-//            if (level.getCell(newX, newY) == undefined) {
+//            if (world.getCell(newX, newY) == undefined) {
 //                return ([newX, newY]);
 //            }
 //        }
@@ -337,15 +337,15 @@ Capabilities.PreyOnOtherAgentsCapability = new Capability();
 //(function() {
 //    this.name = 'MoveTowardsNearestExitCapability';
 //    this.cost = -0;
-//    this.exercise = function(agent, level) {
-//        // TODO: Make these parameters of the level
+//    this.exercise = function(agent, world) {
+//        // TODO: Make these parameters of the world
 //
 //        var options = options || {};
 //        var withNoRepeat = options ? options["withNoRepeat"] : false;
 //        var withNoCollision = options ? options["withNoCollision"] : false;
 //        var withOffscreenCycling = options ? options["withOffscreenCycling"] : false;
 //
-//        var position = this.findPositionForNearestExit(agent, level, withNoRepeat, withNoCollision, withOffscreenCycling)
+//        var position = this.findPositionForNearestExit(agent, world, withNoRepeat, withNoCollision, withOffscreenCycling)
 //
 //        // Set the position and add the move to the agent's memory
 //        agent.moveTo(position[0], position[1]);
@@ -353,13 +353,13 @@ Capabilities.PreyOnOtherAgentsCapability = new Capability();
 //
 //
 //    /**
-//     * @param level
+//     * @param world
 //     * @param withNoRepeat
 //     * @param withNoCollision
 //     * @param withOffscreenCycling
 //     */
-//    this.findPositionForNearestExit = function(agent, level, withNoRepeat, withNoCollision, withOffscreenCycling) {
-//        var ret = this.getAllPlans(level, agent.x, agent.y);
+//    this.findPositionForNearestExit = function(agent, world, withNoRepeat, withNoCollision, withOffscreenCycling) {
+//        var ret = this.getAllPlans(world, agent.x, agent.y);
 //        var trail = ret.trail;
 //        return (trail.length > 1 ? trail[1] : trail[0]);
 //    };
@@ -370,14 +370,14 @@ Capabilities.PreyOnOtherAgentsCapability = new Capability();
 //    /**
 //     * Find the critical path to the nearest exit point
 //     */
-//    this.getAllPlans = function(level, x, y, h) {
+//    this.getAllPlans = function(world, x, y, h) {
 //        var horizontal = h || true;
 //
 //        var shortestDistance = -1, shortistTrail;
-//        for (var i = 0, l = level.exitPoints.length; i < l; i++) {
-//            var ep = level.exitPoints[i];
+//        for (var i = 0, l = world.exitPoints.length; i < l; i++) {
+//            var ep = world.exitPoints[i];
 //            var tx = ep[0], ty = ep[1];
-//            var result = this.criticalPathToExitPoint(level, x, y, tx, ty);
+//            var result = this.criticalPathToExitPoint(world, x, y, tx, ty);
 //            var distance = result.length;
 //            if (shortestDistance == -1 ||  distance < shortestDistance) {
 //                shortestDistance = distance;
@@ -388,13 +388,13 @@ Capabilities.PreyOnOtherAgentsCapability = new Capability();
 //    };
 //
 //
-//    this.criticalPathToExitPoint = function(level, sx, sy, ex, ey) {
+//    this.criticalPathToExitPoint = function(world, sx, sy, ex, ey) {
 //        var cell = [sx, sy], goal = [ex, ey];
 //        var history = [];
 //        var trails = {};
 //        var depth = 0;
 //        history.push(cell);
-//        trails[sy * level.cellsAcross + sx] = [cell];
+//        trails[sy * world.cellsAcross + sx] = [cell];
 //        var candidates = [];
 //        candidates.push(cell);
 //        while (depth++ < this.MAX_DEPTH) {
@@ -402,8 +402,8 @@ Capabilities.PreyOnOtherAgentsCapability = new Capability();
 //            for (var i = 0, l = candidates.length; i < l; i++) {
 //                var candidate = candidates[i];
 //                var x = candidate[0], y = candidate[1];
-//                if (level.isSameCell(candidate, goal)) {
-//                    return trails[y * level.cellsAcross + x];
+//                if (world.isSameCell(candidate, goal)) {
+//                    return trails[y * world.cellsAcross + x];
 //                }
 //                var directions = this.getDirections(candidate, goal);
 //                for (var j = 0; j < directions.length; j++) {
@@ -423,22 +423,22 @@ Capabilities.PreyOnOtherAgentsCapability = new Capability();
 //                            break;
 //                    }
 //                    var newCell = [nx, ny];
-//                    if (nx < 0 || nx >= level.cellsAcross || ny < 0 || ny >= level.cellsDown)
+//                    if (nx < 0 || nx >= world.cellsAcross || ny < 0 || ny >= world.cellsDown)
 //                        continue;
-//                    if (!level.isCell(newCell))
+//                    if (!world.isCell(newCell))
 //                        continue;
-//                    if (level.isInHistory(newCell, history))
+//                    if (world.isInHistory(newCell, history))
 //                        continue;
 //                    // Exclude cells occupied exclusively by resources
-//                    if ((World.settings.resourcesOwnTilesExclusively || level.resourcesOwnTilesExclusively) && level.isPositionOccupiedByResource(nx, ny))
+//                    if ((Universe.settings.resourcesOwnTilesExclusively || world.resourcesOwnTilesExclusively) && world.isPositionOccupiedByResource(nx, ny))
 //                        continue;
 //
 //                    newCandidates.push(newCell);
 //                    history.push(newCell)
 //
-//                    var candidateKey = y * level.cellsAcross + x;
+//                    var candidateKey = y * world.cellsAcross + x;
 //                    var candidateTrail = trails[candidateKey]
-//                    var newCandidateKey = ny * level.cellsAcross + nx;
+//                    var newCandidateKey = ny * world.cellsAcross + nx;
 //                    var newCandidateTrail = []
 //                    for (var k in candidateTrail) {
 //                        newCandidateTrail.push(candidateTrail[k]);
@@ -482,27 +482,27 @@ Capabilities.PreyOnOtherAgentsCapability = new Capability();
 //(function() {
 //    this.name = 'MoveWithMemoryCapability';
 //    this.cost = -0;
-//    this.exercise = function(agent, level) {
-//        // TODO: Make these parameters of the level
+//    this.exercise = function(agent, world) {
+//        // TODO: Make these parameters of the world
 //        var options = options || {};
 //        var withNoRepeat = options ? options["withNoRepeat"] : false;
 //        var withNoCollision = options ? options["withNoCollision"] : false;
 //        var withOffscreenCycling = options ? options["withOffscreenCycling"] : false;
 //
-//        var position = this.findPositionWithFreeNavigation(agent, level, withNoRepeat, withNoCollision, withOffscreenCycling);
+//        var position = this.findPositionWithFreeNavigation(agent, world, withNoRepeat, withNoCollision, withOffscreenCycling);
 //
 //        // Set the position and add the move to the agent's memory
 //        agent.moveTo(position[0], position[1]);
 //    };
 //
-//    this.evaluate = function(agent, level) {
-//        // TODO: Make these parameters of the level
+//    this.evaluate = function(agent, world) {
+//        // TODO: Make these parameters of the world
 //        var options = options || {};
 //        var withNoRepeat = options ? options["withNoRepeat"] : false;
 //        var withNoCollision = options ? options["withNoCollision"] : false;
 //        var withOffscreenCycling = options ? options["withOffscreenCycling"] : false;
 //
-//        var position = this.findPositionWithFreeNavigation(agent, level, withNoRepeat, withNoCollision, withOffscreenCycling)
+//        var position = this.findPositionWithFreeNavigation(agent, world, withNoRepeat, withNoCollision, withOffscreenCycling)
 //    };
 //
 //
@@ -520,7 +520,7 @@ Capabilities.PreyOnOtherAgentsCapability = new Capability();
 //     <li>If the previously visited cell is the only viable alternative, i.e. there are no candidates, move to that cell.
 //     <li>If one of the candidate (non-tile) cells is an exit point, move to that cell.</li>
 //     <li>Create a refined candidate list based on whether any cells have not yet been visited by this agent.
-//     If the 'level.agentsCanCommunicate' property is true, then the memories of other agents met by this agent (AS AT THE TIME THEY MET)
+//     If the 'world.agentsCanCommunicate' property is true, then the memories of other agents met by this agent (AS AT THE TIME THEY MET)
 //     are also shared. (Hereafter, when this property is true, additional conditions are included in square brackets).</li>
 //     <li>The refined candidate list, including just those cells not in this [or other met] agent's memory is then searched.
 //     If any of these candidates in turn have a neighbouring resource, then the first of those candidates is selected.
@@ -538,15 +538,15 @@ Capabilities.PreyOnOtherAgentsCapability = new Capability();
 //     </ol>
 //     </div>
 //     *
-//     * @param level
+//     * @param world
 //     * @param withNoRepeat
 //     * @param withNoCollision
 //     * @param withOffscreenCycling
 //     */
-//    this.findPositionWithFreeNavigation = function(agent, level, withNoRepeat, withNoCollision, withOffscreenCycling) {
+//    this.findPositionWithFreeNavigation = function(agent, world, withNoRepeat, withNoCollision, withOffscreenCycling) {
 //
 //        // Get candidate cells
-//        var candidateCells = this.findCandidateCells(agent, level);
+//        var candidateCells = this.findCandidateCells(agent, world);
 //        var x = agent.x, y = agent.y, lastX = agent.lastMemory.x, lastY = agent.lastMemory.y;
 //
 //        var bestCandidate;
@@ -554,7 +554,7 @@ Capabilities.PreyOnOtherAgentsCapability = new Capability();
 //
 //        // Allow for back-tracking, if there is no way forward
 //        if (candidateCells.length == 0) {
-//            if (World.settings.agentsOwnTilesExclusively && level.getAgentsAtContentMap(lastX, lastY).length > 0) {
+//            if (Universe.settings.agentsOwnTilesExclusively && world.getAgentsAtContentMap(lastX, lastY).length > 0) {
 //                bestCandidate = [x, y];
 //                bestCandidates[bestCandidate] = 1.0;
 //            }
@@ -591,7 +591,7 @@ Capabilities.PreyOnOtherAgentsCapability = new Capability();
 //            bestCandidates[bestCandidate] = 1.0;
 //            for (var i = 0; i < candidatesNotInHistory.length; i++) {
 //                var candidate = candidatesNotInHistory[i];
-//                var resources = level.getNeighbouringResources(candidate[0], candidate[1]);
+//                var resources = world.getNeighbouringResources(candidate[0], candidate[1]);
 //                if (typeof(resources) != 'undefined' && resources.length > 0) {
 //                    bestCandidate = candidate;
 //                    bestCandidates[bestCandidate] = 1.0;
@@ -644,7 +644,7 @@ Capabilities.PreyOnOtherAgentsCapability = new Capability();
 //                        var unvisited = agent.memoriesOfPathsUntried[j];
 //                        if (unvisited != undefined) {
 //                            // Fixes bug with endless back-and-forth cycle, due to proximity of unvisited (and unvisitable) resource cells
-//                            if ((World.settings.resourcesOwnTilesExclusively || level.resourcesOwnTilesExclusively) && level.isPositionOccupiedByResource(unvisited.x, unvisited.y))
+//                            if ((Universe.settings.resourcesOwnTilesExclusively || world.resourcesOwnTilesExclusively) && world.isPositionOccupiedByResource(unvisited.x, unvisited.y))
 //                                continue;
 //
 //                            var inOtherAgentsMemory = false;
@@ -683,7 +683,7 @@ Capabilities.PreyOnOtherAgentsCapability = new Capability();
 //                                var agentUnvisitedMemory = agentMemoryOfPathsUntried[j];
 //
 //                                // Fixes bug with endless back-and-forth cycle, due to proximity of unvisited (and unvisitable) resource cells
-//                                if ((World.settings.resourcesOwnTilesExclusively || level.resourcesOwnTilesExclusively) && level.isPositionOccupiedByResource(agentUnvisitedMemory.x, agentUnvisitedMemory.y))
+//                                if ((Universe.settings.resourcesOwnTilesExclusively || world.resourcesOwnTilesExclusively) && world.isPositionOccupiedByResource(agentUnvisitedMemory.x, agentUnvisitedMemory.y))
 //                                    continue;
 //
 //                                if (allPlacesVisited[j] == undefined) {
@@ -747,7 +747,7 @@ Capabilities.PreyOnOtherAgentsCapability = new Capability();
 //                // Try any unvisited cells at this point
 //                for (var k = 0; k < candidateCells.length; k++) {
 //                    var resourceCandidate = candidateCells[k];
-//                    var neighbouringResources = level.getNeighbouringResources(resourceCandidate[0], resourceCandidate[1]);
+//                    var neighbouringResources = world.getNeighbouringResources(resourceCandidate[0], resourceCandidate[1]);
 //                    if (typeof(neighbouringResources) != 'undefined' && neighbouringResources.length > 0) {
 //                        bestCandidate = resourceCandidate;
 //                        bestCandidates[bestCandidate] = 1.0;
@@ -794,9 +794,9 @@ Capabilities.PreyOnOtherAgentsCapability = new Capability();
 //
 //    /**
 //     */
-//    this.getCapabilities = function(agent, level) {
+//    this.getCapabilities = function(agent, world) {
 //        // Get candidate cells
-//        var candidateCells = this.findCandidateCells(agent, level);
+//        var candidateCells = this.findCandidateCells(agent, world);
 //        return { capability: this, arguments: candidateCells };
 //    };
 //
@@ -804,20 +804,20 @@ Capabilities.PreyOnOtherAgentsCapability = new Capability();
 //    /**
 //     *
 //     * @param agent
-//     * @param level
+//     * @param world
 //     */
-//    this.findCandidateCells = function(agent, level) {
+//    this.findCandidateCells = function(agent, world) {
 //        var x = agent.x, y = agent.y, lastX = agent.lastMemory.x, lastY = agent.lastMemory.y;
 //        var candidateCells = [];
 //        var newX = x, newY = y;
 //        var directions = Capabilities.MoveUtilities.randomDirectionOrder();
 //        var withNoRepeat = false;
-//        var withOffscreenCycling = level.allowOffscreenCycling;
+//        var withOffscreenCycling = world.allowOffscreenCycling;
 //        var waitOnCurrentCell = false;
 //        for (var i = 0; i < directions.length; i++) {
 //            var dir = directions[i];
 //
-//            var newX = x, newY = y, offscreenLeft = 0, offscreenTop = 0, offScreenWidth = level.cellsAcross - 1, offScreenHeight = level.cellsDown - 1, offset = 1, toContinue = false;
+//            var newX = x, newY = y, offscreenLeft = 0, offscreenTop = 0, offScreenWidth = world.cellsAcross - 1, offScreenHeight = world.cellsDown - 1, offset = 1, toContinue = false;
 //            switch (dir) {
 //                case 0:
 //                    (x == offscreenLeft ? (withOffscreenCycling ? newX = offScreenWidth : toContinue = true) : newX = newX - offset);
@@ -833,7 +833,7 @@ Capabilities.PreyOnOtherAgentsCapability = new Capability();
 //                    break;
 //            }
 //            // If we can't repeat and the candidate cell is the last visited cell, continue
-//            if (level.isExitPoint(newX, newY))
+//            if (world.isExitPoint(newX, newY))
 //                return [newX, newY];
 //
 //            // If we can't repeat and the candidate cell is the last visited cell, continue
@@ -841,15 +841,15 @@ Capabilities.PreyOnOtherAgentsCapability = new Capability();
 //                continue;
 //            }
 //            // If the cell is occupied by another agent, don't allow this agent to move there
-//            if (World.settings.agentsOwnTilesExclusively && level.getAgentsAtContentMap(newX, newY).length > 0)
+//            if (Universe.settings.agentsOwnTilesExclusively && world.getAgentsAtContentMap(newX, newY).length > 0)
 //                continue;
 //
 //            // If the cell is occupied by a resource, don't allow the agent to move there
-//            if ((World.settings.resourcesOwnTilesExclusively || level.resourcesOwnTilesExclusively) && level.isPositionOccupiedByResource(newX, newY)) {
+//            if ((Universe.settings.resourcesOwnTilesExclusively || world.resourcesOwnTilesExclusively) && world.isPositionOccupiedByResource(newX, newY)) {
 //                continue;
 //            }
 //            // If the candidate cell is valid (part of the path), add it
-//            if (level.getCell(newX, newY) == undefined) {
+//            if (world.getCell(newX, newY) == undefined) {
 //                candidateCells.push([newX, newY]);
 //            }
 //        }

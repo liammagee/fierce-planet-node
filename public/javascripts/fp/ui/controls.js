@@ -36,7 +36,7 @@ FiercePlanet.Controls = FiercePlanet.Controls || {};
         $('#slowDown').click(FiercePlanet.Game.slowDown);
         $('#speedUp').click(FiercePlanet.Game.speedUp);
         $('#newGame').click(Lifecycle.newGame);
-        $('#restartLevel').click(Lifecycle.restartLevel);
+        $('#restartWorld').click(Lifecycle.restartWorld);
         $('#showResourceGallery').click(FiercePlanet.Dialogs.showResourceGallery);
 
         // Pan/zoomFunctions
@@ -64,25 +64,25 @@ FiercePlanet.Controls = FiercePlanet.Controls || {};
 
         $('#settings').click(FiercePlanet.Dialogs.showSettings);
         $('#credits').click(FiercePlanet.Dialogs.showCredits);
-        $('#openLevelGallery').click(FiercePlanet.Dialogs.showLevelGallery);
-        $('#editor').click(FiercePlanet.LevelUI.listLevels);
+        $('#openWorldGallery').click(FiercePlanet.Dialogs.showWorldGallery);
+        $('#editor').click(FiercePlanet.WorldUI.listWorlds);
 
 
         // Admin functions
         $('#debug').click(Lifecycle.processAgents);
-        $('#replay').click(FiercePlanet.Recording.replayWorld);
+        $('#replay').click(FiercePlanet.Recording.replayUniverse);
         $('#story-board').click(FiercePlanet.Storyboard.showStoryboard);
         $('#high-scores').click(FiercePlanet.ProfileUI.showHighScores);
 
 
-        // Level editor functions
+        // World editor functions
         try {
-            $('#show-level-properties').click(FiercePlanet.LevelUI.showLevelProperties);
+            $('#show-world-properties').click(FiercePlanet.WorldUI.showWorldProperties);
             $('#refresh-tiles').click(FiercePlanet.Editor.refreshTiles);
             $('#fill-all').click(FiercePlanet.Editor.fillAllTiles);
             $('#undo-action').click(FiercePlanet.Editor.undoAction);
-            $('#cancel-level-editor').click(FiercePlanet.Editor.cancelLevelEditor);
-            $('#save-level').click(FiercePlanet.LevelUI.saveLevel);
+            $('#cancel-world-editor').click(FiercePlanet.Editor.cancelWorldEditor);
+            $('#save-world').click(FiercePlanet.WorldUI.saveWorld);
             $('#clear-entry-points').click(FiercePlanet.Editor.clearEntryPoints);
             $('#clear-exit-points').click(FiercePlanet.Editor.clearExitPoints);
 
@@ -124,7 +124,7 @@ FiercePlanet.Controls = FiercePlanet.Controls || {};
 		;
 
         // Trap relevant key strokes
-        if (!World.settings.disableKeyboardShortcuts) {
+        if (!Universe.settings.disableKeyboardShortcuts) {
             $(document).unbind("keydown");
             $(document).keydown(FiercePlanet.Keyboard.handleKeyboardShortcuts);
             $('input, textarea, select, form').focus(function() {

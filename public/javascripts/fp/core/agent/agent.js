@@ -75,7 +75,7 @@ function MemoryOfAgent(agentID, age, x, y, otherAgentID) {
 <div>Agents have the following properties:
 <ul>
     <li>They to a particular type.</li>
-     <li>They have a current location in a given level, and a history of prior locations.</li>
+     <li>They have a current location in a given world, and a history of prior locations.</li>
      <li>They move at a given speed, and can 'wander' relative to the center of the tiles they occupy.</li>
      <li>They can have multiple kinds of 'health' or 'capabilities': for example, economic, environmental and social.</li>
      <li>Without enough of any kind of health, they are unable to function, and die.</li>
@@ -139,7 +139,7 @@ function Agent(culture, x, y) {
     /**
      * Updates the agent
      */
-    this.update = function(level) {
+    this.update = function(world) {
         // Determines the current needs and desires of the agent
 
 
@@ -148,17 +148,17 @@ function Agent(culture, x, y) {
 
         // Executes plans
         if (this.culture.updateFunction)
-            this.culture.updateFunction(this, level);
+            this.culture.updateFunction(this, world);
     };
 
     /**
      Determines current capabilities
      */
-    this.currentCapabilities = function(level) {
+    this.currentCapabilities = function(world) {
         var myCapabilities = [];
         var that = this;
         this.culture.capabilities.forEach(function(capability) {
-            var actualCapabilities = capability.getCapabilities(that, level);
+            var actualCapabilities = capability.getCapabilities(that, world);
             var capability = actualCapabilities.capability;
             var args = actualCapabilities.arguments;
             args.forEach(function(arg) {
@@ -171,17 +171,17 @@ function Agent(culture, x, y) {
     };
 
     /**
-     * Memorises the current position of the agent, and if the level parameter is present,
+     * Memorises the current position of the agent, and if the world parameter is present,
      * surrounding cells, agents and other resources
      *
-     * @param level
+     * @param world
      */
-    this.reviseBeliefs = function(level) {
+    this.reviseBeliefs = function(world) {
 
         var agent = this;
         this.culture.beliefs.forEach(function(belief) {
             if (!_.isUndefined(belief) && !_.isUndefined(belief.makeBelief))
-                belief.makeBelief(agent, level);
+                belief.makeBelief(agent, world);
         });
     };
 
@@ -198,7 +198,7 @@ function Agent(culture, x, y) {
         var lastX = this.x, lastY = this.y;
         this.x = x; this.y = y;
         this.incrementMoves();
-        Lifecycle.currentLevel.changeAgentInContentMap(this, lastX, lastY);
+        Lifecycle.currentWorld.changeAgentInContentMap(this, lastX, lastY);
     };
 
     /**
@@ -406,14 +406,14 @@ function Agent(culture, x, y) {
 
 
     /**
-     * Returns whether there is a neighbouring cell on a given level, at the given position.
+     * Returns whether there is a neighbouring cell on a given world, at the given position.
      *
-     * @param level
+     * @param world
      * @param x
      * @param y
      */
-    this.hasNeighbouringResources = function(level, x, y) {
-        var resources = level.resources;
+    this.hasNeighbouringResources = function(world, x, y) {
+        var resources = world.resources;
         for (var j = 0, len = resources.length; j < len; j++) {
             var resource = resources[j];
             var px = resource.x;
@@ -444,14 +444,14 @@ function Agent(culture, x, y) {
 
     /**
      */
-    this.developPlan = function(level) {
+    this.developPlan = function(world) {
         var agent = this,
-            rankedDesires = Desires.rankDesires(agent, level);
+            rankedDesires = Desires.rankDesires(agent, world);
         if (rankedDesires && rankedDesires.length > 0) {
-            var rankedDesires = Desires.rankDesires(agent, level),
+            var rankedDesires = Desires.rankDesires(agent, world),
                 desireToExplore = rankedDesires[0],
                 satisfyingObjects = desireToExplore.findSatisfyingObjects(agent);
-            var plans = Plans.getBestPlans(agent, level, satisfyingObjects),
+            var plans = Plans.getBestPlans(agent, world, satisfyingObjects),
                 len = plans.length,
                 index = Math.floor(Math.random() * len);
 
@@ -471,9 +471,9 @@ function Agent(culture, x, y) {
 
     /**
      */
-    this.executePlan = function(level) {
+    this.executePlan = function(world) {
         if (_.isUndefined(this.currentPlan) || this.currentPlanStep >= this.currentPlan.distance)
-            this.developPlan(level);
+            this.developPlan(world);
         if (_.isUndefined(this.currentPlan) || this.currentPlanStep >= this.currentPlan.distance)
             return;
         var point = this.currentPlan.trail[this.currentPlanStep];
@@ -487,7 +487,7 @@ function Agent(culture, x, y) {
      */
     this.scopeOfWorld = function() {
         var agent = this;
-        var rankedDesires = Desires.rankDesires(agent, level);
+        var rankedDesires = Desires.rankDesires(agent, world);
         if (rankedDesires && rankedDesires.length > 0) {
             rankedDesires.forEach(function(desire) {
                 // Now get beliefs
@@ -499,7 +499,7 @@ function Agent(culture, x, y) {
     /**
      * Calls the agent type initialise function
      */
-    this.init = function(level) {
+    this.init = function(world) {
         // TODO: Put this in the initialisation logic
         for (var characteristic in this.culture.characteristics) {
             if (this.culture.characteristics.hasOwnProperty(characteristic))
@@ -507,7 +507,7 @@ function Agent(culture, x, y) {
         }
         this.speed = _.isUndefined(this.culture.speed) ? this.speed : this.culture.speed;
         if (this.culture.initFunction)
-            this.culture.initFunction(this, level);
+            this.culture.initFunction(this, world);
     };
 
 
@@ -603,25 +603,25 @@ function SimpleAgent(culture, x, y, color, speed, health, wanderX, wanderY, last
     this.reviseBeliefs = function() {};
     this.incrementCountdownToMove = function() { this.countdownToMove ++; };
     this.resetCountdownToMove = function() { this.countdownToMove = 0; };
-    this.executePlan = function(level) {};
+    this.executePlan = function(world) {};
     /**
      * Calls the agent type initialise function
      */
-    this.init = function(level) {
+    this.init = function(world) {
         for (var characteristic in culture.characteristics) {
             if (culture.characteristics.hasOwnProperty(characteristic))
                 this[characteristic] = culture.characteristics[characteristic];
         }
         if (this.culture.initFunction)
-            this.culture.initFunction(this, level);
+            this.culture.initFunction(this, world);
     };
 
     /**
      * Updates the agent
      */
-    this.update = function(level) {
+    this.update = function(world) {
         if (this.culture.updateFunction)
-            this.culture.updateFunction(this, level);
+            this.culture.updateFunction(this, world);
     };
     this.init()
 }

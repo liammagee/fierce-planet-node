@@ -41,9 +41,9 @@ function Profile() {
     this.status = '';
     this.credits = 0;
 
-    this.highestLevel = 0;
+    this.highestWorld = 0;
     this.highestScore = 0;
-    this.totalLevels = 0;
+    this.totalWorlds = 0;
 
     this.totalSaved = 0;
     this.totalExpired = 0;
@@ -56,8 +56,8 @@ function Profile() {
 
 
     // Game statistics - must be reset every new game
-    this.gameTotalLevels = 0;
-    this.gameHighestLevel = 0;
+    this.gameTotalWorlds = 0;
+    this.gameHighestWorld = 0;
     this.gameScore = 0;
 
     this.gameTotalSaved = 0;
@@ -70,18 +70,18 @@ function Profile() {
     this.gameAveResourcesSpentByCategory = {};
 
 
-    // Level statistics
-    this.currentLevel = 1;
-    this.currentLevelIsPreset = true;
+    // World statistics
+    this.currentWorld = 1;
+    this.currentWorldIsPreset = true;
     this.currentScore = 0;
-    this.currentLevelWaves = 0;
-    this.currentLevelSavedThisWave = 0;
+    this.currentWorldWaves = 0;
+    this.currentWorldSavedThisWave = 0;
 
-    this.currentLevelSaved = 0;
-    this.currentLevelExpired = 0;
-    this.currentLevelResourcesInStore = FiercePlanet.Profile.STARTING_STORE;
-    this.currentLevelResourcesSpent = 0;
-    this.currentLevelResourcesSpentByCategory = {};
+    this.currentWorldSaved = 0;
+    this.currentWorldExpired = 0;
+    this.currentWorldResourcesInStore = FiercePlanet.Profile.STARTING_STORE;
+    this.currentWorldResourcesSpent = 0;
+    this.currentWorldResourcesSpentByCategory = {};
 }
 
 
@@ -89,9 +89,9 @@ function Profile() {
  * Initialises the Profile's non-persistent properties
  */
 Profile.prototype._initialise = function() {
-    this.currentLevelSaved = this.currentLevelSaved || 0;
+    this.currentWorldSaved = this.currentWorldSaved || 0;
     // TODO: These reference the FiercePlanet namespace
-    this.currentLevelResourcesInStore = this.currentLevelResourcesInStore || FiercePlanet.Profile.Game.STARTING_STORE;
+    this.currentWorldResourcesInStore = this.currentWorldResourcesInStore || FiercePlanet.Profile.Game.STARTING_STORE;
 };
 
 
@@ -99,15 +99,15 @@ Profile.prototype._initialise = function() {
  * Resets the current statistics 
  */
 Profile.prototype.resetCurrentStats = function() {
-    this.currentLevelSaved = 0;
-    this.currentLevelExpired = 0;
+    this.currentWorldSaved = 0;
+    this.currentWorldExpired = 0;
 
-    this.currentLevelResourcesInStore = Lifecycle.currentLevel.initialResourceStore || FiercePlanet.Profile.STARTING_STORE;
-    this.currentLevelResourcesSpent = 0;
-    this.currentLevelResourcesSpentByCategory = {};
-    for (var i = 0; i < World.resourceCategories.length; i++) {
-        var category = World.resourceCategories[i];
-        this.currentLevelResourcesSpentByCategory[category.code] = 0;
+    this.currentWorldResourcesInStore = Lifecycle.currentWorld.initialResourceStore || FiercePlanet.Profile.STARTING_STORE;
+    this.currentWorldResourcesSpent = 0;
+    this.currentWorldResourcesSpentByCategory = {};
+    for (var i = 0; i < Universe.resourceCategories.length; i++) {
+        var category = Universe.resourceCategories[i];
+        this.currentWorldResourcesSpentByCategory[category.code] = 0;
     }
 };
 
@@ -116,64 +116,64 @@ Profile.prototype.resetCurrentStats = function() {
  * Initialises the Profile's non-persistent properties
  */
 Profile.prototype.initialiseResourceStore = function(initialStore) {
-    this.currentLevelResourcesInStore = initialStore || FiercePlanet.Profile.STARTING_STORE;
+    this.currentWorldResourcesInStore = initialStore || FiercePlanet.Profile.STARTING_STORE;
 };
 
 
 
 /**
- * Compiles statistics for the current level
+ * Compiles statistics for the current world
  */
-Profile.prototype.compileProfileStats = function(currentLevel) {
-    // Update level data
-    this.currentLevel = currentLevel._id || this.currentLevel;
-    this.currentLevelIsPreset = currentLevel.isPresetLevel || this.currentLevelIsPreset;
+Profile.prototype.compileProfileStats = function(currentWorld) {
+    // Update world data
+    this.currentWorld = currentWorld._id || this.currentWorld;
+    this.currentWorldIsPreset = currentWorld.isPresetWorld || this.currentWorldIsPreset;
 
-    // Update level data
+    // Update world data
 
     // Update game data
-    if (this.gameHighestLevel < this.currentLevel)
-        this.gameHighestLevel = this.currentLevel;
+    if (this.gameHighestWorld < this.currentWorld)
+        this.gameHighestWorld = this.currentWorld;
     if (this.gameScore < this.currentScore)
         this.gameScore = this.currentScore;
-    this.gameTotalLevels ++;
-    this.gameTotalSaved += this.currentLevelSaved;
-    this.gameTotalExpired += this.currentLevelExpired;
-    this.gameTotalResourcesSpent += this.currentLevelResourcesSpent;
-    this.gameAveSaved = this.gameTotalSaved / this.gameTotalLevels;
-    this.gameAveExpired = this.gameTotalExpired / this.gameTotalLevels;
-    this.gameAveResourcesSpent = this.gameTotalResourcesSpent / this.gameTotalLevels;
-    var ks = Object.keys(this.currentLevelResourcesSpentByCategory);
+    this.gameTotalWorlds ++;
+    this.gameTotalSaved += this.currentWorldSaved;
+    this.gameTotalExpired += this.currentWorldExpired;
+    this.gameTotalResourcesSpent += this.currentWorldResourcesSpent;
+    this.gameAveSaved = this.gameTotalSaved / this.gameTotalWorlds;
+    this.gameAveExpired = this.gameTotalExpired / this.gameTotalWorlds;
+    this.gameAveResourcesSpent = this.gameTotalResourcesSpent / this.gameTotalWorlds;
+    var ks = Object.keys(this.currentWorldResourcesSpentByCategory);
     for (var i = 0; i < ks.length; i++) {
         var key = ks[i];
-        var current_level_count = this.currentLevelResourcesSpentByCategory[key];
+        var current_world_count = this.currentWorldResourcesSpentByCategory[key];
         var game_count = this.gameTotalResourcesSpentByCategory[key] || 0;
-        game_count += current_level_count;
+        game_count += current_world_count;
         this.gameTotalResourcesSpentByCategory[key] = game_count;
-        this.gameAveResourcesSpentByCategory[key] = game_count / this.gameTotalLevels;
+        this.gameAveResourcesSpentByCategory[key] = game_count / this.gameTotalWorlds;
     }
 
 
     // Update profile data
     if (this.highestScore < this.currentScore)
         this.highestScore = this.currentScore;
-    if (this.highestLevel < this.currentLevel)
-        this.highestLevel = this.currentLevel;
-    this.credits += this.currentLevelResourcesInStore;
-    this.totalLevels ++;
-    this.totalSaved += this.currentLevelSaved;
-    this.totalExpired += this.currentLevelExpired;
-    this.totalResourcesSpent += this.currentLevelResourcesSpent;
-    this.aveSaved = this.totalSaved / this.totalLevels;
-    this.aveExpired = this.totalExpired / this.totalLevels;
-    this.aveResourcesSpent = this.totalResourcesSpent / this.totalLevels;
+    if (this.highestWorld < this.currentWorld)
+        this.highestWorld = this.currentWorld;
+    this.credits += this.currentWorldResourcesInStore;
+    this.totalWorlds ++;
+    this.totalSaved += this.currentWorldSaved;
+    this.totalExpired += this.currentWorldExpired;
+    this.totalResourcesSpent += this.currentWorldResourcesSpent;
+    this.aveSaved = this.totalSaved / this.totalWorlds;
+    this.aveExpired = this.totalExpired / this.totalWorlds;
+    this.aveResourcesSpent = this.totalResourcesSpent / this.totalWorlds;
     for (var i = 0; i < ks.length; i++) {
         var key = ks[i];
-        var current_level_count = this.currentLevelResourcesSpentByCategory[key];
+        var current_world_count = this.currentWorldResourcesSpentByCategory[key];
         var total_count = this.totalResourcesSpentByCategory[key] || 0;
-        total_count += current_level_count;
+        total_count += current_world_count;
         this.totalResourcesSpentByCategory[key] = total_count;
-        this.aveResourcesSpentByCategory[key] = total_count / this.totalLevels;
+        this.aveResourcesSpentByCategory[key] = total_count / this.totalWorlds;
     }
 
     this.evaluateProfileClass();
@@ -215,10 +215,10 @@ Profile.prototype.updateScore = function() {
  */
 Profile.prototype.processSavedAgent = function(currentWave) {
     this.currentScore += FiercePlanet.Game.SAVE_SCORE;
-    this.currentLevelSaved++;
-    this.currentLevelSavedThisWave++;
+    this.currentWorldSaved++;
+    this.currentWorldSavedThisWave++;
     var resource_bonus = (currentWave < 5 ? 4 : (currentWave < 10 ? 3 : (currentWave < 20 ? 2 : 1)));
-    this.currentLevelResourcesInStore += resource_bonus;
+    this.currentWorldResourcesInStore += resource_bonus;
 };
 
 
@@ -228,9 +228,9 @@ Profile.prototype.processSavedAgent = function(currentWave) {
  */
 Profile.prototype.spendResource = function(resource) {
     var resourceCategory = resource.category.code;
-    this.currentLevelResourcesInStore -= resource.cost;
-    this.currentLevelResourcesSpent += resource.cost;
-    this.currentLevelResourcesSpentByCategory[resourceCategory] += 1;
+    this.currentWorldResourcesInStore -= resource.cost;
+    this.currentWorldResourcesSpent += resource.cost;
+    this.currentWorldResourcesSpentByCategory[resourceCategory] += 1;
 };
 
 

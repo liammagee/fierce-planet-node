@@ -365,7 +365,7 @@ describe("level-related classes", function() {
     describe("handling resources", function() {
         var resource;
         beforeEach(function() {
-            resource = new Resource(World.resourceTypes[0], 0, 0);
+            resource = new Resource(Universe.resourceTypes[0], 0, 0);
             level.setResources([resource]);
         });
 
@@ -387,7 +387,7 @@ describe("level-related classes", function() {
 
         it("should determine the index of a particular resource", function() {
           expect(level.getCurrentResourceIndex(resource)).toEqual(0);
-            var nonexistingResource = new Resource(World.resourceTypes[1], 1, 1)
+            var nonexistingResource = new Resource(Universe.resourceTypes[1], 1, 1)
           expect(level.getCurrentResourceIndex(nonexistingResource)).toEqual(-1);
         });
 
@@ -422,7 +422,7 @@ describe("level-related classes", function() {
 
         describe("handling multiple resources", function() {
             beforeEach(function() {
-                var neigbour = new Resource(World.resourceTypes[1], 1, 0);
+                var neigbour = new Resource(Universe.resourceTypes[1], 1, 0);
                 level.addResource(neigbour);
             });
 
@@ -459,17 +459,17 @@ describe("level-related classes", function() {
 
         describe("handling a more complex resource mix", function() {
             beforeEach(function() {
-                World.settings.resourcesInTension = false;
-                World.settings.ignoreResourceBalance = false;
-                World.settings.applyGeneralHealth = false;
+                Universe.settings.resourcesInTension = false;
+                Universe.settings.ignoreResourceBalance = false;
+                Universe.settings.applyGeneralHealth = false;
 
                 // Make the first type increase effects on other types
-                World.resourceCategories[0].setEvaluateOtherCategoryImpact(function(otherCategory) { return 2;});
+                Universe.resourceCategories[0].setEvaluateOtherCategoryImpact(function(otherCategory) { return 2;});
                 // Make the second type decrease effects on other types
-                World.resourceCategories[1].setEvaluateOtherCategoryImpact(function(otherCategory) { return 0.5;});
-                var neigbour1 = new Resource(World.resourceTypes[1], 1, 0);
-                var neigbour2 = new Resource(World.resourceTypes[2], 2, 0);
-                var neigbour3 = new Resource(World.resourceTypes[0], 3, 0);
+                Universe.resourceCategories[1].setEvaluateOtherCategoryImpact(function(otherCategory) { return 0.5;});
+                var neigbour1 = new Resource(Universe.resourceTypes[1], 1, 0);
+                var neigbour2 = new Resource(Universe.resourceTypes[2], 2, 0);
+                var neigbour3 = new Resource(Universe.resourceTypes[0], 3, 0);
                 level.addResource(neigbour1);
                 level.addResource(neigbour2);
                 level.addResource(neigbour3);
@@ -497,25 +497,25 @@ describe("level-related classes", function() {
                 expect(Math.round(level.calculateResourceEffect(resource) * 1000) / 1000).toEqual(0.444);
 
                 // With ignoring resource mix
-                World.settings.ignoreResourceBalance = true;
+                Universe.settings.ignoreResourceBalance = true;
                 expect(level.calculateResourceEffect(resource, true)).toEqual(1);
                 expect(level.calculateResourceEffect(resource)).toEqual(1);
 
                 // Without ignoring resource mix
-                World.settings.ignoreResourceBalance = false;
+                Universe.settings.ignoreResourceBalance = false;
                 expect(Math.round(level.calculateResourceEffect(resource, false) * 1000) / 1000).toEqual(0.444);
 
                 // With applying general health
-                World.settings.applyGeneralHealth = true;
+                Universe.settings.applyGeneralHealth = true;
                 expect(level.calculateResourceEffect(resource, true)).toEqual(1);
                 expect(level.calculateResourceEffect(resource)).toEqual(1);
 
                 // Without ignoring resource mix
-                World.settings.applyGeneralHealth = false;
+                Universe.settings.applyGeneralHealth = false;
                 expect(Math.round(level.calculateResourceEffect(resource, false) * 1000) / 1000).toEqual(0.444);
 
                 // With resource tension
-                World.settings.resourcesInTension = true;
+                Universe.settings.resourcesInTension = true;
                 expect(Math.round(level.calculateResourceEffect(resource, false, true) * 1000) / 1000).toEqual(0.889);
                 expect(Math.round(level.calculateResourceEffect(resource, false) * 1000) / 1000).toEqual(0.889);
 
@@ -541,9 +541,9 @@ describe("level-related classes", function() {
             });
 
             afterEach(function() {
-                World.settings.resourcesInTension = false;
-                World.settings.ignoreResourceBalance = false;
-                World.settings.applyGeneralHealth = false;
+                Universe.settings.resourcesInTension = false;
+                Universe.settings.ignoreResourceBalance = false;
+                Universe.settings.applyGeneralHealth = false;
 
             });
 
@@ -551,10 +551,10 @@ describe("level-related classes", function() {
 
         describe("handling impacts of all resources", function() {
             beforeEach(function() {
-                World.settings.resourcesInTensionGlobally = true;
-                var neigbour1 = new Resource(World.resourceTypes[1], 1, 1);
-                var neigbour2 = new Resource(World.resourceTypes[2], 5, 5);
-                var neigbour3 = new Resource(World.resourceTypes[0], 9, 9);
+                Universe.settings.resourcesInTensionGlobally = true;
+                var neigbour1 = new Resource(Universe.resourceTypes[1], 1, 1);
+                var neigbour2 = new Resource(Universe.resourceTypes[2], 5, 5);
+                var neigbour3 = new Resource(Universe.resourceTypes[0], 9, 9);
                 level.addResource(neigbour1);
                 level.addResource(neigbour2);
                 level.addResource(neigbour3);
@@ -570,7 +570,7 @@ describe("level-related classes", function() {
             });
 
             afterEach(function() {
-                World.settings.resourcesInTensionGlobally = false;
+                Universe.settings.resourcesInTensionGlobally = false;
             });
         });
 
@@ -580,7 +580,7 @@ describe("level-related classes", function() {
     describe("handling agents", function() {
         beforeEach(function() {
             level.addEntryPoint(0, 0);
-            level.generateAgents(World.cultures[0], 10);
+            level.generateAgents(Universe.cultures[0], 10);
         });
 
         it("should generate a set of standard agents at the entry point", function() {
@@ -599,8 +599,8 @@ describe("level-related classes", function() {
 
         describe("handling level agents", function() {
             beforeEach(function() {
-                level.addLevelAgent(new Agent(World.cultures[0], 0, 0));
-                level.generateAgents(World.cultures[0], 10);
+                level.addLevelAgent(new Agent(Universe.cultures[0], 0, 0));
+                level.generateAgents(Universe.cultures[0], 10);
             });
 
             it("should add a level agent to the current agents", function() {
@@ -611,8 +611,8 @@ describe("level-related classes", function() {
 
         describe("handling wave agents", function() {
             beforeEach(function() {
-                level.addWaveAgent(new Agent(World.cultures[0], 0, 0));
-                level.generateAgents(World.cultures[0], 10);
+                level.addWaveAgent(new Agent(Universe.cultures[0], 0, 0));
+                level.generateAgents(Universe.cultures[0], 10);
             });
 
             it("should add a set of wave agent to the current agents", function() {
@@ -623,8 +623,8 @@ describe("level-related classes", function() {
 
         describe("random initial health dilution", function() {
             beforeEach(function() {
-                World.settings.agentsHaveRandomInitialHealth = true;
-                level.generateAgents(World.cultures[0], 10);
+                Universe.settings.agentsHaveRandomInitialHealth = true;
+                level.generateAgents(Universe.cultures[0], 10);
             });
 
             it("should have less than 100 health", function() {
@@ -632,7 +632,7 @@ describe("level-related classes", function() {
             });
 
             afterEach(function() {
-                World.settings.agentsHaveRandomInitialHealth = false;
+                Universe.settings.agentsHaveRandomInitialHealth = false;
             });
         });
 
@@ -642,17 +642,17 @@ describe("level-related classes", function() {
             });
 
             it("should generate 2 x the number of agents", function() {
-                level.generateAgents(World.cultures[0], 10);
+                level.generateAgents(Universe.cultures[0], 10);
                 expect(level.currentAgents.length).toEqual(20);
             });
 
             describe("handling level agents", function() {
                 beforeEach(function() {
-                    level.addLevelAgent(new Agent(World.cultures[0], 0, 0));
+                    level.addLevelAgent(new Agent(Universe.cultures[0], 0, 0));
                 });
 
                 it("should add only one level agent to the current agents", function() {
-                    level.generateAgents(World.cultures[0], 10);
+                    level.generateAgents(Universe.cultures[0], 10);
                     expect(level.levelAgents.length).toEqual(1);
                     expect(level.currentAgents.length).toEqual(21);
                 });
@@ -660,11 +660,11 @@ describe("level-related classes", function() {
 
             describe("handling wave agents", function() {
                 beforeEach(function() {
-                    level.addWaveAgent(new Agent(World.cultures[0], 0, 0));
+                    level.addWaveAgent(new Agent(Universe.cultures[0], 0, 0));
                 });
 
                 it("should add only one set of wave agent to the current agents", function() {
-                    level.generateAgents(World.cultures[0], 10);
+                    level.generateAgents(Universe.cultures[0], 10);
                     expect(level.waveAgents.length).toEqual(1);
                     expect(level.currentAgents.length).toEqual(30);
                 });
@@ -676,8 +676,8 @@ describe("level-related classes", function() {
             var agent, resource;
 
             beforeEach(function() {
-                level.generateAgents(World.cultures[0], 10);
-                level.addResource(new Resource(World.resourceTypes[0], 1, 1));
+                level.generateAgents(Universe.cultures[0], 10);
+                level.addResource(new Resource(Universe.resourceTypes[0], 1, 1));
                 agent = level.currentAgents[0];
                 resource = level.resources[0];
                 agent.adjustGeneralHealth(-90);
@@ -694,10 +694,10 @@ describe("level-related classes", function() {
             var hittingAgent, hitAgent;
 
             beforeEach(function() {
-                World.settings.predatorsVisible = true;
-                hittingAgent = new Agent(World.cultures[1], 0, 0);
+                Universe.settings.predatorsVisible = true;
+                hittingAgent = new Agent(Universe.cultures[1], 0, 0);
                 level.addLevelAgent(hittingAgent);
-                level.generateAgents(World.cultures[0], 10);
+                level.generateAgents(Universe.cultures[0], 10);
                 hitAgent = level.currentAgents[0];
             });
 
@@ -728,7 +728,7 @@ describe("level-related classes", function() {
 
 
         it("should be serializable to JSON with resources", function() {
-            var resource = new Resource(World.resourceTypes[0], 0, 0);
+            var resource = new Resource(Universe.resourceTypes[0], 0, 0);
             level.setResources([resource]);
             var json = JSON.stringify(level);
             expect(json).toBeDefined();

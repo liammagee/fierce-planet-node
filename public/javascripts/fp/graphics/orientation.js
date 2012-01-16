@@ -32,13 +32,13 @@ FiercePlanet.Orientation = FiercePlanet.Orientation || {};
     this.cellWidth = 0, this.cellHeight = 0;
     this.pieceWidth = 0, this.pieceHeight = 0;
     this.offsetX = 0, this.offsetY = 0;
-    this.zoomLevel = 1, this.externalZoomLevel = 1, this.zoomMagnificationFactor = 1.5;
+    this.zoomWorld = 1, this.externalZoomWorld = 1, this.zoomMagnificationFactor = 1.5;
     this.rotationAngle = this.DEFAULT_ROTATION_ANGLE, this.perspectiveAngle = this.DEFAULT_PERSPECTIVE_ANGLE, this.mapRotationAngle = this.DEFAULT_MAP_ROTATION_ANGLE;
 
     
     this.reset = function() {
         this.offsetX = 0, this.offsetY = 0;
-        this.zoomLevel = 1, this.externalZoomLevel = 1, this.zoomMagnificationFactor = 1.5;
+        this.zoomWorld = 1, this.externalZoomWorld = 1, this.zoomMagnificationFactor = 1.5;
         this.rotationAngle = this.DEFAULT_ROTATION_ANGLE, this.perspectiveAngle = this.DEFAULT_PERSPECTIVE_ANGLE, this.mapRotationAngle = this.DEFAULT_MAP_ROTATION_ANGLE;
 
         this.adjustParameters(this.DEFAULT_WORLD_WIDTH, this.DEFAULT_WORLD_HEIGHT);
@@ -69,7 +69,7 @@ FiercePlanet.Orientation = FiercePlanet.Orientation || {};
 
     this.resizeWorld = function() {
         try {
-            var canvases = $('#world, #imageCanvas, #map_canvas,#baseCanvas, #guideCanvas, #noticeCanvas, #agentCanvas, #resourceCanvas, #scrollingCanvas');
+            var canvases = $('#world-container, #imageCanvas, #map_canvas,#baseCanvas, #guideCanvas, #noticeCanvas, #agentCanvas, #resourceCanvas, #scrollingCanvas');
 //
             //, #alt_map_canvas
 //            $('#map_canvas')[0].width = this.worldWidth;
@@ -92,12 +92,12 @@ FiercePlanet.Orientation = FiercePlanet.Orientation || {};
             $('#wrapper').css({width: 490 + this.worldWidth});
 			$('#global-info-panel').css({left: this.worldWidth - 90});
 			$('#notifications').css({top: 117 + this.worldHeight, width: this.worldWidth});
-            $('#level-editor').css({top: 190 + this.worldHeight, width: this.worldWidth});
+            $('#world-editor').css({top: 190 + this.worldHeight, width: this.worldWidth});
             $('#actual_map').css({width: (this.worldWidth * 2), height: (this.worldHeight * 2), 'margin-top': -this.worldHeight, 'margin-left': -this.worldWidth });
             //$('#controls').css({left: 385 - this.worldWidth});
-            //$('#world').css({left: 480 - this.worldWidth});
+            //$('#world-container').css({left: 480 - this.worldWidth});
 			//$('#notifications').css({left: 480 - this.worldWidth, top: 117 + this.worldHeight, width: this.worldWidth});
-            //$('#level-editor').css({left: 480 - this.worldWidth, top: 190 + this.worldHeight, width: this.worldWidth});
+            //$('#world-editor').css({left: 480 - this.worldWidth, top: 190 + this.worldHeight, width: this.worldWidth});
     //        $('#graph-area').css({left: 480 - this.worldWidth, top: 190 + this.worldHeight, width: this.worldWidth});
         }
         catch (e) {}

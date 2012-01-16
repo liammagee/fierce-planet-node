@@ -16,7 +16,7 @@ var PredatorPreyModule = PredatorPreyModule || {};
 
         var module = new Module();
         module.id = 'PredatorPrey';
-        module.registerCampaign(PredatorPreyLevels);
+        module.registerCampaign(PredatorPreyWorlds);
         //module.registerAgentSet(AgentTypes.CITIZEN_AGENT_TYPE);
         module.registerCulture(PredatorPreyCultures.PREDATOR_AGENT_TYPE);
         module.registerCulture(PredatorPreyCultures.PREY_AGENT_TYPE);
@@ -24,19 +24,19 @@ var PredatorPreyModule = PredatorPreyModule || {};
         module.registerResourceSet(TBL);
         module.register();
 
-		World.registerCultures(module.allCultures());
-		//        World.registerAgentTypes(DefaultModule.AgentTypes.agentTypes);
-		World.switchResourceSet(TBL);
-		World.settings.skewTiles = false;
-        World.settings.agentsCanCommunicate = false;
+		Universe.registerCultures(module.allCultures());
+		//        Universe.registerAgentTypes(DefaultModule.AgentTypes.agentTypes);
+		Universe.switchResourceSet(TBL);
+		Universe.settings.skewTiles = false;
+        Universe.settings.agentsCanCommunicate = false;
         AgentConstants.DEFAULT_SPEED = 1;
         Lifecycle.interval = 100;
-        Lifecycle.currentLevelSetID = 'Predator-Prey';
+        Lifecycle.currentCampaignID = 'Predator-Prey';
         var localStorage = localStorage || {};
-        Lifecycle.currentLevelNumber = localStorage.currentLevelNumber = 0;
-        Lifecycle.currentLevelPreset = true;
-        World.settings.showGraph = true;
-        Lifecycle.NEW_LEVEL_DELAY = 3000;
+        Lifecycle.currentWorldNumber = localStorage.currentWorldNumber = 0;
+        Lifecycle.currentWorldPreset = true;
+        Universe.settings.showGraph = true;
+        Lifecycle.NEW_WORLD_DELAY = 3000;
     };
 
 

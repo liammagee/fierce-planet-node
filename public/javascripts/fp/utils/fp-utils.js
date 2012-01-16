@@ -26,13 +26,13 @@ $(function(){
     $().zoom(function(direction){
         switch(direction) {
             case 1:
-                FiercePlanet.Orientation.externalZoomLevel *= 1.2;
+                FiercePlanet.Orientation.externalZoomWorld *= 1.2;
                 break;
             case -1:
-                FiercePlanet.Orientation.externalZoomLevel /= 1.2;
+                FiercePlanet.Orientation.externalZoomWorld /= 1.2;
                 break;
             case 0:
-                FiercePlanet.Orientation.externalZoomLevel = 1;
+                FiercePlanet.Orientation.externalZoomWorld = 1;
                 break;
             }
     });
@@ -63,10 +63,10 @@ FiercePlanet.Utils = FiercePlanet.Utils || {};
      */
     this.bindVariables = function() {
         // Set up shortcut variable names for debugging convenience
-        $fp.w = $fp.w || World;
-        $fp.s = $fp.s || World.settings;
+        $fp.w = $fp.w || Universe;
+        $fp.s = $fp.s || Universe.settings;
         $fp.p = FiercePlanet.Game.currentProfile;
-        $fp.l = Lifecycle.currentLevel;
+        $fp.l = Lifecycle.currentWorld;
         $fp.r = FiercePlanet.Game.currentResource;
         $fp.rid = FiercePlanet.Game.currentResourceId;
         $fp.x = FiercePlanet.Game.currentX;
@@ -74,45 +74,45 @@ FiercePlanet.Utils = FiercePlanet.Utils || {};
     };
 
     /**
-     * Initialises World settings
+     * Initialises Universe settings
      */
-    this.initialiseWorldSettings = function() {
-        World.settings.noticesVisible = World.settings.noticesVisible || true;
-        World.settings.statusBarVisible = World.settings.statusBarVisible || true;
-        World.settings.scrollingImageVisible = World.settings.scrollingImageVisible || true;
-        World.settings.catastrophesVisible = World.settings.catastrophesVisible || true;
-        World.settings.disableKeyboardShortcuts = World.settings.disableKeyboardShortcuts || true;
-        World.settings.allowInlinePanning = World.settings.allowInlinePanning || false;
+    this.initialiseUniverseSettings = function() {
+        Universe.settings.noticesVisible = Universe.settings.noticesVisible || true;
+        Universe.settings.statusBarVisible = Universe.settings.statusBarVisible || true;
+        Universe.settings.scrollingImageVisible = Universe.settings.scrollingImageVisible || true;
+        Universe.settings.catastrophesVisible = Universe.settings.catastrophesVisible || true;
+        Universe.settings.disableKeyboardShortcuts = Universe.settings.disableKeyboardShortcuts || true;
+        Universe.settings.allowInlinePanning = Universe.settings.allowInlinePanning || false;
 
-        World.settings.soundsPlayable = World.settings.soundsPlayable || false;
-        World.settings.useInlineResourceSwatch = World.settings.useInlineResourceSwatch || false;
-        World.settings.agentTracing = World.settings.agentTracing || false;
-        World.settings.agentGoToNearestExit = World.settings.agentGoToNearestExit || false;
+        Universe.settings.soundsPlayable = Universe.settings.soundsPlayable || false;
+        Universe.settings.useInlineResourceSwatch = Universe.settings.useInlineResourceSwatch || false;
+        Universe.settings.agentTracing = Universe.settings.agentTracing || false;
+        Universe.settings.agentGoToNearestExit = Universe.settings.agentGoToNearestExit || false;
 
-        World.settings.hidePath = World.settings.hidePath || false;
-        World.settings.hidePathBorder = World.settings.hidePathBorder || false;
-        World.settings.hideLevelInfo = World.settings.hideLevelInfo || false;
-        World.settings.showGraph = World.settings.showGraph || false;
-        World.settings.showModuleEditor = World.settings.showModuleEditor || false;
-        World.settings.refreshGraphEveryWave = World.settings.refreshGraphEveryWave || false;
-        World.settings.showChat = World.settings.showChat || false;
-        World.settings.makeElementsMovable = World.settings.makeElementsMovable || false;
-        World.settings.reverseMouseClickEffects = World.settings.reverseMouseClickEffects || false;
+        Universe.settings.hidePath = Universe.settings.hidePath || false;
+        Universe.settings.hidePathBorder = Universe.settings.hidePathBorder || false;
+        Universe.settings.hideWorldInfo = Universe.settings.hideWorldInfo || false;
+        Universe.settings.showGraph = Universe.settings.showGraph || false;
+        Universe.settings.showModuleEditor = Universe.settings.showModuleEditor || false;
+        Universe.settings.refreshGraphEveryWave = Universe.settings.refreshGraphEveryWave || false;
+        Universe.settings.showChat = Universe.settings.showChat || false;
+        Universe.settings.makeElementsMovable = Universe.settings.makeElementsMovable || false;
+        Universe.settings.reverseMouseClickEffects = Universe.settings.reverseMouseClickEffects || false;
 
-        World.settings.rivalsVisible = World.settings.rivalsVisible || false;
-        World.settings.predatorsVisible = World.settings.predatorsVisible || false;
-        World.settings.tilesMutable = World.settings.tilesMutable || false;
-        World.settings.tilesRemovable = World.settings.tilesRemovable || false;
-        World.settings.backgroundIconsVisible = World.settings.backgroundIconsVisible || false;
-        World.settings.recording = World.settings.recording || false;
-        World.settings.godMode = World.settings.godMode || false;
+        Universe.settings.rivalsVisible = Universe.settings.rivalsVisible || false;
+        Universe.settings.predatorsVisible = Universe.settings.predatorsVisible || false;
+        Universe.settings.tilesMutable = Universe.settings.tilesMutable || false;
+        Universe.settings.tilesRemovable = Universe.settings.tilesRemovable || false;
+        Universe.settings.backgroundIconsVisible = Universe.settings.backgroundIconsVisible || false;
+        Universe.settings.recording = Universe.settings.recording || false;
+        Universe.settings.godMode = Universe.settings.godMode || false;
 
-        World.settings.skewTiles = World.settings.skewTiles || false;
-        World.settings.showResourcesAsBoxes = World.settings.showResourcesAsBoxes || true;
+        Universe.settings.skewTiles = Universe.settings.skewTiles || false;
+        Universe.settings.showResourcesAsBoxes = Universe.settings.showResourcesAsBoxes || true;
 
-        World.settings.sendEventsToServer = World.settings.sendEventsToServer || false;
-        World.settings.spectate = World.settings.spectate || false;
-        World.settings.firstPerson = World.settings.firstPerson || false;
+        Universe.settings.sendEventsToServer = Universe.settings.sendEventsToServer || false;
+        Universe.settings.spectate = Universe.settings.spectate || false;
+        Universe.settings.firstPerson = Universe.settings.firstPerson || false;
     }
 
     /**
@@ -137,19 +137,19 @@ FiercePlanet.Utils = FiercePlanet.Utils || {};
     this.getAndRetrieveProperties = function() {
 
         // Get the settings from the World object
-        for (var key in World.settings) {
+        for (var key in Universe.settings) {
             // Make sure we're only capturing numbers, strings, booleans (not objects, functions or undefineds)
-            if (World.settings.hasOwnProperty(key) && $.inArray(typeof World.settings[key], ["number", "string", "boolean"]) > -1) {
+            if (Universe.settings.hasOwnProperty(key) && $.inArray(typeof Universe.settings[key], ["number", "string", "boolean"]) > -1) {
                 var option = $('#' + key);
                 if (option && option.length > 0) {
                     // Using a checkbox?
                     if (option[0].type == "checkbox") {
-                        option[0].checked = World.settings[key];
+                        option[0].checked = Universe.settings[key];
                     }
                     // Using a slider?
                     else if (option.attr("class") && option.attr("class").indexOf("slider-component") > -1) {
-                        option.slider("value", World.settings[key]);
-                        $('#' + key + "Display")[0].innerHTML = World.settings[key];
+                        option.slider("value", Universe.settings[key]);
+                        $('#' + key + "Display")[0].innerHTML = Universe.settings[key];
                     }
                 }
             }
@@ -168,24 +168,24 @@ FiercePlanet.Utils = FiercePlanet.Utils || {};
         var inputs = $('#settings-dialog input[type="checkbox"]');
         for (var key in inputs) {
             var inputID = inputs[key].id;
-            World.settings[inputID] = inputs[key].checked;
+            Universe.settings[inputID] = inputs[key].checked;
         }
 
         // Add slider values
         inputs = $('#settings-dialog .slider-component');
         for (key in inputs) {
             inputID = inputs[key].id;
-            World.settings[inputID] = $("#" + inputID).slider("value");
+            Universe.settings[inputID] = $("#" + inputID).slider("value");
         }
 
 
 
         // Store all settings
-        World.settings.store();
+        Universe.settings.store();
 
         FiercePlanet.Utils.processSettings();
 
-        Lifecycle.restartLevel();
+        Lifecycle.restartWorld();
     };
 
 
@@ -196,7 +196,7 @@ FiercePlanet.Utils = FiercePlanet.Utils || {};
         // Handle setting specific settings
 
         // Open extended area if we are showing the graph
-        if (World.settings.showGraph) {
+        if (Universe.settings.showGraph) {
             FiercePlanet.Graph.openDialog();
             FiercePlanet.Graph.drawGraph();
         }
@@ -204,12 +204,12 @@ FiercePlanet.Utils = FiercePlanet.Utils || {};
             FiercePlanet.Graph.clearGraph();
         }
 
-        if (World.settings.showModuleEditor) {
+        if (Universe.settings.showModuleEditor) {
             FiercePlanet.ModuleEditor.openDialog();
         }
 
 
-        if (World.settings.disableKeyboardShortcuts)
+        if (Universe.settings.disableKeyboardShortcuts)
             $(document).unbind('keydown');
         else {
             $(document).unbind('keydown');
@@ -227,34 +227,34 @@ FiercePlanet.Utils = FiercePlanet.Utils || {};
         FiercePlanet.Utils.loadScripts();
 
 
-        if (World.settings.resourcesUpgradeable)
+        if (Universe.settings.resourcesUpgradeable)
             $('#upgrade-option').css('display', 'block');
         else
             $('#upgrade-option').css('display', 'none');
 
-        if (World.settings.makeSquare) {
-//        $('#world').height($('#world').width());
-            $('#world').height(480);
+        if (Universe.settings.makeSquare) {
+//        $('#world-container').height($('#world-container').width());
+            $('#world-container').height(480);
             $('#map_canvas').height(480);
             $('canvas').height(480);
             $('canvas').width(480);
             $('#notifications').css('top', '597px');
-            $('#level-editor').css('top', '580px');
+            $('#world-editor').css('top', '580px');
 //        FiercePlanet.Orientation.worldHeight = 480;
         }
         else {
-//            $('#world').height(500);
+//            $('#world-container').height(500);
 //            $('#map_canvas').height(500);
 //            $('canvas').height(500);
 //            $('canvas').width(600);
 //            $('#notifications').css('top', '517px');
-//            $('#level-editor').css('top', '500px');
+//            $('#world-editor').css('top', '500px');
 //            FiercePlanet.Orientation.worldHeight = 400;
         }
     };
 
     /**
-     * Makes a level from a JSON object
+     * Makes a world from a JSON object
      */
     this.makeFromJSONObject = function(obj, prototype) {
         var obj = {};

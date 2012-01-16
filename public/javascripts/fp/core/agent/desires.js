@@ -8,12 +8,12 @@
 
 var Desires = Desires || {};
 (function() {
-    this.rankDesires = function(agent, level) {
+    this.rankDesires = function(agent, world) {
         var desires = agent.culture.desires;
         return desires.sort(function(a, b) {
             if (_.isUndefined(a.evaluate) || _.isUndefined(b.evaluate))
                 return 0;
-            return  b.evaluate(agent, level) -  a.evaluate(agent, level);
+            return  b.evaluate(agent, world) -  a.evaluate(agent, world);
         });
     };
 }).apply(Desires);
@@ -22,7 +22,7 @@ Desires.ImproveHealth = {};
 (function() {
     this.name = 'Improve Health';
     this.dependsOnBeliefs = 'Improve Health';
-    this.evaluate = function(agent, level) {
+    this.evaluate = function(agent, world) {
         return 1.0 - (agent.health / AgentConstants.INITIAL_HEALTH);
     };
     this.findSatisfyingObjects = function(agent) {
@@ -37,8 +37,8 @@ Desires.ImproveHealth = {};
         }
         return satisfyingObjects;
     };
-    this.satisfy = function(agent, level) {
-        Capabilities.ConsumeResourcesCapability.exercise(agent, level);
+    this.satisfy = function(agent, world) {
+        Capabilities.ConsumeResourcesCapability.exercise(agent, world);
     };
 }).apply(Desires.ImproveHealth);
 
@@ -46,7 +46,7 @@ Desires.ExploreSpace = {};
 (function() {
     this.name = 'Explore';
     this.dependsOnBeliefs = 'Improve Health';
-    this.evaluate = function(agent, level) {
+    this.evaluate = function(agent, world) {
         return 0.5;
     };
     this.findSatisfyingObjects = function(agent) {
@@ -113,7 +113,7 @@ Desires.ExploreSpace = {};
         }
         return satisfyingObjects;
     };
-    this.satisfy = function(agent, level) {
+    this.satisfy = function(agent, world) {
         // Do nothing - assume desire is satisfied by moving.
     };
 }).apply(Desires.ExploreSpace);
@@ -122,11 +122,11 @@ Desires.Flee = {};
 (function() {
     this.name = 'Flee';
     this.dependsOnBeliefs = 'Improve Health';
-    this.evaluate = function(agent, level) {
-        var surroundingPositions = level.getVonNeumannNeighbourhood(agent.x, agent.y, true);
+    this.evaluate = function(agent, world) {
+        var surroundingPositions = world.getVonNeumannNeighbourhood(agent.x, agent.y, true);
         var presenceOfThreat = false;
         surroundingPositions.forEach(function(position) {
-            var agents = level.getAgentsAtContentMap(position.x, position.y);
+            var agents = world.getAgentsAtContentMap(position.x, position.y);
             agents.forEach(function(otherAgent) {
                 if (otherAgent.id != agent.id && otherAgent.culture != agent.culture) {
                     otherAgent.capabilities.forEach(function(capability) {
@@ -154,7 +154,7 @@ Desires.Flee = {};
         }
         return satisfyingObjects;
     };
-    this.satisfy = function(agent, level) {
+    this.satisfy = function(agent, world) {
         // Do nothing - assume desire is satisfied by moving.
     };
 
@@ -163,7 +163,7 @@ Desires.Flee = {};
 Desires.Reproduce = {};
 (function() {
     this.name = 'Reproduce';
-    this.evaluate = function(agent, level) {
+    this.evaluate = function(agent, world) {
         return 0.1;
     };
     this.findSatisfyingObjects = function(agent) {
@@ -178,7 +178,7 @@ Desires.Reproduce = {};
         }
         return satisfyingObjects;
     };
-    this.satisfy = function(agent, level) {
+    this.satisfy = function(agent, world) {
         // Do nothing - assume desire is satisfied by moving.
     };
 

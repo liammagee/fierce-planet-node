@@ -18,7 +18,7 @@ function Campaign() {
  * Gets a tile at the given co-ordinate
  */
 Campaign.prototype = {
-	levels: [],
+	worlds: [],
 	id: undefined,
 	name: undefined,
 	position: undefined

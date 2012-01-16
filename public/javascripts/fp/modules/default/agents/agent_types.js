@@ -19,7 +19,7 @@ var DefaultCultures = DefaultCultures || {};
 (function() {
 
     this.init = function() {
-        this.CITIZEN_AGENT_TYPE = new Culture("Citizen", "000", World.resourceCategories);
+        this.CITIZEN_AGENT_TYPE = new Culture("Citizen", "000", Universe.resourceCategories);
 
         this.CITIZEN_AGENT_TYPE.characteristics = [
         ];

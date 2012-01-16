@@ -104,7 +104,7 @@ FiercePlanet.Graph = FiercePlanet.Graph || {};
      * Updates the flot graph
      */
     this.updateGraph = function() {
-        if ($("#world-graph")[0] && World.settings.showGraph) {
+        if ($("#world-graph")[0] && Universe.settings.showGraph) {
 //            if (true) {
             if (Lifecycle.inPlay) {
                 plotStats.update(plot);
@@ -139,14 +139,14 @@ FiercePlanet.Graph = FiercePlanet.Graph || {};
             },
             update: function(plot) {
                 var data = plot.getData();
-                if (Lifecycle.levelCounter > 0) {
+                if (Lifecycle.worldCounter > 0) {
                     var agentSets = ModuleManager.currentModule.allCultures();
                     var j = 0;
                     for (var i = 0, l = agentSets.length; i < l; i++) {
                         var as = agentSets[i];
                         var counter = 0;
-                        Lifecycle.currentLevel.currentAgents.forEach(function(a) {if (a.culture.name == as.name) counter++} )
-                        var d = [Lifecycle.levelCounter, counter];
+                        Lifecycle.currentWorld.currentAgents.forEach(function(a) {if (a.culture.name == as.name) counter++} )
+                        var d = [Lifecycle.worldCounter, counter];
                         j++;
                         data[i].data.push(d);
                     }
@@ -163,8 +163,8 @@ FiercePlanet.Graph = FiercePlanet.Graph || {};
                     yaxis: { min: 0, max: totalSaveable }
                 };
                 var seedData = [];
-                for (var i = 0, l = World.resourceCategories.length; i < l; i++) {
-                    var cat = World.resourceCategories[i];
+                for (var i = 0, l = Universe.resourceCategories.length; i < l; i++) {
+                    var cat = Universe.resourceCategories[i];
                     seedData.push({ color: cat.color, data: [[0, 100]], lines: { show: true } });
                 }
                 seedData.push({ color: '#333', data: [[0, 100]], lines: { show: true } });
@@ -172,17 +172,17 @@ FiercePlanet.Graph = FiercePlanet.Graph || {};
             },
             update: function(plot) {
                 var data = plot.getData();
-                if (Lifecycle.levelCounter > 0) {
-                    var stats = Lifecycle.currentLevel.currentAgentHealthStats();
+                if (Lifecycle.worldCounter > 0) {
+                    var stats = Lifecycle.currentWorld.currentAgentHealthStats();
                     var j = 0;
                     for (var i in stats) {
                         if (stats.hasOwnProperty(i)) {
-                            var d = [Lifecycle.levelCounter, stats[i]];
+                            var d = [Lifecycle.worldCounter, stats[i]];
                             data[j].data.push(d);
                             j++;
                         }
                     }
-//                    data[j].data.push([FiercePlanet.levelCounter, stats.total])
+//                    data[j].data.push([FiercePlanet.worldCounter, stats.total])
                 }
                 plot.setData(data);
             }
@@ -190,7 +190,7 @@ FiercePlanet.Graph = FiercePlanet.Graph || {};
 
     this.SavedExpiredStats =  {
             setup: function() {
-                var totalSaveable = FiercePlanet.currentLevel ? FiercePlanet.currentLevel.getTotalSaveableAgents() : 55;
+                var totalSaveable = FiercePlanet.currentWorld ? FiercePlanet.currentWorld.getTotalSaveableAgents() : 55;
                 var options = {
                     series: { shadowSize: 0 }, // drawing is faster without shadows
                     yaxis: { min: 0, max: totalSaveable }
@@ -202,11 +202,11 @@ FiercePlanet.Graph = FiercePlanet.Graph || {};
             },
             update: function(plot) {
                 var data = plot.getData();
-                if (Lifecycle.levelCounter > 0) {
+                if (Lifecycle.worldCounter > 0) {
                     var savedData = data[0].data;
                     var expiredData = data[1].data;
-                    savedData.push([Lifecycle.levelCounter, FiercePlanet.Game.currentProfile.currentLevelSaved]);
-                    expiredData.push([Lifecycle.levelCounter, FiercePlanet.Game.currentProfile.currentLevelExpired]);
+                    savedData.push([Lifecycle.worldCounter, FiercePlanet.Game.currentProfile.currentWorldSaved]);
+                    expiredData.push([Lifecycle.worldCounter, FiercePlanet.Game.currentProfile.currentWorldExpired]);
                 }
                 plot.setData(data);
             }
@@ -223,8 +223,8 @@ FiercePlanet.Graph = FiercePlanet.Graph || {};
                     yaxis: { min: 0, max: totalSaveable }
                 };
                 var seedData = [];
-                for (var i = 0, l = World.resourceCategories.length; i < l; i++) {
-                    var cat = World.resourceCategories[i];
+                for (var i = 0, l = Universe.resourceCategories.length; i < l; i++) {
+                    var cat = Universe.resourceCategories[i];
                     seedData.push({ color: cat.color, data: [[0, 100]], lines: { show: true } });
                 }
                 seedData.push({ color: '#333', data: [[0, 100]], lines: { show: true } });
@@ -232,17 +232,17 @@ FiercePlanet.Graph = FiercePlanet.Graph || {};
             },
             update: function(plot) {
                 var data = plot.getData();
-                if (Lifecycle.levelCounter > 0) {
-                    var stats = Lifecycle.currentLevel.currentAgentHealthStats();
+                if (Lifecycle.worldCounter > 0) {
+                    var stats = Lifecycle.currentWorld.currentAgentHealthStats();
                     var j = 0;
                     for (var i in stats) {
                         if (stats.hasOwnProperty(i)) {
-                            var d = [Lifecycle.levelCounter, stats[i]];
+                            var d = [Lifecycle.worldCounter, stats[i]];
                             data[j].data.push(d);
                             j++;
                         }
                     }
-//                    data[j].data.push([FiercePlanet.levelCounter, stats.total])
+//                    data[j].data.push([FiercePlanet.worldCounter, stats.total])
                 }
                 plot.setData(data);
             }
@@ -262,17 +262,17 @@ FiercePlanet.Graph = FiercePlanet.Graph || {};
             },
             update: function(plot) {
                 var data = plot.getData();
-                if (Lifecycle.levelCounter > 0) {
-                    var stats = Lifecycle.currentLevel.currentAgentHealthStats();
+                if (Lifecycle.worldCounter > 0) {
+                    var stats = Lifecycle.currentWorld.currentAgentHealthStats();
                     var j = 0;
                     for (var i in stats) {
                         if (stats.hasOwnProperty(i)) {
-                            var d = [Lifecycle.levelCounter, stats[i]];
+                            var d = [Lifecycle.worldCounter, stats[i]];
                             data[j].data.push(d);
                             j++;
                         }
                     }
-//                    data[j].data.push([FiercePlanet.levelCounter, stats.total])
+//                    data[j].data.push([FiercePlanet.worldCounter, stats.total])
                 }
                 plot.setData(data);
             }

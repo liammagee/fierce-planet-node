@@ -61,7 +61,7 @@ body {
 	position:relative;
     z-index: 1;
 }
-#world {
+#world-container {
 	position:absolute;
 	overflow: hidden;
     float: left;
@@ -95,10 +95,11 @@ body {
 #scrollingCanvas    { z-index: 7 }
 #noticeCanvas       { z-index: 8 }
 
-#level-name {
+#world-name {
 	font-size:18px;
 }
 #resourceLevels {
+    color:#FFF;
 	position:absolute;
 	top:270px;
 	font-size:14px;
@@ -119,6 +120,7 @@ body {
 	font-size:10px;
 }
 #score {
+    color:#FFF;
 	position:absolute;
     width:inherit;
 	top:115px;
@@ -134,7 +136,7 @@ body {
 	letter-spacing:2px;
 	color:#93C83E;
 }
-#level {
+#world {
 	color:#FFF;
 	position:absolute;
 	top:160px;
@@ -199,7 +201,7 @@ body {
     z-index: 100;
 }
 
-#level-editor {
+#world-editor {
     position:absolute;
     left: -120px;
     top: 500px;
@@ -215,7 +217,7 @@ body {
     vertical-align:middle;
 }
 
-#level-editor > div, #level-features > div {
+#world-editor > div, #world-features > div {
     float: left;
     position: relative;
     width: 100px;
@@ -228,7 +230,7 @@ body {
     vertical-align:middle;
 }
 
-#level-editor a, #level-features a {
+#world-editor a, #world-features a {
     color: #1F62C1;
 }
 

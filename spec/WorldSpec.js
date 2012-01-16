@@ -61,9 +61,9 @@ if (typeof(global) != "undefined") {
     var predatorAgentType = new AgentType("predator", "000", resourceCategories);
     var agentTypes = [citizenAgentType, predatorAgentType];
 
-    World.registerResourceCategories(resourceCategories);
-    World.registerResourceTypes(resourceTypes);
-    World.registerCultures(agentTypes);
+    Universe.registerResourceCategories(resourceCategories);
+    Universe.registerResourceTypes(resourceTypes);
+    Universe.registerCultures(agentTypes);
 })();
 
 
@@ -76,32 +76,32 @@ describe("world-related classes", function() {
 
     describe("world", function() {
         it("should have 3 resource categories", function() {
-            expect(World.resourceCategories.length).toEqual(3);
+            expect(Universe.resourceCategories.length).toEqual(3);
         });
 
         it("should have 3 resource types", function() {
-            expect(World.resourceTypes.length).toEqual(3);
+            expect(Universe.resourceTypes.length).toEqual(3);
         });
 
         it("should have 2 agent types", function() {
-            expect(World.cultures.length).toEqual(2);
+            expect(Universe.cultures.length).toEqual(2);
         });
 
         it("should resolve a type given its code", function() {
-            expect(World.resolveResourceType("farm")).toEqual(World.resourceTypes[0]);
-            expect(World.resolveResourceType("water")).toEqual(World.resourceTypes[1]);
-            expect(World.resolveResourceType("clinic")).toEqual(World.resourceTypes[2]);
-            expect(World.resolveResourceType("legal")).toBeUndefined();
+            expect(Universe.resolveResourceType("farm")).toEqual(Universe.resourceTypes[0]);
+            expect(Universe.resolveResourceType("water")).toEqual(Universe.resourceTypes[1]);
+            expect(Universe.resolveResourceType("clinic")).toEqual(Universe.resourceTypes[2]);
+            expect(Universe.resolveResourceType("legal")).toBeUndefined();
         });
 
         describe("adding a different namespace", function() {
             beforeEach(function() {
-                World.resourceTypeNamespace = {};
-                World.resourceTypeNamespace.name = "Triple bottom line";
+                Universe.resourceTypeNamespace = {};
+                Universe.resourceTypeNamespace.name = "Triple bottom line";
             });
 
             it("should have a namespace", function() {
-                expect(World.resourceTypeNamespace).toBeDefined();
+                expect(Universe.resourceTypeNamespace).toBeDefined();
             });
         });
 
@@ -112,65 +112,65 @@ describe("world-related classes", function() {
             });
 
             it("should have default settings", function() {
-                expect(World.settings.agentsCanCommunicate).toBeTruthy();
-                expect(World.settings.agentsHaveRandomInitialHealth).toBeFalsy();
-                expect(World.settings.agentsCanAdjustSpeed).toBeTruthy();
-                expect(World.settings.agentsCanAdjustWander).toBeTruthy();
-                expect(World.settings.agentCostPerMove).toEqual(World.settings.DEFAULT_AGENT_COST_PER_MOVE);
+                expect(Universe.settings.agentsCanCommunicate).toBeTruthy();
+                expect(Universe.settings.agentsHaveRandomInitialHealth).toBeFalsy();
+                expect(Universe.settings.agentsCanAdjustSpeed).toBeTruthy();
+                expect(Universe.settings.agentsCanAdjustWander).toBeTruthy();
+                expect(Universe.settings.agentCostPerMove).toEqual(Universe.settings.DEFAULT_AGENT_COST_PER_MOVE);
 
-                expect(World.settings.resourcesUpgradeable).toBeFalsy();
-                expect(World.settings.resourcesInTension).toBeFalsy();
-                expect(World.settings.resourcesInTensionGlobally).toBeFalsy();
-                expect(World.settings.resourceBonus).toBeFalsy();
-                expect(World.settings.applyGeneralHealth).toBeFalsy();
-                expect(World.settings.ignoreResourceBalance).toBeFalsy();
-                expect(World.settings.rateOfResourceRecovery).toEqual(World.settings.DEFAULT_RESOURCE_RECOVERY_RATE);
+                expect(Universe.settings.resourcesUpgradeable).toBeFalsy();
+                expect(Universe.settings.resourcesInTension).toBeFalsy();
+                expect(Universe.settings.resourcesInTensionGlobally).toBeFalsy();
+                expect(Universe.settings.resourceBonus).toBeFalsy();
+                expect(Universe.settings.applyGeneralHealth).toBeFalsy();
+                expect(Universe.settings.ignoreResourceBalance).toBeFalsy();
+                expect(Universe.settings.rateOfResourceRecovery).toEqual(Universe.settings.DEFAULT_RESOURCE_RECOVERY_RATE);
             });
 
             it("should be possible to set property settings", function() {
-                World.settings.agentsCanCommunicate = false;
-                expect(World.settings.agentsCanCommunicate).toBeFalsy();
-                World.settings.agentsHaveRandomInitialHealth = true;
-                expect(World.settings.agentsHaveRandomInitialHealth).toBeTruthy();
-                World.settings.resourcesUpgradeable = true;
-                expect(World.settings.resourcesUpgradeable).toBeTruthy();
-                World.settings.resourcesInTension = true;
-                expect(World.settings.resourcesInTension).toBeTruthy();
-                World.settings.resourcesInTensionGlobally = true;
-                expect(World.settings.resourcesInTensionGlobally).toBeTruthy();
-                World.settings.resourceBonus = true;
-                expect(World.settings.resourceBonus).toBeTruthy();
-                World.settings.applyGeneralHealth = true;
-                expect(World.settings.applyGeneralHealth).toBeTruthy();
-                World.settings.ignoreResourceBalance = true;
-                expect(World.settings.ignoreResourceBalance).toBeTruthy();
+                Universe.settings.agentsCanCommunicate = false;
+                expect(Universe.settings.agentsCanCommunicate).toBeFalsy();
+                Universe.settings.agentsHaveRandomInitialHealth = true;
+                expect(Universe.settings.agentsHaveRandomInitialHealth).toBeTruthy();
+                Universe.settings.resourcesUpgradeable = true;
+                expect(Universe.settings.resourcesUpgradeable).toBeTruthy();
+                Universe.settings.resourcesInTension = true;
+                expect(Universe.settings.resourcesInTension).toBeTruthy();
+                Universe.settings.resourcesInTensionGlobally = true;
+                expect(Universe.settings.resourcesInTensionGlobally).toBeTruthy();
+                Universe.settings.resourceBonus = true;
+                expect(Universe.settings.resourceBonus).toBeTruthy();
+                Universe.settings.applyGeneralHealth = true;
+                expect(Universe.settings.applyGeneralHealth).toBeTruthy();
+                Universe.settings.ignoreResourceBalance = true;
+                expect(Universe.settings.ignoreResourceBalance).toBeTruthy();
 
-                World.settings.agentCostPerMove = -4;
-                expect(World.settings.agentCostPerMove).toNotEqual(World.settings.DEFAULT_AGENT_COST_PER_MOVE);
-                World.settings.rateOfResourceRecovery = 3;
-                expect(World.settings.rateOfResourceRecovery).toNotEqual(World.settings.DEFAULT_RESOURCE_RECOVERY_RATE);
+                Universe.settings.agentCostPerMove = -4;
+                expect(Universe.settings.agentCostPerMove).toNotEqual(Universe.settings.DEFAULT_AGENT_COST_PER_MOVE);
+                Universe.settings.rateOfResourceRecovery = 3;
+                expect(Universe.settings.rateOfResourceRecovery).toNotEqual(Universe.settings.DEFAULT_RESOURCE_RECOVERY_RATE);
             });
 
             it("should be possible to store arbitrary properties", function() {
-                expect(World.settings.someArbitraryProperty).toBeUndefined();
-                World.settings.someArbitraryProperty = true;
-                expect(World.settings.someArbitraryProperty).toBeTruthy();
-                World.settings.someArbitraryProperty = false;
-                expect(World.settings.someArbitraryProperty).toBeFalsy();
+                expect(Universe.settings.someArbitraryProperty).toBeUndefined();
+                Universe.settings.someArbitraryProperty = true;
+                expect(Universe.settings.someArbitraryProperty).toBeTruthy();
+                Universe.settings.someArbitraryProperty = false;
+                expect(Universe.settings.someArbitraryProperty).toBeFalsy();
             });
 
             describe("reset property values", function() {
                 beforeEach(function() {
-                    World.settings.agentsCanCommunicate = false;
+                    Universe.settings.agentsCanCommunicate = false;
                 });
 
                 it("should have a new value", function() {
-                    expect(World.settings.agentsCanCommunicate).toBeFalsy();
+                    expect(Universe.settings.agentsCanCommunicate).toBeFalsy();
                 });
 
                 it("should have a new value", function() {
-                    initWorld.apply(World);
-                    expect(World.settings.agentsCanCommunicate).toBeTruthy();
+                    initUniverse.apply(World);
+                    expect(Universe.settings.agentsCanCommunicate).toBeTruthy();
                 });
             });
 
@@ -182,8 +182,8 @@ describe("world-related classes", function() {
                 beforeEach(function() {
                     // If in a non-browser environment, construct a proxy
                     proxyLocalStorage = localStorage || {};
-                    World.settings.agentsCanCommunicate = true;
-                    settingsAsJSON = World.settings.toJSON();
+                    Universe.settings.agentsCanCommunicate = true;
+                    settingsAsJSON = Universe.settings.toJSON();
                 });
 
                 it("should settings string to exist", function() {
@@ -191,48 +191,48 @@ describe("world-related classes", function() {
                 });
 
                 it("should be possible to save settings as JSON", function() {
-                    World.settings.agentsCanCommunicate = false;
-                    expect(World.settings.agentsCanCommunicate).toBeFalsy();
+                    Universe.settings.agentsCanCommunicate = false;
+                    expect(Universe.settings.agentsCanCommunicate).toBeFalsy();
 
                     // Restore settings
-                    World.settings.parseJSON(settingsAsJSON);
-                    expect(World.settings.agentsCanCommunicate).toBeTruthy();
+                    Universe.settings.parseJSON(settingsAsJSON);
+                    expect(Universe.settings.agentsCanCommunicate).toBeTruthy();
                 });
 
                 it("should be possible to save and load settings from local storage, explicitly", function() {
-                    localStorage.settings = World.settings.toJSON();
+                    localStorage.settings = Universe.settings.toJSON();
                     expect(localStorage.settings).toBeDefined();
 
-                    World.settings.agentsCanCommunicate = false;
-                    expect(World.settings.agentsCanCommunicate).toBeFalsy();
+                    Universe.settings.agentsCanCommunicate = false;
+                    expect(Universe.settings.agentsCanCommunicate).toBeFalsy();
 
                     // Restore settings
-                    World.settings.parseJSON(localStorage.settings);
-                    expect(World.settings.agentsCanCommunicate).toBeTruthy();
+                    Universe.settings.parseJSON(localStorage.settings);
+                    expect(Universe.settings.agentsCanCommunicate).toBeTruthy();
                 });
 
                 it("should be possible to save and load settings from local storage, implicitly", function() {
-                    World.settings.store();
+                    Universe.settings.store();
 
-                    World.settings.agentsCanCommunicate = false;
-                    expect(World.settings.agentsCanCommunicate).toBeFalsy();
+                    Universe.settings.agentsCanCommunicate = false;
+                    expect(Universe.settings.agentsCanCommunicate).toBeFalsy();
 
                     // Restore settings
-                    World.settings.load();
-                    expect(World.settings.agentsCanCommunicate).toBeTruthy();
+                    Universe.settings.load();
+                    expect(Universe.settings.agentsCanCommunicate).toBeTruthy();
                 });
 
                 it("should throw an error when invalid JSON is passed in", function() {
-                    World.settings.agentsCanCommunicate = false;
+                    Universe.settings.agentsCanCommunicate = false;
 
-                    expect(World.settings.parseJSON(null)).toBeUndefined();
-                    expect(World.settings.parseJSON("")).toBeUndefined();
-                    expect(World.settings.parseJSON([])).toBeUndefined();
-                    expect(World.settings.parseJSON({})).toBeUndefined();
-                    expect(World.settings.parseJSON(undefined)).toBeUndefined();
+                    expect(Universe.settings.parseJSON(null)).toBeUndefined();
+                    expect(Universe.settings.parseJSON("")).toBeUndefined();
+                    expect(Universe.settings.parseJSON([])).toBeUndefined();
+                    expect(Universe.settings.parseJSON({})).toBeUndefined();
+                    expect(Universe.settings.parseJSON(undefined)).toBeUndefined();
 
                     // Settings properties should be undisturbed
-                    expect(World.settings.agentsCanCommunicate).toBeFalsy();
+                    expect(Universe.settings.agentsCanCommunicate).toBeFalsy();
                 });
             });
 

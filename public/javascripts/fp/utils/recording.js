@@ -18,25 +18,25 @@ FiercePlanet.Recording = FiercePlanet.Recording || {};
     /**
      * Record the current state of the game
      */
-    this.recordWorld = function() {
-            if (Lifecycle.currentLevel != undefined) {
+    this.recordUniverse = function() {
+            if (Lifecycle.currentWorld != undefined) {
                 try {
-                    var level = new Level(Lifecycle.currentLevel.id);
+                    var world = new World(Lifecycle.currentWorld.id);
                     var agents = [];
-                    for (var i = 0, len = Lifecycle.currentLevel.currentAgents.length; i < len; i++) {
-                        var actualAgent = Lifecycle.currentLevel.currentAgents[i];
+                    for (var i = 0, len = Lifecycle.currentWorld.currentAgents.length; i < len; i++) {
+                        var actualAgent = Lifecycle.currentWorld.currentAgents[i];
                         var proxyAgent = new Agent(actualAgent.culture, actualAgent.x, actualAgent.y);
                         proxyAgent.lastMemory = actualAgent.lastMemory;
                         proxyAgent.delay = actualAgent.delay;
                         proxyAgent.speed = actualAgent.speed;
                         agents.push(proxyAgent);
                     }
-                    level.setCurrentAgents(agents);
-                    level.setResources(Lifecycle.currentLevel.resources);
+                    world.setCurrentAgents(agents);
+                    world.setResources(Lifecycle.currentWorld.resources);
                     // Serialised option, for remote persistence
-                    FiercePlanet.Game.recordedLevels[FiercePlanet.Game.globalRecordingCounter] = JSON.stringify(level);
+                    FiercePlanet.Game.recordedWorlds[FiercePlanet.Game.globalRecordingCounter] = JSON.stringify(world);
                     // Local option
-//                FiercePlanet.recordedLevels[FiercePlanet.globalRecordingCounter] = level;
+//                FiercePlanet.recordedWorlds[FiercePlanet.globalRecordingCounter] = world;
                     FiercePlanet.Game.globalRecordingCounter++;
                 }
                 catch (err) {
@@ -48,9 +48,9 @@ FiercePlanet.Recording = FiercePlanet.Recording || {};
     /**
      * Replay the game
      */
-    this.replayWorld = function() {
+    this.replayUniverse = function() {
             Lifecycle._stopAgents();
-            FiercePlanet.Game.existingCurrentLevel = Lifecycle.currentLevel;
+            FiercePlanet.Game.existingCurrentWorld = Lifecycle.currentWorld;
             clearInterval(Lifecycle.agentTimerId);
             FiercePlanet.Game.globalRecordingCounter = 0;
             Lifecycle.waveCounter = 0;
@@ -72,17 +72,17 @@ FiercePlanet.Recording = FiercePlanet.Recording || {};
      * Replay a single step in a recorded game
      */
     this.replayStep = function () {
-            var level = FiercePlanet.Game.recordedLevels[FiercePlanet.Game.globalRecordingCounter];
-            if (level == undefined) {
+            var world = FiercePlanet.Game.recordedWorlds[FiercePlanet.Game.globalRecordingCounter];
+            if (world == undefined) {
                 this.replayStop();
             }
             else {
                 try {
                     FiercePlanet.Drawing.clearAgents();
                     // Serialised option, for remote persistence
-                    Lifecycle.currentLevel = JSON.parse(level);
+                    Lifecycle.currentWorld = JSON.parse(world);
                     // Local option
-//                Lifecycle.currentLevel = level;
+//                Lifecycle.currentWorld = world;
                     FiercePlanet.Game.globalRecordingCounter++;
                     Lifecycle.waveCounter++;
                     FiercePlanet.Drawing.clearCanvas('#resourceCanvas');
@@ -111,7 +111,7 @@ FiercePlanet.Recording = FiercePlanet.Recording || {};
     this.replayStop = function () {
             Lifecycle.agentTimerId = clearInterval(Lifecycle.agentTimerId);
             FiercePlanet.Game.globalRecordingCounter = 0;
-            Lifecycle.currentLevel = FiercePlanet.existingCurrentLevel;
+            Lifecycle.currentWorld = FiercePlanet.existingCurrentWorld;
             FiercePlanet.Game.inPlay = false;
         };
 

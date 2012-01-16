@@ -11,14 +11,14 @@ var Beliefs = Beliefs || {};
 function Belief() {
     this.time, this.x, this.y, this.source, this.object;
 
-    this.exercise = function(agent, level) {};
+    this.exercise = function(agent, world) {};
 }
 
 
 Beliefs.BeliefsAboutPaths = {};
 (function() {
     this.name = 'Beliefs About Paths';
-    this.makeBelief = function(agent, level) {
+    this.makeBelief = function(agent, world) {
         // Initialise belief variables
         if (_.isUndefined(agent.beliefs))
             agent.beliefs = [];
@@ -51,52 +51,52 @@ Beliefs.BeliefsAboutPaths = {};
         // Add to ordered memory
         agent.chronologicalMemory[agent.age] = memory;
 
-        if (level != undefined) {
+        if (world != undefined) {
             // Add any unvisited path cells to memory
-            if (x - 1 >= 0 && level.getTile(x - 1, y) == undefined && agent.memoriesOfPlacesVisited[[x - 1, y]] == undefined) {
+            if (x - 1 >= 0 && world.getTile(x - 1, y) == undefined && agent.memoriesOfPlacesVisited[[x - 1, y]] == undefined) {
                 // Add path cell to memory
                 agent.lastUntriedPathMemory = new Memory(agent.id, agent.age, x - 1, y);
                 agent.memoriesOfPathsUntried[[x - 1, y]] = agent.lastUntriedPathMemory;
             }
-            if (x + 1 < level.cellsAcross && level.getTile(x + 1, y) == undefined && agent.memoriesOfPlacesVisited[[x + 1, y]] == undefined) {
+            if (x + 1 < world.cellsAcross && world.getTile(x + 1, y) == undefined && agent.memoriesOfPlacesVisited[[x + 1, y]] == undefined) {
                 // Add path cell to memory
                 agent.lastUntriedPathMemory = new Memory(agent.id, agent.age, x + 1, y);
                 agent.memoriesOfPathsUntried[[x + 1, y]] = agent.lastUntriedPathMemory;
             }
-            if (y - 1 >= 0 && level.getTile(x, y - 1) == undefined && agent.memoriesOfPlacesVisited[[x, y - 1]] == undefined) {
+            if (y - 1 >= 0 && world.getTile(x, y - 1) == undefined && agent.memoriesOfPlacesVisited[[x, y - 1]] == undefined) {
                 // Add path cell to memory
                 agent.lastUntriedPathMemory = new Memory(agent.id, agent.age, x, y - 1);
                 agent.memoriesOfPathsUntried[[x, y - 1]] = agent.lastUntriedPathMemory;
             }
-            if (y + 1 < level.cellsDown && level.getTile(x, y + 1) == undefined && agent.memoriesOfPlacesVisited[[x, y + 1]] == undefined) {
+            if (y + 1 < world.cellsDown && world.getTile(x, y + 1) == undefined && agent.memoriesOfPlacesVisited[[x, y + 1]] == undefined) {
                 agent.lastUntriedPathMemory = new Memory(agent.id, agent.age, x, y + 1);
                 agent.memoriesOfPathsUntried[[x, y + 1]] = agent.lastUntriedPathMemory;
             }
-            if (level.allowOffscreenCycling) {
+            if (world.allowOffscreenCycling) {
                 if (x == 0) {
-                    var newX = level.cellsAcross - 1;
-                    if (level.getTile(newX, y) == undefined && agent.memoriesOfPlacesVisited[[newX, y]] == undefined) {
+                    var newX = world.cellsAcross - 1;
+                    if (world.getTile(newX, y) == undefined && agent.memoriesOfPlacesVisited[[newX, y]] == undefined) {
                         agent.lastUntriedPathMemory = new Memory(agent.id, agent.age, newX, y);
                         agent.memoriesOfPathsUntried[[newX, y]] = agent.lastUntriedPathMemory;
                     }
                 }
-                else if (x == level.cellsAcross - 1) {
+                else if (x == world.cellsAcross - 1) {
                     var newX = 0;
-                    if (level.getTile(newX, y) == undefined && agent.memoriesOfPlacesVisited[[newX, y]] == undefined) {
+                    if (world.getTile(newX, y) == undefined && agent.memoriesOfPlacesVisited[[newX, y]] == undefined) {
                         agent.lastUntriedPathMemory = new Memory(agent.id, agent.age, newX, y);
                         agent.memoriesOfPathsUntried[[newX, y]] = agent.lastUntriedPathMemory;
                     }
                 }
                 if (y == 0) {
-                    var newY = level.cellsDown - 1;
-                    if (level.getTile(x, newY) == undefined && agent.memoriesOfPlacesVisited[[x, newY]] == undefined) {
+                    var newY = world.cellsDown - 1;
+                    if (world.getTile(x, newY) == undefined && agent.memoriesOfPlacesVisited[[x, newY]] == undefined) {
                         agent.lastUntriedPathMemory = new Memory(agent.id, agent.age, x, newY);
                         agent.memoriesOfPathsUntried[[x, newY]] = agent.lastUntriedPathMemory;
                     }
                 }
-                else if (y == level.cellsDown - 1) {
+                else if (y == world.cellsDown - 1) {
                     var newY = 0;
-                    if (level.getTile(x, newY) == undefined && agent.memoriesOfPlacesVisited[[x, newY]] == undefined) {
+                    if (world.getTile(x, newY) == undefined && agent.memoriesOfPlacesVisited[[x, newY]] == undefined) {
                         agent.lastUntriedPathMemory = new Memory(agent.id, agent.age, x, newY);
                         agent.memoriesOfPathsUntried[[x, newY]] = agent.lastUntriedPathMemory;
                     }
@@ -110,8 +110,8 @@ Beliefs.BeliefsAboutPaths = {};
 Beliefs.BeliefsAboutResources = {};
 (function() {
     this.name = 'Beliefs About Resources';
-    this.makeBelief = function(agent, level) {
-        if (_.isUndefined(level))
+    this.makeBelief = function(agent, world) {
+        if (_.isUndefined(world))
             return;
 
         var x = agent.x, y = agent.y;
@@ -123,13 +123,13 @@ Beliefs.BeliefsAboutResources = {};
         agent.memoriesOfResources = agent.memoriesOfResources || [];
 
 
-        var resources = level.resources;
+        var resources = world.resources;
 
         // Add neighbouring resources to memory
 
-        var positions = level.getVonNeumannNeighbourhood(x, y, true);
+        var positions = world.getVonNeumannNeighbourhood(x, y, true);
         positions.forEach(function(position) {
-            var resources = level.getResourcesAtContentMap(position.x, position.y);
+            var resources = world.getResourcesAtContentMap(position.x, position.y);
             // TODO: Can only add one resource to memory
             if (resources && resources.length > 0)
                 agent.memoriesOfResources[[x, y]] = resources[0];
@@ -156,8 +156,8 @@ Beliefs.BeliefsAboutResources = {};
 Beliefs.BeliefsAboutOtherAgents = {};
 (function() {
     this.name = 'Beliefs About Other Agents';
-    this.makeBelief = function(agent, level) {
-        if (_.isUndefined(level))
+    this.makeBelief = function(agent, world) {
+        if (_.isUndefined(world))
             return;
 
         var x = agent.x, y = agent.y;
@@ -171,9 +171,9 @@ Beliefs.BeliefsAboutOtherAgents = {};
 
 
         // Add neighbouring resources to memory
-        var positions = level.getVonNeumannNeighbourhood(x, y, true);
+        var positions = world.getVonNeumannNeighbourhood(x, y, true);
         positions.forEach(function(position) {
-            var agents = level.getAgentsAtContentMap(position.x, position.y);
+            var agents = world.getAgentsAtContentMap(position.x, position.y);
             // TODO: Can only add one resource to memory
             if (agents && agents.length > 0) {
                 agents.forEach(function(otherAgent) {
@@ -183,7 +183,7 @@ Beliefs.BeliefsAboutOtherAgents = {};
         });
 
         /*
-        var agents = level.currentAgents;
+        var agents = world.currentAgents;
         // Add neighbouring resources to memory
         for (var j = 0; j < agents.length; j++) {
             var otherAgent = agents[j];
@@ -206,8 +206,8 @@ Beliefs.BeliefsAboutOtherAgents = {};
 Beliefs.BeliefsBasedOnOtherAgentsBeliefs = {};
 (function() {
     this.name = 'Beliefs Based On Other Agents\' Beliefs';
-    this.makeBelief = function(agent, level) {
-        if (_.isUndefined(level))
+    this.makeBelief = function(agent, world) {
+        if (_.isUndefined(world))
             return;
 
         var x = agent.x, y = agent.y;
@@ -223,10 +223,10 @@ Beliefs.BeliefsBasedOnOtherAgentsBeliefs = {};
         // Add agents on this tile to memory
 //        /*
         var neighbouringAgents = [];
-        var positions = level.getVonNeumannNeighbourhood(x, y, true);
+        var positions = world.getVonNeumannNeighbourhood(x, y, true);
 //        var positions = [{x: x, y: y}];
         positions.forEach(function(position) {
-            var agents = level.getAgentsAtContentMap(position.x, position.y);
+            var agents = world.getAgentsAtContentMap(position.x, position.y);
             if (agents && agents.length > 0) {
                 agents.forEach(function(otherAgent) {
                     if (otherAgent.id != agent.id && otherAgent.age > 0 && otherAgent.alive)
@@ -285,7 +285,7 @@ Beliefs.BeliefsBasedOnOtherAgentsBeliefs = {};
 //*/
 
         /*
-        var agents = level.currentAgents;
+        var agents = world.currentAgents;
         for (var i = 0; i < agents.length; i++) {
             var otherAgent = agents[i];
             if (otherAgent.id == agent.id)

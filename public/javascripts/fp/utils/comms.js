@@ -18,47 +18,47 @@ FiercePlanet.Comms = FiercePlanet.Comms || {};
     this.duelingAgents = [];
 
     this.receiveServerEvent = function(nickname, eventType, obj){
-        if (eventType == 'level') {
-            var levelNumber = obj;
-            if (World.settings.spectate) {
-                Lifecycle.currentLevelNumber = levelNumber;
-                Lifecycle.currentLevelPreset = true;
-                Lifecycle.newLevel();
-//                Lifecycle.startLevel();
+        if (eventType == 'world') {
+            var worldNumber = obj;
+            if (Universe.settings.spectate) {
+                Lifecycle.currentWorldNumber = worldNumber;
+                Lifecycle.currentWorldPreset = true;
+                Lifecycle.newWorld();
+//                Lifecycle.startWorld();
             }
             // TODO: Fix - causes problems with main Google screen
 //            FiercePlanet.Drawing.drawMirrorGame();
         }
         else if (eventType == 'start') {
-            if (World.settings.spectate) {
-                FiercePlanet.Dialogs.newLevelDialog.dialog('close');
-//                Lifecycle.startLevel();
+            if (Universe.settings.spectate) {
+                FiercePlanet.Dialogs.newWorldDialog.dialog('close');
+//                Lifecycle.startWorld();
             }
         }
         else if (eventType == 'play') {
-            if (World.settings.spectate) {
+            if (Universe.settings.spectate) {
 //                Lifecycle.pauseGame();
             }
         }
         else if (eventType == 'pause') {
-            if (World.settings.spectate) {
+            if (Universe.settings.spectate) {
                 Lifecycle.pauseGame();
             }
         }
         else if (eventType == 'resources') {
-//            if (World.settings.spectate) {
+//            if (Universe.settings.spectate) {
                 var resources = obj;
                 for (var i = 0, l = resources.length; i < l; i++) {
                     FiercePlanet.Utils.makeFromJSONObject(resources[i], Resource.prototype);
                 }
-//                Lifecycle.currentLevel.addResource(resource);
+//                Lifecycle.currentWorld.addResource(resource);
                 FiercePlanet.Drawing.drawResources('#alt_resourceCanvas', resources);
 //            }
         }
         else if (eventType == 'agents') {
             var agents = obj;
             // Co-op mode
-//                Lifecycle.currentLevel.setCurrentAgents(agents);
+//                Lifecycle.currentWorld.setCurrentAgents(agents);
 //                FiercePlanet.Drawing.clearCanvas('#agentCanvas');
 //                FiercePlanet.Drawing.drawAgents();
             // Comp mode
@@ -67,9 +67,9 @@ FiercePlanet.Comms = FiercePlanet.Comms || {};
 
             // Same screen
             for (var i = 0, l = agents.length; i < l; i++) {
-                Lifecycle.currentLevel.currentAgents.push(agents[i]);
+                Lifecycle.currentWorld.currentAgents.push(agents[i]);
             }
-            if (World.settings.spectate) {
+            if (Universe.settings.spectate) {
                 Lifecycle.processAgents();
                 Lifecycle._stopAgents();
             }
@@ -77,12 +77,12 @@ FiercePlanet.Comms = FiercePlanet.Comms || {};
         else if (eventType == 'agent') {
             duelingAgents.push(obj);
             // Co-op mode
-//                Lifecycle.currentLevel.setCurrentAgents(agents);
+//                Lifecycle.currentWorld.setCurrentAgents(agents);
 //                FiercePlanet.Drawing.clearCanvas('#agentCanvas');
 //                FiercePlanet.Drawing.drawAgents();
             FiercePlanet.Drawing.clearCanvas('#alt_agentCanvas');
             FiercePlanet.Drawing.drawAgents('#alt_agentCanvas', duelingAgents);
-            if (World.settings.spectate) {
+            if (Universe.settings.spectate) {
                 Lifecycle.processAgents();
                 Lifecycle._stopAgents();
             }

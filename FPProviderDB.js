@@ -1,6 +1,6 @@
 var levelCounter = 1;
 
-World = require('./public/javascripts/fp/core/world.js').World;
+World = require('./public/javascripts/fp/core/Universe.js').World;
 Level = require('./public/javascripts/fp/core/level.js').Level;
 require('./public/javascripts/fp/core/agent/agent.js');
 require('./public/javascripts/fp/core/resource.js');

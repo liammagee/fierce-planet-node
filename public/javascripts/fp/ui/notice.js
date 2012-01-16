@@ -25,7 +25,7 @@ NoticeDimensions.WAVE_NOTICE_HEIGHT = 150;
  */
 function Notice(text, x, y, start, duration, width, height, backgroundColor, foregroundColor, lineWidth, font) {
     this.text = text || "";
-    this.start = start || Lifecycle.worldCounter;
+    this.start = start || Lifecycle.universeCounter;
     this.duration = duration || 150;
     this.x = x || 0; // Math.random() * (FiercePlanet.Orientation.worldWidth - Notice.WAVE_NOTICE_WIDTH);
     this.y = y || 0; // Math.random() * (FiercePlanet.Orientation.worldHeight - Notice.WAVE_NOTICE_HEIGHT);

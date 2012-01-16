@@ -50,7 +50,7 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
             var notice = FiercePlanet.Game.currentNotice;
             var s = notice.start;
             var d = notice.duration;
-            if (s > Lifecycle.levelCounter || (s + d) < Lifecycle.levelCounter)
+            if (s > Lifecycle.worldCounter || (s + d) < Lifecycle.worldCounter)
                 return;
             var x = notice.x;
             var y = notice.y;
@@ -125,17 +125,17 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
         var dy = y - my;
 
         // Correct for zoom level
-        x = mx + (dx / FiercePlanet.Orientation.zoomLevel);
-        y = my + (dy / FiercePlanet.Orientation.zoomLevel);
+        x = mx + (dx / FiercePlanet.Orientation.zoomWorld);
+        y = my + (dy / FiercePlanet.Orientation.zoomWorld);
         // Old. TODO: Remove once tested
-        // x /= FiercePlanet.Orientation.zoomLevel;
-        // y /= FiercePlanet.Orientation.zoomLevel;
+        // x /= FiercePlanet.Orientation.zoomWorld;
+        // y /= FiercePlanet.Orientation.zoomWorld;
         // TODO: Determine if this is still relevant
-    //    x /= FiercePlanet.Orientation.externalZoomLevel;
-    //    y /= FiercePlanet.Orientation.externalZoomLevel;
+    //    x /= FiercePlanet.Orientation.externalZoomWorld;
+    //    y /= FiercePlanet.Orientation.externalZoomWorld;
         // Correct for border
-        x -= (1 / FiercePlanet.Orientation.zoomLevel);
-        y -= (1 / FiercePlanet.Orientation.zoomLevel);
+        x -= (1 / FiercePlanet.Orientation.zoomWorld);
+        y -= (1 / FiercePlanet.Orientation.zoomWorld);
 
         // Correct for rotation
 //        if (FiercePlanet.Orientation.rotationAngle != 0) {
@@ -155,7 +155,7 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
         posY = Math.floor(posY / (sh / FiercePlanet.Orientation.worldHeight));
 
         // Correct for tilt isometric view
-        if (World.settings.skewTiles || Lifecycle.currentLevel.isometric) {
+        if (Universe.settings.skewTiles || Lifecycle.currentWorld.isometric) {
             var point = FiercePlanet.Isometric.normaliseCoordinates(x, y);
             posX = Math.floor(point.x / FiercePlanet.Orientation.cellWidth);
             posY = Math.floor(point.y / FiercePlanet.Orientation.cellHeight);
@@ -181,9 +181,9 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
      *  Makes key elements divs movable (draggable), if the setting is set to true
      */
     this.makeElementsMovable = function() {
-        if (World.settings.makeElementsMovable) {
+        if (Universe.settings.makeElementsMovable) {
             $('#graph-area, #controls').draggable({cursor: "pointer"});
-            $('#gameworld').resizable().draggable({handler: '#handle', cancel: '#world, #console'});
+            $('#gameworld').resizable().draggable({handler: '#handle', cancel: '#world-container, #console'});
             $('#global-info-panel').draggable({cancel: '#swatch', cursor: "pointer"});
         }
         else {
@@ -198,23 +198,23 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
 
 
     /**
-     * Show level information
+     * Show world information
      */
-    this.levelInfo = function() {
-        var levelHTML = "";
-        var level = Lifecycle.currentLevel;
-        if (level.image != undefined) {
-            levelHTML += '<img src="' + level.image + '" alt="City Image" width="460" height="140">';
-            if (level.imageAttribution)
-                levelHTML += '<div style="font-size: 0.8em; text-align: right">' + level.imageAttribution + '</div>';
+    this.worldInfo = function() {
+        var worldHTML = "";
+        var world = Lifecycle.currentWorld;
+        if (world.image != undefined) {
+            worldHTML += '<img src="' + world.image + '" alt="City Image" width="460" height="140">';
+            if (world.imageAttribution)
+                worldHTML += '<div style="font-size: 0.8em; text-align: right">' + world.imageAttribution + '</div>';
         }
-        if (level.name != undefined) {
-            levelHTML += "<h3>" + level.name + "</h3>";
+        if (world.name != undefined) {
+            worldHTML += "<h3>" + world.name + "</h3>";
         }
-        if (level.introduction != undefined) {
-            levelHTML += level.introduction;
+        if (world.introduction != undefined) {
+            worldHTML += world.introduction;
         }
-        FiercePlanet.Dialogs.newLevelDialog.html(levelHTML).dialog('open');
+        FiercePlanet.Dialogs.newWorldDialog.html(worldHTML).dialog('open');
     };
 
 

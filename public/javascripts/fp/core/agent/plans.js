@@ -13,13 +13,13 @@ var Plans = Plans || {};
 (function() {
 
     /**
-     * @param level
+     * @param world
      * @param withNoRepeat
      * @param withNoCollision
      * @param withOffscreenCycling
      */
-    this.findPositionForNearestExit = function(agent, level) {
-        var ret = this.getAllPlans(agent, level, agent.x, agent.y);
+    this.findPositionForNearestExit = function(agent, world) {
+        var ret = this.getAllPlans(agent, world, agent.x, agent.y);
         var trail = ret.trail;
         return (trail.length > 1 ? trail[1] : trail[0]);
     };
@@ -31,12 +31,12 @@ var Plans = Plans || {};
     /**
      * Find the critical path to the nearest exit point
      */
-    this.getAllPlans = function(agent, level, points, h) {
+    this.getAllPlans = function(agent, world, points, h) {
         var horizontal = h || true, shortestDistance = -1, shortistTrail, point, x = agent.x, y = agent.y, paths = [];
         for (var i = 0, l = points.length; i < l; i++) {
             var ep = points[i];
             var tx = ep[0], ty = ep[1];
-            var result = this.criticalPathToPoint(agent, level, x, y, tx, ty);
+            var result = this.criticalPathToPoint(agent, world, x, y, tx, ty);
             var distance = result.length;
             if (shortestDistance == -1 ||  distance < shortestDistance) {
                 shortestDistance = distance;
@@ -51,8 +51,8 @@ var Plans = Plans || {};
     /**
      * Find the critical path to the nearest exit point
      */
-    this.getBestPlans = function(agent, level, points, h) {
-        var plans = this.getAllPlans(agent, level, points, h),
+    this.getBestPlans = function(agent, world, points, h) {
+        var plans = this.getAllPlans(agent, world, points, h),
             bestPlans = [],
             shortestPlan = -1;
 
@@ -72,13 +72,13 @@ var Plans = Plans || {};
     };
 
 
-    this.criticalPathToPoint = function(agent, level, sx, sy, ex, ey) {
+    this.criticalPathToPoint = function(agent, world, sx, sy, ex, ey) {
         var cell = [sx, sy], goal = [ex, ey];
         var history = [];
         var trails = {};
         var depth = 0;
         history.push(cell);
-        trails[sy * level.cellsAcross + sx] = [cell];
+        trails[sy * world.cellsAcross + sx] = [cell];
         var candidates = [];
         candidates.push(cell);
         while (depth++ < this.MAX_DEPTH) {
@@ -86,24 +86,24 @@ var Plans = Plans || {};
             for (var i = 0, l = candidates.length; i < l; i++) {
                 var candidate = candidates[i];
                 var x = candidate[0], y = candidate[1];
-                if (level.isSameCell(candidate, goal)) {
-                    return trails[y * level.cellsAcross + x];
+                if (world.isSameCell(candidate, goal)) {
+                    return trails[y * world.cellsAcross + x];
                 }
                 var directions = this.getDirections(candidate, goal);
                 for (var j = 0; j < directions.length; j++) {
                     var nx = x, ny = y;
                     switch(directions[j]) {
                         case 0:
-                            nx = (x == level.cellsAcross - 1 && level.allowOffscreenCycling) ? 0 : nx + 1;
+                            nx = (x == world.cellsAcross - 1 && world.allowOffscreenCycling) ? 0 : nx + 1;
                             break;
                         case 1:
-                            ny = (y == level.cellsDown - 1 && level.allowOffscreenCycling) ? 0 : ny + 1;
+                            ny = (y == world.cellsDown - 1 && world.allowOffscreenCycling) ? 0 : ny + 1;
                             break;
                         case 2:
-                            nx = (x == 0 && level.allowOffscreenCycling) ? level.cellsAcross - 1 : nx - 1;
+                            nx = (x == 0 && world.allowOffscreenCycling) ? world.cellsAcross - 1 : nx - 1;
                             break;
                         case 3:
-                            ny = (y == 0 && level.allowOffscreenCycling) ? level.cellsDown - 1 : ny - 1;
+                            ny = (y == 0 && world.allowOffscreenCycling) ? world.cellsDown - 1 : ny - 1;
                             break;
                     }
                     var newCell = [nx, ny];
@@ -139,22 +139,22 @@ var Plans = Plans || {};
                         continue;
 
 
-                    if (nx < 0 || nx >= level.cellsAcross || ny < 0 || ny >= level.cellsDown)
+                    if (nx < 0 || nx >= world.cellsAcross || ny < 0 || ny >= world.cellsDown)
                         continue;
-                    if (!level.isCell(newCell))
+                    if (!world.isCell(newCell))
                         continue;
-                    if (level.isInHistory(newCell, history))
+                    if (world.isInHistory(newCell, history))
                         continue;
                     // Exclude cells occupied exclusively by resources
-                    if ((World.settings.resourcesOwnTilesExclusively || level.resourcesOwnTilesExclusively) && level.isPositionOccupiedByResource(nx, ny))
+                    if ((Universe.settings.resourcesOwnTilesExclusively || world.resourcesOwnTilesExclusively) && world.isPositionOccupiedByResource(nx, ny))
                         continue;
 
                     newCandidates.push(newCell);
                     history.push(newCell)
 
-                    var candidateKey = y * level.cellsAcross + x;
+                    var candidateKey = y * world.cellsAcross + x;
                     var candidateTrail = trails[candidateKey]
-                    var newCandidateKey = ny * level.cellsAcross + nx;
+                    var newCandidateKey = ny * world.cellsAcross + nx;
                     var newCandidateTrail = []
                     for (var k = 0, len = candidateTrail.length; k < len; k++) {
                         newCandidateTrail.push(candidateTrail[k]);
