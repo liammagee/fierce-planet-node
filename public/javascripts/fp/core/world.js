@@ -33,36 +33,27 @@ function World() {
 
     // Sets the id, if passed in; otherwise default to 1001
     this.id = 1;
-
     this.name = undefined;
-
-    this.isPresetWorld = false;
-    this.isTerminalWorld = false;
-    this.waves = [];
-    this.entryPoints = [];
-    this.exitPoints = [];
 
     // Dimensions
     this.cellsAcross = 10, this.cellsDown = 10;
 
-    // Parameters
-    this.initialAgentNumber = 1, this.waveNumber = 1, this.expiryLimit = 1;
+	// Game parameters
+    this.isPresetWorld = false, this.isTerminalWorld = false, this.customWorld = false;
+    this.entryPoints = [], this.exitPoints = [];
 
-    this.initialResourceStore = 100;
-    this.currentResourceStore = 100;
-    this.currentResourceSpent = 0;
-    this.initialResourceNumber = 0;
+    // Agent parameters
+    this.initialAgentNumber = 1, this.waveNumber = 1, this.expiryLimit = 1, this.waves = [];
 
-    this.allowOffscreenCycling = false;
-    this.allowResourcesOnPath = false;
-    this.customWorld = false;
-    this.noWander = false;
-    this.noSpeedChange = false;
-    this.resourcesOwnTilesExclusively = false;
+	// Resource parameters
+    this.initialResourceStore = 100, this.currentResourceStore = 100, this.initialResourceNumber = 0, this.currentResourceSpent = 0;
 
+	// Cell options
+    this.allowOffscreenCycling = false, this.resourcesOwnTilesExclusively = false, this.allowResourcesOnPath = false;
     // Rendering options
     this.isometric = false;
-
+    // Agent options
+    this.noWander = false, this.noSpeedChange = false;
     // Generation options
     this.randomiseAgents = false;
     this.placeAgentsOnAllCells = false;
@@ -91,10 +82,9 @@ function World() {
     this.tiles = [];
 
     // User interface elements
-    this.tip = null;
+    this.tip = null, this.catastrophe = null;
     this.introduction = "Welcome to world " + this.id + ".";
     this.conclusion = "Congratulations! You have completed world " + this.id + ".";
-    this.catastrophe = null;
 
     // Google map, image and sound options
     this.backgroundTerrain = null, this.mapOptions = null, this.mapURL = null;

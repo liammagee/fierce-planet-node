@@ -44,7 +44,7 @@ if (typeof(global) != "undefined") {
     DefaultModule = require('./../public/javascripts/fp/modules/default/default-module.js').DefaultModule;
 
     PredatorPreyCultures = require('./../public/javascripts/fp/modules/pp/agents/pp-agent-types.js').PredatorPreyCultures;
-    PredatorPreyLevels = require('./../public/javascripts/fp/modules/pp/worlds/pp-levels.js').PredatorPreyLevels;
+    PredatorPreyWorlds = require('./../public/javascripts/fp/modules/pp/worlds/pp-worlds.js').PredatorPreyWorlds;
     PredatorPreyModule = require('./../public/javascripts/fp/modules/pp/predator-prey-module.js').PredatorPreyModule;
 //jstat = require('./../public/javascripts/jstat-1.0.0/js/jstat-1.0.0.js').jstat;
 //NormalDistribution = require('./../public/javascripts/jstat-1.0.0/js/jstat-1.0.0.js').NormalDistribution;
