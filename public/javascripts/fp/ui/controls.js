@@ -67,9 +67,10 @@ FiercePlanet.Controls = FiercePlanet.Controls || {};
         $('#openWorldGallery').click(FiercePlanet.Dialogs.showWorldGallery);
         $('#editor').click(FiercePlanet.WorldUI.listWorlds);
 
+        $('#debug').click(Lifecycle.processAgents);
+
 
         // Admin functions
-        $('#debug').click(Lifecycle.processAgents);
         $('#replay').click(FiercePlanet.Recording.replayUniverse);
         $('#story-board').click(FiercePlanet.Storyboard.showStoryboard);
         $('#high-scores').click(FiercePlanet.ProfileUI.showHighScores);

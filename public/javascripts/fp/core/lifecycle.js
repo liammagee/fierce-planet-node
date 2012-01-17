@@ -419,7 +419,10 @@ var Lifecycle = Lifecycle || {};
             console.log("Starting agents at " + (Lifecycle.startTime));
 
         clearInterval(Lifecycle.agentTimerId);
-        Lifecycle.agentTimerId = setInterval(Lifecycle.processAgents, Lifecycle.interval);
+        if (! _.isUndefined(Lifecycle.currentWorld.interval) && Lifecycle.currentWorld.interval > 0)
+            Lifecycle.agentTimerId = setInterval(Lifecycle.processAgents, Lifecycle.currentWorld.interval);
+        else
+            Lifecycle.agentTimerId = setInterval(Lifecycle.processAgents, Lifecycle.interval);
         Lifecycle.inPlay = true;
 
 		if (this.postStartAgentsCallback)

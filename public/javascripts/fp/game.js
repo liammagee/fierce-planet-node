@@ -63,7 +63,6 @@ FiercePlanet.Game = FiercePlanet.Game || {};
     this.loadGame = function () {
         //FiercePlanet.Utils.loadScripts();
 
-
         // Load relevant settings, if available
         FiercePlanet.Orientation.adjustParameters(FiercePlanet.Orientation.DEFAULT_WORLD_WIDTH, FiercePlanet.Orientation.DEFAULT_WORLD_HEIGHT);
 

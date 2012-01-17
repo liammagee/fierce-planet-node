@@ -78,6 +78,7 @@ var CitiesModule = CitiesModule || {};
             ;
             this.conclusion = "Well done.";
             this.setup = function () {
+                CitiesCultures.init();
                 this.generatePath();
                 CitiesCultures.CELLULAR_AGENT_TYPE.capabilities[0].exercise = function(agent, world) {
                     var normalisedPotential = (agent.potential / FiercePlanet.Parameters.Range);// * FiercePlanet.Parameters.TotalAgents / 2;
@@ -112,6 +113,7 @@ var CitiesModule = CitiesModule || {};
             ;
             this.conclusion = "Well done.";
             this.setup = function () {
+                CitiesCultures.init();
                 this.generatePath();
                 CitiesCultures.CELLULAR_AGENT_TYPE.capabilities[0].exercise = function(agent, world) {
                     var x = agent.x, y = agent.y;
@@ -139,17 +141,101 @@ var CitiesModule = CitiesModule || {};
                     min = _.min(potentials),
                     max = _.max(potentials),
                     range = max - min;
-                console.log(FiercePlanet.Parameters.Range)
+                FiercePlanet.Parameters.Max =  max;
                 FiercePlanet.Parameters.Range =  range;
             };
         }).apply(this.citiesWorld2);
 
+        this.citiesWorld3  = new World();
+        (function () {
+            this.id = 3;
+            this.name = "Vicsek-Szalay Model (pp. 43-44)";
+            this.isPresetWorld = true;
+            this.interval = 10;
+            this.cellsAcross = 130, this.cellsDown = 130;
+            this.placeAgentsOnAllCells = true, this.generateWaveAgentsAutomatically = true;
+            this.waveNumber = 1, this.dontClearCanvas = true, this.scrollingImageVisible = false, this.initialResourceStore = 0;
+            this.introduction =
+                "<p>Threshold</p><p><input class='world-parameters' name='Threshold' value='4.5'/> </p>" +
+                    "<p>Add noise:</p><p><input type='checkbox' class='world-parameters' name='AddNoise' checked='checked'/> </p>" +
+                    "<p>Draw development:</p><p><input type='checkbox' class='world-parameters' name='DrawDevelopment' checked='checked'/> </p>" +
+                    ""
+            ;
+            this.conclusion = "Well done.";
+            this.setup = function () {
+                CitiesCultures.init();
+                this.generatePath();
+                _.extend(CitiesCultures.CELLULAR_AGENT_TYPE,
+                    {
+                        initFunction: function (agent, world) {
+                            agent.potential = Math.random() < 0.5 ? -1 : 1;
+                            agent.development = 0;
+                        },
+                        drawFunction: (function (ctx, agent, x, y, pieceWidth, pieceHeight, newColor, counter, direction) {
+                            var __ret = FiercePlanet.Drawing.getDrawingPosition(agent, Lifecycle.waveCounter);
+                            var xPos = __ret.intX;
+                            var yPos = __ret.intY;
+                            var nx = xPos * FiercePlanet.Orientation.cellWidth;
+                            var ny = yPos * FiercePlanet.Orientation.cellHeight;
+                            nx = nx - (FiercePlanet.Orientation.worldWidth) / 2;
+                            ny = ny - (FiercePlanet.Orientation.worldHeight) / 2;
+
+                            if (FiercePlanet.Parameters.Threshold)
+                                ctx.fillStyle = agent.development == 1 ? '#fff' : '#000';
+                            else
+                                ctx.fillStyle = agent.development == 1 ? '#fff' : '#000';
+                            ctx.fillRect(nx, ny, FiercePlanet.Orientation.cellWidth, FiercePlanet.Orientation.cellHeight);
+                        }),
+                        characteristics: {
+                            potential: 0, development: 0
+                        }
+                    });
+                CitiesCultures.CELLULAR_AGENT_TYPE.capabilities[0].exercise = function(agent, world) {
+                    var x = agent.x, y = agent.y;
+                    var positions = world.getVonNeumannNeighbourhood(x, y, true);
+                    var totalPotential = 0, counter = 0;
+                    positions.forEach(function(position) {
+                        var agents = world.getAgentsAtContentMap(position.x, position.y);
+                        if (agents && agents.length > 0) {
+                            counter++;
+                            var agent = agents[0];
+                            totalPotential += agent.potential;
+                        }
+                    });
+                    totalPotential = totalPotential / counter;
+                    if (FiercePlanet.Parameters.AddNoise) {
+                        totalPotential += (Math.random() < 0.5 ? -1 : 1);
+                    }
+
+                    agent.newPotential = totalPotential;
+                };
+                this.cultures = [CitiesCultures.CELLULAR_AGENT_TYPE];
+                this.initialiseWaves(1);
+            };
+            this.tickFunction = function () {
+                this.currentAgents.forEach(function(agent) {
+                    if (agent.newPotential)
+                        agent.potential = agent.newPotential;
+                    agent.development =  (agent.potential <= FiercePlanet.Parameters.Threshold && agent.development == 0 ? 0 : 1 );
+                })
+                var potentials = _.map(this.currentAgents, function(agent) { return agent.potential; }),
+                    min = _.min(potentials),
+                    max = _.max(potentials),
+                    range = max - min;
+                var devs = _.map(this.currentAgents, function(agent) { return agent.development; }),
+                    totalDev = _.reduce(devs, function(memo, num){ return memo + num; }, 0);
+                FiercePlanet.Parameters.Max =  max;
+                FiercePlanet.Parameters.Range =  range;
+                console.log(max, range, totalDev, Lifecycle.waveCounter)
+            };
+        }).apply(this.citiesWorld3);
+
 
         // Prepare as a module
         this.id = "Cities";
-        this.name = "Cities - Batty";
+        this.name = "Cities Module - Batty";
         this.position = 1;
-        this.worlds = [this.citiesWorld1, this.citiesWorld2 ];
+        this.worlds = [this.citiesWorld1, this.citiesWorld2, this.citiesWorld3 ];
     }
 
     this.init();
@@ -180,7 +266,7 @@ var CitiesModule = CitiesModule || {};
         Universe.settings.showEditor = true;
         Universe.settings.store();
         Lifecycle.currentCampaignID = 'Cities';
-        Lifecycle.currentWorldNumber = localStorage.currentWorldNumber = 0;
+        //Lifecycle.currentWorldNumber = localStorage.currentWorldNumber = 0;
         Lifecycle.currentWorldPreset = true;
         AgentConstants.DEFAULT_SPEED = 1;
         Lifecycle.interval = 500;
