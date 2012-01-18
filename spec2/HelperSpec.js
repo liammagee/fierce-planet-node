@@ -7,6 +7,7 @@ if (typeof(global) != "undefined") {
     var FiercePlanet = {};
     ModuleManager = require('./../public/javascripts/fp/core/module-manager.js').ModuleManager;
     Lifecycle = require('./../public/javascripts/fp/core/lifecycle.js').Lifecycle;
+    Cell = require('./../public/javascripts/fp/core/cell.js').Cell;
     World = require('./../public/javascripts/fp/core/world.js').World;
     Resource = require('./../public/javascripts/fp/core/resource.js').Resource;
     ResourceCategory = require('./../public/javascripts/fp/core/resource.js').ResourceCategory;

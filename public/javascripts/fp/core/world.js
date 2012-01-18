@@ -5,6 +5,12 @@
  * MIT Licensed
  */
 
+/**
+ * World class definition
+ *
+ * @constructor
+ * @param id
+ */
 
 /**
  * World class definition
@@ -24,11 +30,11 @@ function World() {
         if (this.catastrophe != undefined)
             this.catastrophe.struck = false;
 
-        this.initialiseWaves(this.waveNumber);
-
         // Set up world
         if (this.setup)
             this.setup();
+
+        this.initialiseWaves(this.waveNumber);
     };
 
     // Sets the id, if passed in; otherwise default to 1001
@@ -70,16 +76,16 @@ function World() {
     // Agent variables
     this.cultures = undefined;
     this.currentAgents = [], this.currentAgentsMap = {}, this.currentAgentsFunction = function(agent) {return agent};
-    this.worldAgents = [], this.waveAgents = [], this.expiredAgents = [], this.savedAgents = [];
+    this.expiredAgents = [], this.savedAgents = [];
 
     // Resource variables
     this.worldResources = [], this.resources = [], this.resourceCategoryCounts = [];
 
     /** Object for storing tiles, resources and other world entities for co-ordinate based look-up */
-    this.contentMap = {};
     this.cells = {};
     this.terrainMap = {};
     this.tiles = [];
+    this.newCells = [];
 
     // User interface elements
     this.tip = null, this.catastrophe = null;
@@ -89,18 +95,9 @@ function World() {
     // Google map, image and sound options
     this.backgroundTerrain = null, this.mapOptions = null, this.mapURL = null;
     this.thumbnail = undefined, this.image = null, this.imageAttribution = null, this.soundSrc = null;
+
 }
 
-
-/**
- * Retrieves current agents - will filter if a filter agent is available (requires Underscore to be loaded)
- */
-World.prototype.getCurrentAgents = function() {
-    if (typeof(_) === 'undefined' || _.isUndefined(this.currentAgentsFunction))
-        return this.currentAgents;
-    else
-        return _.filter(this.currentAgents, this.currentAgentsFunction);
-};
 
 // Tile functions
 /**
@@ -109,37 +106,26 @@ World.prototype.getCurrentAgents = function() {
  * @param y
  */
 World.prototype.getTile = function(x, y) {
-    var tilePosition = y * this.cellsAcross + x;
-    return this.tiles[tilePosition];
+    // New - TODO: Check
+    var cell = this.getNewCell(x, y);
+    return cell.agentsAllowed;
+    // Old
+//    var tilePosition = y * this.cellsAcross + x;
+//    return this.tiles[tilePosition];
 };
-/**
- * Gets tiles surrounding a given co-ordinate
- * @param x
- * @param y
- */
-World.prototype.getSurroundingTiles = function(x, y) {
-    var surroundingTiles = [];
-
-    if (x > 0)
-        surroundingTiles.push(this.getTile(x - 1, y));
-    if (x < this.cellsAcross - 1)
-        surroundingTiles.push(this.getTile(x + 1, y));
-    if (y > 0)
-        surroundingTiles.push(this.getTile(x, y - 1));
-    if (y < this.cellsDown - 1)
-        surroundingTiles.push(this.getTile(x, y + 1));
-
-    return surroundingTiles;
-};
-/**
- *
- */
-World.prototype.getTiles = function() { return this.tiles; };
 /**
  * 
  * @param tiles
  */
 World.prototype.setTiles = function(tiles) {
+    // New
+    tiles.forEach(function(tile) {
+        var cell = this.getNewCell(tile.x, tile.y);
+        if (!_.isUndefined(cell)) {
+            cell.agentsAllowed = false;
+        }
+    })
+    // Old
     this.tiles = tiles;
     this.generatePath();
     this.assignCells();
@@ -149,6 +135,12 @@ World.prototype.setTiles = function(tiles) {
  * @param tile
  */
 World.prototype.addTile = function(tile) {
+    // New
+    var cell = this.getNewCell(tile.x, tile.y);
+    if (!_.isUndefined(cell)) {
+        cell.agentsAllowed = false;
+    }
+    // Old
     var position = tile.y * this.cellsAcross + tile.x;
     if (this.tiles[position] != undefined)
         throw new Error("Tile is already occupied!");
@@ -173,6 +165,11 @@ World.prototype.addDefaultTile = function(x, y) {
  * @param y
  */
 World.prototype.removeTile = function(x, y) {
+    // New
+    var cell = this.getNewCell(x, y);
+    if (!_.isUndefined(cell))
+        cell.agentsAllowed = true;
+    // Old
     var tilePosition = y * this.cellsAcross + x;
     this.tiles[tilePosition] = undefined;
     // This fails when trying to add back tile at this co-ordinate
@@ -188,6 +185,10 @@ World.prototype.fillWithTiles = function() {
     this.tiles = [];
     for (var i = 0; i < this.cellsAcross; i++) {
         for (var j = 0; j < this.cellsDown; j++) {
+            // New
+            var cell = this.getNewCell(i, j);
+            cell.agentsAllowed = false;
+            // Old
             var tile = new Tile(DEFAULT_TILE_COLOR, j, i);
             this.tiles.push(tile);
             this.addCell(tile.x, tile.y, tile);
@@ -204,6 +205,10 @@ World.prototype.removeAllTiles = function() {
 //    this.cells = {};
     for (var i = 0; i < this.cellsAcross; i++) {
         for (var j = 0; j < this.cellsDown; j++) {
+            // New
+            var cell = this.getNewCell(i, j);
+            cell.agentsAllowed = true;
+            // Old
             var tilePosition = j * this.cellsAcross + i;
             this.tiles[tilePosition] = undefined;
             this.annulCell(i, j);
@@ -219,6 +224,10 @@ World.prototype.removeAllTiles = function() {
 World.prototype.removeTiles = function(start, number) {
     for (var i = start; i < start + number; i++) {
         if (i >= 0 && i < this.tiles.length) {
+            // New
+            var cell = this.cells[i];
+            cell.agentsAllowed = true;
+            // Old
             var tile = this.tiles[i];
             this.tiles[i] = undefined;
             this.annulCell(tile.x, tile.y);
@@ -235,6 +244,10 @@ World.prototype.removeTiles = function(start, number) {
 World.prototype.addTiles = function(start, number) {
     for (var i = start; i < start + number; i++) {
         if (i >= 0 && i < this.tiles.length) {
+            // New
+            var cell = this.cells[i];
+            cell.agentsAllowed = false;
+            // Old
             var x = i % this.cellsAcross;
             var y = Math.floor(i / this.cellsAcross);
             var tile = new Tile(DEFAULT_TILE_COLOR, x, y);
@@ -250,18 +263,25 @@ World.prototype.addTiles = function(start, number) {
  */
 World.prototype.generatePath = function() {
     var pathCells = [];
+    // New
+    cells.forEach(function(cell) {
+        if (cell.agentsAllowed) {
+            pathCells.push(cell.x, cell.y);
+        }
+    })
+    // Old
+    /*
     for (var i = 0; i < this.cellsDown; i++) {
         for (var j = 0; j < this.cellsAcross; j++) {
             var tilePosition = i * this.cellsAcross + j;
             if (_.isUndefined(this.tiles[tilePosition]))
                 pathCells.push([j, i]);
         }
-
     }
+    */
     this.pathway = pathCells;
     return pathCells;
 };
-
 /**
  * Retrieves the index of the co-ordinate in the path variable
  */
@@ -297,6 +317,11 @@ World.prototype.addTerrainToPath = function(terrain) {
         var path = this.pathway[i];
         this.terrainMap[path] = terrain;
     }
+    this.newCells.forEach(function(cell) {
+        if (cell.agentsAllowed) {
+            cell.terrain = terrain;
+        }
+    })
 };
 /**
  * Adds a particular terrain to the background
@@ -308,21 +333,11 @@ World.prototype.addTerrainToBackground = function(terrain) {
 
 // Cell functions
 /**
- *
- */
-World.prototype.getCells = function() { return this.cells; };
-/**
  * 
  * @param x
  * @param y
  */
 World.prototype.getCell = function(x, y) { return this.cells[[x, y]]; };
-
-/**
- *
- * @param cells
- */
-World.prototype.setCells = function(cells) { this.cells = cells; };
 /**
  * 
  * @param x
@@ -349,124 +364,89 @@ World.prototype.assignCells = function() {
     }
 };
 
+
 // Object functions
+World.prototype.indexify = function(x, y) {
+    return y * this.cellsAcross + x;
+};
+World.prototype.getNewCell = function(x, y) {
+    return this.newCells[this.indexify(x, y)];
+};
 World.prototype.initContentMap = function() {
-    this.contentMap = {};
     for (var i = 0; i < this.cellsAcross; i++) {
         for (var j = 0; j < this.cellsDown; j++) {
-            this.addNewContentToMap(i, j);
+            this.newCells[this.indexify(i, j)] = new Cell(i, j);
         }
     }
     this.updateContentMap();
 };
 World.prototype.addNewContentToMap = function(x, y) {
-    var contents = {};
-    contents.resources = [];
-    contents.agents = [];
-    this.contentMap[[x, y]] = contents;
+    this.newCells[this.indexify(x, y)] = new Cell(x, y);
 }
-
 World.prototype.updateContentMap = function() {
     for (var i = 0; i < this.resources.length; i++) {
         var resource = this.resources[i];
         var x = resource.x, y = resource.y;
-        var contents = this.contentMap[[x, y]];
-        contents.resources.push(resource);
+        var cell = this.newCells[this.indexify(x, y)];
+        if (!_.isUndefined(cell))
+            cell.resources.push(resource);
     }
     for (var i = 0; i < this.currentAgents.length; i++) {
         var agent = this.currentAgents[i];
         var x = agent.x, y = agent.y;
-        var contents = this.contentMap[[x, y]];
-        contents.agents.push(agent);
+        var cell = this.newCells[this.indexify(x, y)];
+        if (!_.isUndefined(cell))
+            cell.agents.push(resource);
     }
 };
 World.prototype.addResourceToContentMap = function(resource) {
     var x = resource.x, y = resource.y;
-    var contents = this.contentMap[[x, y]];
-    contents.resources.push(resource);
+    var cell = this.newCells[this.indexify(x, y)];
+    if (!_.isUndefined(cell))
+        cell.resources.push(resource);
 };
 World.prototype.removeResourceFromContentMap = function(resource) {
     var x = resource.x, y = resource.y;
-    var contents = this.contentMap[[x, y]];
-    var foundIndex = -1;
-    for (var i = 0; i < contents.resources.length; i++) {
-        var r = contents.resources[i];
-        if (r == resource)
-            foundIndex = i;
-    }
-    if (foundIndex > -1)
-        contents.resources.splice(foundIndex, 1);
+    var cell = this.getNewCell(x, y);
+    var index = _.indexOf(cell.resources, resource);
+    if (!_.isUndefined(cell))
+        cell.resources.splice(index, 1);
 };
 World.prototype.removeAllResourcesFromContentMap = function() {
-    for (var i = 0; i < this.cellsAcross; i++) {
-        for (var j = 0; j < this.cellsDown; j++) {
-            var content = this.contentMap[[i, j]];
-            if (typeof(content) !== 'undefined')
-                content.resources = [];
-        }
-    }
-};
-World.prototype.changeResourceInContentMap = function(resource, lastX, lastY) {
-    var x = resource.x, y = resource.y;
-    var lastContents = this.contentMap[[lastX, lastX]];
-    var foundIndex = -1;
-    for (var i = 0; i < lastContents.resource.length; i++) {
-        var r = lastContents.resource[i];
-        if (r == resource)
-            foundIndex = i;
-    }
-    if (foundIndex > -1)
-        lastContents.resources.splice(foundIndex, 1);
-
-    this.addResourceToContentMap(resource);
+    this.newCells.forEach(function(cell) { cell.resources = []});
 };
 World.prototype.getResourcesAtContentMap = function(x, y) {
-    return this.contentMap[[x, y]].resources;
+    return this.newCells[this.indexify(x, y)].resources;
 };
 World.prototype.addAgentToContentMap = function(agent) {
     var x = agent.x, y = agent.y;
-    var contents = this.contentMap[[x, y]];
-    contents.agents.push(agent);
+    var cell = this.newCells[this.indexify(x, y)];
+    if (!_.isUndefined(cell))
+        cell.agents.push(agent);
 };
 World.prototype.removeAgentFromContentMap = function(agent) {
     var x = agent.x, y = agent.y;
-    var contents = this.contentMap[[x, y]];
-    var foundIndex = -1;
-    for (var i = 0; i < contents.agents.length; i++) {
-        var a = contents.agents[i];
-        if (a == agent)
-            foundIndex = i;
-    }
-    if (foundIndex > -1)
-        contents.agents.splice(foundIndex, 1);
+    var cell = this.getNewCell(x, y);
+    var index = _.indexOf(cell.agents, agent);
+    if (!_.isUndefined(cell))
+        cell.agents.splice(index, 1);
 };
 World.prototype.changeAgentInContentMap = function(agent, lastX, lastY) {
     var x = agent.x, y = agent.y;
-    if (typeof(lastX) !== 'undefined' && typeof(lastY) !== 'undefined') {
-        var lastContents = this.contentMap[[lastX, lastY]];
-        var foundIndex = -1;
-        for (var i = 0; i < lastContents.agents.length; i++) {
-            var a = lastContents.agents[i];
-            if (a == agent)
-                foundIndex = i;
-        }
-        if (foundIndex > -1)
-            lastContents.agents.splice(foundIndex, 1);
+    if (!_.isUndefined(lastX) && !_.isUndefined(lastY)) {
+        var cell = this.getNewCell(lastX, lastY);
+        var index = _.indexOf(cell.agents, agent);
+        if (!_.isUndefined(cell))
+            cell.agents.splice(index, 1);
     }
 
     this.addAgentToContentMap(agent);
 };
 World.prototype.removeAllAgentsFromContentMap = function() {
-    for (var i = 0; i < this.cellsAcross; i++) {
-        for (var j = 0; j < this.cellsDown; j++) {
-            var content = this.contentMap[[i, j]];
-            if (typeof(content) !== 'undefined')
-                content.agents = [];
-        }
-    }
+    this.newCells.forEach(function(cell) { cell.agents = []});
 };
 World.prototype.getAgentsAtContentMap = function(x, y) {
-    return this.contentMap[[x, y]].agents;
+    return this.newCells[this.indexify(x, y)].agents;
 };
 
 
@@ -477,16 +457,25 @@ World.prototype.getAgentsAtContentMap = function(x, y) {
  * @param y
  */
 World.prototype.addEntryPoint = function(x, y) {
-    if (!this.isEntryOrExitPoint(x, y))
-        this.entryPoints.push([x, y]);
+    var cell = this.getNewCell(x, y);
+    if (!_.isUndefined(cell))
+        cell.isEntryPoint = true;
 };
-
+World.prototype.getEntryPoints = function() {
+    var entryPoints = [];
+    this.newCells.forEach(function(cell) {
+        if (cell.isEntryPoint)
+            entryPoints.push(cell);
+    });
+    return entryPoints;
+};
 /**
  * Resets the entry point collection, leaving only one entry point at co-ordinate (0. 0)
  */
 World.prototype.resetEntryPoints = function() {
-    this.entryPoints = [];
-    this.addEntryPoint(0, 0);
+    this.newCells.forEach(function(cell) {
+        cell.isEntryPoint = false;
+    });
 };
 /**
  * Removes an entry point at the given co-ordinate
@@ -494,20 +483,8 @@ World.prototype.resetEntryPoints = function() {
  * @param y
  */
 World.prototype.removeEntryPoint = function(x, y) {
-    var position = -1;
-    for (var i = 0; i < this.entryPoints.length; i++) {
-        var point = this.entryPoints[i];
-        if (point[0] == x && point[1] == y)
-            position = i;
-    }
-    if (position > -1) {
-        this.entryPoints.splice(position, 1);
-    }
+    this.getNewCell(x, y).isEntryPoint = false;
 };
-/**
- * Gets the first entry point
- */
-World.prototype.getFirstEntryPoint = function() { return this.entryPoints[0]; };
 
 // Exit point functions
 /**
@@ -516,13 +493,7 @@ World.prototype.getFirstEntryPoint = function() { return this.entryPoints[0]; };
  * @param y
  */
 World.prototype.isExitPoint = function(x, y) {
-    for (var i = 0; i < this.exitPoints.length; i++) {
-        var point = this.exitPoints[i];
-        if (point[0] == x && point[1]== y) {
-            return true;
-        }
-    }
-    return false;
+    return this.getNewCell(x, y).isExitPoint;
 };
 /**
  *
@@ -530,22 +501,17 @@ World.prototype.isExitPoint = function(x, y) {
  * @param y
  */
 World.prototype.addExitPoint = function(x, y) {
-    var found = false;
-    for (var i = 0; i < this.exitPoints.length; i++) {
-        var point = this.exitPoints[i];
-        if (point[0] == x && point[1]== y) {
-            found = true;
-            break;
-        }
-    }
-    if (!found)
-        this.exitPoints.push([x, y]);
+    var cell = this.getNewCell(x, y);
+    if (!_.isUndefined(cell))
+        cell.isExitPoint = true;
 };
 /**
  *
  */
 World.prototype.resetExitPoints = function() {
-    this.exitPoints = [];
+    this.newCells.forEach(function(cell) {
+        cell.isExitPoint = false;
+    });
 };
 /**
  *
@@ -553,15 +519,15 @@ World.prototype.resetExitPoints = function() {
  * @param y
  */
 World.prototype.removeExitPoint = function(x, y) {
-    var position = -1;
-    for (var i = 0; i < this.exitPoints.length; i++) {
-        var point = this.exitPoints[i];
-        if (point[0] == x && point[1] == y)
-            position = i;
-    }
-    if (position > -1) {
-        this.exitPoints.splice(position, 1);
-    }
+    this.getNewCell(x, y).isExitPoint = false;
+};
+World.prototype.getExitPoints = function() {
+    var exitPoints = [];
+    this.newCells.forEach(function(cell) {
+        if (cell.isExitPoint)
+            exitPoints.push(cell);
+    });
+    return exitPoints;
 };
 
 /**
@@ -570,18 +536,9 @@ World.prototype.removeExitPoint = function(x, y) {
  * @param y
  */
 World.prototype.isEntryOrExitPoint = function(x, y) {
-    for (var i = 0, l = this.entryPoints.length; i < l; i++) {
-        var point = this.entryPoints[i];
-        if (point[0] == x && point[1]== y) {
-            return true;
-        }
-    }
-    for (var i = 0, l = this.exitPoints.length; i < l; i++) {
-        var point = this.exitPoints[i];
-        if (point[0] == x && point[1]== y) {
-            return true;
-        }
-    }
+    var cell = this.getNewCell(x, y);
+    if (!_.isUndefined(cell))
+        return (cell.isEntryPoint || cell.isExitPoint);
     return false;
 };
 
@@ -589,16 +546,14 @@ World.prototype.isEntryOrExitPoint = function(x, y) {
 // Agent functions
 
 /**
- * Adds an agent to the world agent collection
- * @param agent
+ * Retrieves current agents - will filter if a filter agent is available (requires Underscore to be loaded)
  */
-World.prototype.addWorldAgent = function(agent) { this.worldAgents.push(agent); };
-
-/**
- * Adds an agent to the wave agent collection
-  * @param agent
- */
-World.prototype.addWaveAgent = function(agent) { this.waveAgents.push(agent); };
+World.prototype.getCurrentAgents = function() {
+    if (typeof(_) === 'undefined' || _.isUndefined(this.currentAgentsFunction))
+        return this.currentAgents;
+    else
+        return _.filter(this.currentAgents, this.currentAgentsFunction);
+};
 
 /**
  * Sets the current agent collection, and adds agents to a map
@@ -612,7 +567,6 @@ World.prototype.setCurrentAgents = function(currentAgents) {
         this.addAgentToContentMap(agent);
     }
 };
-World.prototype.getAgentByID = function(agentID) { return this.currentAgentsMap[agentID]; };
 
 /**
  * Add expired agent
@@ -668,20 +622,17 @@ World.prototype.generateAgents = function(culture, number) {
         }
     }
     else {
-        for (var j = 0; j < this.entryPoints.length; j++) {
-            var point = this.entryPoints[j];
-            var x = point[0];
-            var y = point[1];
+        var entryPoints = this.getEntryPoints();
+        for (var j = 0; j < entryPoints.length; j++) {
+            var point = entryPoints[j];
+            var x = point.x;
+            var y = point.y;
             for (var i = 0; i < number; i ++) {
                 var agent = this.generateAgentAtPoint(culture, x, y, j);
                 agents.push(agent);
             }
         }
     }
-    /*
-    $.merge(agents, this.generateWaveAgents(number));
-    $.merge(agents, this.worldAgents);
-    */
 
     this.setCurrentAgents(agents);
 	return agents;
@@ -719,21 +670,6 @@ World.prototype.generateAgentAtPoint = function(culture, x, y, j) {
 }
 
 /**
- *
- * @param numAgents
- */
-World.prototype.generateWaveAgents = function(numAgents) {
-    var newAgents = [];
-    for (var j = 0; j < numAgents; j++) {
-        for (var i = 0; i < this.waveAgents.length; i++) {
-            var waveAgent = this.waveAgents[i];
-            newAgents.push(new Agent(waveAgent.culture, waveAgent.x, waveAgent.y));
-        }
-    }
-    return newAgents;
-};
-
-/**
  * Indicates total number of agents saveable on this world
  */
 World.prototype.getTotalSaveableAgents = function () {
@@ -742,7 +678,7 @@ World.prototype.getTotalSaveableAgents = function () {
     var minor = (firstWave * (firstWave - 1)) / 2;
     var major = (lastWave * (lastWave + 1)) / 2;
     var saveablePerEntryPoint = major - minor;
-    var totalSaveable = saveablePerEntryPoint * this.entryPoints.length;
+    var totalSaveable = saveablePerEntryPoint * this.getEntryPoints().length;
     return totalSaveable;
 };
 
@@ -1136,8 +1072,6 @@ World.prototype.initialiseWaves = function(waveNumber) {
 World.prototype.pointDistance = function(x, y, ex, ey) {
     return Math.abs(ex - x) + Math.abs(ey - y);
 };
-
-
 World.prototype.meanDistance = function (cell, goal){
     var x = cell[0], y = cell[1];
     var gx = goal[0], gy = goal[1];
@@ -1146,9 +1080,14 @@ World.prototype.meanDistance = function (cell, goal){
 World.prototype.isSameCell = function (c1, c2){
     return (c1 && c2 && c1[0] == c2[0] && c1[1] == c2[1])
 };
-World.prototype.isCell = function (cell){
+World.prototype.isCellOld = function (cell){
     var x = cell[0], y = cell[1];
     return (this.getCell(x, y) == undefined);
+};
+World.prototype.areAgentsAllowed = function (point){
+    var x = point[0], y = point[1];
+    var cell = this.getNewCell(x, y);
+    return cell.agentsAllowed;
 };
 World.prototype.isInHistory = function (cell, history){
     for (var i = 0, l = history.length; i < l; i++) {

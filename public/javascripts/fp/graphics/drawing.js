@@ -245,10 +245,11 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         ctx.translate(midTilePosX, midTilePosY);
         ctx.rotate(FiercePlanet.Orientation.rotationAngle);
 
-        for (var i = 0; i < Lifecycle.currentWorld.exitPoints.length; i++) {
-            var point = Lifecycle.currentWorld.exitPoints[i];
-            var xPos = point[0];
-            var yPos = point[1];
+        var exitPoints = Lifecycle.currentWorld.getExitPoints();
+        for (var i = 0; i < exitPoints.length; i++) {
+            var point = exitPoints[i];
+            var xPos = point.x;
+            var yPos = point.y;
             var x = xPos * FiercePlanet.Orientation.cellWidth + FiercePlanet.Orientation.cellWidth / 2;
             var y = yPos * FiercePlanet.Orientation.cellHeight + FiercePlanet.Orientation.cellHeight / 2;
             if ((Universe.settings.skewTiles || Lifecycle.currentWorld.isometric)) {
@@ -300,14 +301,15 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         ctx.translate(midTilePosX, midTilePosY);
         ctx.rotate(FiercePlanet.Orientation.rotationAngle);
 
-        for (var i = 0; i < Lifecycle.currentWorld.entryPoints.length; i++) {
-            var point = Lifecycle.currentWorld.entryPoints[i];
-            var xPos = point[0];
-            var yPos = point[1];
+        var entryPoints = Lifecycle.currentWorld.getEntryPoints();
+        for (var i = 0; i < entryPoints.length; i++) {
+            var cell = entryPoints[i];
+            var xPos = cell.x;
+            var yPos = cell.y;
             var x = xPos * FiercePlanet.Orientation.cellWidth + FiercePlanet.Orientation.cellWidth / 2;
             var y = yPos * FiercePlanet.Orientation.cellHeight + FiercePlanet.Orientation.cellHeight / 2;
             if ((Universe.settings.skewTiles || Lifecycle.currentWorld.isometric)) {
-                var newOrigin = FiercePlanet.Isometric.doIsometricOffset(point[0], point[1]);
+                var newOrigin = FiercePlanet.Isometric.doIsometricOffset(cell[0], cell[1]);
                 x = newOrigin.x + FiercePlanet.Orientation.cellWidth / 2;
                 y = newOrigin.y + FiercePlanet.Orientation.cellHeight / 2;
             }

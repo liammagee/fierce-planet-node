@@ -18,8 +18,6 @@ describe("level-related classes", function() {
         expect(level.noSpeedChange).toBeFalsy();
         
         expect(level.tiles).toEqual([]);
-        expect(level.levelAgents).toEqual([]);
-        expect(level.waveAgents).toEqual([]);
         expect(level.currentAgents).toEqual([]);
         expect(level.cells).toEqual([]);
         expect(level.resources).toEqual([]);
@@ -49,37 +47,16 @@ describe("level-related classes", function() {
                 expect(level.tiles.length).toEqual(100);
             });
 
-            it("should have a cell at various co-ordinates between [0, 0] and [9, 9]", function() {
-                for (var i = 0; i < level.worldWidth; i++) {
-                    for (var j = 0; j < level.worldHeight; j++) {
-                        expect(level.getCell(i, j)).toBeDefined();
-                    }
-                }
-                expect(level.getCell(-1, -1)).toBeUndefined();
-                expect(level.getCell(level.worldWidth, level.worldHeight)).toBeUndefined();
-            });
-
-            it("should have surrounding tiles", function() {
-                var surroundingTiles = level.getSurroundingTiles(5, 5);
-                expect(surroundingTiles.length).toEqual(4);
-                surroundingTiles = level.getSurroundingTiles(0, 0);
-                expect(surroundingTiles.length).toEqual(2);
-                surroundingTiles = level.getSurroundingTiles(9, 9);
-                expect(surroundingTiles.length).toEqual(2);
-            });
-
             it("should be possible to set the entire tile collection", function() {
                 var tiles = level.tiles;
                 // At co-ordinate [0, 9]
                 tiles.splice(0, 1);
                 level.setTiles(tiles);
                 expect(level.tiles.length).toEqual(99);
-                expect(level.getCell(0, 0)).toBeUndefined();
 
                 tiles.splice(9, 1);
                 level.setTiles(tiles);
                 expect(level.tiles.length).toEqual(98);
-                expect(level.getCell(0, 1)).toBeUndefined();
             });
 
             describe("removing one tile", function() {
@@ -90,10 +67,6 @@ describe("level-related classes", function() {
                 it("should have same number of tiles, but tile at this co-ordinate should be undefined", function() {
                     expect(level.tiles.length).toEqual(100);
                     expect(level.getTile(5, 5)).toBeUndefined();
-                });
-
-                it("should not have a result at the corresponding co-ordinate", function() {
-                    expect(level.getCell(5, 5)).toBeUndefined();
                 });
 
                 it("should have a path corresponding to the removed tiles", function() {
@@ -112,9 +85,6 @@ describe("level-related classes", function() {
                         expect(level.getTile(5, 5)).toBeDefined();
                     });
 
-                    it("should have a result at the corresponding co-ordinate", function() {
-                        expect(level.getCell(5, 5)).toBeDefined();
-                    });
                 });
 
                 describe("adding a tile object", function() {
@@ -125,10 +95,6 @@ describe("level-related classes", function() {
                     it("should have 1 move tile", function() {
                         expect(level.tiles.length).toEqual(100);
                         expect(level.getTile(5, 5)).toBeDefined();
-                    });
-
-                    it("should have a result at the corresponding co-ordinate", function() {
-                        expect(level.getCell(5, 5)).toBeDefined();
                     });
                 });
             });
@@ -145,11 +111,6 @@ describe("level-related classes", function() {
                     expect(level.getTile(9, 9)).toBeUndefined();
                 });
 
-                it("should not have a result at the corresponding co-ordinate", function() {
-                    expect(level.getCell(0, 0)).toBeUndefined();
-                    expect(level.getCell(5, 5)).toBeUndefined();
-                    expect(level.getCell(9, 9)).toBeUndefined();
-                });
 
                 it("should have a path corresponding to the removed tiles", function() {
                     var path = level.pathway;
@@ -172,13 +133,6 @@ describe("level-related classes", function() {
                     expect(level.getTile(0, 5)).toBeDefined();
                 });
 
-                it("should not have a result at the corresponding co-ordinate", function() {
-                    expect(level.getCell(0, 0)).toBeDefined();
-                    expect(level.getCell(0, 2)).toBeUndefined();
-                    expect(level.getCell(9, 4)).toBeUndefined();
-                    expect(level.getCell(0, 5)).toBeDefined();
-                });
-
                 it("should have a path corresponding to the removed tiles", function() {
                     var path = level.pathway;
                     expect(path.length).toEqual(30);
@@ -194,10 +148,6 @@ describe("level-related classes", function() {
                     it("should have 1 move tile", function() {
                         expect(level.tiles.length).toEqual(100);
                         expect(level.getTile(0, 2)).toBeDefined();
-                    });
-
-                    it("should have a result at the corresponding co-ordinate", function() {
-                        expect(level.getCell(0, 2)).toBeDefined();
                     });
                 });
             });
@@ -218,7 +168,6 @@ describe("level-related classes", function() {
             it("should have an entry point", function() {
                 expect(level.entryPoints.length).toEqual(1);
                 expect(level.entryPoints[0]).toEqual([0, 0]);
-                expect(level.getFirstEntryPoint()).toEqual([0, 0]);
             });
 
             describe("removing entry points", function() {
@@ -229,7 +178,6 @@ describe("level-related classes", function() {
                 it("should have no entry points", function() {
                     expect(level.entryPoints.length).toEqual(0);
                     expect(level.entryPoints[0]).toBeUndefined();
-                    expect(level.getFirstEntryPoint()).toBeUndefined();
                 });
             });
 
@@ -241,7 +189,6 @@ describe("level-related classes", function() {
                 it("should have just one entry point", function() {
                     expect(level.entryPoints.length).toEqual(1);
                     expect(level.entryPoints[0]).toEqual([0, 0]);
-                    expect(level.getFirstEntryPoint()).toEqual([0, 0]);
                 });
             });
 
@@ -253,7 +200,6 @@ describe("level-related classes", function() {
                 it("should have just one entry point", function() {
                     expect(level.entryPoints.length).toEqual(1);
                     expect(level.entryPoints[0]).toEqual([0, 0]);
-                    expect(level.getFirstEntryPoint()).toEqual([0, 0]);
                 });
             });
 
@@ -266,7 +212,6 @@ describe("level-related classes", function() {
                     expect(level.entryPoints.length).toEqual(2);
                     expect(level.entryPoints[0]).toEqual([0, 0]);
                     expect(level.entryPoints[1]).toEqual([9, 9]);
-                    expect(level.getFirstEntryPoint()).toEqual([0, 0]);
                 });
             });
 
@@ -279,7 +224,6 @@ describe("level-related classes", function() {
                 it("should have just one entry point", function() {
                     expect(level.entryPoints.length).toEqual(1);
                     expect(level.entryPoints[0]).toEqual([0, 0]);
-                    expect(level.getFirstEntryPoint()).toEqual([0, 0]);
                 });
             });
 
@@ -587,11 +531,6 @@ describe("level-related classes", function() {
             expect(level.currentAgents.length).toEqual(10);
         });
 
-        it("should retrieve an agent by an ID", function() {
-            var agent = level.currentAgents[0];
-            expect(level.getAgentByID(agent.id)).toEqual(agent);
-        });
-
         it("should calculate the correct number of total saveable agents", function() {
             expect(level.getTotalSaveableAgents()).toEqual(55);
         });
@@ -606,18 +545,6 @@ describe("level-related classes", function() {
             it("should add a level agent to the current agents", function() {
                 expect(level.levelAgents.length).toEqual(1);
                 expect(level.currentAgents.length).toEqual(11);
-            });
-        });
-
-        describe("handling wave agents", function() {
-            beforeEach(function() {
-                level.addWaveAgent(new Agent(Universe.cultures[0], 0, 0));
-                level.generateAgents(Universe.cultures[0], 10);
-            });
-
-            it("should add a set of wave agent to the current agents", function() {
-                expect(level.waveAgents.length).toEqual(1);
-                expect(level.currentAgents.length).toEqual(20);
             });
         });
 
@@ -658,17 +585,6 @@ describe("level-related classes", function() {
                 });
             });
 
-            describe("handling wave agents", function() {
-                beforeEach(function() {
-                    level.addWaveAgent(new Agent(Universe.cultures[0], 0, 0));
-                });
-
-                it("should add only one set of wave agent to the current agents", function() {
-                    level.generateAgents(Universe.cultures[0], 10);
-                    expect(level.waveAgents.length).toEqual(1);
-                    expect(level.currentAgents.length).toEqual(30);
-                });
-            });
         });
 
 
