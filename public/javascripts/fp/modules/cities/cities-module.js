@@ -120,7 +120,7 @@ var CitiesModule = CitiesModule || {};
                     var positions = world.getMooreNeighbourhood(x, y, true);
                     var totalPotential = 0, counter = 0;
                     positions.forEach(function(position) {
-                        var agents = world.getAgentsAtContentMap(position.x, position.y);
+                        var agents = world.getAgentsAtCell(position.x, position.y);
                         if (agents && agents.length > 0) {
                             counter++;
                             var agent = agents[0];
@@ -195,7 +195,7 @@ var CitiesModule = CitiesModule || {};
                     var positions = world.getVonNeumannNeighbourhood(x, y, true);
                     var totalPotential = 0, counter = 0;
                     positions.forEach(function(position) {
-                        var agents = world.getAgentsAtContentMap(position.x, position.y);
+                        var agents = world.getAgentsAtCell(position.x, position.y);
                         if (agents && agents.length > 0) {
                             counter++;
                             var agent = agents[0];

@@ -198,7 +198,7 @@ function Agent(culture, x, y) {
         var lastX = this.x, lastY = this.y;
         this.x = x; this.y = y;
         this.incrementMoves();
-        Lifecycle.currentWorld.changeAgentInContentMap(this, lastX, lastY);
+        Lifecycle.currentWorld.changeAgentInCell(this, lastX, lastY);
     };
 
     /**

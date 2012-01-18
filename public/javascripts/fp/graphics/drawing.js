@@ -86,49 +86,13 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
     };
 
     /**
-     * Draws all the tiles on the map
-     */
-    this.drawTiles = function() {
-        var tiles = Lifecycle.currentWorld.tiles;
-        for (var i = 0; i < tiles.length; i += 1) {
-            if (tiles[i] != undefined)
-                this.drawTile(tiles[i]);
-        }
-    };
-
-    /**
-     * Draws a tile
-     * @param tile
-     */
-    this.drawTile = function(tile) {
-        var canvas = $('#baseCanvas')[0];
-        var ctx = canvas.getContext('2d');
-    
-        var x = tile.x * FiercePlanet.Orientation.cellWidth;
-        var y = tile.y * FiercePlanet.Orientation.cellHeight;
-        ctx.clearRect(x + 1, y + 1, FiercePlanet.Orientation.cellWidth - 1, FiercePlanet.Orientation.cellHeight - 1);
-        if (tile.y == 0 || Lifecycle.currentWorld.getTile(tile.x, tile.y - 1) == undefined) {
-            var my_gradient = ctx.createLinearGradient(x, y, x, y + FiercePlanet.Orientation.cellHeight / 4);
-            my_gradient.addColorStop(0, "#060");
-            my_gradient.addColorStop(1, "#" + tile.color);
-            ctx.fillStyle = my_gradient;
-        }
-        else {
-            ctx.fillStyle = "#" + tile.color;
-        }
-        ctx.fillRect(x, y, FiercePlanet.Orientation.cellWidth, FiercePlanet.Orientation.cellHeight);
-        ctx.strokeStyle = "#fff";
-        ctx.strokeRect(x, y, FiercePlanet.Orientation.cellWidth, FiercePlanet.Orientation.cellHeight);
-    };
-    
-    /**
      * Draws the current world path
      */
     this.drawPath = function(altCanvasName) {
         var canvasName = altCanvasName || '#baseCanvas';
         var canvas = $(canvasName)[0];
         var ctx = canvas.getContext('2d');
-        var pathTiles = Lifecycle.currentWorld.pathway;
+        var pathCells = Lifecycle.currentWorld.pathway;
 
         // Rotation logic here - TODO: Refactor out
         var midTilePosX = FiercePlanet.Orientation.halfWorldWidth;
@@ -137,15 +101,15 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         ctx.translate(midTilePosX, midTilePosY);
         ctx.rotate(FiercePlanet.Orientation.rotationAngle);
 
-        for (var i = 0; i < pathTiles.length; i += 1) {
-            var pathTile = pathTiles[i];
+        for (var i = 0; i < pathCells.length; i += 1) {
+            var pathTile = pathCells[i];
 
             var xPos = pathTile[0];
             var yPos = pathTile[1];
             var x = xPos * FiercePlanet.Orientation.cellWidth;
             var y = yPos * FiercePlanet.Orientation.cellHeight;
 
-            var terrain = Lifecycle.currentWorld.terrainMap[pathTile];
+            var terrain = Lifecycle.currentWorld.getCell(xPos, yPos).terrain;
             var pathColor = terrain ? this.insertAlpha(terrain.color, terrain.alpha) : "#000";
 
             if ((Universe.settings.skewTiles || Lifecycle.currentWorld.isometric)) {
@@ -171,7 +135,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
                 y = y - FiercePlanet.Orientation.halfWorldHeight;
 
                 if (!Universe.settings.hidePath) {
-                    if (yPos == 0 || Lifecycle.currentWorld.getTile(xPos, yPos - 1) != undefined) {
+                    if (yPos == 0 || !Lifecycle.currentWorld.areAgentsAllowed(xPos, yPos - 1)) {
                         var my_gradient = ctx.createLinearGradient(x, y, x, y + FiercePlanet.Orientation.cellHeight / 4);
                         my_gradient.addColorStop(0, "#ccc");
                         my_gradient.addColorStop(1, pathColor);
@@ -180,6 +144,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
                     else {
                         ctx.fillStyle = pathColor;
                     }
+                    console.log(pathColor)
                     ctx.fillRect(x, y, FiercePlanet.Orientation.cellWidth, FiercePlanet.Orientation.cellHeight);
                 }
                 if (!Universe.settings.hidePathBorder) {
@@ -1720,7 +1685,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         if (xPos < 0 || xPos >= FiercePlanet.Orientation.cellsAcross || yPos < 0 || yPos >= FiercePlanet.Orientation.cellsDown)
             return;
 
-        if (Lifecycle.currentWorld.isInPath(xPos, yPos) > -1)
+        if (Lifecycle.currentWorld.getCell(xPos, yPos).agentsAllowed && !Universe.settings.allowResourcesOnPath)
             return;
 
         var scrollingCanvas = $('#guideCanvas')[0];

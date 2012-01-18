@@ -23,8 +23,8 @@ function World() {
     this.initWorld = function() {
         this.setCurrentAgents([]);
         this.expiredAgents = [];
+        this.initialiseCells();
         this.generatePath();
-        this.initContentMap();
         this.waves = undefined;
         this.resetResources();
         if (this.catastrophe != undefined)
@@ -43,6 +43,7 @@ function World() {
 
     // Dimensions
     this.cellsAcross = 10, this.cellsDown = 10;
+    this.cells = [];
 
 	// Game parameters
     this.isPresetWorld = false, this.isTerminalWorld = false, this.customWorld = false;
@@ -81,12 +82,6 @@ function World() {
     // Resource variables
     this.worldResources = [], this.resources = [], this.resourceCategoryCounts = [];
 
-    /** Object for storing tiles, resources and other world entities for co-ordinate based look-up */
-    this.cells = {};
-    this.terrainMap = {};
-    this.tiles = [];
-    this.newCells = [];
-
     // User interface elements
     this.tip = null, this.catastrophe = null;
     this.introduction = "Welcome to world " + this.id + ".";
@@ -95,7 +90,6 @@ function World() {
     // Google map, image and sound options
     this.backgroundTerrain = null, this.mapOptions = null, this.mapURL = null;
     this.thumbnail = undefined, this.image = null, this.imageAttribution = null, this.soundSrc = null;
-
 }
 
 
@@ -105,155 +99,53 @@ function World() {
  * @param x
  * @param y
  */
-World.prototype.getTile = function(x, y) {
-    // New - TODO: Check
-    var cell = this.getNewCell(x, y);
-    return cell.agentsAllowed;
-    // Old
-//    var tilePosition = y * this.cellsAcross + x;
-//    return this.tiles[tilePosition];
+World.prototype.areAgentsAllowed = function(x, y) {
+    return this.getCell(x, y).agentsAllowed;
 };
 /**
  * 
- * @param tiles
+ * @param cellPositions
  */
-World.prototype.setTiles = function(tiles) {
-    // New
-    tiles.forEach(function(tile) {
-        var cell = this.getNewCell(tile.x, tile.y);
+World.prototype.allowAgentsOnCellPositions = function(cellPositions) {
+    var world = this;
+    var liveCellPositions = _.compact(cellPositions);
+    liveCellPositions.forEach(function(cellPosition) {
+        var cell = world.getCell(cellPosition.x, cellPosition.y);
         if (!_.isUndefined(cell)) {
             cell.agentsAllowed = false;
         }
     })
-    // Old
-    this.tiles = tiles;
     this.generatePath();
-    this.assignCells();
 };
-/**
- *
- * @param tile
- */
-World.prototype.addTile = function(tile) {
-    // New
-    var cell = this.getNewCell(tile.x, tile.y);
+World.prototype.forbidAgentOnCell = function(x, y) {
+    var cell = this.getCell(x, y);
     if (!_.isUndefined(cell)) {
         cell.agentsAllowed = false;
+        cell.isEntryPoint = false;
+        cell.isExitPoint = false;
     }
-    // Old
-    var position = tile.y * this.cellsAcross + tile.x;
-    if (this.tiles[position] != undefined)
-        throw new Error("Tile is already occupied!");
-    this.tiles[position] = tile;
-    this.removeEntryPoint(tile.x, tile.y);
-    this.removeExitPoint(tile.x, tile.y);
-    this.removeFromPath(tile.x, tile.y);
-    this.addCell(tile.x, tile.y, tile);
 };
 
-/**
- *
- * @param x
- * @param y
- */
-World.prototype.addDefaultTile = function(x, y) {
-    this.addTile(new Tile(DEFAULT_TILE_COLOR, x, y));
+World.prototype.forbidAgentsOnAllCells = function() {
+    this.cells.forEach(function(cell) { cell.agentsAllowed = false;})
+    this.generatePath();
 };
-/**
- * 
- * @param x
- * @param y
- */
-World.prototype.removeTile = function(x, y) {
-    // New
-    var cell = this.getNewCell(x, y);
-    if (!_.isUndefined(cell))
+
+World.prototype.allowAgentsOnAllCells = function() {
+    this.cells.forEach(function(cell) { cell.agentsAllowed = true;})
+    this.generatePath();
+};
+World.prototype.allowAgentsOnCellRange = function(start, number) {
+    for (var i = start; i < start + number; i++) {
+        var cell = this.cells[i];
         cell.agentsAllowed = true;
-    // Old
-    var tilePosition = y * this.cellsAcross + x;
-    this.tiles[tilePosition] = undefined;
-    // This fails when trying to add back tile at this co-ordinate
-//    this.tiles.splice(tilePosition, 1);
-    this.annulCell(x, y);
-    this.addToPath(x, y);
-};
-
-/**
- * Fill all available cells with tiles
- */
-World.prototype.fillWithTiles = function() {
-    this.tiles = [];
-    for (var i = 0; i < this.cellsAcross; i++) {
-        for (var j = 0; j < this.cellsDown; j++) {
-            // New
-            var cell = this.getNewCell(i, j);
-            cell.agentsAllowed = false;
-            // Old
-            var tile = new Tile(DEFAULT_TILE_COLOR, j, i);
-            this.tiles.push(tile);
-            this.addCell(tile.x, tile.y, tile);
-        }
     }
     this.generatePath();
 };
-
-/**
- * Remove all tiles from the world
- */
-World.prototype.removeAllTiles = function() {
-//    this.tiles = [];
-//    this.cells = {};
-    for (var i = 0; i < this.cellsAcross; i++) {
-        for (var j = 0; j < this.cellsDown; j++) {
-            // New
-            var cell = this.getNewCell(i, j);
-            cell.agentsAllowed = true;
-            // Old
-            var tilePosition = j * this.cellsAcross + i;
-            this.tiles[tilePosition] = undefined;
-            this.annulCell(i, j);
-        }
-    }
-    this.generatePath();
-};
-/**
- *
- * @param start
- * @param number
- */
-World.prototype.removeTiles = function(start, number) {
+World.prototype.forbidAgentsOnCellRange = function(start, number) {
     for (var i = start; i < start + number; i++) {
-        if (i >= 0 && i < this.tiles.length) {
-            // New
-            var cell = this.cells[i];
-            cell.agentsAllowed = true;
-            // Old
-            var tile = this.tiles[i];
-            this.tiles[i] = undefined;
-            this.annulCell(tile.x, tile.y);
-        }
-    }
-    this.generatePath();
-};
-
-/**
- * Adds default tiles to all cells
- * @param start
- * @param number
- */
-World.prototype.addTiles = function(start, number) {
-    for (var i = start; i < start + number; i++) {
-        if (i >= 0 && i < this.tiles.length) {
-            // New
-            var cell = this.cells[i];
-            cell.agentsAllowed = false;
-            // Old
-            var x = i % this.cellsAcross;
-            var y = Math.floor(i / this.cellsAcross);
-            var tile = new Tile(DEFAULT_TILE_COLOR, x, y);
-            this.tiles[i] = tile;
-            this.addCell(tile.x, tile.y, tile);
-        }
+        var cell = this.cells[i];
+        cell.agentsAllowed = false;
     }
     this.generatePath();
 };
@@ -264,24 +156,16 @@ World.prototype.addTiles = function(start, number) {
 World.prototype.generatePath = function() {
     var pathCells = [];
     // New
-    cells.forEach(function(cell) {
+    this.cells.forEach(function(cell) {
         if (cell.agentsAllowed) {
-            pathCells.push(cell.x, cell.y);
+            pathCells.push([cell.x, cell.y]);
         }
     })
-    // Old
-    /*
-    for (var i = 0; i < this.cellsDown; i++) {
-        for (var j = 0; j < this.cellsAcross; j++) {
-            var tilePosition = i * this.cellsAcross + j;
-            if (_.isUndefined(this.tiles[tilePosition]))
-                pathCells.push([j, i]);
-        }
-    }
-    */
     this.pathway = pathCells;
     return pathCells;
 };
+
+
 /**
  * Retrieves the index of the co-ordinate in the path variable
  */
@@ -294,30 +178,17 @@ World.prototype.isInPath = function(x, y) {
     return -1;
 };
 /**
- * Add cell to path
- */
-World.prototype.addToPath = function(x, y) {
-    if (this.isInPath(x, y) == -1)
-        this.pathway.push([x, y]);
-};
-/**
  * Remove cell from path
  */
 World.prototype.removeFromPath = function(x, y) {
-    var index = this.isInPath(x, y);
-    if (index > -1)
+    if (this.getCell(x, y).agentsAllowed)
         this.pathway.splice(index, 1);
 };
 /**
  * Adds a particular terrain to all parts of the path
  */
 World.prototype.addTerrainToPath = function(terrain) {
-    this.terrainMap = {};
-    for (var i = 0, l = this.pathway.length; i < l; i++) {
-        var path = this.pathway[i];
-        this.terrainMap[path] = terrain;
-    }
-    this.newCells.forEach(function(cell) {
+    this.cells.forEach(function(cell) {
         if (cell.agentsAllowed) {
             cell.terrain = terrain;
         }
@@ -331,122 +202,88 @@ World.prototype.addTerrainToBackground = function(terrain) {
 };
 
 
-// Cell functions
-/**
- * 
- * @param x
- * @param y
- */
-World.prototype.getCell = function(x, y) { return this.cells[[x, y]]; };
-/**
- * 
- * @param x
- * @param y
- * @param value
- */
-World.prototype.addCell = function(x, y, value) {this.cells[[x, y]] = value;};
-/**
- *
- * @param x
- * @param y
- */
-World.prototype.annulCell = function(x, y) { this.cells[[x, y]] = undefined; };
-/**
- *
- */
-World.prototype.assignCells = function() {
-    this.cells = [];
-    for (var i = 0; i < this.tiles.length; i++) {
-        var tile = this.tiles[i];
-//        if (tile != undefined)
-        if (_.isUndefined(tile))
-            this.addCell(tile.x, tile.y, tile);
-    }
-};
-
-
 // Object functions
 World.prototype.indexify = function(x, y) {
     return y * this.cellsAcross + x;
 };
-World.prototype.getNewCell = function(x, y) {
-    return this.newCells[this.indexify(x, y)];
+World.prototype.getCell = function(x, y) {
+    return this.cells[this.indexify(x, y)];
 };
-World.prototype.initContentMap = function() {
+World.prototype.initialiseCells = function() {
     for (var i = 0; i < this.cellsAcross; i++) {
         for (var j = 0; j < this.cellsDown; j++) {
-            this.newCells[this.indexify(i, j)] = new Cell(i, j);
+            this.cells[this.indexify(i, j)] = new Cell(i, j);
         }
     }
-    this.updateContentMap();
+    this.updateCells();
 };
-World.prototype.addNewContentToMap = function(x, y) {
-    this.newCells[this.indexify(x, y)] = new Cell(x, y);
+World.prototype.addCellAtPoint = function(x, y) {
+    this.cells[this.indexify(x, y)] = new Cell(x, y);
 }
-World.prototype.updateContentMap = function() {
+World.prototype.updateCells = function() {
     for (var i = 0; i < this.resources.length; i++) {
         var resource = this.resources[i];
         var x = resource.x, y = resource.y;
-        var cell = this.newCells[this.indexify(x, y)];
+        var cell = this.cells[this.indexify(x, y)];
         if (!_.isUndefined(cell))
             cell.resources.push(resource);
     }
     for (var i = 0; i < this.currentAgents.length; i++) {
         var agent = this.currentAgents[i];
         var x = agent.x, y = agent.y;
-        var cell = this.newCells[this.indexify(x, y)];
+        var cell = this.cells[this.indexify(x, y)];
         if (!_.isUndefined(cell))
-            cell.agents.push(resource);
+            cell.agents.push(agent);
     }
 };
-World.prototype.addResourceToContentMap = function(resource) {
+World.prototype.addResourceToCell = function(resource) {
     var x = resource.x, y = resource.y;
-    var cell = this.newCells[this.indexify(x, y)];
+    var cell = this.cells[this.indexify(x, y)];
     if (!_.isUndefined(cell))
         cell.resources.push(resource);
 };
-World.prototype.removeResourceFromContentMap = function(resource) {
+World.prototype.removeResourceFromCell = function(resource) {
     var x = resource.x, y = resource.y;
-    var cell = this.getNewCell(x, y);
+    var cell = this.getCell(x, y);
     var index = _.indexOf(cell.resources, resource);
     if (!_.isUndefined(cell))
         cell.resources.splice(index, 1);
 };
-World.prototype.removeAllResourcesFromContentMap = function() {
-    this.newCells.forEach(function(cell) { cell.resources = []});
+World.prototype.removeAllResourcesFromCells = function() {
+    this.cells.forEach(function(cell) { cell.resources = []});
 };
-World.prototype.getResourcesAtContentMap = function(x, y) {
-    return this.newCells[this.indexify(x, y)].resources;
+World.prototype.getResourcesAtCell = function(x, y) {
+    return this.cells[this.indexify(x, y)].resources;
 };
-World.prototype.addAgentToContentMap = function(agent) {
+World.prototype.addAgentToCell = function(agent) {
     var x = agent.x, y = agent.y;
-    var cell = this.newCells[this.indexify(x, y)];
+    var cell = this.cells[this.indexify(x, y)];
     if (!_.isUndefined(cell))
         cell.agents.push(agent);
 };
-World.prototype.removeAgentFromContentMap = function(agent) {
+World.prototype.removeAgentFromCell = function(agent) {
     var x = agent.x, y = agent.y;
-    var cell = this.getNewCell(x, y);
+    var cell = this.getCell(x, y);
     var index = _.indexOf(cell.agents, agent);
     if (!_.isUndefined(cell))
         cell.agents.splice(index, 1);
 };
-World.prototype.changeAgentInContentMap = function(agent, lastX, lastY) {
+World.prototype.changeAgentInCell = function(agent, lastX, lastY) {
     var x = agent.x, y = agent.y;
     if (!_.isUndefined(lastX) && !_.isUndefined(lastY)) {
-        var cell = this.getNewCell(lastX, lastY);
+        var cell = this.getCell(lastX, lastY);
         var index = _.indexOf(cell.agents, agent);
         if (!_.isUndefined(cell))
             cell.agents.splice(index, 1);
     }
 
-    this.addAgentToContentMap(agent);
+    this.addAgentToCell(agent);
 };
-World.prototype.removeAllAgentsFromContentMap = function() {
-    this.newCells.forEach(function(cell) { cell.agents = []});
+World.prototype.removeAllAgentsFromCells = function() {
+    this.cells.forEach(function(cell) { cell.agents = []});
 };
-World.prototype.getAgentsAtContentMap = function(x, y) {
-    return this.newCells[this.indexify(x, y)].agents;
+World.prototype.getAgentsAtCell = function(x, y) {
+    return this.cells[this.indexify(x, y)].agents;
 };
 
 
@@ -457,13 +294,13 @@ World.prototype.getAgentsAtContentMap = function(x, y) {
  * @param y
  */
 World.prototype.addEntryPoint = function(x, y) {
-    var cell = this.getNewCell(x, y);
+    var cell = this.getCell(x, y);
     if (!_.isUndefined(cell))
         cell.isEntryPoint = true;
 };
 World.prototype.getEntryPoints = function() {
     var entryPoints = [];
-    this.newCells.forEach(function(cell) {
+    this.cells.forEach(function(cell) {
         if (cell.isEntryPoint)
             entryPoints.push(cell);
     });
@@ -473,7 +310,7 @@ World.prototype.getEntryPoints = function() {
  * Resets the entry point collection, leaving only one entry point at co-ordinate (0. 0)
  */
 World.prototype.resetEntryPoints = function() {
-    this.newCells.forEach(function(cell) {
+    this.cells.forEach(function(cell) {
         cell.isEntryPoint = false;
     });
 };
@@ -483,7 +320,7 @@ World.prototype.resetEntryPoints = function() {
  * @param y
  */
 World.prototype.removeEntryPoint = function(x, y) {
-    this.getNewCell(x, y).isEntryPoint = false;
+    this.getCell(x, y).isEntryPoint = false;
 };
 
 // Exit point functions
@@ -493,7 +330,7 @@ World.prototype.removeEntryPoint = function(x, y) {
  * @param y
  */
 World.prototype.isExitPoint = function(x, y) {
-    return this.getNewCell(x, y).isExitPoint;
+    return this.getCell(x, y).isExitPoint;
 };
 /**
  *
@@ -501,7 +338,7 @@ World.prototype.isExitPoint = function(x, y) {
  * @param y
  */
 World.prototype.addExitPoint = function(x, y) {
-    var cell = this.getNewCell(x, y);
+    var cell = this.getCell(x, y);
     if (!_.isUndefined(cell))
         cell.isExitPoint = true;
 };
@@ -509,7 +346,7 @@ World.prototype.addExitPoint = function(x, y) {
  *
  */
 World.prototype.resetExitPoints = function() {
-    this.newCells.forEach(function(cell) {
+    this.cells.forEach(function(cell) {
         cell.isExitPoint = false;
     });
 };
@@ -519,11 +356,11 @@ World.prototype.resetExitPoints = function() {
  * @param y
  */
 World.prototype.removeExitPoint = function(x, y) {
-    this.getNewCell(x, y).isExitPoint = false;
+    this.getCell(x, y).isExitPoint = false;
 };
 World.prototype.getExitPoints = function() {
     var exitPoints = [];
-    this.newCells.forEach(function(cell) {
+    this.cells.forEach(function(cell) {
         if (cell.isExitPoint)
             exitPoints.push(cell);
     });
@@ -536,7 +373,7 @@ World.prototype.getExitPoints = function() {
  * @param y
  */
 World.prototype.isEntryOrExitPoint = function(x, y) {
-    var cell = this.getNewCell(x, y);
+    var cell = this.getCell(x, y);
     if (!_.isUndefined(cell))
         return (cell.isEntryPoint || cell.isExitPoint);
     return false;
@@ -564,7 +401,7 @@ World.prototype.setCurrentAgents = function(currentAgents) {
     for (var i = 0; i < this.currentAgents.length; i++) {
         var agent = this.currentAgents[i];
         this.currentAgentsMap[[agent.x, agent.y]] = agent;
-        this.addAgentToContentMap(agent);
+        this.addAgentToCell(agent);
     }
 };
 
@@ -753,11 +590,11 @@ World.prototype.resetResources = function() {
 
     this.resources = [];
     this.worldResources = this.worldResources || [];
-    this.removeAllResourcesFromContentMap();
+    this.removeAllResourcesFromCells();
 
     for (var i = 0; i < this.worldResources.length; i++) {
         this.resources.push(this.worldResources[i]);
-        this.addResourceToContentMap(this.worldResources[i]);
+        this.addResourceToCell(this.worldResources[i]);
     }
     this.resourceCategoryCounts = this.resetResourceCategoryCounts();
 };
@@ -789,10 +626,6 @@ World.prototype.generateWorldResources = function() {
     var agents = [];
     if (this.randomiseResources && this.initialResourceNumber > 0) {
         // Get pathway length
-        var a = [];
-//        this.tiles.map(function(tile){(tile != null ? a.push(tile) : null)})
-        this.tiles.map(function(tile){(a.push(tile))})
-        var al = a.length;
         this.worldResources = [];
         for (var i = 0; i < this.initialResourceNumber; i ++) {
             // Generate a random tile position
@@ -818,7 +651,7 @@ World.prototype.generateWorldResources = function() {
  */
 World.prototype.addResource = function(resource) {
     this.resources.push(resource);
-    this.addResourceToContentMap(resource);
+    this.addResourceToCell(resource);
     this.incrementResourceCategoryCount(resource);
 
     var resourceCategory = resource.category.code;
@@ -835,7 +668,7 @@ World.prototype.removeResource = function(resource) {
     var index = this.getCurrentResourceIndex(resource);
     if (index > -1) {
         this.resources.splice(index, 1);
-        this.removeResourceFromContentMap(resource);
+        this.removeResourceFromCell(resource);
         this.decrementResourceCategoryCount(resource);
     }
 };
@@ -850,7 +683,7 @@ World.prototype.removeResourceByPosition = function(x, y) {
     if (index > -1) {
         var resource = this.resources[index];
         this.resources.splice(index, 1);
-        this.removeResourceFromContentMap(resource);
+        this.removeResourceFromCell(resource);
         this.decrementResourceCategoryCount(resource);
     }
 };
@@ -1080,15 +913,6 @@ World.prototype.meanDistance = function (cell, goal){
 World.prototype.isSameCell = function (c1, c2){
     return (c1 && c2 && c1[0] == c2[0] && c1[1] == c2[1])
 };
-World.prototype.isCellOld = function (cell){
-    var x = cell[0], y = cell[1];
-    return (this.getCell(x, y) == undefined);
-};
-World.prototype.areAgentsAllowed = function (point){
-    var x = point[0], y = point[1];
-    var cell = this.getNewCell(x, y);
-    return cell.agentsAllowed;
-};
 World.prototype.isInHistory = function (cell, history){
     for (var i = 0, l = history.length; i < l; i++) {
         var testCell = history[i]
@@ -1203,7 +1027,7 @@ World.prototype.getNeighbouringResources = function(x, y) {
     var resources = [];
     for (var i = 0, l = surroundingPositions.length; i < l; i++) {
         var position = surroundingPositions[i];
-        var cellResources = this.getResourcesAtContentMap(position.x, position.y);
+        var cellResources = this.getResourcesAtCell(position.x, position.y);
         if (cellResources) {
             cellResources.forEach(function(resource){
                 resources.push(resource);
@@ -1220,7 +1044,7 @@ World.prototype.getNeighbouringAgents = function(x, y) {
     var agents = [];
     for (var i = 0, l = surroundingPositions.length; i < l; i++) {
         var position = surroundingPositions[i];
-        var cellAgents = this.getAgentsAtContentMap(position.x, position.y);
+        var cellAgents = this.getAgentsAtCell(position.x, position.y);
         if (cellAgents) {
             cellAgents.forEach(function(agent){
                 agents.push(agent);
@@ -1229,7 +1053,6 @@ World.prototype.getNeighbouringAgents = function(x, y) {
     }
     return agents;
 };
-
 
 if (typeof exports !== "undefined")
     exports.World = World;

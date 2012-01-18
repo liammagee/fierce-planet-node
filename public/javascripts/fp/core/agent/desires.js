@@ -126,7 +126,7 @@ Desires.Flee = {};
         var surroundingPositions = world.getVonNeumannNeighbourhood(agent.x, agent.y, true);
         var presenceOfThreat = false;
         surroundingPositions.forEach(function(position) {
-            var agents = world.getAgentsAtContentMap(position.x, position.y);
+            var agents = world.getAgentsAtCell(position.x, position.y);
             agents.forEach(function(otherAgent) {
                 if (otherAgent.id != agent.id && otherAgent.culture != agent.culture) {
                     otherAgent.capabilities.forEach(function(capability) {

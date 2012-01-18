@@ -73,15 +73,18 @@ var CellularAutomataModule = CellularAutomataModule || {};
                 }
 
                 var bg = new Terrain('#000', 0.9);
+                this.addTerrainToPath(bg);
+                /*
                 this.generatePath();
                 for (var i = 0; i < this.cellsAcross; i++) {
                     for (var j = 0; j < this.cellsDown; j++) {
                         this.terrainMap[[i, j]] = bg;
                     }
                 }
+                */
 
                 if (FiercePlanet.Parameters.SizeOfWorld) {
-                    this.initContentMap();
+                    this.initialiseCells();
                     this.waves = undefined;
                     this.initialiseWaves(this.waveNumber);
                 }
@@ -90,7 +93,7 @@ var CellularAutomataModule = CellularAutomataModule || {};
                 var pl = this.pathway.length;
                 var tile = this.pathway[Math.ceil(this.cellsAcross / 2)];
 //                var tile = this.pathway[1275];
-                var agents = this.getAgentsAtContentMap(tile[0], tile[1]);
+                var agents = this.getAgentsAtCell(tile[0], tile[1]);
                 if (agents && agents.length > 0)
                     agents[0].isLiving = true;
             };
@@ -119,9 +122,9 @@ var CellularAutomataModule = CellularAutomataModule || {};
             var y = agent.y;
 
             if (y > 0 && y == Lifecycle.waveCounter - 10) {
-                var left = (x <= 0) ? false : world.getAgentsAtContentMap(x - 1, y - 1)[0].isLiving;
-                var center = world.getAgentsAtContentMap(x, y - 1)[0].isLiving;
-                var right = (x >= world.cellsAcross - 1) ? false : world.getAgentsAtContentMap(x + 1, y - 1)[0].isLiving;
+                var left = (x <= 0) ? false : world.getAgentsAtCell(x - 1, y - 1)[0].isLiving;
+                var center = world.getAgentsAtCell(x, y - 1)[0].isLiving;
+                var right = (x >= world.cellsAcross - 1) ? false : world.getAgentsAtCell(x + 1, y - 1)[0].isLiving;
                 world.AutomataNumber = world.AutomataNumber || 110;
                 var state = parseInt( (left & 1).toString() + (center & 1).toString() +  (right & 1).toString(), 2) + 1;
                 var mask = Math.pow(2, state) / 2;

@@ -200,8 +200,8 @@ describe("agent-related classes", function() {
 
         describe("plan evaluation after some sequence of moves, with a cell removed", function() {
             beforeEach(function() {
-                if (world.getTile(1, 2) == undefined)
-                    world.addDefaultTile(1, 2);
+                if (world.areAgentsAllowed(1, 2))
+                    world.getCell(1, 2).agentsAllowed = false;
                 agent.moveTo(0, 1);
                 agent.reviseBeliefs(world);
                 agent.moveTo(0, 2);
@@ -268,8 +268,8 @@ describe("agent-related classes", function() {
         describe("plan evaluation with another agent", function() {
             var otherAgent;
             beforeEach(function() {
-                if (world.getTile(1, 2) == undefined)
-                    world.addDefaultTile(1, 2);
+                if (world.areAgentsAllowed(1, 2))
+                    world.getCell(1, 2).agentsAllowed = false;
                 agent.moveTo(0, 1);
                 agent.reviseBeliefs(world);
                 agent.moveTo(0, 2);

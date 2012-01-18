@@ -59,7 +59,7 @@ describe("world-related classes", function() {
             var resource;
             beforeEach(function() {
                 world.resources = [];
-                world.removeAllResourcesFromContentMap();
+                world.removeAllResourcesFromCells();
                 resource = new Resource(Universe.resourceTypes[0], 11, 10);
                 world.addResource(resource)
             });
@@ -69,13 +69,13 @@ describe("world-related classes", function() {
             });
 
             it("should have a resource in the content map", function() {
-                var testResource = world.getResourcesAtContentMap(11, 10)[0];
+                var testResource = world.getResourcesAtCell(11, 10)[0];
                 expect(testResource).toEqual(resource);
             });
 
             it("remove a resource", function() {
                 world.removeResource(resource);
-                var testResource = world.getResourcesAtContentMap(11, 10)[0];
+                var testResource = world.getResourcesAtCell(11, 10)[0];
                 expect(testResource).toBeUndefined();
             });
 
@@ -83,7 +83,7 @@ describe("world-related classes", function() {
                 var positions = world.getVonNeumannNeighbourhood(10, 10);
                 var allResources = [];
                 positions.forEach(function(position) {
-                    var resources = world.getResourcesAtContentMap(position.x, position.y);
+                    var resources = world.getResourcesAtCell(position.x, position.y);
                     resources.forEach(function(resource) {
                         allResources.push(resource);
                     })
@@ -97,10 +97,10 @@ describe("world-related classes", function() {
             var agent;
             beforeEach(function() {
                 world.currentAgents = [];
-                world.removeAllAgentsFromContentMap();
+                world.removeAllAgentsFromCells();
                 agent = new Agent(Universe.cultures[0], 10, 10);
                 world.currentAgents.push(agent);
-                world.addAgentToContentMap(agent);
+                world.addAgentToCell(agent);
             });
 
             it("should have a agent", function() {
@@ -108,14 +108,14 @@ describe("world-related classes", function() {
             });
 
             it("should have a agent in the content map", function() {
-                var testAgent = world.getAgentsAtContentMap(10, 10)[0];
+                var testAgent = world.getAgentsAtCell(10, 10)[0];
                 expect(testAgent).toEqual(agent);
             });
 
             it("remove a agent", function() {
                 world.currentAgents = [];
-                world.removeAgentFromContentMap(agent);
-                var testAgent = world.getAgentsAtContentMap(10, 10)[0];
+                world.removeAgentFromCell(agent);
+                var testAgent = world.getAgentsAtCell(10, 10)[0];
                 expect(testAgent).toBeUndefined();
             });
 
@@ -123,7 +123,7 @@ describe("world-related classes", function() {
                 var positions = world.getVonNeumannNeighbourhood(11, 10);
                 var allAgents = [];
                 positions.forEach(function(position) {
-                    var agents = world.getAgentsAtContentMap(position.x, position.y);
+                    var agents = world.getAgentsAtCell(position.x, position.y);
                     agents.forEach(function(agent) {
                         allAgents.push(agent);
                     })
@@ -144,7 +144,7 @@ describe("world-related classes", function() {
             beforeEach(function() {
                 agent = new Agent(Universe.cultures[0], 10, 10);
                 world.currentAgents.push(agent);
-                world.addAgentToContentMap(agent);
+                world.addAgentToCell(agent);
                 world.currentAgentsFunction = function(agent) { if (agent.x == 10 && agent.y == 10) { return agent; } };
             });
 

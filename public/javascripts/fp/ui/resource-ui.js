@@ -96,17 +96,21 @@ FiercePlanet.ResourceUI = FiercePlanet.ResourceUI || {};
                 return;
             }
         }
-        var currentTile = Lifecycle.currentWorld.getTile(posX, posY);
+        var areAgentsAllowed = Lifecycle.currentWorld.areAgentsAllowed(posX, posY);
         if (Universe.settings.tilesMutable) {
-            if (currentTile == undefined) {
-                Lifecycle.currentWorld.addTile(new Tile(DEFAULT_TILE_COLOR, posX, posY));
+            if (areAgentsAllowed) {
+                var cell = Lifecycle.currentWorld.getCell(posX, posY);
+                cell.agentsAllowed = false;
+                Lifecycle.currentWorld.forbidAgentOnCell(posX, posY);
                 FiercePlanet.Drawing.drawCanvases();
             }
             else if (!foundResource && FiercePlanet.Game.currentResourceId != null) {
                 FiercePlanet.ResourceUI.dropItem(posX, posY);
             }
             else {
-                Lifecycle.currentWorld.removeTile(posX, posY);
+                var cell = Lifecycle.currentWorld.getCell(posX, posY);
+                cell.agentsAllowed = true;
+//                Lifecycle.currentWorld.removeTile(posX, posY);
                 FiercePlanet.Drawing.drawCanvases();
             }
         }
@@ -130,7 +134,7 @@ FiercePlanet.ResourceUI = FiercePlanet.ResourceUI || {};
         var __ret = FiercePlanet.GeneralUI.getCurrentPosition(e);
         var posX = __ret.posX;
         var posY = __ret.posY;
-        if (Lifecycle.currentWorld.getCell(posX, posY) == undefined && ! Lifecycle.currentWorld.allowResourcesOnPath)
+        if (Lifecycle.currentWorld.areAgentsAllowed(posX, posY) && ! Lifecycle.currentWorld.allowResourcesOnPath)
             return;
         if (Lifecycle.currentWorld.isPositionOccupiedByResource(posX, posY))
             return;
@@ -170,7 +174,7 @@ FiercePlanet.ResourceUI = FiercePlanet.ResourceUI || {};
                     var __ret = FiercePlanet.GeneralUI.getCurrentPosition(e);
                     var posX = __ret.posX;
                     var posY = __ret.posY;
-                    if (Lifecycle.currentWorld.getCell(posX, posY) == undefined && ! Lifecycle.currentWorld.allowResourcesOnPath)
+                    if (Lifecycle.currentWorld.areAgentsAllowed(posX, posY) && ! Lifecycle.currentWorld.allowResourcesOnPath)
                         return;
                     if (Lifecycle.currentWorld.isPositionOccupiedByResource(posX, posY))
                         return;
@@ -226,7 +230,7 @@ FiercePlanet.ResourceUI = FiercePlanet.ResourceUI || {};
      * @param posY - the y coordinate to drop the resource on
      */
     this.dropItem = function(posX, posY) {
-        if (Lifecycle.currentWorld.getCell(posX, posY) == undefined && ! Lifecycle.currentWorld.allowResourcesOnPath)
+        if (Lifecycle.currentWorld.areAgentsAllowed(posX, posY) && ! Lifecycle.currentWorld.allowResourcesOnPath)
             return;
         if (Lifecycle.currentWorld.isPositionOccupiedByResource(posX, posY))
             return;

@@ -158,7 +158,7 @@ var Lifecycle = Lifecycle || {};
             var nullifiedAgent = Lifecycle.currentWorld.currentAgents[nullIndex];
             Lifecycle.currentWorld.currentAgents.splice(nullIndex, 1);
             // Remove the agent from the map
-            Lifecycle.currentWorld.removeAgentFromContentMap(agent);
+            Lifecycle.currentWorld.removeAgentFromCell(agent);
         }
 
         if (Lifecycle.currentWorld.expiredAgents.length >= Lifecycle.currentWorld.expiryLimit && ! Universe.settings.noGameOver) {

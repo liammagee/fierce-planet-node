@@ -96,9 +96,9 @@ describe("agent-related classes", function() {
             beforeEach(function() {
                 level = new Level(1);
                 // Add a cross path in the middle of the level
-                level.removeTiles(45, 1);
-                level.removeTiles(53, 4);
-                level.removeTiles(65, 1);
+                level.allowAgentsOnCellRange(45, 1);
+                level.allowAgentsOnCellRange(53, 4);
+                level.allowAgentsOnCellRange(65, 1);
 
                 // Place the agent at a co-ordinate on the path
                 agent = new Agent(Universe.cultures[0], 4, 5);
@@ -196,9 +196,9 @@ describe("agent-related classes", function() {
                 beforeEach(function() {
                     level = new Level(1);
                     // Add a cross path in the middle of the level
-                    level.removeTiles(45, 1);
-                    level.removeTiles(53, 4);
-                    level.removeTiles(65, 1);
+                    level.allowAgentsOnCellRange(45, 1);
+                    level.allowAgentsOnCellRange(53, 4);
+                    level.allowAgentsOnCellRange(65, 1);
                     resource = new Resource(Universe.resourceTypes[0], 3, 4);
                     level.addResource(new Resource(Universe.resourceTypes[0], 3, 4));
 
@@ -229,11 +229,11 @@ describe("agent-related classes", function() {
 
             beforeEach(function() {
                 level = new Level(1);
-                level.fillWithTiles();
+                level.forbidAgentsOnAllCells();
                 // Add a cross path in the middle of the level
-                level.removeTiles(45, 1);
-                level.removeTiles(53, 4);
-                level.removeTiles(65, 1);
+                level.allowAgentsOnCellRange(45, 1);
+                level.allowAgentsOnCellRange(53, 4);
+                level.allowAgentsOnCellRange(65, 1);
 
                 // Place the agent at a co-ordinate on the path
                 agent = new Agent(Universe.cultures[0], 4, 5);
@@ -328,11 +328,11 @@ describe("agent-related classes", function() {
 
             beforeEach(function() {
                 level = new Level(1);
-                level.fillWithTiles();
+                level.forbidAgentsOnAllCells();
                 // Add a cross path in the middle of the level
-                level.removeTiles(45, 1);
-                level.removeTiles(53, 4);
-                level.removeTiles(65, 1);
+                level.allowAgentsOnCellRange(45, 1);
+                level.allowAgentsOnCellRange(53, 4);
+                level.allowAgentsOnCellRange(65, 1);
 
                 // Place the agent at a co-ordinate on the path
                 agent = new Agent(Universe.cultures[0], 3, 5);

@@ -41,7 +41,7 @@ FiercePlanet.WorldUI = FiercePlanet.WorldUI || {};
 		Lifecycle.currentWorldNumber = -1;
 		Lifecycle.currentWorldPreset = false;
         Lifecycle.currentWorld.name = '[Enter the world name here]';
-		Lifecycle.currentWorld.fillWithTiles();
+		Lifecycle.currentWorld.forbidAgentsOnAllCells();
 
         // Prepare the world properties form
         FiercePlanet.WorldUI.prepareWorldPropertiesForm();
@@ -120,7 +120,7 @@ FiercePlanet.WorldUI = FiercePlanet.WorldUI || {};
         if (Lifecycle.currentWorld._id && (world.cellsAcross != ca || world.cellsDown != cd)) {
             if (confirm("The world dimensions have changed, and the current maze will be deleted. Should we proceed?")) {
                 // Redo world dimensions
-                world.fillWithTiles();
+                world.forbidAgentsOnAllCells();
             }
             else {
                 // Reset dimensions
@@ -130,7 +130,7 @@ FiercePlanet.WorldUI = FiercePlanet.WorldUI || {};
         }
         else if (! Lifecycle.currentWorld._id) {
             // Redo world dimensions
-            world.fillWithTiles();
+            world.forbidAgentsOnAllCells();
         }
 
         // Save the world

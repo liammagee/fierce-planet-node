@@ -141,7 +141,7 @@ var Plans = Plans || {};
 
                     if (nx < 0 || nx >= world.cellsAcross || ny < 0 || ny >= world.cellsDown)
                         continue;
-                    if (!world.areAgentsAllowed(newCell))
+                    if (!world.areAgentsAllowed(newCell[0], newCell[1]))
                         continue;
                     if (world.isInHistory(newCell, history))
                         continue;

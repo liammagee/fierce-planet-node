@@ -88,7 +88,7 @@ Capabilities.RegenerateCapability = new Capability();
                             agent.children.push(childAgent);
                             a.children.push(childAgent);
                             Lifecycle.currentWorld.currentAgents.push(childAgent);
-                            Lifecycle.currentWorld.addAgentToContentMap(childAgent);
+                            Lifecycle.currentWorld.addAgentToCell(childAgent);
                             Lifecycle.currentWorld.currentResourceStore += 10;
                         }
                     }

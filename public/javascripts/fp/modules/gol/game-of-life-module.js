@@ -25,7 +25,7 @@ var GameOfLifeModule = GameOfLifeModule || {};
             var agentCounter = 0;
             positions.forEach(function(position) {
                 var pX = position.x, pY = position.y;
-                var agents = world.getAgentsAtContentMap(pX, pY);
+                var agents = world.getAgentsAtCell(pX, pY);
                 if (agents && agents.length > 0 && agents[0].isLiving)
                     agentCounter++;
             })
@@ -165,15 +165,16 @@ var GameOfLifeModule = GameOfLifeModule || {};
                 }
 
                 var bg = new Terrain('#000', 0.9);
-                this.generatePath();
-                for (var i = 0; i < this.cellsAcross; i++) {
-                    for (var j = 0; j < this.cellsDown; j++) {
-                        this.terrainMap[[i, j]] = bg;
-                    }
-                }
+                this.addTerrainToPath(bg);
+//                this.generatePath();
+//                for (var i = 0; i < this.cellsAcross; i++) {
+//                    for (var j = 0; j < this.cellsDown; j++) {
+//                        this.terrainMap[[i, j]] = bg;
+//                    }
+//                }
 
                 if (FiercePlanet.Parameters.SizeOfWorld) {
-                    this.initContentMap();
+                    this.initialiseCells();
                     this.waves = undefined;
                     this.initialiseWaves(this.waveNumber);
                 }
@@ -185,8 +186,8 @@ var GameOfLifeModule = GameOfLifeModule || {};
                     for (var i = 0; i < nola; i ++) {
                         // Generate a random tile position
                         var tp = Math.floor(Math.random() * pl);
-                        var tile = this.pathway[tp];
-                        var agents = this.getAgentsAtContentMap(tile[0], tile[1]);
+                        var pathCell = this.pathway[tp];
+                        var agents = this.getAgentsAtCell(pathCell[0], pathCell[1]);
                         if (agents && agents.length > 0)
                             agents[0].isLiving = true;
                     }

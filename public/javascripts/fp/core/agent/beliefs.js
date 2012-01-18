@@ -53,50 +53,50 @@ Beliefs.BeliefsAboutPaths = {};
 
         if (world != undefined) {
             // Add any unvisited path cells to memory
-            if (x - 1 >= 0 && world.getTile(x - 1, y) == undefined && agent.memoriesOfPlacesVisited[[x - 1, y]] == undefined) {
+            if (x - 1 >= 0 && world.areAgentsAllowed(x - 1, y) && agent.memoriesOfPlacesVisited[[x - 1, y]] == undefined) {
                 // Add path cell to memory
                 agent.lastUntriedPathMemory = new Memory(agent.id, agent.age, x - 1, y);
                 agent.memoriesOfPathsUntried[[x - 1, y]] = agent.lastUntriedPathMemory;
             }
-            if (x + 1 < world.cellsAcross && world.getTile(x + 1, y) == undefined && agent.memoriesOfPlacesVisited[[x + 1, y]] == undefined) {
+            if (x + 1 < world.cellsAcross && world.areAgentsAllowed(x + 1, y) && agent.memoriesOfPlacesVisited[[x + 1, y]] == undefined) {
                 // Add path cell to memory
                 agent.lastUntriedPathMemory = new Memory(agent.id, agent.age, x + 1, y);
                 agent.memoriesOfPathsUntried[[x + 1, y]] = agent.lastUntriedPathMemory;
             }
-            if (y - 1 >= 0 && world.getTile(x, y - 1) == undefined && agent.memoriesOfPlacesVisited[[x, y - 1]] == undefined) {
+            if (y - 1 >= 0 && world.areAgentsAllowed(x, y - 1) && agent.memoriesOfPlacesVisited[[x, y - 1]] == undefined) {
                 // Add path cell to memory
                 agent.lastUntriedPathMemory = new Memory(agent.id, agent.age, x, y - 1);
                 agent.memoriesOfPathsUntried[[x, y - 1]] = agent.lastUntriedPathMemory;
             }
-            if (y + 1 < world.cellsDown && world.getTile(x, y + 1) == undefined && agent.memoriesOfPlacesVisited[[x, y + 1]] == undefined) {
+            if (y + 1 < world.cellsDown && world.areAgentsAllowed(x, y + 1) && agent.memoriesOfPlacesVisited[[x, y + 1]] == undefined) {
                 agent.lastUntriedPathMemory = new Memory(agent.id, agent.age, x, y + 1);
                 agent.memoriesOfPathsUntried[[x, y + 1]] = agent.lastUntriedPathMemory;
             }
             if (world.allowOffscreenCycling) {
                 if (x == 0) {
                     var newX = world.cellsAcross - 1;
-                    if (world.getTile(newX, y) == undefined && agent.memoriesOfPlacesVisited[[newX, y]] == undefined) {
+                    if (world.areAgentsAllowed(newX, y) && agent.memoriesOfPlacesVisited[[newX, y]] == undefined) {
                         agent.lastUntriedPathMemory = new Memory(agent.id, agent.age, newX, y);
                         agent.memoriesOfPathsUntried[[newX, y]] = agent.lastUntriedPathMemory;
                     }
                 }
                 else if (x == world.cellsAcross - 1) {
                     var newX = 0;
-                    if (world.getTile(newX, y) == undefined && agent.memoriesOfPlacesVisited[[newX, y]] == undefined) {
+                    if (world.areAgentsAllowed(newX, y) && agent.memoriesOfPlacesVisited[[newX, y]] == undefined) {
                         agent.lastUntriedPathMemory = new Memory(agent.id, agent.age, newX, y);
                         agent.memoriesOfPathsUntried[[newX, y]] = agent.lastUntriedPathMemory;
                     }
                 }
                 if (y == 0) {
                     var newY = world.cellsDown - 1;
-                    if (world.getTile(x, newY) == undefined && agent.memoriesOfPlacesVisited[[x, newY]] == undefined) {
+                    if (world.areAgentsAllowed(x, newY) && agent.memoriesOfPlacesVisited[[x, newY]] == undefined) {
                         agent.lastUntriedPathMemory = new Memory(agent.id, agent.age, x, newY);
                         agent.memoriesOfPathsUntried[[x, newY]] = agent.lastUntriedPathMemory;
                     }
                 }
                 else if (y == world.cellsDown - 1) {
                     var newY = 0;
-                    if (world.getTile(x, newY) == undefined && agent.memoriesOfPlacesVisited[[x, newY]] == undefined) {
+                    if (world.areAgentsAllowed(x, newY) && agent.memoriesOfPlacesVisited[[x, newY]] == undefined) {
                         agent.lastUntriedPathMemory = new Memory(agent.id, agent.age, x, newY);
                         agent.memoriesOfPathsUntried[[x, newY]] = agent.lastUntriedPathMemory;
                     }
@@ -129,7 +129,7 @@ Beliefs.BeliefsAboutResources = {};
 
         var positions = world.getVonNeumannNeighbourhood(x, y, true);
         positions.forEach(function(position) {
-            var resources = world.getResourcesAtContentMap(position.x, position.y);
+            var resources = world.getResourcesAtCell(position.x, position.y);
             // TODO: Can only add one resource to memory
             if (resources && resources.length > 0)
                 agent.memoriesOfResources[[x, y]] = resources[0];
@@ -173,7 +173,7 @@ Beliefs.BeliefsAboutOtherAgents = {};
         // Add neighbouring resources to memory
         var positions = world.getVonNeumannNeighbourhood(x, y, true);
         positions.forEach(function(position) {
-            var agents = world.getAgentsAtContentMap(position.x, position.y);
+            var agents = world.getAgentsAtCell(position.x, position.y);
             // TODO: Can only add one resource to memory
             if (agents && agents.length > 0) {
                 agents.forEach(function(otherAgent) {
@@ -226,7 +226,7 @@ Beliefs.BeliefsBasedOnOtherAgentsBeliefs = {};
         var positions = world.getVonNeumannNeighbourhood(x, y, true);
 //        var positions = [{x: x, y: y}];
         positions.forEach(function(position) {
-            var agents = world.getAgentsAtContentMap(position.x, position.y);
+            var agents = world.getAgentsAtCell(position.x, position.y);
             if (agents && agents.length > 0) {
                 agents.forEach(function(otherAgent) {
                     if (otherAgent.id != agent.id && otherAgent.age > 0 && otherAgent.alive)

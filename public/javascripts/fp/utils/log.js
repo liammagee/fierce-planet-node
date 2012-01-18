@@ -49,8 +49,14 @@ var Log = (function() {
 
         say: function say(message, level) {
             if (this.isAt(level)) {
-                if (!_.isUndefined(jqconsole))
-                    jqconsole.Write(message + '\n', 'sys');
+                if (typeof(jqconsole) !== 'undefined') {
+                    try {
+                        jqconsole.Write(message + '\n', 'sys');
+                    }
+                    catch (err) {
+                        // Fail silently
+                    }
+                }
                 if (!_.isUndefined(console) && this.isAt(level))
                     console.log(message);
             }

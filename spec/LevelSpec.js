@@ -17,7 +17,6 @@ describe("level-related classes", function() {
         expect(level.noWander).toBeFalsy();
         expect(level.noSpeedChange).toBeFalsy();
         
-        expect(level.tiles).toEqual([]);
         expect(level.currentAgents).toEqual([]);
         expect(level.cells).toEqual([]);
         expect(level.resources).toEqual([]);
@@ -38,120 +37,6 @@ describe("level-related classes", function() {
     describe("handling tiles, cells, entry and exit points", function() {
         beforeEach(function() {});
 
-        describe("working with tiles", function() {
-            beforeEach(function() {
-                level.fillWithTiles();
-            });
-
-            it("should have 100 tiles", function() {
-                expect(level.tiles.length).toEqual(100);
-            });
-
-            it("should be possible to set the entire tile collection", function() {
-                var tiles = level.tiles;
-                // At co-ordinate [0, 9]
-                tiles.splice(0, 1);
-                level.setTiles(tiles);
-                expect(level.tiles.length).toEqual(99);
-
-                tiles.splice(9, 1);
-                level.setTiles(tiles);
-                expect(level.tiles.length).toEqual(98);
-            });
-
-            describe("removing one tile", function() {
-                beforeEach(function() {
-                    level.removeTile(5, 5);
-                });
-
-                it("should have same number of tiles, but tile at this co-ordinate should be undefined", function() {
-                    expect(level.tiles.length).toEqual(100);
-                    expect(level.getTile(5, 5)).toBeUndefined();
-                });
-
-                it("should have a path corresponding to the removed tiles", function() {
-                    var path = level.pathway;
-                    expect(path.length).toEqual(1);
-                    expect(path[0]).toEqual([5, 5]);
-                });
-
-                describe("adding a tile based on co-ordinates", function() {
-                    beforeEach(function() {
-                        level.addDefaultTile(5, 5);
-                    });
-
-                    it("should have 1 move tile", function() {
-                        expect(level.tiles.length).toEqual(100);
-                        expect(level.getTile(5, 5)).toBeDefined();
-                    });
-
-                });
-
-                describe("adding a tile object", function() {
-                    beforeEach(function() {
-                        level.addTile(new Tile("0FFF1F", 5, 5));
-                    });
-
-                    it("should have 1 move tile", function() {
-                        expect(level.tiles.length).toEqual(100);
-                        expect(level.getTile(5, 5)).toBeDefined();
-                    });
-                });
-            });
-
-            describe("removing all tiles", function() {
-                beforeEach(function() {
-                    level.removeAllTiles();
-                });
-
-                it("should have same number of tiles, but tile at this co-ordinate should be undefined", function() {
-                    expect(level.tiles.length).toEqual(100);
-                    expect(level.getTile(0, 0)).toBeUndefined();
-                    expect(level.getTile(5, 5)).toBeUndefined();
-                    expect(level.getTile(9, 9)).toBeUndefined();
-                });
-
-
-                it("should have a path corresponding to the removed tiles", function() {
-                    var path = level.pathway;
-                    expect(path.length).toEqual(100);
-                    expect(path[0]).toEqual([0, 0]);
-                    expect(path[99]).toEqual([9, 9]);
-                });
-            });
-            
-            describe("removing selected tiles", function() {
-                beforeEach(function() {
-                    level.removeTiles(20, 30);
-                });
-
-                it("should have same number of tiles, but tiles at relevant co-ordinates should be undefined", function() {
-                    expect(level.tiles.length).toEqual(100);
-                    expect(level.getTile(0, 0)).toBeDefined();
-                    expect(level.getTile(0, 2)).toBeUndefined();
-                    expect(level.getTile(9, 4)).toBeUndefined();
-                    expect(level.getTile(0, 5)).toBeDefined();
-                });
-
-                it("should have a path corresponding to the removed tiles", function() {
-                    var path = level.pathway;
-                    expect(path.length).toEqual(30);
-                    expect(path[0]).toEqual([0, 2]);
-                    expect(path[29]).toEqual([9, 4]);
-                });
-
-                describe("adding a tile based on co-ordinates", function() {
-                    beforeEach(function() {
-                        level.addDefaultTile(0, 2);
-                    });
-
-                    it("should have 1 move tile", function() {
-                        expect(level.tiles.length).toEqual(100);
-                        expect(level.getTile(0, 2)).toBeDefined();
-                    });
-                });
-            });
-        });
 
 
         describe("adding entry points", function() {
@@ -637,7 +522,7 @@ describe("level-related classes", function() {
 
 
         it("should be serializable to JSON with tiles", function() {
-            level.fillWithTiles();
+            level.forbidAgentsOnAllCells();
             var json = JSON.stringify(level);
             expect(json).toBeDefined();
         });

@@ -24,8 +24,7 @@ FiercePlanet.Editor = FiercePlanet.Editor || {};
      */
     this.showDesignFeaturesDialog = function(e) {
         $("#make-tile").click(function(e) {
-            var tile = new Tile(DEFAULT_TILE_COLOR, FiercePlanet.Game.currentX, FiercePlanet.Game.currentY);
-            Lifecycle.currentWorld.addTile(tile);
+            Lifecycle.currentWorld.forbidAgentOnCell(FiercePlanet.Game.currentX, FiercePlanet.Game.currentY);
             FiercePlanet.Dialogs.designFeaturesDialog.dialog('close');
             FiercePlanet.Drawing.drawGame();
         });
@@ -104,7 +103,7 @@ FiercePlanet.Editor = FiercePlanet.Editor || {};
      * @param e
      */
     this.handleEditorMouseDown = function(e) {
-        FiercePlanet.Game.oldTiles = Lifecycle.currentWorld.tiles.slice();
+        FiercePlanet.Game.oldCells = Lifecycle.currentWorld.cells.slice();
         FiercePlanet.Game.isMouseDown = true;
         FiercePlanet.Game.isMouseMoving = false;
         return false;
@@ -125,15 +124,16 @@ FiercePlanet.Editor = FiercePlanet.Editor || {};
                 return;
 
             if (FiercePlanet.Editor.clearMode) {
-                var currentTile = Lifecycle.currentWorld.getTile(currentPoint.posX, currentPoint.posY);
-                if (currentTile == undefined ) {
-                    var tile = new Tile(DEFAULT_TILE_COLOR, currentPoint.posX, currentPoint.posY);
-                    Lifecycle.currentWorld.addTile(tile);
+                var agentsAllowed = Lifecycle.currentWorld.areAgentsAllowed(currentPoint.posX, currentPoint.posY);
+                if (agentsAllowed) {
+                    var cell = Lifecycle.currentWorld.getCell(currentPoint.posX, currentPoint.posY);
+                    cell.agentsAllowed = false;
                     FiercePlanet.Drawing.drawCanvases();
                 }
             }
             else {
-                Lifecycle.currentWorld.removeTile(currentPoint.posX, currentPoint.posY);
+                var cell = Lifecycle.currentWorld.getCell(currentPoint.posX, currentPoint.posY);
+                cell.agentsAllowed = true;
             }
             FiercePlanet.Drawing.drawCanvases();
         }
@@ -155,20 +155,21 @@ FiercePlanet.Editor = FiercePlanet.Editor || {};
         FiercePlanet.Game.currentX = currentPoint.posX;
         FiercePlanet.Game.currentY = currentPoint.posY;
 
-        var currentTile = Lifecycle.currentWorld.getTile(FiercePlanet.Game.currentX, FiercePlanet.Game.currentY);
+        var agentsAllowed = Lifecycle.currentWorld.areAgentsAllowed(FiercePlanet.Game.currentX, FiercePlanet.Game.currentY);
         if (FiercePlanet.Editor.clearMode) {
-            if (currentTile == undefined) {
-                var tile = new Tile(DEFAULT_TILE_COLOR, FiercePlanet.Game.currentX, FiercePlanet.Game.currentY);
-                Lifecycle.currentWorld.addTile(tile);
+            if (agentsAllowed) {
+                var cell = Lifecycle.currentWorld.getCell(currentPoint.posX, currentPoint.posY);
+                cell.agentsAllowed = false;
                 FiercePlanet.Drawing.drawCanvases();
             }
         }
         else {
-            if (currentTile == undefined && !FiercePlanet.Game.isMouseMoving) {
+            if (agentsAllowed && !FiercePlanet.Game.isMouseMoving) {
                 FiercePlanet.Editor.showDesignFeaturesDialog(e);
             }
             else {
-                Lifecycle.currentWorld.removeTile(FiercePlanet.Game.currentX, FiercePlanet.Game.currentY);
+                var cell = Lifecycle.currentWorld.getCell(currentPoint.posX, currentPoint.posY);
+                cell.agentsAllowed = true;
                 FiercePlanet.Drawing.drawCanvases();
             }
         }
@@ -199,7 +200,7 @@ FiercePlanet.Editor = FiercePlanet.Editor || {};
      * Undoes the last action
      */
     this.undoAction = function() {
-        Lifecycle.currentWorld.tiles = (FiercePlanet.Game.oldTiles);
+        Lifecycle.currentWorld.cells = (FiercePlanet.Game.oldCells);
         FiercePlanet.Drawing.drawCanvases();
     };
 
@@ -207,7 +208,7 @@ FiercePlanet.Editor = FiercePlanet.Editor || {};
      * Refreshes the world with tiles
      */
     this.refreshTiles = function() {
-        Lifecycle.currentWorld.fillWithTiles();
+        Lifecycle.currentWorld.forbidAgentsOnAllCells();
         Lifecycle.currentWorld.addEntryPoint(0, 0);
         FiercePlanet.Drawing.drawCanvases();
     };
@@ -216,7 +217,7 @@ FiercePlanet.Editor = FiercePlanet.Editor || {};
      * Clears the world of tiles
      */
     this.fillAllTiles = function() {
-        Lifecycle.currentWorld.removeAllTiles();
+        Lifecycle.currentWorld.allowAgentsOnAllCells();
         Lifecycle.currentWorld.addEntryPoint(0, 0);
         FiercePlanet.Drawing.drawCanvases();
     };

@@ -76,13 +76,14 @@ var PredatorPreyWorlds = PredatorPreyWorlds || new Campaign();
             this.setup = function () {
 //                    Universe.settings.firstPerson = true;
                 var bg = new Terrain('#ABBB2A', 0.01);
+                this.addTerrainToPath(bg);
 //                    this.addTerrainToBackground(bg);
-                this.generatePath();
-                for (var i = 0; i < this.cellsAcross; i++) {
-                    for (var j = 0; j < this.cellsDown; j++) {
-                        this.terrainMap[[i, j]] = bg;
-                    }
-                }
+//                this.generatePath();
+//                for (var i = 0; i < this.cellsAcross; i++) {
+//                    for (var j = 0; j < this.cellsDown; j++) {
+//                        this.terrainMap[[i, j]] = bg;
+//                    }
+//                }
                 if (typeof FiercePlanet !== "undefined" && !_.isUndefined(FiercePlanet.Parameters)) {
                     PredatorPreyCultures.PREY_AGENT_TYPE.waveNumber = parseInt(FiercePlanet.Parameters.PreyWaveNumber);
                     PredatorPreyCultures.PREY_AGENT_TYPE.moveCost = parseInt(FiercePlanet.Parameters.PreyMoveCost);
