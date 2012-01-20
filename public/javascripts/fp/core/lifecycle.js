@@ -161,26 +161,29 @@ var Lifecycle = Lifecycle || {};
             Lifecycle.currentWorld.removeAgentFromCell(agent);
         }
 
-        if (Lifecycle.currentWorld.expiredAgents.length >= Lifecycle.currentWorld.expiryLimit && ! Universe.settings.noGameOver) {
-            return Lifecycle.gameOver();
-        }
-		else {
-            // No agents left? End of wave
-            if (Lifecycle.currentWorld.currentAgents.length == 0) {
-                // Start a new wave
-                if (Lifecycle.currentWaveNumber < Lifecycle.currentWorld.waveNumber - 1) {
-                    Lifecycle.completeWave();
-                    Lifecycle.newWave();
-                }
-                else if (Lifecycle.currentWorld.isPresetWorld && ! Lifecycle.currentWorld.isTerminalWorld) {
-                    Lifecycle.completeWorld();
-                    Lifecycle.worldDelayCounter = 0;
-                }
-                else {
-                    return Lifecycle.completeGame();
+        // Deal with terminal conditions
+        if (! Lifecycle.currentWorld.playIndefinitely) {
+            if (Lifecycle.currentWorld.expiredAgents.length >= Lifecycle.currentWorld.expiryLimit && (! Universe.settings.noGameOver )) {
+                return Lifecycle.gameOver();
+            }
+            else {
+                // No agents left? End of wave
+                if (Lifecycle.currentWorld.currentAgents.length == 0) {
+                    // Start a new wave
+                    if (Lifecycle.currentWaveNumber < Lifecycle.currentWorld.waveNumber - 1) {
+                        Lifecycle.completeWave();
+                        Lifecycle.newWave();
+                    }
+                    else if (Lifecycle.currentWorld.isPresetWorld && ! Lifecycle.currentWorld.isTerminalWorld) {
+                        Lifecycle.completeWorld();
+                        Lifecycle.worldDelayCounter = 0;
+                    }
+                    else {
+                        return Lifecycle.completeGame();
+                    }
                 }
             }
-		}
+        }
 
         // Invoke pre process callback
 		if (Lifecycle.postProcessCallback)

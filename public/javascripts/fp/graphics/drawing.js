@@ -144,7 +144,6 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
                     else {
                         ctx.fillStyle = pathColor;
                     }
-                    console.log(pathColor)
                     ctx.fillRect(x, y, FiercePlanet.Orientation.cellWidth, FiercePlanet.Orientation.cellHeight);
                 }
                 if (!Universe.settings.hidePathBorder) {

@@ -108,6 +108,10 @@ $LAB
         else {
             DefaultModule.init();
         }
+        var world = urlParams.world;
+        if (!_.isUndefined(world)) {
+            Lifecycle.currentWorldNumber = localStorage.currentWorldNumber = world;
+        }
         FiercePlanet.Game.loadGame();
     })
     .script("paperjs-0.22/lib/paper.js")
