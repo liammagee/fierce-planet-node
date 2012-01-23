@@ -112,7 +112,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
             var terrain = Lifecycle.currentWorld.getCell(xPos, yPos).terrain;
             var pathColor = terrain ? this.insertAlpha(terrain.color, terrain.alpha) : "#000";
 
-            if ((Universe.settings.skewTiles || Lifecycle.currentWorld.isometric)) {
+            if ((Universe.settings.isometricView || Lifecycle.currentWorld.isometricView)) {
                 var newOrigin = FiercePlanet.Isometric.doIsometricOffset(xPos, yPos);
                 var originXp = newOrigin.x + FiercePlanet.Orientation.cellWidth / 2;
                 var originYp = newOrigin.y + FiercePlanet.Orientation.cellHeight;
@@ -216,7 +216,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
             var yPos = point.y;
             var x = xPos * FiercePlanet.Orientation.cellWidth + FiercePlanet.Orientation.cellWidth / 2;
             var y = yPos * FiercePlanet.Orientation.cellHeight + FiercePlanet.Orientation.cellHeight / 2;
-            if ((Universe.settings.skewTiles || Lifecycle.currentWorld.isometric)) {
+            if ((Universe.settings.isometricView || Lifecycle.currentWorld.isometricView)) {
                 var newOrigin = FiercePlanet.Isometric.doIsometricOffset(point[0], point[1]);
                 x = newOrigin.x + FiercePlanet.Orientation.cellWidth / 2;
                 y = newOrigin.y + FiercePlanet.Orientation.cellHeight / 2;
@@ -272,7 +272,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
             var yPos = cell.y;
             var x = xPos * FiercePlanet.Orientation.cellWidth + FiercePlanet.Orientation.cellWidth / 2;
             var y = yPos * FiercePlanet.Orientation.cellHeight + FiercePlanet.Orientation.cellHeight / 2;
-            if ((Universe.settings.skewTiles || Lifecycle.currentWorld.isometric)) {
+            if ((Universe.settings.isometricView || Lifecycle.currentWorld.isometricView)) {
                 var newOrigin = FiercePlanet.Isometric.doIsometricOffset(cell[0], cell[1]);
                 x = newOrigin.x + FiercePlanet.Orientation.cellWidth / 2;
                 y = newOrigin.y + FiercePlanet.Orientation.cellHeight / 2;
@@ -474,7 +474,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         ctx.rotate(FiercePlanet.Orientation.rotationAngle);
 
         // Handle this special case by merging/sorting resources and agents, so top-most entities are not rendered with overlap
-        if ((Universe.settings.skewTiles || Lifecycle.currentWorld.isometric) && resources.length > 0) {
+        if ((Universe.settings.isometricView || Lifecycle.currentWorld.isometricView) && resources.length > 0) {
             var entities = _.union(resources, agents)
                 .sort(function(a, b) {
                     return (((a.y * len) - a.x > (b.y * len) - b.x) ? 1 : ((a.y * len) - a.x < (b.y * len) - b.x) ? -1 : 0);
@@ -530,7 +530,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         var canvasName = altCanvasName || '#resourceCanvas';
         var resources = altResources || Lifecycle.currentWorld.resources;
 
-        if ((Universe.settings.skewTiles || Lifecycle.currentWorld.isometric) && Universe.settings.showResourcesAsBoxes) {
+        if ((Universe.settings.isometricView || Lifecycle.currentWorld.isometricView) && Universe.settings.showResourcesAsBoxes) {
             this.clearCanvas(canvasName);
             var len = FiercePlanet.Orientation.cellsAcross;
             resources.sort(function(a, b) {
@@ -566,7 +566,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
             resourceGradient.addColorStop(0.5, "#" + c);
             resourceGradient.addColorStop(1, "#" + c);
 
-            if ((Universe.settings.skewTiles || Lifecycle.currentWorld.isometric)) {
+            if ((Universe.settings.isometricView || Lifecycle.currentWorld.isometricView)) {
                 var tileOffset = FiercePlanet.Isometric.offsets3DPoint([FiercePlanet.Orientation.cellHeight, 0, 0]);
                 var newOrigin = FiercePlanet.Isometric.doIsometricOffset(resource.x, resource.y);
                 var originXp = newOrigin.x + FiercePlanet.Orientation.cellWidth / 2;
@@ -676,7 +676,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         resourceGradient.addColorStop(0.5, "#" + c);
         resourceGradient.addColorStop(1, "#" + c);
 
-        if ((Universe.settings.skewTiles || Lifecycle.currentWorld.isometric)) {
+        if ((Universe.settings.isometricView || Lifecycle.currentWorld.isometricView)) {
             var tileOffset = FiercePlanet.Isometric.offsets3DPoint([FiercePlanet.Orientation.cellHeight, 0, 0]);
             var newOrigin = FiercePlanet.Isometric.doIsometricOffset(resource.x, resource.y);
             var originXp = newOrigin.x + FiercePlanet.Orientation.cellWidth / 2;
@@ -775,7 +775,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         resourceGradient.addColorStop(0.5, "#" + c);
         resourceGradient.addColorStop(1, "#" + c);
 
-        if ((Universe.settings.skewTiles || Lifecycle.currentWorld.isometric)) {
+        if ((Universe.settings.isometricView || Lifecycle.currentWorld.isometricView)) {
             var tileOffset = FiercePlanet.Isometric.offsets3DPoint([FiercePlanet.Orientation.cellHeight, 0, 0]);
             var newOrigin = FiercePlanet.Isometric.doIsometricOffset(resource.x, resource.y);
             var originXp = newOrigin.x + FiercePlanet.Orientation.cellWidth / 2;
@@ -877,7 +877,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         var ax = xPos * FiercePlanet.Orientation.cellWidth + wx + FiercePlanet.Orientation.cellWidth / 2;
         var ay = yPos * FiercePlanet.Orientation.cellHeight + wy + FiercePlanet.Orientation.cellHeight / 4;
 
-        if ((Universe.settings.skewTiles || Lifecycle.currentWorld.isometric)) {
+        if ((Universe.settings.isometricView || Lifecycle.currentWorld.isometricView)) {
             var newOrigin = FiercePlanet.Isometric.doIsometricOffset(resource.x, resource.y);
             x = newOrigin.x + FiercePlanet.Orientation.cellWidth / 2;
             y = newOrigin.y + FiercePlanet.Orientation.cellHeight / 2;
@@ -914,7 +914,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
      * @param resource
      */
     this.clearResource = function(resource) {
-        if ((Universe.settings.skewTiles || Lifecycle.currentWorld.isometric)) {
+        if ((Universe.settings.isometricView || Lifecycle.currentWorld.isometricView)) {
             FiercePlanet.Drawing.drawResources();
         }
         else {
@@ -983,7 +983,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
                 var yPos = __ret.intY;
                 var x = xPos * FiercePlanet.Orientation.cellWidth + wx + 1;
                 var y = yPos * FiercePlanet.Orientation.cellHeight + wy + 1;
-                if ((Universe.settings.skewTiles || Lifecycle.currentWorld.isometric)) {
+                if ((Universe.settings.isometricView || Lifecycle.currentWorld.isometricView)) {
                     var newOrigin = FiercePlanet.Isometric.doIsometricOffset(xPos, yPos);
                     x = newOrigin.x + wx + 1;// - FiercePlanet.Orientation.cellWidth / 2;
                     y = newOrigin.y + wy + 1;// - FiercePlanet.Orientation.cellHeight / 2;
@@ -1167,7 +1167,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
             var x = xPos * FiercePlanet.Orientation.cellWidth + wx + FiercePlanet.Orientation.cellWidth / 2;
             var y = yPos * FiercePlanet.Orientation.cellHeight + wy + FiercePlanet.Orientation.cellHeight / 4;
 
-            if ((Universe.settings.skewTiles || Lifecycle.currentWorld.isometric)) {
+            if ((Universe.settings.isometricView || Lifecycle.currentWorld.isometricView)) {
                 var newOrigin = FiercePlanet.Isometric.doIsometricOffset(xPos, yPos);
                 x = newOrigin.x + wx + FiercePlanet.Orientation.cellWidth / 2;
                 y = newOrigin.y + wy + FiercePlanet.Orientation.cellHeight / 4;
@@ -1212,7 +1212,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         var x = xPos * FiercePlanet.Orientation.cellWidth + wx + FiercePlanet.Orientation.cellWidth / 2;
         var y = yPos * FiercePlanet.Orientation.cellHeight + wy + FiercePlanet.Orientation.cellHeight / 4;
 
-        if ((Universe.settings.skewTiles || Lifecycle.currentWorld.isometric)) {
+        if ((Universe.settings.isometricView || Lifecycle.currentWorld.isometricView)) {
             var newOrigin = FiercePlanet.Isometric.doIsometricOffset(xPos, yPos);
             x = newOrigin.x + wx + FiercePlanet.Orientation.cellWidth / 2;
             y = newOrigin.y + wy + FiercePlanet.Orientation.cellHeight / 4;
@@ -1230,7 +1230,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         var c = agent.color.toString();
         var newColor = this.diluteColour(redH, greenH, blueH, c);
         */
-        var newColor = '#fff';
+        var newColor = agent.color || 'fff';
 
         try {
             eval(agent.culture.drawFunction)(ctx, agent, x, y, FiercePlanet.Orientation.pieceWidth, FiercePlanet.Orientation.pieceHeight, newColor, Lifecycle.waveCounter, direction);
@@ -1266,7 +1266,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         var x = xPos * FiercePlanet.Orientation.cellWidth + wx + FiercePlanet.Orientation.cellWidth / 2;
         var y = yPos * FiercePlanet.Orientation.cellHeight + wy + FiercePlanet.Orientation.cellHeight / 4;
 
-        if ((Universe.settings.skewTiles || Lifecycle.currentWorld.isometric)) {
+        if ((Universe.settings.isometricView || Lifecycle.currentWorld.isometricView)) {
             var newOrigin = FiercePlanet.Isometric.doIsometricOffset(xPos, yPos);
             x = newOrigin.x + wx + FiercePlanet.Orientation.cellWidth / 2;
             y = newOrigin.y + wy + FiercePlanet.Orientation.cellHeight / 4;
@@ -1570,15 +1570,15 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
      * Toggle 3d
      */
     this.toggle3d = function () {
-        if (Universe.settings.skewTiles) {
-            Universe.settings.skewTiles = false;
+        if (Universe.settings.isometricView) {
+            Universe.settings.isometricView = false;
             $('#resourceCanvas').css({zIndex: 5});
             $('#agentCanvas').css({zIndex: 6});
             Lifecycle.currentWorld.mapOptions.rotate = 0;
             $('#3d')[0].innerHTML = 'View 3D';
         }
         else {
-            Universe.settings.skewTiles = true;
+            Universe.settings.isometricView = true;
             $('#resourceCanvas').css({zIndex: 6});
             $('#agentCanvas').css({zIndex: 5});
             Lifecycle.currentWorld.mapOptions.rotate = 30;
@@ -1697,7 +1697,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         x = xPos * FiercePlanet.Orientation.cellWidth;
         y = yPos * FiercePlanet.Orientation.cellHeight;
 
-        if ((Universe.settings.skewTiles || Lifecycle.currentWorld.isometric)) {
+        if ((Universe.settings.isometricView || Lifecycle.currentWorld.isometricView)) {
             var newOrigin = FiercePlanet.Isometric.doIsometricOffset(xPos, yPos);
             var originXp = newOrigin.x + FiercePlanet.Orientation.cellWidth / 2;
             var originYp = newOrigin.y + FiercePlanet.Orientation.cellHeight;

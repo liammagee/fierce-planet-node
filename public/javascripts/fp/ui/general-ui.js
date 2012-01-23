@@ -155,7 +155,7 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
         posY = Math.floor(posY / (sh / FiercePlanet.Orientation.worldHeight));
 
         // Correct for tilt isometric view
-        if (Universe.settings.skewTiles || Lifecycle.currentWorld.isometric) {
+        if (Universe.settings.isometricView || Lifecycle.currentWorld.isometricView) {
             var point = FiercePlanet.Isometric.normaliseCoordinates(x, y);
             posX = Math.floor(point.x / FiercePlanet.Orientation.cellWidth);
             posY = Math.floor(point.y / FiercePlanet.Orientation.cellHeight);

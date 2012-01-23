@@ -81,7 +81,7 @@ Capabilities.RegenerateCapability = new Capability();
                     if (birthChance < agent.culture.birthProbability) {
                         if (world.countAgentsAtPosition(x, y) <= 1 && (Universe.settings.agentsOwnTilesExclusively || world.agentsOwnTilesExclusively)) {
                             var childAgent = new Agent(agent.culture, agent.x, agent.y);
-                            childAgent.delay = parseInt(Math.random() * AgentConstants.DEFAULT_SPEED * 5);
+                            childAgent.delay = parseInt(Math.random() * childAgent.culture.initialSpeed * 5);
                             childAgent.canCommunicateWithOtherAgents = (Universe.settings.agentsCanCommunicate);
                             childAgent.bornAt = (Lifecycle.worldCounter);
                             childAgent.parents = [agent, a];

@@ -107,7 +107,7 @@ FiercePlanet.Utils = FiercePlanet.Utils || {};
         Universe.settings.recording = Universe.settings.recording || false;
         Universe.settings.godMode = Universe.settings.godMode || false;
 
-        Universe.settings.skewTiles = Universe.settings.skewTiles || false;
+        Universe.settings.isometricView = Universe.settings.isometricView || false;
         Universe.settings.showResourcesAsBoxes = Universe.settings.showResourcesAsBoxes || true;
 
         Universe.settings.sendEventsToServer = Universe.settings.sendEventsToServer || false;

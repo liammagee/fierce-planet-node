@@ -22,14 +22,13 @@ var PredatorPreyModule = PredatorPreyModule || {};
         module.registerCulture(PredatorPreyCultures.PREY_AGENT_TYPE);
 //        module.registerCulture(PredatorPreyCultures.TEST_AGENT_TYPE);
         module.registerResourceSet(TBL);
-        module.register();
+        module.registerSelf();
 
 		Universe.registerCultures(module.allCultures());
 		//        Universe.registerAgentTypes(DefaultModule.AgentTypes.agentTypes);
 		Universe.switchResourceSet(TBL);
-		Universe.settings.skewTiles = false;
+		Universe.settings.isometricView = false;
         Universe.settings.agentsCanCommunicate = false;
-        AgentConstants.DEFAULT_SPEED = 1;
         Lifecycle.interval = 100;
         Lifecycle.currentCampaignID = 'Predator-Prey';
         var localStorage = localStorage || {};

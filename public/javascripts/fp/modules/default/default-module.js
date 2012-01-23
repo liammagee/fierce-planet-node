@@ -34,7 +34,7 @@ var DefaultModule = DefaultModule || {};
         module.registerResourceSet(TBL);
         //module.registerResourceSet(CoS);
 
-        module.register();
+        module.registerSelf();
 
 		Universe.registerCultures(module.allCultures());
 		//        Universe.registerAgentTypes(DefaultModule.AgentTypes.agentTypes);

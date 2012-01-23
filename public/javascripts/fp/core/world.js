@@ -58,7 +58,7 @@ function World() {
 	// Cell options
     this.allowOffscreenCycling = false, this.resourcesOwnTilesExclusively = false, this.allowResourcesOnPath = false;
     // Rendering options
-    this.isometric = false;
+    this.isometricView = false;
     // Agent options
     this.noWander = false, this.noSpeedChange = false;
     // Generation options
@@ -436,16 +436,36 @@ World.prototype.addSavedAgent = function(agent, time) {
  */
 World.prototype.generateAgents = function(culture, number) {
 //    var agents = this.currentAgents;
-    var agents = [];
+    var agents = [],
+        world = this;
     if (this.randomiseAgents) {
         // Get pathway length
-        var pl = this.pathway.length;
+        var pl = this.cells.length;
         for (var i = 0; i < number; i ++) {
             // Generate a random tile position
-            var tp = Math.floor(Math.random() * pl);
-            var tile = this.pathway[tp];
-            var agent = this.generateAgentAtPoint(culture, tile[0], tile[1]);
-            agents.push(agent);
+            var positionFound = false;
+            while (!positionFound) {
+                var ci = Math.floor(Math.random() * pl);
+                var cell = this.cells[ci];
+                if (cell.agents == 0) {
+                    var positions = this.getMooreNeighbourhood(cell.x, cell.y, false);
+                    var counter = 0;
+
+//                    agents.forEach(function(agent) {
+//                        positions.forEach(function(position) {
+//                            if (agent.x == position.x && agent.y == position.y)
+//                                counter ++;
+//                        })
+//                    });
+//                    var canPlaceAgent = (counter < 4);
+                    var canPlaceAgent = true;
+                    if (canPlaceAgent) {
+                        var agent = world.generateAgentAtPoint(culture, cell.x, cell.y);
+                        agents.push(agent);
+                        positionFound = true;
+                    }
+                }
+            }
         }
     }
     else if (this.placeAgentsOnAllCells) {
@@ -485,7 +505,7 @@ World.prototype.generateAgentAtPoint = function(culture, x, y, j) {
     var colorScheme = (colorSeed == 0 ? "000" : (colorSeed == 1 ? "0f0" : "00f"));
     // TODO: Make this option configurable
 //            agent.setColor(colorScheme);
-    agent.delay = parseInt(Math.random() * AgentConstants.DEFAULT_SPEED * 5);
+    agent.delay = parseInt(Math.random() * agent.culture.initialSpeed * 5);
     agent.canCommunicateWithOtherAgents = (Universe.settings.agentsCanCommunicate);
     agent.bornAt = (Lifecycle.worldCounter);
 

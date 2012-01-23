@@ -75,7 +75,7 @@ $LAB
         , 'fp/modules/default/resources/tbl.js'
         , 'fp/modules/default/resources/cos.js'
        , 'fp/modules/default/resources/resource_types.js'
-       , 'fp/modules/default/agents/agent_types.js'
+       , 'fp/modules/default/agents/default_cultures.js'
     , 'fp/modules/pp/predator-prey-module.js' , 'fp/modules/pp/worlds/pp-worlds.js' , 'fp/modules/pp/agents/pp-agent-types.js'
     , 'fp/modules/gol/game-of-life-module.js', 'fp/modules/ca/ca-module.js', 'fp/modules/cities/cities-module.js'
     ])
@@ -140,7 +140,7 @@ require([
     , 'fp/data/resourceset/tbl.js'
     , 'fp/data/resourceset/cos.js'
     , 'fp/data/player_classes.js'
-    , 'fp/data/agent_types.js'
+    , 'fp/data/default_cultures.js'
 
     , 'fp/db/fp-db.js'
 
@@ -185,7 +185,7 @@ require([
           // document.onmousedown = function() {return false;} // mozilla
 
           // Default to 3d
-          Universe.settings.skewTiles = true;
+          Universe.settings.isometricView = true;
           $('#3d')[0].innerHTML = 'View 2D';
           FiercePlanet.Drawing.drawGame();
           FiercePlanet.WorldUI.makeWorldFromJSON(!{JSON.stringify(serverWorld)});

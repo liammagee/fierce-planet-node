@@ -126,7 +126,7 @@ var Additional = Additional || new Campaign();
     
         this.world16 = new World();
         this.world16.id = 16;
-        this.world16.isometric = false;
+        this.world16.isometricView = false;
         this.world16.allowOffscreenCycling = true;
         this.world16.allowResourcesOnPath = false;
         this.world16.initialResourceStore = 200;
@@ -184,7 +184,7 @@ var Additional = Additional || new Campaign();
     
         this.world18 = new World();
         this.world18.id = 18;
-        this.world18.isometric = true;
+        this.world18.isometricView = true;
         this.world18.allowResourcesOnPath = false;
         this.world18.initialResourceStore = 180;
         this.world18.isPresetWorld = true;
@@ -211,7 +211,7 @@ var Additional = Additional || new Campaign();
     
         this.world19 = new World();
         this.world19.id = 19;
-        this.world19.isometric = true;
+        this.world19.isometricView = true;
         this.world19.allowResourcesOnPath = false;
         this.world19.initialResourceStore = 150;
         this.world19.isPresetWorld = true;
@@ -240,7 +240,7 @@ var Additional = Additional || new Campaign();
     
         this.world20 = new World();
         this.world20.id = 20;
-        this.world20.isometric = false;
+        this.world20.isometricView = false;
         this.world20.allowResourcesOnPath = false;
         this.world20.initialResourceStore = 1000;
         this.world20.isPresetWorld = true;
@@ -266,7 +266,7 @@ var Additional = Additional || new Campaign();
     
         this.world21 = new World();
         this.world21.id = 21;
-        this.world21.isometric = false;
+        this.world21.isometricView = false;
         this.world21.allowResourcesOnPath = true;
         this.world21.allowOffscreenCycling = true;
         this.world21.initialResourceStore = 0;

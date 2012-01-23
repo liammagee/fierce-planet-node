@@ -6,55 +6,8 @@
  */
 
 
-var CitiesCultures = CitiesCultures || {};
 var CitiesWorlds = CitiesWorlds || new Campaign();
 var CitiesModule = CitiesModule || {};
-
-
-(function() {
-    this.init = function() {
-        var switchStateCapability = {} ;
-        switchStateCapability.counter = 0;
-        switchStateCapability.exercise = function(agent, world) {
-            var x = agent.x, y = agent.y;
-            agent.potential = Math.pow(agent.potential * FiercePlanet.Parameters.RateOfGrowth, FiercePlanet.Parameters.ScaleFactor);
-            if (agent.potential > 1)
-                agent.potential = 1;
-        };
-        this.CELLULAR_AGENT_TYPE = new Culture("Cell", "000", Universe.resourceCategories);
-        _.extend(this.CELLULAR_AGENT_TYPE,
-            {
-                speed: 1,
-                characteristics: {potential: 0},
-                capabilities: [switchStateCapability]
-            });
-        this.CELLULAR_AGENT_TYPE.drawFunction = (function (ctx, agent, x, y, pieceWidth, pieceHeight, newColor, counter, direction) {
-            var __ret = FiercePlanet.Drawing.getDrawingPosition(agent, Lifecycle.waveCounter);
-            var xPos = __ret.intX;
-            var yPos = __ret.intY;
-            var nx = xPos * FiercePlanet.Orientation.cellWidth;
-            var ny = yPos * FiercePlanet.Orientation.cellHeight;
-            nx = nx - (FiercePlanet.Orientation.worldWidth) / 2;
-            ny = ny - (FiercePlanet.Orientation.worldHeight) / 2;
-
-            var grey = Math.floor(agent.potential * 255);
-            ctx.fillStyle = 'rgb(' + grey + ', ' + grey + ', ' + grey + ')';
-            ctx.fillRect(nx, ny, FiercePlanet.Orientation.cellWidth, FiercePlanet.Orientation.cellHeight);
-        });
-        this.CELLULAR_AGENT_TYPE.initFunction = function (agent, world) {
-            if (FiercePlanet.Parameters.DistributeNormally) {
-                var pot = jStat.normal.sample(0.5, 0.15);
-                pot = (pot < 0 ? 0 : (pot > 1 ? 1 : pot));
-                agent.potential = pot;
-            }
-            // Otherwise, assume uniform distribution
-            else {
-                agent.potential = Math.random();
-            }
-        }
-    };
-
-}).apply(CitiesCultures);
 
 
 (function () {
@@ -279,17 +232,17 @@ var CitiesModule = CitiesModule || {};
                 id: 4,
                 name: "Local Diffusion and Contact: Global Pattern from Local Action (pp. 48-51)",
                 isPresetWorld: true,
-                interval: 10,
+                interval: 50,
                 cellsAcross: 130,
                 cellsDown: 130,
                 dontClearCanvas: true,
                 scrollingImageVisible: false,
                 initialResourceStore: 0,
                 playIndefinitely: true,
+                noWander: true,
+                noSpeedChange: true,
                 introduction:
-                    "<p>Threshold</p><p><input class='world-parameters' name='Threshold' value='4.5'/> </p>" +
-                    "<p>Add noise:</p><p><input type='checkbox' class='world-parameters' name='AddNoise' checked='checked'/> </p>" +
-                    "<p>Draw development:</p><p><input type='checkbox' class='world-parameters' name='DrawDevelopment' checked='checked'/> </p>" +
+                    "<p>Threshold</p><p><input class='world-parameters' name='Threshold' value='6'/> </p>" +
                     "<p>Number of Agents:</p><p><input class='world-parameters' name='NumberOfAgents' value='6000'/> </p>" +
                     "",
                 conclusion: "Well done.",
@@ -306,11 +259,30 @@ var CitiesModule = CitiesModule || {};
                     /// Set up agents
                     var culture = _.clone(DefaultCultures.CITIZEN_AGENT_TYPE);
                     culture.waveNumber = parseInt(FiercePlanet.Parameters.NumberOfAgents);
+                    culture.initialSpeed = 1;
+                    culture.beliefs = [];
+                    culture.desires = [];
+                    culture.capabilities = [];
+                    culture.initFunction = function(agent, world) {
+                        agent.color = '666';
+                        agent.isDeveloped = false;
+                    };
                     culture.updateFunction = function(agent, world) {
-                        var newX = Math.floor(Math.random() * world.cellsAcross),
-                            newY = Math.floor(Math.random() * world.cellsDown);
-                        if (world.getCell(newX, newY).agents.length == 0)
-                            agent.moveTo(newX, newY);
+                        /*
+                        if (! agent.isDeveloped) {
+//                        var newX = Math.floor(Math.random() * world.cellsAcross),
+//                            newY = Math.floor(Math.random() * world.cellsDown);
+                            var positions = world.getMooreNeighbourhood(agent.x, agent.y, false);
+                            var position = positions[Math.floor(Math.random() * positions.length)],
+                                newX = position.x,
+                                newY = position.y;
+                            var agents = world.getAgentsAtCell(position.x, position.y);
+                            if (agents.length == 0) {
+                                agent.moveTo(newX, newY);
+                            }
+
+                        }
+                        */
                     };
                     this.cultures = [culture];
                     this.randomiseAgents = true;
@@ -318,7 +290,65 @@ var CitiesModule = CitiesModule || {};
                 },
                 tickFunction: function () {
                     var world = this;
+                    var undevelopedAgents = _.compact(_.map(this.currentAgents, function(agent) {if (! agent.isDeveloped) return agent;} ));
+                    undevelopedAgents.forEach(function(agent) {
+//                        var positions = world.getVonNeumannNeighbourhood(agent.x, agent.y, false);
+                        var positions = world.getMooreNeighbourhood(agent.x, agent.y, false);
+                        var position = positions[Math.floor(Math.random() * positions.length)],
+                            newX = position.x,
+                            newY = position.y;
+//                        var position = world.cells[Math.floor(Math.random() * world.cells.length)],
+//                            newX = position.x, newY = position.y;
+                        var agents = world.getAgentsAtCell(position.x, position.y);
+                        if (agents.length == 0) {
+                            agent.moveTo(newX, newY);
+                        }
+                        /*
+                        var x = agent.x, y = agent.y;
+                        var surroundingPositions = world.getMooreNeighbourhood(x, y, true),
+                            agentCounter = 0, developedAgentCounter = 0;
+                        surroundingPositions.forEach(function(position) {
+//                            var agents = Lifecytcle.currentWorld.getAgentsAtCell(position.x, position.y);
+                            var agents = world.getAgentsAtCell(position.x, position.y);
+                            if (agents && agents.length > 0) {
+                                agentCounter++;
+                                if (agents[0].isDeveloped)
+                                    developedAgentCounter++;
+                            }
+                        });
+                        if (agentCounter > parseInt(FiercePlanet.Parameters.Threshold)) {
+                            if (developedAgentCounter < 2) {
+                                agent.color = 'fff';
+                                agent.isDeveloped = true;
+                            }
+                        }
+                        */
+                    })
+
+                    var undevelopedCounter = undevelopedAgents.length;
+                    undevelopedAgents.forEach(function(agent) {
+                        var x = agent.x, y = agent.y;
+                        var surroundingPositions = world.getMooreNeighbourhood(x, y, true),
+                            agentCounter = 0, developedAgentCounter = 0;
+                        surroundingPositions.forEach(function(position) {
+//                            var agents = Lifecytcle.currentWorld.getAgentsAtCell(position.x, position.y);
+                            var agents = world.getAgentsAtCell(position.x, position.y);
+                            if (agents && agents.length > 0) {
+                                agentCounter++;
+                                if (agents[0].isDeveloped)
+                                    developedAgentCounter++;
+                            }
+                        });
+                        if (agentCounter > parseInt(FiercePlanet.Parameters.Threshold)) {
+                            if ((developedAgentCounter > 0 && developedAgentCounter < 3) || world.currentAgents.length - undevelopedCounter < 5) {
+                                agent.color = 'fff';
+                                agent.isDeveloped = true;
+                                undevelopedCounter--;
+                            }
+                        }
+                    })
                     // Adjust potential for all cells
+                    /*
                     this.cells.forEach(function(cell) {
                         var x = cell.x, y = cell.y;
                         var positions = world.getVonNeumannNeighbourhood(x, y, true);
@@ -348,12 +378,15 @@ var CitiesModule = CitiesModule || {};
                         max = _.max(potentials),
                         range = max - min;
 //                        ,total = _.reduce(potentials, function(memo, num){ return memo + num; }, 0);
-                    var devs = _.map(this.cells, function(cell) { return cell.development; }),
+                        */
+                    var devs = _.map(this.currentAgents, function(agent) { return (agent.color == 'fff' ? 1 : 0); }),
                         totalDev = _.reduce(devs, function(memo, num){ return memo + num; }, 0);
-                    FiercePlanet.Parameters.Max =  max;
-                    FiercePlanet.Parameters.Range =  range;
-                    FiercePlanet.Drawing.drawPath();
-                    //console.log(max, range, totalDev, Lifecycle.waveCounter)
+//                    FiercePlanet.Drawing.drawCanvases();
+                    FiercePlanet.Drawing.clearCanvas('#resourceCanvas');
+//                    FiercePlanet.Drawing.drawResourceAndAgents();
+
+//                    FiercePlanet.Drawing.drawPath();
+                    console.log(totalDev, Lifecycle.waveCounter)
                 }
             })
 
@@ -514,17 +547,13 @@ var CitiesModule = CitiesModule || {};
 
 (function() {
     this.init = function() {
-
         var module = new Module();
         module.id = 'Cities';
-
         module.registerCampaign(CitiesWorlds);
-        CitiesCultures.init();
-        module.registerCulture(CitiesCultures.CELLULAR_AGENT_TYPE );
-        module.register();
+        module.registerSelf();
 
         _.extend(Universe.settings, {
-            skewTiles: false,
+            isometricView: false,
             agentsCanCommunicate: false,
             hidePathBorder: true,
             scrollingImageVisible: false,
@@ -542,14 +571,11 @@ var CitiesModule = CitiesModule || {};
 
         })
 
-        AgentConstants.DEFAULT_SPEED = 1;
-
         FiercePlanet.ModuleEditor.buildEditorFromUrl('/javascripts/fp/modules/cities/cities-module.js', 'CitiesModule.init(); FiercePlanet.Game.loadGame();');
     };
 }).apply(CitiesModule);
 
 if (typeof exports !== "undefined") {
-    exports.CitiesCultures = CitiesCultures;
     exports.CitiesWorlds = CitiesWorlds;
     exports.CitiesModule = CitiesModule;
 }

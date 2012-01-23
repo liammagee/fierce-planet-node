@@ -71,7 +71,7 @@ var GameOfLifeModule = GameOfLifeModule || {};
 
                 var color = (agent.isLiving ? "#fff" : "#000");
                 ctx.fillStyle = color;
-                if ((Universe.settings.skewTiles || Lifecycle.currentWorld.isometric)) {
+                if ((Universe.settings.isometricView || Lifecycle.currentWorld.isometricView)) {
                     var newOrigin = FiercePlanet.Isometric.doIsometricOffset(xPos, yPos);
                     nx = newOrigin.x;
                     ny = newOrigin.y;
@@ -114,7 +114,7 @@ var GameOfLifeModule = GameOfLifeModule || {};
         this.gameOfLifeWorld = new World();
         (function () {
             this.id = 1;
-            this.isometric = false;
+            this.isometricView = false;
             this.allowResourcesOnPath = true;
             this.allowOffscreenCycling = true;
             this.initialResourceStore = 10000;
@@ -218,11 +218,11 @@ var GameOfLifeModule = GameOfLifeModule || {};
         module.registerCampaign(GameOfLifeWorlds);
         module.registerCulture(GameOfLifeCultures.CELLULAR_AGENT_TYPE);
         module.registerResourceSet(TBL);
-        module.register();
+        module.registerSelf();
 
 		Universe.registerCultures(module.allCultures());
 		Universe.switchResourceSet(TBL);
-		Universe.settings.skewTiles = false;
+		Universe.settings.isometricView = false;
         Universe.settings.hidePathBorder = true;
         Universe.settings.agentsCanCommunicate = false;
         Universe.settings.scrollingImageVisible = localStorage.scrollingImageVisible = false;

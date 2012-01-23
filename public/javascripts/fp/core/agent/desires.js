@@ -23,7 +23,7 @@ Desires.ImproveHealth = {};
     this.name = 'Improve Health';
     this.dependsOnBeliefs = 'Improve Health';
     this.evaluate = function(agent, world) {
-        return 1.0 - (agent.health / AgentConstants.INITIAL_HEALTH);
+        return 1.0 - (agent.health / agent.culture.initialHealth);
     };
     this.findSatisfyingObjects = function(agent) {
         if (_.isUndefined(agent.memoriesOfResources))

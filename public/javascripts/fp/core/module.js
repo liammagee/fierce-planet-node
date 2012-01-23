@@ -24,7 +24,7 @@ function Module() {};
     /**
      * Registers a module
      */
-    Module.prototype.register = function() {
+    Module.prototype.registerSelf = function() {
         ModuleManager.registerModule(this);
     };
 

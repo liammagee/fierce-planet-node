@@ -5,21 +5,7 @@
  * MIT Licensed
  */
 
-/**
- * Agent constants
- */
-var AgentConstants = AgentConstants || {};
-(function() {
-	this.INITIAL_HEALTH = 100;
-	this.DEFAULT_SPEED = 10;
 
-	this.VERY_UNLIKELY = 0;
-	this.UNLIKELY = 1;
-	this.MODERATELY_LIKELY = 2;
-	this.EVEN_CHANCE = 3;
-	this.PROBABILITY_STRATEGY_TO_DEVIATE = this.UNLIKELY;
-	
-}).apply(AgentConstants);
 
 
 /**
@@ -101,17 +87,17 @@ function Agent(culture, x, y) {
 
 
     /**
-     * Generates a normalised health adjustment amount (not below zero, not above the INITIAL_HEALTH amount).
+     * Generates a normalised health adjustment amount (not below zero, not above the DEFAULT_INITIAL_HEALTH amount).
      *
      * @param existingHealthValue
      * @param adjustment
      */
     this.makeHealthAdjustment = function(existingHealthValue, adjustment) {
         var newHealth = existingHealthValue + adjustment;
-        if (newHealth > 0 && newHealth < AgentConstants.INITIAL_HEALTH)
+        if (newHealth > 0 && newHealth < this.culture.initialHealth)
             return newHealth;
         else if (newHealth > 0)
-            return AgentConstants.INITIAL_HEALTH;
+            return this.culture.initialHealth;
         else
             return 0;
     };
@@ -207,7 +193,7 @@ function Agent(culture, x, y) {
     this.registerHealthStats = function() {
         for (var i = 0; i < this.culture.healthCategories.length; i++) {
             var category = this.culture.healthCategories[i];
-            this.healthCategoryStats[category.code] = AgentConstants.INITIAL_HEALTH;
+            this.healthCategoryStats[category.code] = this.culture.initialHealth;
         }
         // Add length accessor here, to easily determine number of categories
         this.healthCategoryStats.length = this.culture.healthCategories.length;
@@ -353,24 +339,24 @@ function Agent(culture, x, y) {
      */
     this.adjustSpeed = function() {
         var tmpSpeed = this.speed;
-        var variance = this.speed - AgentConstants.DEFAULT_SPEED;
+        var variance = this.speed - this.culture.initialSpeed;
 
         // Calculate probability of adjustment
         var prob = 0;
-        switch (AgentConstants.PROBABILITY_STRATEGY_TO_DEVIATE) {
-            case AgentConstants.VERY_UNLIKELY:
+        switch (CultureDefaults.PROBABILITY_STRATEGY_TO_DEVIATE) {
+            case CultureDefaults.VERY_UNLIKELY:
                 // Makes movement away from MOVE_INCREMENTS very unlikely: EXP(N, N)
                 prob = Math.pow(Math.abs(variance), Math.abs(variance)) + 2;
                 break;
-            case AgentConstants.UNLIKELY:
+            case CultureDefaults.UNLIKELY:
                 // Makes movement away from MOVE_INCREMENTS unlikely
                 prob = Math.pow(Math.abs(variance) + 1, 2) + 2;
                 break;
-            case AgentConstants.MODERATELY_LIKELY:
+            case CultureDefaults.MODERATELY_LIKELY:
                 //    Makes movement away from MOVE_INCREMENTS moderately likely
                 prob = Math.abs(variance) + 2;
                 break;
-            case AgentConstants.EVEN_CHANCE:
+            case CultureDefaults.EVEN_CHANCE:
                 // Makes movement away from MOVE_INCREMENTS an even chance
                 prob = 1 + 1 + 1;
                 break;
@@ -505,7 +491,7 @@ function Agent(culture, x, y) {
             if (this.culture.characteristics.hasOwnProperty(characteristic))
                 this[characteristic] = this.culture.characteristics[characteristic];
         }
-        this.speed = _.isUndefined(this.culture.speed) ? this.speed : this.culture.speed;
+        this.speed = _.isUndefined(this.culture.initialSpeed) ? this.speed : this.culture.initialSpeed;
         if (this.culture.initFunction)
             this.culture.initFunction(this, world);
     };
@@ -534,12 +520,12 @@ function Agent(culture, x, y) {
 
     // Speed-related
     this.delay = 0;
-    this.speed = AgentConstants.DEFAULT_SPEED;
+    this.speed = this.culture.initialSpeed;
     this.countdownToMove = 0;
     this.wanderX = 0, this.wanderY = 0;
 
     // Health related
-    this.health = AgentConstants.INITIAL_HEALTH;
+    this.health = this.culture.initialHealth;
     this.healthCategoryStats = {};
 
     this.canCommunicateWithOtherAgents = true;
@@ -592,7 +578,7 @@ function SimpleAgent(culture, x, y, color, speed, health, wanderX, wanderY, last
     this.y = y;
     this.color = color;
     this.health = health;
-    this.speed = AgentConstants.DEFAULT_SPEED;
+    this.speed = CultureDefaults.DEFAULT_INITIAL_SPEED;
     this.wanderX = wanderX;
     this.wanderY = wanderY;
     this.lastMemory = new Memory(0, 0, x, y);
@@ -630,5 +616,4 @@ if (typeof exports !== "undefined") {
     exports.Agent = Agent;
     exports.Memory = Memory;
     exports.MemoryOfAgent = MemoryOfAgent;
-	exports.AgentConstants = AgentConstants;
 }

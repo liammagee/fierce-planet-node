@@ -22,7 +22,7 @@ var PredatorPreyWorlds = PredatorPreyWorlds || new Campaign();
         this.gameOfLifeWorld = new World();
         (function () {
             this.id = 1;
-            this.isometric = false;
+            this.isometricView = false;
             this.allowResourcesOnPath = true;
             this.allowOffscreenCycling = true;
             this.initialResourceStore = 10000;

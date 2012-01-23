@@ -6,7 +6,7 @@ Level = require('./public/javascripts/fp/core/level.js').Level;
 Resource = require('./public/javascripts/fp/core/resource.js').Resource;
 ResourceCategory = require('./public/javascripts/fp/core/resource.js').ResourceCategory;
 ResourceType = require('./public/javascripts/fp/core/resource.js').ResourceType;
-AgentConstants = require('./public/javascripts/fp/core/agent/agent.js').AgentConstants;
+CultureDefaults = require('./public/javascripts/fp/core/agent/agent.js').CultureDefaults;
 Memory = require('./public/javascripts/fp/core/agent/agent.js').Memory;
 MemoryOfAgent = require('./public/javascripts/fp/core/agent/agent.js').MemoryOfAgent;
 Culture = require('./public/javascripts/fp/core/agent/culture.js').Culture;
@@ -28,7 +28,7 @@ Wave = require('./public/javascripts/fp/core/wave.js').Wave;
 Statistics = require('./public/javascripts/fp/core/statistics.js').Statistics;
 
 var DefaultModule = DefaultModule || {};
-DefaultCultures = require('./public/javascripts/fp/modules/default/agents/agent_types.js').DefaultCultures;
+DefaultCultures = require('public/javascripts/fp/modules/default/agents/default_cultures.js').DefaultCultures;
 ResourceTypes = require('./public/javascripts/fp/modules/default/resources/resource_types.js').ResourceTypes;
 CoS = require('./public/javascripts/fp/modules/default/resources/cos.js').CoS;
 TBL = require('./public/javascripts/fp/modules/default/resources/tbl.js').TBL;

@@ -316,11 +316,11 @@ $(function() {
           FiercePlanet.Drawing.toggle3d();
       }
       else if (command == '3d') {
-          Universe.settings.skewTiles = true;
+          Universe.settings.isometricView = true;
           $('#3d')[0].innerHTML = 'View 2D';
       }
       else if (command == '2d') {
-          Universe.settings.skewTiles = false;
+          Universe.settings.isometricView = false;
           $('#3d')[0].innerHTML = 'View 3D';
       }
       else if (command == 'tilt-up' || command == 'tu') {

@@ -89,7 +89,7 @@ FiercePlanet.Editor = FiercePlanet.Editor || {};
 
         // Modify settings
         FiercePlanet.Game.inDesignMode = true;
-        Universe.settings.skewTiles = false;
+        Universe.settings.isometricView = false;
 
         // Minimise console
         FiercePlanet.Console.minimise();

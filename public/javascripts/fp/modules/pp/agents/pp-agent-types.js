@@ -22,11 +22,13 @@ var PredatorPreyCultures = PredatorPreyCultures || {};
         this.TEST_AGENT_TYPE = new Culture("Test", "fbe53b", Universe.resourceCategories);
 
         this.PREY_AGENT_TYPE.waveNumber = 50;
+        this.PREY_AGENT_TYPE.speed = 1;
         this.PREY_AGENT_TYPE.moveCost = -2;
         this.PREY_AGENT_TYPE.birthProbability = 0.1;
         this.PREY_AGENT_TYPE.reproductionAge = 15;
 
         this.PREDATOR_AGENT_TYPE.waveNumber = 20;
+        this.PREY_AGENT_TYPE.speed = 1;
         this.PREDATOR_AGENT_TYPE.moveCost = -5;
         this.PREDATOR_AGENT_TYPE.birthProbability = 0.2;
         this.PREDATOR_AGENT_TYPE.reproductionAge = 25;
@@ -81,7 +83,7 @@ var PredatorPreyCultures = PredatorPreyCultures || {};
                 for (var j in agent.culture.healthCategories) {
                     var rc = agent.culture.healthCategories[j];
                     var h = agent.getHealthForResourceCategory(rc);
-                    var barLength = Math.floor((h / AgentConstants.INITIAL_HEALTH) * pieceWidth / 2);
+                    var barLength = Math.floor((h / agent.culture.initialHealth) * pieceWidth / 2);
 
                     ctx.lineWidth = 3;
                     ctx.lineCap = "round";
@@ -113,7 +115,7 @@ var PredatorPreyCultures = PredatorPreyCultures || {};
                 /*
                  ctx.beginPath();
                  ctx.moveTo(x - pieceWidth / 4, y - 5);
-                 var barLength = (agent.health / INITIAL_HEALTH) * pieceWidth / 2;
+                 var barLength = (agent.health / DEFAULT_INITIAL_HEALTH) * pieceWidth / 2;
                  ctx.lineTo(x - pieceWidth / 4 + barLength, y - 5);
                  ctx.closePath();
                  ctx.lineWidth = 3;

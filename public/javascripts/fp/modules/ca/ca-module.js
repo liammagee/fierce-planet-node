@@ -16,7 +16,7 @@ var CellularAutomataModule = CellularAutomataModule || {};
         this.citiesWorld1  = new World();
         (function () {
             this.id = 1;
-            this.isometric = false;
+            this.isometricView = false;
             this.allowResourcesOnPath = true;
             this.allowOffscreenCycling = true;
             this.initialResourceStore = 10000;
@@ -133,6 +133,7 @@ var CellularAutomataModule = CellularAutomataModule || {};
         };
         GameOfLifeCultures.CELLULAR_AGENT_TYPE.capabilities = [ switchStateCapability ];
         GameOfLifeCultures.CELLULAR_AGENT_TYPE.updateFunction = void 0;
+        GameOfLifeCultures.CELLULAR_AGENT_TYPE.speed = 1;
 
         var module = new Module();
         module.id = 'CA';
@@ -140,11 +141,11 @@ var CellularAutomataModule = CellularAutomataModule || {};
         module.registerCampaign(CellularAutomataWorlds);
         module.registerCulture(GameOfLifeCultures.CELLULAR_AGENT_TYPE);
         module.registerResourceSet(TBL);
-        module.register();
+        module.registerSelf();
 
         Universe.registerCultures(module.allCultures());
         Universe.switchResourceSet(TBL);
-        Universe.settings.skewTiles = false;
+        Universe.settings.isometricView = false;
         Universe.settings.agentsCanCommunicate = false;
         Universe.settings.hidePathBorder = true;
 
@@ -155,7 +156,6 @@ var CellularAutomataModule = CellularAutomataModule || {};
         Lifecycle.currentCampaignID = 'CA';
         Lifecycle.currentWorldNumber = localStorage.currentWorldNumber = 0;
         Lifecycle.currentWorldPreset = true;
-        AgentConstants.DEFAULT_SPEED = 1;
         Lifecycle.interval = 50;
         Lifecycle.NEW_WORLD_DELAY = 300;
 

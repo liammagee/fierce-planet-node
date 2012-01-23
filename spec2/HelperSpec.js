@@ -14,9 +14,9 @@ if (typeof(global) != "undefined") {
     ResourceType = require('./../public/javascripts/fp/core/resource.js').ResourceType;
 
     Agent = require('./../public/javascripts/fp/core/agent/agent.js').Agent;
-    AgentConstants = require('./../public/javascripts/fp/core/agent/agent.js').AgentConstants;
     Memory = require('./../public/javascripts/fp/core/agent/agent.js').Memory;
     MemoryOfAgent = require('./../public/javascripts/fp/core/agent/agent.js').MemoryOfAgent;
+    CultureDefaults = require('./../public/javascripts/fp/core/agent/culture.js').CultureDefaults;
     Culture = require('./../public/javascripts/fp/core/agent/culture.js').Culture;
     Chacteristics = require('./../public/javascripts/fp/core/agent/characteristics.js').Chacteristics;
     Beliefs = require('./../public/javascripts/fp/core/agent/beliefs.js').Beliefs;
@@ -36,7 +36,7 @@ if (typeof(global) != "undefined") {
     Statistics = require('./../public/javascripts/fp/core/statistics.js').Statistics;
 
     var DefaultModule = DefaultModule || {};
-    DefaultCultures = require('./../public/javascripts/fp/modules/default/agents/agent_types.js').DefaultCultures;
+    DefaultCultures = require('../public/javascripts/fp/modules/default/agents/default_cultures.js').DefaultCultures;
     ResourceTypes = require('./../public/javascripts/fp/modules/default/resources/resource_types.js').ResourceTypes;
     CoS = require('./../public/javascripts/fp/modules/default/resources/cos.js').CoS;
     TBL = require('./../public/javascripts/fp/modules/default/resources/tbl.js').TBL;

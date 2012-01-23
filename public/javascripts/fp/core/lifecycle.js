@@ -123,7 +123,7 @@ var Lifecycle = Lifecycle || {};
                 // Adjust wander
                 if (!Lifecycle.currentWorld.noWander && Universe.settings.agentsCanAdjustWander) {
                     // Make sure agents don't wander over boxes in 3D view
-                    if (Universe.settings.showResourcesAsBoxes && Universe.settings.skewTiles) {
+                    if (Universe.settings.showResourcesAsBoxes && Universe.settings.isometricView) {
                         agent.adjustWander(FiercePlanet.Orientation.cellWidth, 0);
                     }
                     else {
@@ -151,7 +151,6 @@ var Lifecycle = Lifecycle || {};
         }
 
         Lifecycle.currentWorld.recoverResources();
-
         // Check whether we have too many
         for (var i = nullifiedAgents.length - 1; i >= 0; i-= 1) {
             var nullIndex = nullifiedAgents[i];
@@ -390,6 +389,7 @@ var Lifecycle = Lifecycle || {};
         Lifecycle.currentWave = 1;
         Lifecycle.currentWaveNumber = 0;
         Lifecycle.currentWorld.initWorld();
+
 
 		if (this.postInitialiseGameCallback)
 			this.postInitialiseGameCallback();

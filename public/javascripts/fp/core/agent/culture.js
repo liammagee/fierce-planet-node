@@ -6,6 +6,21 @@
  */
 
 
+/**
+ * Agent constants
+ */
+var CultureDefaults = CultureDefaults || {};
+(function() {
+    this.DEFAULT_INITIAL_HEALTH = 100;
+    this.DEFAULT_INITIAL_SPEED = 10;
+
+    this.VERY_UNLIKELY = 0;
+    this.UNLIKELY = 1;
+    this.MODERATELY_LIKELY = 2;
+    this.EVEN_CHANCE = 3;
+    this.PROBABILITY_STRATEGY_TO_DEVIATE = this.UNLIKELY;
+
+}).apply(CultureDefaults);
 
 /**
  * Defines the type of an agent.
@@ -15,12 +30,12 @@
  * @param name
  * @param color
  */
-function Culture(name, color, healthCategories, speed, health, drawFunction, initFunction, updateFunction) {
+function Culture(name, color, healthCategories, initialSpeed, initialHealth, drawFunction, initFunction, updateFunction) {
     this.name = name;
     this.color = color;
+    this.initialSpeed = initialSpeed || CultureDefaults.DEFAULT_INITIAL_SPEED;
+    this.initialHealth = initialHealth || CultureDefaults.DEFAULT_INITIAL_HEALTH;
     this.healthCategories = healthCategories || [];
-    this.speed = speed || AgentConstants.DEFAULT_SPEED;
-    this.health = health || AgentConstants.INITIAL_HEALTH;
     this.generateEachWave = true;
 
     this.characteristics = {};
@@ -41,7 +56,6 @@ function Culture(name, color, healthCategories, speed, health, drawFunction, ini
         })
     };
     this.updateFunction = this.updateFunction || this.defaultUpdateFunction;
-
 }
 
 
@@ -76,5 +90,8 @@ function Culture(name, color, baseSize, speed, health, drawFunction) {
  */
 
 
-if (typeof exports !== "undefined")
+if (typeof exports !== "undefined") {
+    exports.CultureDefaults = CultureDefaults;
     exports.Culture = Culture;
+
+}
