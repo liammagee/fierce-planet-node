@@ -149,8 +149,8 @@ FiercePlanet.Parameters = FiercePlanet.Parameters || {};
                     yaxis: { min: 0, max: totalSaveable }
                 };
                 var seedData = [];
-                for (var i = 0, l = Universe.resourceCategories.length; i < l; i++) {
-                    var cat = Universe.resourceCategories[i];
+                for (var i = 0, l = ModuleManager.currentModule.resourceSet.categories.length; i < l; i++) {
+                    var cat = ModuleManager.currentModule.resourceSet.categories[i];
                     seedData.push({ color: cat.color, data: [[0, 100]], lines: { show: true } });
                 }
                 seedData.push({ color: '#333', data: [[0, 100]], lines: { show: true } });
@@ -209,8 +209,8 @@ FiercePlanet.Parameters = FiercePlanet.Parameters || {};
                     yaxis: { min: 0, max: totalSaveable }
                 };
                 var seedData = [];
-                for (var i = 0, l = Universe.resourceCategories.length; i < l; i++) {
-                    var cat = Universe.resourceCategories[i];
+                for (var i = 0, l = ModuleManager.currentModule.resourceSet.categories.length; i < l; i++) {
+                    var cat = ModuleManager.currentModule.resourceSet.categories[i];
                     seedData.push({ color: cat.color, data: [[0, 100]], lines: { show: true } });
                 }
                 seedData.push({ color: '#333', data: [[0, 100]], lines: { show: true } });

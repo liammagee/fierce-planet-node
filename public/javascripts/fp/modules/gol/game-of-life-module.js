@@ -44,7 +44,7 @@ var GameOfLifeModule = GameOfLifeModule || {};
             }
         };
 
-        this.CELLULAR_AGENT_TYPE = new Culture("Cell", "000", Universe.resourceCategories);
+        this.CELLULAR_AGENT_TYPE = new Culture("Cell", "000", ModuleManager.currentModule.resourceSet.categories);
         this.CELLULAR_AGENT_TYPE.birthProbability = 0.0;
         this.CELLULAR_AGENT_TYPE.reproductionAge = 15;
         this.CELLULAR_AGENT_TYPE.moveCost = 0;
@@ -138,7 +138,6 @@ var GameOfLifeModule = GameOfLifeModule || {};
             this.noSpeedChange = true;
             this.resourcesOwnTilesExclusively = false;
             this.agentsOwnTilesExclusively = true;
-            this.canCommunicateWithOtherAgents = false;
             this.allowOffscreenCycling = false;
             this.waveNumber = 1;
             this.expiryLimit = 1;
@@ -215,16 +214,13 @@ var GameOfLifeModule = GameOfLifeModule || {};
 
         var module = new Module();
         module.id = 'GOL';
+        module.registerSelf();
         module.registerCampaign(GameOfLifeWorlds);
         module.registerCulture(GameOfLifeCultures.CELLULAR_AGENT_TYPE);
         module.registerResourceSet(TBL);
-        module.registerSelf();
 
-		Universe.registerCultures(module.allCultures());
-		Universe.switchResourceSet(TBL);
 		Universe.settings.isometricView = false;
         Universe.settings.hidePathBorder = true;
-        Universe.settings.agentsCanCommunicate = false;
         Universe.settings.scrollingImageVisible = localStorage.scrollingImageVisible = false;
         Universe.settings.showGraph = true;
         Universe.settings.showEditor = true;

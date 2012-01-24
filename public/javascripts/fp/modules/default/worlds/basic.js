@@ -847,13 +847,11 @@ var Basic = Basic || new Campaign();
             this.addTerrainToPath(new Terrain('#848A64', 0.7));
             if (! this.preState) {
                 this.preState = {};
-                this.preState.agentsCanCommunicate = Universe.settings.agentsCanCommunicate;
                 this.preState.ignoreResourceBalance = Universe.settings.ignoreResourceBalance;
-                this.preState.agentsCanCommunicate = Universe.settings.useInlineResourceSwatch;
+                this.preState.useInlineResourceSwatch = Universe.settings.useInlineResourceSwatch;
                 this.preState.interval = Lifecycle.interval;
                 this.preState.capabilities = FiercePlanet.Game.currentProfile.capabilities;
             }
-            Universe.settings.agentsCanCommunicate = true;
             Universe.settings.ignoreResourceBalance = true;
             Universe.settings.useInlineResourceSwatch = false;
             Lifecycle.interval = 10;
@@ -865,9 +863,8 @@ var Basic = Basic || new Campaign();
         this.world11.teardown = function() {
             if (!this.preState)
                 return;
-            Universe.settings.agentsCanCommunicate = this.preState.agentsCanCommunicate;
             Universe.settings.ignoreResourceBalance = this.preState.ignoreResourceBalance;
-            Universe.settings.useInlineResourceSwatch = this.preState.agentsCanCommunicate;
+            Universe.settings.useInlineResourceSwatch = this.preState.useInlineResourceSwatch;
             Lifecycle.interval = this.preState.interval;
             FiercePlanet.Game.currentProfile.capabilities = this.preState.capabilities;
             FiercePlanet.GeneralUI.refreshSwatch();

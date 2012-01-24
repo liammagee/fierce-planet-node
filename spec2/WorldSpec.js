@@ -60,7 +60,7 @@ describe("world-related classes", function() {
             beforeEach(function() {
                 world.resources = [];
                 world.removeAllResourcesFromCells();
-                resource = new Resource(Universe.resourceTypes[0], 11, 10);
+                resource = new Resource(ModuleManager.currentModule.resourceSet.types[0], 11, 10);
                 world.addResource(resource)
             });
 
@@ -98,7 +98,7 @@ describe("world-related classes", function() {
             beforeEach(function() {
                 world.currentAgents = [];
                 world.removeAllAgentsFromCells();
-                agent = new Agent(Universe.cultures[0], 10, 10);
+                agent = new Agent(ModuleManager.currentModule.cultures[0], 10, 10);
                 world.currentAgents.push(agent);
                 world.addAgentToCell(agent);
             });
@@ -142,7 +142,7 @@ describe("world-related classes", function() {
         describe("returning a subset of current agents from a world", function() {
             var agent;
             beforeEach(function() {
-                agent = new Agent(Universe.cultures[0], 10, 10);
+                agent = new Agent(ModuleManager.currentModule.cultures[0], 10, 10);
                 world.currentAgents.push(agent);
                 world.addAgentToCell(agent);
                 world.currentAgentsFunction = function(agent) { if (agent.x == 10 && agent.y == 10) { return agent; } };

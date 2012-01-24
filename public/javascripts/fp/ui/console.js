@@ -383,31 +383,23 @@ $(function() {
               var rs = params[1];
               jqconsole.Write(rs + '\n')
               if (rs == 'tbl') {
-                  Universe.resourceTypeNamespace = TBL;
-                  if (Universe.resourceTypeNamespace.doSetup)
-                      Universe.resourceTypeNamespace.doSetup();
-
-                  //TBL
-                  Universe.registerResourceCategories([TBL.ECO_CATEGORY, TBL.ENV_CATEGORY, TBL.SOC_CATEGORY]);
-                  Universe.registerResourceTypes(TBL.ECONOMIC_RESOURCE_TYPES.concat(TBL.ENVIRONMENTAL_RESOURCE_TYPES.concat(TBL.SOCIAL_RESOURCE_TYPES)));
+                  ModuleManager.currentModule.resourceSet = TBL;
+                  if (ModuleManager.currentModule.resourceSet.doSetup)
+                      ModuleManager.currentModule.resourceSet.doSetup();
                   FiercePlanet.Game.currentProfile.capabilities = ["farm", "water", "clinic"];
               }
               else if (rs == 'cos') {
-                  Universe.resourceTypeNamespace = CoS;
-                  if (Universe.resourceTypeNamespace.doSetup)
-                      Universe.resourceTypeNamespace.doSetup();
-
-                  //CoS
-                  Universe.registerResourceCategories([CoS.ECO_CATEGORY, CoS.ENV_CATEGORY, CoS.POL_CATEGORY, CoS.CUL_CATEGORY]);
-                  Universe.registerResourceTypes(CoS.ECONOMIC_RESOURCE_TYPES.concat(CoS.ECOLOGICAL_RESOURCE_TYPES.concat(CoS.POLITICAL_RESOURCE_TYPES.concat(CoS.CULTURAL_RESOURCE_TYPES))));
+                  ModuleManager.currentModule.resourceSet = CoS;
+                  if (ModuleManager.currentModule.resourceSet.doSetup)
+                      ModuleManager.currentModule.resourceSet.doSetup();
                   FiercePlanet.Game.currentProfile.capabilities = ["farm", "water", "clinic", "legal"];
               }
 
-                      // Handle resource drag and drop and click interactions
-                      FiercePlanet.ResourceUI.initialiseAndLoadResources();
+              // Handle resource drag and drop and click interactions
+              FiercePlanet.ResourceUI.initialiseAndLoadResources();
 
-                      // Handle resource drag and drop and click interactions
-                      FiercePlanet.ResourceUI.setupResourceInteraction();
+              // Handle resource drag and drop and click interactions
+              FiercePlanet.ResourceUI.setupResourceInteraction();
 
               Lifecycle.newWorld();
           }

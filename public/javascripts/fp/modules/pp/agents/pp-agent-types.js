@@ -17,9 +17,9 @@ var PredatorPreyCultures = PredatorPreyCultures || {};
 (function () {
 
     this.init = function () {
-        this.PREY_AGENT_TYPE = new Culture("Prey", "000", Universe.resourceCategories);
-        this.PREDATOR_AGENT_TYPE = new Culture("Predator", "f00", Universe.resourceCategories);
-        this.TEST_AGENT_TYPE = new Culture("Test", "fbe53b", Universe.resourceCategories);
+        this.PREY_AGENT_TYPE = new Culture("Prey", "000", ModuleManager.currentModule.resourceSet.categories);
+        this.PREDATOR_AGENT_TYPE = new Culture("Predator", "f00", ModuleManager.currentModule.resourceSet.categories);
+        this.TEST_AGENT_TYPE = new Culture("Test", "fbe53b", ModuleManager.currentModule.resourceSet.categories);
 
         this.PREY_AGENT_TYPE.waveNumber = 50;
         this.PREY_AGENT_TYPE.speed = 1;

@@ -105,8 +105,8 @@ Profile.prototype.resetCurrentStats = function() {
     this.currentWorldResourcesInStore = Lifecycle.currentWorld.initialResourceStore || FiercePlanet.Profile.STARTING_STORE;
     this.currentWorldResourcesSpent = 0;
     this.currentWorldResourcesSpentByCategory = {};
-    for (var i = 0; i < Universe.resourceCategories.length; i++) {
-        var category = Universe.resourceCategories[i];
+    for (var i = 0; i < ModuleManager.currentModule.resourceSet.categories.length; i++) {
+        var category = ModuleManager.currentModule.resourceSet.categories[i];
         this.currentWorldResourcesSpentByCategory[category.code] = 0;
     }
 };

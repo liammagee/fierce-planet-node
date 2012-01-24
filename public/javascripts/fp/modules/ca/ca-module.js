@@ -40,7 +40,6 @@ var CellularAutomataModule = CellularAutomataModule || {};
             this.noSpeedChange = true;
             this.resourcesOwnTilesExclusively = false;
             this.agentsOwnTilesExclusively = true;
-            this.canCommunicateWithOtherAgents = false;
             this.allowOffscreenCycling = false;
             this.waveNumber = 1;
             this.expiryLimit = 1;
@@ -143,10 +142,7 @@ var CellularAutomataModule = CellularAutomataModule || {};
         module.registerResourceSet(TBL);
         module.registerSelf();
 
-        Universe.registerCultures(module.allCultures());
-        Universe.switchResourceSet(TBL);
         Universe.settings.isometricView = false;
-        Universe.settings.agentsCanCommunicate = false;
         Universe.settings.hidePathBorder = true;
 
         Universe.settings.scrollingImageVisible = localStorage.scrollingImageVisible = false;

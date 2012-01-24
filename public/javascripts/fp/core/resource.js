@@ -120,7 +120,7 @@ Resource.prototype.provideYield = function(agent, resourceEffect, adjustSpeedToY
         }
         else {
             if (agent.getHealthForResource(this) < 100) {
-                var rawAdjustment = this.perAgentYield * this.upgradeWorld * Universe.resourceCategories.length;
+                var rawAdjustment = this.perAgentYield * this.upgradeWorld * ModuleManager.currentModule.resourceSet.categories.length;
                 adjustment = rawAdjustment * resourceEffect;
                 agent.adjustHealthForResource(adjustment, this);
                 if (adjustSpeedToYield && Universe.settings.agentsCanAdjustSpeed) {

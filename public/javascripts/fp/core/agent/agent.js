@@ -343,20 +343,20 @@ function Agent(culture, x, y) {
 
         // Calculate probability of adjustment
         var prob = 0;
-        switch (CultureDefaults.PROBABILITY_STRATEGY_TO_DEVIATE) {
-            case CultureDefaults.VERY_UNLIKELY:
+        switch (ProbabilityFlags.PROBABILITY_STRATEGY_TO_DEVIATE) {
+            case ProbabilityFlags.VERY_UNLIKELY:
                 // Makes movement away from MOVE_INCREMENTS very unlikely: EXP(N, N)
                 prob = Math.pow(Math.abs(variance), Math.abs(variance)) + 2;
                 break;
-            case CultureDefaults.UNLIKELY:
+            case ProbabilityFlags.UNLIKELY:
                 // Makes movement away from MOVE_INCREMENTS unlikely
                 prob = Math.pow(Math.abs(variance) + 1, 2) + 2;
                 break;
-            case CultureDefaults.MODERATELY_LIKELY:
+            case ProbabilityFlags.MODERATELY_LIKELY:
                 //    Makes movement away from MOVE_INCREMENTS moderately likely
                 prob = Math.abs(variance) + 2;
                 break;
-            case CultureDefaults.EVEN_CHANCE:
+            case ProbabilityFlags.EVEN_CHANCE:
                 // Makes movement away from MOVE_INCREMENTS an even chance
                 prob = 1 + 1 + 1;
                 break;
@@ -527,8 +527,6 @@ function Agent(culture, x, y) {
     // Health related
     this.health = this.culture.initialHealth;
     this.healthCategoryStats = {};
-
-    this.canCommunicateWithOtherAgents = true;
 
 
     // BELIEFS - TODO: Check if redundant now

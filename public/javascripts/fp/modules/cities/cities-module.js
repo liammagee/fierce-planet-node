@@ -347,45 +347,9 @@ var CitiesModule = CitiesModule || {};
                             }
                         }
                     })
-                    // Adjust potential for all cells
-                    /*
-                    this.cells.forEach(function(cell) {
-                        var x = cell.x, y = cell.y;
-                        var positions = world.getVonNeumannNeighbourhood(x, y, true);
-                        var totalPotential = 0, counter = 0;
-                        positions.forEach(function(position) {
-                            var cell = world.getCell(position.x, position.y);
-                            counter++;
-                            totalPotential += cell.potential;
-                        });
-                        totalPotential = totalPotential / counter;
-                        if (FiercePlanet.Parameters.AddNoise) {
-                            totalPotential += (Math.random() < 0.5 ? -1 : 1);
-                        }
-                        cell.newPotential = totalPotential;
-                    });
-
-                    // Adjust potential for all cells
-                    this.cells.forEach(function(cell) {
-                        if (cell.newPotential)
-                            cell.potential = cell.newPotential;
-                        cell.development =  (cell.potential <= FiercePlanet.Parameters.Threshold && cell.development == 0 ? 0 : 1 );
-                        if (cell.development == 1)
-                            cell.terrain = new Terrain("#fff", 1.0);
-                    });
-                    var potentials = _.map(this.cells, function(cell) { return cell.potential; }),
-                        min = _.min(potentials),
-                        max = _.max(potentials),
-                        range = max - min;
-//                        ,total = _.reduce(potentials, function(memo, num){ return memo + num; }, 0);
-                        */
                     var devs = _.map(this.currentAgents, function(agent) { return (agent.color == 'fff' ? 1 : 0); }),
                         totalDev = _.reduce(devs, function(memo, num){ return memo + num; }, 0);
-//                    FiercePlanet.Drawing.drawCanvases();
                     FiercePlanet.Drawing.clearCanvas('#resourceCanvas');
-//                    FiercePlanet.Drawing.drawResourceAndAgents();
-
-//                    FiercePlanet.Drawing.drawPath();
                     console.log(totalDev, Lifecycle.waveCounter)
                 }
             })
@@ -554,7 +518,6 @@ var CitiesModule = CitiesModule || {};
 
         _.extend(Universe.settings, {
             isometricView: false,
-            agentsCanCommunicate: false,
             hidePathBorder: true,
             scrollingImageVisible: false,
             showGraph: false,
@@ -568,7 +531,6 @@ var CitiesModule = CitiesModule || {};
             currentWorldPreset: true,
             interval: 500,
             NEW_WORLD_DELAY: 300
-
         })
 
         FiercePlanet.ModuleEditor.buildEditorFromUrl('/javascripts/fp/modules/cities/cities-module.js', 'CitiesModule.init(); FiercePlanet.Game.loadGame();');

@@ -33,8 +33,8 @@ var Statistics = {};
 		var data = [];
         if (Lifecycle.worldCounter > 0) {
             var stats = Lifecycle.currentWorld.currentAgentHealthStats();
-            for (var i = 0, l = Universe.resourceCategories.length; i < l; i++) {
-				data.push(Universe.resourceCategories[i].code, stats[Universe.resourceCategories[i].code]);
+            for (var i = 0, l = ModuleManager.currentModule.resourceSet.categories.length; i < l; i++) {
+				data.push(ModuleManager.currentModule.resourceSet.categories[i].code, stats[ModuleManager.currentModule.resourceSet.categories[i].code]);
 			}
 			data.push('total', stats.total);
 
@@ -130,8 +130,8 @@ var Statistics = {};
 	this.lifeExpectancyByAgentCultureStats = function() {
 		var data = [];
         if (Lifecycle.worldCounter > 0) {
-            for (var i = 0, l = Universe.cultures.length; i < l; i++) {
-				var agentType = Universe.cultures[i];
+            for (var i = 0, l = ModuleManager.currentModule.cultures.length; i < l; i++) {
+				var agentType = ModuleManager.currentModule.cultures[i];
 				var expiredCounter = 0, expiredMin = 0, expiredMax = 0;
 				var expired =  Lifecycle.currentWorld.expiredAgents.length;
 				expired = (expired == 0 ? 1 : expired)
@@ -180,8 +180,8 @@ var Statistics = {};
 		var data = [];
         if (Lifecycle.worldCounter > 0) {
             var stats = Lifecycle.currentWorld.currentAgentHealthStats();
-            for (var i = 0, l = Universe.resourceCategories.length; i < l; i++) {
-				data.push(Universe.resourceCategories[i].code, stats[Universe.resourceCategories[i].code]);
+            for (var i = 0, l = ModuleManager.currentModule.resourceSet.categories.length; i < l; i++) {
+				data.push(ModuleManager.currentModule.resourceSet.categories[i].code, stats[ModuleManager.currentModule.resourceSet.categories[i].code]);
 			}
 			data.push('total', stats.total);
 

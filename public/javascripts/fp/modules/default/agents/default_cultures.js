@@ -19,7 +19,7 @@ var DefaultCultures = DefaultCultures || {};
 (function() {
 
     this.init = function() {
-        this.CITIZEN_AGENT_TYPE = new Culture("Citizen", "000", Universe.resourceCategories);
+        this.CITIZEN_AGENT_TYPE = new Culture("Citizen", "000", ModuleManager.currentModule.resourceSet.categories);
 
         this.CITIZEN_AGENT_TYPE.initialSpeed = CultureDefaults.DEFAULT_INITIAL_SPEED;
         this.CITIZEN_AGENT_TYPE.characteristics = [

@@ -239,7 +239,7 @@ FiercePlanet.ResourceUI = FiercePlanet.ResourceUI || {};
 //    if (e.dataTransfer)
 //        resourceCode = e.dataTransfer.getData('Text');
 
-        var resourceType = Universe.resolveResourceType(resourceCode);
+        var resourceType = ModuleManager.currentModule.resolveResourceType(resourceCode);
         var resource = new Resource(resourceType, posX, posY);
 
         if (FiercePlanet.Game.currentProfile.currentWorldResourcesInStore < resource.cost) {
@@ -272,13 +272,10 @@ FiercePlanet.ResourceUI = FiercePlanet.ResourceUI || {};
      * Draw swatches
      */
     this.initialiseAndLoadResources = function () {
-//        if (Universe.resourceTypeNamespace.doSetup)
-//            Universe.resourceTypeNamespace.doSetup();
-
         $('#swatch').empty();
         $('#gallery-items').empty();
-        for (var i = 0; i < Universe.resourceCategories.length; i++) {
-            var category = Universe.resourceCategories[i];
+        for (var i = 0; i < ModuleManager.currentModule.resourceSet.categories.length; i++) {
+            var category = ModuleManager.currentModule.resourceSet.categories[i];
 
             // Add to swatch
             var swatchCategoryHTML = '<div class="swatch-category" id="' + category.code + '"></div>';
@@ -299,32 +296,32 @@ FiercePlanet.ResourceUI = FiercePlanet.ResourceUI || {};
             var categoryInstanceCounter = 0;
             for (var j = 0; j < category.types.length; j++) {
                 var resourceType = category.types[j];
-
-                var swatchInstanceHTML =
-                    '<div class="swatch-instance" title="' + resourceType.name + '">' +
-                        '<div class="swatch-draggable" id="' + resourceType.code + '"><img src="' + resourceType.image + '" alt=""></div>' +
-                        '<div>' + resourceType.cost + '</div>' +
-                    '</div>'
+                    var swatchInstanceHTML =
+                        '<div class="swatch-instance" title="' + resourceType.name + '">' +
+                            '<div class="swatch-draggable" id="' + resourceType.code + '"><img src="' + resourceType.image + '" alt=""></div>' +
+                            '<div>' + resourceType.cost + '</div>' +
+                            '</div>'
                         ;
-                swatchCategoryElement.append(swatchInstanceHTML);
-                var swatchInstanceElement = $('#' + resourceType.code);
+                    swatchCategoryElement.append(swatchInstanceHTML);
+                    var swatchInstanceElement = $('#' + resourceType.code);
 //            swatchInstanceElement.css({'background': '#' + CATEGORY.color});
-                if (categoryInstanceCounter > 0) {
-                    swatchInstanceElement.addClass('inactive');
-                }
+                    if (categoryInstanceCounter > 0) {
+                        swatchInstanceElement.addClass('inactive');
+                    }
 
-                var galleryInstanceHTML =
+                    var galleryInstanceHTML =
                         '<div class="swatch-instance inactive purchase" id="' + resourceType.code + '-purchase" title="' + resourceType.name + '">' +
                             '<img src="' + resourceType.image + '" alt="">' +
-                        '</div>';
+                            '</div>';
 //            var galleryInstanceHTML =
 //                    '<div class="swatch-instance purchase inactive" id="' + resourceType.code + '-purchase" title="' + resourceType.name + '">' +
 //                        '<img src="' + resourceType.image + '" alt="">' +
 //                    '</div>';
-                galleryCategoryElement.append(galleryInstanceHTML);
+                    galleryCategoryElement.append(galleryInstanceHTML);
 
-                // Increment the category instance
-                categoryInstanceCounter++;
+                    // Increment the category instance
+                    categoryInstanceCounter++;
+
             }
         }
     };

@@ -42,7 +42,7 @@ Capabilities.ProduceResourcesCapability = new Capability();
     this.name = 'ProduceResourcesCapability';
     this.exercise = function(agent, world) {
         if (!world.isPositionOccupiedByResource(agent.x, agent.y)) {
-            var rt = Universe.resourceTypes[Math.floor(Math.random() * Universe.resourceTypes.length)];
+            var rt = ModuleManager.currentModule.resourceSet.types[Math.floor(Math.random() * ModuleManager.currentModule.resourceSet.types.length)];
             var buildChance = Math.random();
             if (buildChance < 0.1 && world.currentResourceStore > rt.cost) {
                 world.addResource(new Resource(rt, agent.x, agent.y));
@@ -82,7 +82,6 @@ Capabilities.RegenerateCapability = new Capability();
                         if (world.countAgentsAtPosition(x, y) <= 1 && (Universe.settings.agentsOwnTilesExclusively || world.agentsOwnTilesExclusively)) {
                             var childAgent = new Agent(agent.culture, agent.x, agent.y);
                             childAgent.delay = parseInt(Math.random() * childAgent.culture.initialSpeed * 5);
-                            childAgent.canCommunicateWithOtherAgents = (Universe.settings.agentsCanCommunicate);
                             childAgent.bornAt = (Lifecycle.worldCounter);
                             childAgent.parents = [agent, a];
                             agent.children.push(childAgent);

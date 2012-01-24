@@ -1180,9 +1180,9 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
             var direction = this.getAgentDirection(agent);
 
     
-            var blueH = agent.healthCategoryStats[Universe.resourceCategories[0].code];
-            var greenH = agent.healthCategoryStats[Universe.resourceCategories[1].code];
-            var redH = agent.healthCategoryStats[Universe.resourceCategories[2].code];
+            var blueH = agent.healthCategoryStats[ModuleManager.currentModule.resourceSet.categories[0].code];
+            var greenH = agent.healthCategoryStats[ModuleManager.currentModule.resourceSet.categories[1].code];
+            var redH = agent.healthCategoryStats[ModuleManager.currentModule.resourceSet.categories[2].code];
             var c = agent.color.toString();
             var newColor = this.diluteColour(redH, greenH, blueH, c);
 
@@ -1224,9 +1224,9 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
 
         var direction = this.getAgentDirection(agent);
         /*
-        var blueH = agent.healthCategoryStats[Universe.resourceCategories[0].code];
-        var greenH = agent.healthCategoryStats[Universe.resourceCategories[1].code];
-        var redH = agent.healthCategoryStats[Universe.resourceCategories[2].code];
+        var blueH = agent.healthCategoryStats[ModuleManager.currentModule.resourceSet.categories[0].code];
+        var greenH = agent.healthCategoryStats[ModuleManager.currentModule.resourceSet.categories[1].code];
+        var redH = agent.healthCategoryStats[ModuleManager.currentModule.resourceSet.categories[2].code];
         var c = agent.color.toString();
         var newColor = this.diluteColour(redH, greenH, blueH, c);
         */

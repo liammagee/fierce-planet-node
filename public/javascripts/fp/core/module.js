@@ -10,53 +10,50 @@
 
 var FiercePlanet = FiercePlanet || {};
 
+
+
+
 /**
  * @namespace Manages modules
  */
-function Module() {};
-
-
-    Module.prototype.id;
-    Module.prototype._campaigns = {};
-    Module.prototype._resourceSets = {};
-    Module.prototype._cultures = [];
+function Module() {
 
     /**
      * Registers a module
      */
-    Module.prototype.registerSelf = function() {
+    this.registerSelf = function() {
         ModuleManager.registerModule(this);
     };
 
 
-    // World sets
+// World sets
 
     /**
      * Registers a module
      */
-    Module.prototype.registerCampaign = function(campaign) {
-        this._campaigns = this._campaigns || {};
+    this.registerCampaign = function(campaign) {
+        this.campaigns = this.campaigns || {};
 
         if (typeof(campaign) != "undefined" && campaign.id)
-            this._campaigns[campaign.id] = campaign;
+            this.campaigns[campaign.id] = campaign;
 
     };
 
     /**
      * Retrieves  a world set
      */
-    Module.prototype.getCampaign = function(campaignID) {
-        return this._campaigns[campaignID];
+    this.getCampaign = function(campaignID) {
+        return this.campaigns[campaignID];
     };
 
     /**
      * Retrieves  a world set
      */
-    Module.prototype.allCampaigns = function() {
+    this.allCampaigns = function() {
         var campaignArray = [];
-        for (var i in this._campaigns) {
-            if (this._campaigns.hasOwnProperty(i)) {
-                campaignArray.push(this._campaigns[i]);
+        for (var i in this.campaigns) {
+            if (this.campaigns.hasOwnProperty(i)) {
+                campaignArray.push(this.campaigns[i]);
             }
         }
         // Sort in reverse
@@ -71,85 +68,65 @@ function Module() {};
     /**
      * Retrieves  a module
      */
-    Module.prototype.getWorld = function(campaignID, world) {
+    this.getWorld = function(campaignID, world) {
         return this.getCampaign(campaignID).worlds[world]
     };
 
 
-
-    // Resource sets
-
     /**
-     * Registers a module
+     * Registers a resource set (only one is allowed per module)
      */
-    Module.prototype.registerResourceSet = function(resourceSet) {
-        this._resourceSets = this._resourceSets || {};
-
+    this.registerResourceSet = function(resourceSet) {
         if (typeof(resourceSet) != "undefined" && resourceSet.id) {
             if (resourceSet.doSetup)
                 resourceSet.doSetup();
 
-            this._resourceSets[resourceSet.id] = resourceSet;
+            this.resourceSet = resourceSet;
         }
-
     };
 
-    /**
-     * Retrieves  a resource set
-     */
-    Module.prototype.getResourceSet = function(resourceSetID) {
-        return this._resourceSets[resourceSetID];
-    };
-
-    /**
-     * Retrieves  a resource set
-     */
-    Module.prototype.allResourceSets = function() {
-        var resourceSets = [];
-        for (var i in this._resourceSets) {
-            if (this._resourceSets.hasOwnProperty(i)) {
-                resourceSets.push(this._resourceSets[i]);
-            }
+    this.resolveResourceType  = function(code) {
+        for (var i = 0, l = this.resourceSet.types.length; i < l; i++) {
+            var resourceType = this.resourceSet.types[i];
+            if (resourceType.code == code)
+                return resourceType;
         }
-        return resourceSets;
+        return undefined;
+
     };
 
 
-    // Agent sets
-
     /**
-     * Registers a agent set
+     * Registers a culture
      */
-    Module.prototype.registerCulture = function(culture) {
-        this._cultures = this._cultures || [];
-        this._cultures.push(culture);
-
-//        if (typeof(agentSet) != "undefined" && agentSet.id)
-//            this._agentSets[agentSet.id] = agentSet;
-
+    this.registerCulture = function(culture) {
+        this.cultures = this.cultures || [];
+        this.cultures.push(culture);
     };
 
     /**
      * Retrieves  a agent set
      */
-    Module.prototype.getAgentSet = function(cultureID) {
-        return this._cultures[cultureID];
+    this.allCultures = function() {
+        return this.cultures;
     };
 
-    /**
-     * Retrieves  a agent set
-     */
-    Module.prototype.allCultures = function() {
-        /*
-        var agentTypes = [];
-        for (var i in this._agentSets) {
-            if (this._agentSets.hasOwnProperty(i)) {
-                agentTypes.push(this._agentSets[i]);
+    this.setHealthCategoriesForAllCultures = function() {
+        if (!_.isUndefined(this.cultures) && !_.isUndefined(this.resourceSet) && !_.isUndefined(this.resourceSet.categories)) {
+            for (var i = 0, l = this.cultures.length; i < l; i++) {
+                this.cultures[i].healthCategories = this.resourceSet.categories;
             }
+
         }
-        */
-        return this._cultures;
     };
+
+
+    this.id;
+    this.campaigns = {};
+    this.resourceSet = {};
+    this.cultures = [];
+};
+
 
 
 if (typeof exports !== "undefined")

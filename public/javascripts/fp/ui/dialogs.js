@@ -303,12 +303,12 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
                         $( this ).dialog( "close" );
                     },
                     "Reset": function() {
-                        var namespace = Universe.resourceTypeNamespace;
-                        initUniverse.apply(Universe);
-                        FiercePlanet.Utils.initialiseUniverseSettings();
-                        Universe.resourceTypeNamespace = namespace;
-                        if (Universe.resourceTypeNamespace.doSetup)
-                            Universe.resourceTypeNamespace.doSetup();
+//                        var namespace = Universe.resourceTypeNamespace;
+//                        initUniverse.apply(Universe);
+//                        FiercePlanet.Utils.initialiseUniverseSettings();
+//                        Universe.resourceTypeNamespace = namespace;
+//                        if (Universe.resourceTypeNamespace.doSetup)
+//                            Universe.resourceTypeNamespace.doSetup();
                         FiercePlanet.Utils.getAndRetrieveProperties();
                     },
                     "Cancel": function() {

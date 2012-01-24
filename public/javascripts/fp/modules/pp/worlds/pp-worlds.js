@@ -44,7 +44,6 @@ var PredatorPreyWorlds = PredatorPreyWorlds || new Campaign();
             this.noSpeedChange = true;
             this.resourcesOwnTilesExclusively = false;
             this.agentsOwnTilesExclusively = true;
-            this.canCommunicateWithOtherAgents = false;
             this.allowOffscreenCycling = false;
             this.waveNumber = 1;
             this.expiryLimit = 1000;

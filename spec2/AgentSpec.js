@@ -5,7 +5,7 @@ describe("agent-related classes", function() {
   var culture, agent, world;
 
   beforeEach(function() {
-      culture = Universe.cultures[0];
+      culture = ModuleManager.currentModule.cultures[0];
       culture.beliefs = [
           Beliefs.BeliefsAboutResources
           , Beliefs.BeliefsBasedOnOtherAgentsBeliefs
@@ -23,7 +23,7 @@ describe("agent-related classes", function() {
         });
 
         it("should have a type", function() {
-          expect(agent.culture).toEqual(Universe.cultures[0]);
+          expect(agent.culture).toEqual(ModuleManager.currentModule.cultures[0]);
         });
 
         it("should have a id", function() {

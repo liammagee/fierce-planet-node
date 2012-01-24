@@ -14,13 +14,20 @@ var CultureDefaults = CultureDefaults || {};
     this.DEFAULT_INITIAL_HEALTH = 100;
     this.DEFAULT_INITIAL_SPEED = 10;
 
+}).apply(CultureDefaults);
+
+/**
+ * Probability constants
+ */
+var ProbabilityFlags = ProbabilityFlags || {};
+(function() {
     this.VERY_UNLIKELY = 0;
     this.UNLIKELY = 1;
     this.MODERATELY_LIKELY = 2;
     this.EVEN_CHANCE = 3;
     this.PROBABILITY_STRATEGY_TO_DEVIATE = this.UNLIKELY;
 
-}).apply(CultureDefaults);
+}).apply(ProbabilityFlags);
 
 /**
  * Defines the type of an agent.
