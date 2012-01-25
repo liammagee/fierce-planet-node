@@ -123,7 +123,7 @@ function Module() {
 
     this.id;
     this.campaigns = {};
-    this.resourceSet = {};
+    this.resourceSet;
     this.cultures = [];
 };
 

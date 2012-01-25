@@ -7,15 +7,8 @@
 
 
 var DefaultModule = DefaultModule || {};
-//FiercePlanet.PresetWorlds = FiercePlanet.PresetWorlds || {};
-
 
 (function() {
-
-	/**
-	 * @constant The number of preset worlds
-	 */
-	this.MAX_DEFAULT_LEVELS = 1000;
 
     this.init = function() {
         var module = new Module();
@@ -24,16 +17,13 @@ var DefaultModule = DefaultModule || {};
 
         module.registerCampaign(Basic);
         module.registerCampaign(Additional);
-        module.registerResourceSet(CoS);
-        FiercePlanet.Game.currentProfile.capabilities = ["farm", "water", "clinic", "legal"];
-//        module.registerResourceSet(TBL);
+//        module.registerResourceSet(CoS);
+//        FiercePlanet.Game.currentProfile.capabilities = ["farm", "water", "clinic", "legal"];
+        module.registerResourceSet(TBL);
 
         DefaultCultures.init();
         module.registerCulture(DefaultCultures.CITIZEN_AGENT_TYPE);
     };
-
-
-
 }).apply(DefaultModule);
 
 

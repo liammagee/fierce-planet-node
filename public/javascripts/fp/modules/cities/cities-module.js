@@ -268,21 +268,6 @@ var CitiesModule = CitiesModule || {};
                         agent.isDeveloped = false;
                     };
                     culture.updateFunction = function(agent, world) {
-                        /*
-                        if (! agent.isDeveloped) {
-//                        var newX = Math.floor(Math.random() * world.cellsAcross),
-//                            newY = Math.floor(Math.random() * world.cellsDown);
-                            var positions = world.getMooreNeighbourhood(agent.x, agent.y, false);
-                            var position = positions[Math.floor(Math.random() * positions.length)],
-                                newX = position.x,
-                                newY = position.y;
-                            var agents = world.getAgentsAtCell(position.x, position.y);
-                            if (agents.length == 0) {
-                                agent.moveTo(newX, newY);
-                            }
-
-                        }
-                        */
                     };
                     this.cultures = [culture];
                     this.randomiseAgents = true;
@@ -303,48 +288,36 @@ var CitiesModule = CitiesModule || {};
                         if (agents.length == 0) {
                             agent.moveTo(newX, newY);
                         }
-                        /*
-                        var x = agent.x, y = agent.y;
-                        var surroundingPositions = world.getMooreNeighbourhood(x, y, true),
-                            agentCounter = 0, developedAgentCounter = 0;
-                        surroundingPositions.forEach(function(position) {
-//                            var agents = Lifecytcle.currentWorld.getAgentsAtCell(position.x, position.y);
-                            var agents = world.getAgentsAtCell(position.x, position.y);
-                            if (agents && agents.length > 0) {
-                                agentCounter++;
-                                if (agents[0].isDeveloped)
-                                    developedAgentCounter++;
-                            }
-                        });
-                        if (agentCounter > parseInt(FiercePlanet.Parameters.Threshold)) {
-                            if (developedAgentCounter < 2) {
-                                agent.color = 'fff';
-                                agent.isDeveloped = true;
-                            }
-                        }
-                        */
                     })
 
                     var undevelopedCounter = undevelopedAgents.length;
                     undevelopedAgents.forEach(function(agent) {
-                        var x = agent.x, y = agent.y;
+                        var x = agent.x, y = agent.y,
+                            cell = world.getCell(x, y);
                         var surroundingPositions = world.getMooreNeighbourhood(x, y, true),
                             agentCounter = 0, developedAgentCounter = 0;
                         surroundingPositions.forEach(function(position) {
-//                            var agents = Lifecytcle.currentWorld.getAgentsAtCell(position.x, position.y);
+                            var testCell = world.getCell(position.x, position.y);
                             var agents = world.getAgentsAtCell(position.x, position.y);
                             if (agents && agents.length > 0) {
                                 agentCounter++;
-                                if (agents[0].isDeveloped)
+                                if (testCell.developed)
                                     developedAgentCounter++;
                             }
                         });
                         if (agentCounter > parseInt(FiercePlanet.Parameters.Threshold)) {
                             if ((developedAgentCounter > 0 && developedAgentCounter < 3) || world.currentAgents.length - undevelopedCounter < 5) {
-                                agent.color = 'fff';
-                                agent.isDeveloped = true;
+                                cell.needsToBeDeveloped = true;
                                 undevelopedCounter--;
                             }
+                        }
+                    })
+                    undevelopedAgents.forEach(function(agent) {
+                        var x = agent.x, y = agent.y;
+                        var cell = world.getCell(x, y);
+                        if (cell.needsToBeDeveloped) {
+                            cell.terrain = new Terrain('#fff', 1.0);
+                            cell.developed = true;
                         }
                     })
                     var devs = _.map(this.currentAgents, function(agent) { return (agent.color == 'fff' ? 1 : 0); }),
@@ -430,7 +403,7 @@ var CitiesModule = CitiesModule || {};
         this.citiesWorld6  = new World();
         _.extend(this.citiesWorld6,
             {
-                id: 5,
+                id: 6,
                 name: "Krugman's Model: Trade and Scale (pp. 57-63)",
                 isPresetWorld: true,
                 interval: 10,
@@ -498,11 +471,163 @@ var CitiesModule = CitiesModule || {};
                 }
             })
 
+        this.citiesWorld7  = new World();
+        _.extend(this.citiesWorld7,
+            {
+                id: 7,
+                name: "Neighbourhoods (pp. 77)",
+                isPresetWorld: true,
+                interval: 100,
+                cellsAcross: 101,
+                cellsDown: 101,
+                dontClearCanvas: true,
+                scrollingImageVisible: false,
+                initialResourceStore: 0,
+                playIndefinitely: true,
+                introduction:
+                    "<p>Neighbourhood type</p>" +
+                    "<p><select class='world-parameters' name='NeighbourhoodType'>" +
+                        "<option value='0'>Moore</option>" +
+                        "<option value='1'>von Neumann</option>" +
+                        "<option value='2'>Combined Moore/von Neumann</option>" +
+                        "<option value='3'>Displace von Neumann </option>" +
+                        "<option value='4'>'H'</option>" +
+                        "<option value='5'>Sierpinkski's gasket</option>" +
+                        "<option value='6'>Superblock</option>" +
+                    "</select></p>" +
+                    "<p>Minimum neighbours</p>" +
+                        "<p><select class='world-parameters' name='MinNeighbours'>" +
+                        "<option value='0'>0</option>" +
+                        "<option value='1' selected='true'>1</option>" +
+                        "<option value='2'>2</option>" +
+                        "<option value='3'>3</option>" +
+                        "<option value='4'>4</option>" +
+                        "<option value='5'>5</option>" +
+                        "<option value='6'>6</option>" +
+                        "<option value='7'>7</option>" +
+                        "<option value='8'>8</option>" +
+                        "<option value='9'>9</option>" +
+                        "</select></p>" +
+                    "<p>Maximum neighbours</p>" +
+                        "<p><select class='world-parameters' name='MaxNeighbours'>" +
+                        "<option value='0'>0</option>" +
+                        "<option value='1' selected='true'>1</option>" +
+                        "<option value='2'>2</option>" +
+                        "<option value='3'>3</option>" +
+                        "<option value='4'>4</option>" +
+                        "<option value='5'>5</option>" +
+                        "<option value='6'>6</option>" +
+                        "<option value='7'>7</option>" +
+                        "<option value='8'>8</option>" +
+                        "<option value='9'>9</option>" +
+                        "</select></p>" +
+                    "<p>Probability</p><p><input class='world-parameters' name='Probability' value='1.0'/> </p>" +
+                    "<p>Use Cumulative Probability</p><p><input type='checkbox' class='world-parameters' name='CumulativeProbability'/> </p>" +
+                    "<p>Age to revert: </p><p><input type='text' class='world-parameters' name='AgeToRevert' value='0'/> </p>" +
+                    "<p>With shading:</p><p><input type='checkbox' class='world-parameters' name='WithShading' checked='checked'/> </p>" +
+                    "",
+                conclusion: "Well done.",
+                setup: function () {
+                    this.generatePath();
+                    this.cells.forEach(function(cell) {
+                        cell.developed = 0;
+                        cell.terrain = new Terrain("#000", 1.0);
+                        cell.agentsAllowed = true;
+                        cell.attemptsToDevelop = 0;
+                    });
+                    var cell = this.getCell(50, 50);
+                    cell.developed = true;
+                    cell.terrain = new Terrain("#fff", 1.0);
+                },
+                tickFunction: function () {
+                    this.generateAutomata();
+
+                    var devs = _.map(this.cells, function(cell) { return cell.developed; }),
+                        totalDev = _.reduce(devs, function(memo, num){ return memo + num; }, 0);
+                    FiercePlanet.Drawing.drawPath();
+                    console.log(totalDev, Lifecycle.waveCounter)
+                },
+                generateAutomata: function () {
+                    var world = this,
+                        neighbourhoodType = parseInt(FiercePlanet.Parameters.NeighbourhoodType),
+                        minNeighbours = parseInt(FiercePlanet.Parameters.MinNeighbours),
+                        maxNeighbours = parseInt(FiercePlanet.Parameters.MaxNeighbours),
+                        probability = parseFloat(FiercePlanet.Parameters.Probability),
+                        cumulativeProbability = FiercePlanet.Parameters.CumulativeProbability,
+                        ageToRevert = parseInt(FiercePlanet.Parameters.AgeToRevert),
+                        withShading = FiercePlanet.Parameters.WithShading;
+                    // Adjust potential for all cells
+                    this.cells.forEach(function(cell) {
+                        var x = cell.x, y = cell.y, positions;
+                        switch(neighbourhoodType) {
+                            case 0:
+                                positions = world.getMooreNeighbourhood(x, y, true);
+                                break;
+                            case 1:
+                                positions = world.getVonNeumannNeighbourhood(x, y, true);
+                                break;
+                            case 2:
+                                positions = world.getMvNNeighbourhood(x, y, true);
+                                break;
+                            // Displaced von Neumann
+                            case 3:
+                                positions = world.getMaskedNeighbourhood(x, y, true, [0, 2, 4, 6]);
+                                break;
+                            // 'H'
+                            case 4:
+                                positions = world.getMaskedNeighbourhood(x, y, true, [2, 6]);
+                                break;
+                            // Sierpinkski's gasket
+                            case 5:
+                                positions = world.getMaskedNeighbourhood(x, y, true, [0, 2, 3, 4, 6]);
+                                break;
+                            // Superblock
+                            case 6:
+                                positions = world.getMaskedNeighbourhood(x, y, true, [2, 3]);
+                                break;
+                        }
+                        var totalPotential = 0, counter = 0;
+                        positions.forEach(function(position) {
+                            var testCell = world.getCell(position.x, position.y);
+                            if (testCell.developed)
+                                counter++;
+                        });
+                        if (counter >= minNeighbours && counter <= maxNeighbours && !cell.developed) {
+                            var r = Math.random();
+                            // Apply att
+                            if (cumulativeProbability)
+                                r = Math.pow(r, cell.attemptsToDevelop + 1);
+                            if (r < probability)
+                                cell.needsDevelopment = true;
+                            else if (cumulativeProbability)
+                                cell.attemptsToDevelop++;
+                        }
+                    });
+                    this.cells.forEach(function(cell) {
+                        if (cell.needsDevelopment) {
+                            cell.terrain = new Terrain("#fff", 1.0);
+                            cell.developed = true;
+                            cell.needsDevelopment = false;
+                            cell.age = 0;
+                        }
+                        else if (ageToRevert > 0 && cell.developed && cell.age > 0 && cell.age % ageToRevert == 0) {
+                            cell.terrain = new Terrain("#000", 1.0);
+                            cell.developed = false;
+                            cell.age = 0;
+                        }
+                        else if (cell.developed) {
+                            cell.age++;
+                        }
+                    });
+
+                }
+            })
+
         // Prepare as a module
         this.id = "Cities";
         this.name = "Cities Module - Batty";
         this.position = 1;
-        this.worlds = [this.citiesWorld1, this.citiesWorld2, this.citiesWorld3, this.citiesWorld4, this.citiesWorld5, this.citiesWorld6 ];
+        this.worlds = [this.citiesWorld1, this.citiesWorld2, this.citiesWorld3, this.citiesWorld4, this.citiesWorld5, this.citiesWorld6, this.citiesWorld7 ];
     }
 
     this.initCitiesWorlds();
@@ -513,15 +638,16 @@ var CitiesModule = CitiesModule || {};
     this.init = function() {
         var module = new Module();
         module.id = 'Cities';
-        module.registerCampaign(CitiesWorlds);
         module.registerSelf();
+        module.registerCampaign(CitiesWorlds);
 
         _.extend(Universe.settings, {
             isometricView: false,
             hidePathBorder: true,
             scrollingImageVisible: false,
             showGraph: false,
-            showEditor: false
+            showEditor: false,
+            animateWorldAtStart: false
         })
         localStorage.scrollingImageVisible = false;
         Universe.settings.store();
@@ -532,6 +658,8 @@ var CitiesModule = CitiesModule || {};
             interval: 500,
             NEW_WORLD_DELAY: 300
         })
+
+        FiercePlanet.Orientation.worldWidth = 600, FiercePlanet.Orientation.worldHeight = 600;
 
         FiercePlanet.ModuleEditor.buildEditorFromUrl('/javascripts/fp/modules/cities/cities-module.js', 'CitiesModule.init(); FiercePlanet.Game.loadGame();');
     };

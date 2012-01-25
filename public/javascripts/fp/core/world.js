@@ -653,6 +653,9 @@ function World() {
      *
      */
     this.resetResourceCategoryCounts = function() {
+        if (_.isUndefined(ModuleManager.currentModule.resourceSet))
+            return;
+
         var rcc = {};
         ModuleManager.currentModule.resourceSet.categories.forEach(function(resourceCategory) {
             rcc[resourceCategory.code] = 0;
@@ -968,6 +971,77 @@ function World() {
             surroundingPositions.push({x: x, y: prevY});
         if (this.allowOffscreenCycling || (nextX > 0 && prevY < this.cellsDown - 1))
             surroundingPositions.push({x: nextX, y: prevY});
+
+        return surroundingPositions;
+    };
+
+    /**
+     * Gets positions surrounding a given co-ordinate.
+     * THe Moore neighbourhood returns only positions to the left, right, top and bottom of the current position.
+     *
+     * @param x
+     * @param y
+     * @param includeSelf
+     */
+    this.getMvNNeighbourhood = function(x, y, includeSelf) {
+        var surroundingPositions = this.getMooreNeighbourhood(x, y, includeSelf);
+
+        // Add extended von Neumann cells
+        var extendRight = (x < this.cellsAcross - 2),
+            extendDown = (y < this.cellsDown - 2),
+            extendLeft = (x > 1),
+            extendUp = (y > 1),
+            nextX = extendRight ? x + 2 : 1,
+            nextY = extendDown ? y + 2 : 1,
+            prevX = extendLeft ? x - 2 : this.cellsAcross - 2,
+            prevY = extendUp ? y - 2 : this.cellsDown - 2;
+
+        if (this.allowOffscreenCycling || (nextX > 1))
+            surroundingPositions.push({x: nextX, y: y});
+        if (this.allowOffscreenCycling || (nextY > 1))
+            surroundingPositions.push({x: x, y: nextY});
+        if (this.allowOffscreenCycling || (prevX < this.cellsAcross - 2))
+            surroundingPositions.push({x: prevX, y: y});
+        if (this.allowOffscreenCycling || (prevY < this.cellsDown - 2))
+            surroundingPositions.push({x: x, y: prevY});
+
+        return surroundingPositions;
+    };
+
+    /**
+     * Gets positions surrounding a given co-ordinate.
+     * THe Moore neighbourhood returns only positions to the left, right, top and bottom of the current position.
+     *
+     * @param x
+     * @param y
+     * @param includeSelf
+     */
+    this.getHNeighbourhood = function(x, y, includeSelf) {
+        return this.getMaskedNeighbourhood(x, y, includeSelf, [2, 6]);
+    };
+
+    /**
+     * Gets positions surrounding a given co-ordinate.
+     *
+     * @param x
+     * @param y
+     * @param includeSelf
+     */
+    this.getMaskedNeighbourhood = function(x, y, includeSelf, maskedPositionIndexes) {
+        var surroundingPositions = this.getMooreNeighbourhood(x, y, includeSelf);
+
+        var sortedPositions = maskedPositionIndexes;
+        if (!_.isUndefined(maskedPositionIndexes)) {
+            sortedPositions = maskedPositionIndexes.sort(function(a, b) {
+                return (a < b ? 1 :  (a > b ? -1 : 0));
+            });
+        }
+        sortedPositions.forEach(function(position) {
+            if (includeSelf)
+                position += 1;
+            if (position > 0 && position < surroundingPositions.length - 1)
+                surroundingPositions.splice(position, 1);
+        });
 
         return surroundingPositions;
     };

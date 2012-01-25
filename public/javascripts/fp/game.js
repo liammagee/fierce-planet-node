@@ -64,7 +64,7 @@ FiercePlanet.Game = FiercePlanet.Game || {};
         //FiercePlanet.Utils.loadScripts();
 
         // Load relevant settings, if available
-        FiercePlanet.Orientation.adjustParameters(FiercePlanet.Orientation.DEFAULT_WORLD_WIDTH, FiercePlanet.Orientation.DEFAULT_WORLD_HEIGHT);
+        FiercePlanet.Orientation.adjustParameters(FiercePlanet.Orientation.worldWidth, FiercePlanet.Orientation.worldHeight);
 
         // Load relevant settings, if available
         FiercePlanet.ProfileUI.loadProfileSettingsFromStorage();
@@ -213,12 +213,14 @@ FiercePlanet.Game = FiercePlanet.Game || {};
 
         };
         Lifecycle.preStartWorldCallback = function () {
-            if (Universe.settings.sendEventsToServer) {
+            if (Universe.settings.sendEventsToServer)
                 FiercePlanet.Comms.notifyServerOfEvent("start", null);
-            }
 
-            FiercePlanet.Game._startAudio();
-            FiercePlanet.Drawing.animateWorld();
+            if (Universe.settings.playAudio)
+                FiercePlanet.Game._startAudio();
+            if (Universe.settings.animateWorldAtStart)
+                FiercePlanet.Drawing.animateWorld();
+
             // Start a new world
             if (Universe.settings.firstPerson) {
                 //            Lifecycle.currentWorld.generateAgents(AgentTypes.CITIZEN_AGENT_TYPE, 1);

@@ -272,6 +272,8 @@ FiercePlanet.ResourceUI = FiercePlanet.ResourceUI || {};
      * Draw swatches
      */
     this.initialiseAndLoadResources = function () {
+        if (_.isUndefined(ModuleManager.currentModule.resourceSet))
+            return;
         $('#swatch').empty();
         $('#gallery-items').empty();
         for (var i = 0; i < ModuleManager.currentModule.resourceSet.categories.length; i++) {
