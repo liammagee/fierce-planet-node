@@ -229,7 +229,7 @@ var GameOfLifeModule = GameOfLifeModule || {};
         Lifecycle.currentWorldNumber = localStorage.currentWorldNumber = 0;
         Lifecycle.currentWorldPreset = true;
         Lifecycle.interval = 10;
-        Lifecycle.NEW_WORLD_DELAY = 300;
+        Lifecycle.worldDelay = 300;
 
         FiercePlanet.ModuleEditor.buildEditorFromUrl('/javascripts/fp/modules/gol/game-of-life-module.js', 'GameOfLifeModule.init(); FiercePlanet.Game.loadGame();');
     };

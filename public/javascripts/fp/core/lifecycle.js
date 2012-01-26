@@ -17,10 +17,7 @@ var Lifecycle = Lifecycle || {};
 
 
 (function() {
-    /** @constant The time to wait before starting the first wave */
-    this.NEW_WORLD_DELAY = 3000;
-    /** @constant The time to wait between waves */
-    this.NEW_WAVE_DELAY = 200;
+    this.worldDelay = 3000, this.waveDelay = 200;
     // Delay variables
     this.worldDelayCounter = 0, this.waveDelayCounter = 0;
     // Counter variables
@@ -35,7 +32,7 @@ var Lifecycle = Lifecycle || {};
     this.currentWave = 1, this.currentWaveNumber = 0;
     this.numAgents = 1;
 	// Callbacks
-    this.preNewGameCallback, this.postNewGameCallback, this.preNewWorldCallback, this.postNewWorldCallback = null, this.preNewWaveCallback = null, this.postNewWaveCallback = null, this.preProcessCallback = null, this.postProcessCallback = null;
+//    this.preNewGameCallback, this.postNewGameCallback, this.preNewWorldCallback, this.postNewWorldCallback = null, this.preNewWaveCallback = null, this.postNewWaveCallback = null, this.preProcessCallback = null, this.postProcessCallback = null;
 
     /**
      * Core logic loop: processes agents.
@@ -47,13 +44,13 @@ var Lifecycle = Lifecycle || {};
         	Lifecycle.preProcessCallback();
 
         // Delay, until we are ready for the first wave
-        if (Lifecycle.worldDelayCounter < Lifecycle.NEW_WORLD_DELAY / Lifecycle.interval) {
+        if (Lifecycle.worldDelayCounter < Lifecycle.worldDelay / Lifecycle.interval) {
             Lifecycle.worldDelayCounter++;
             return;
         }
 
         // Delay, until we are ready for a new wave
-        if (Lifecycle.waveDelayCounter < Lifecycle.NEW_WAVE_DELAY / Lifecycle.interval) {
+        if (Lifecycle.waveDelayCounter < Lifecycle.waveDelay / Lifecycle.interval) {
             Lifecycle.waveDelayCounter++;
             return;
         }
@@ -374,21 +371,18 @@ var Lifecycle = Lifecycle || {};
         if (Lifecycle.currentWorldPreset) {
             try {
                 Lifecycle.currentWorld = ModuleManager.currentModule.getWorld(Lifecycle.currentCampaignID, Lifecycle.currentWorldNumber);
-                //eval("FiercePlanet.Modules.Basic.world" + Lifecycle.currentWorldNumber.toString());
             }
             catch(err) {
                 Lifecycle.currentWorld = ModuleManager.currentModule.getWorld(Lifecycle.currentCampaignID, 1);
-//                Lifecycle.currentWorld = eval("FiercePlanet.Modules.Basic.world1");
             }
         }
         else if (Lifecycle.currentWorld == undefined) {
             Lifecycle.currentWorld = ModuleManager.currentModule.getWorld(Lifecycle.currentCampaignID, 1);
-//            Lifecycle.currentWorld = eval("FiercePlanet.Modules.Basic.world1");
         }
-
         Lifecycle.currentWave = 1;
         Lifecycle.currentWaveNumber = 0;
-        Lifecycle.currentWorld.initWorld();
+
+        this.currentWorld.initWorld();
 
 
 		if (this.postInitialiseGameCallback)

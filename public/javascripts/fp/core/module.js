@@ -69,7 +69,7 @@ function Module() {
      * Retrieves  a module
      */
     this.getWorld = function(campaignID, world) {
-        return this.getCampaign(campaignID).worlds[world]
+        return this.getCampaign(campaignID).worlds[world];
     };
 
 

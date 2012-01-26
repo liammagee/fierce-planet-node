@@ -31,7 +31,7 @@ var PredatorPreyModule = PredatorPreyModule || {};
         var localStorage = localStorage || {};
         Lifecycle.currentWorldNumber = localStorage.currentWorldNumber = 0;
         Lifecycle.currentWorldPreset = true;
-        Lifecycle.NEW_WORLD_DELAY = 3000;
+        Lifecycle.worldDelay = 3000;
     };
 
 

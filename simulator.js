@@ -85,8 +85,8 @@ Lifecycle.postNewLevelCallback = function() {
 	console.log('Level: ' + Lifecycle.currentWorld.name)
 }
 Lifecycle.currentLevelNumber = 0;
-Lifecycle.NEW_WORLD_DELAY = 0;
-Lifecycle.NEW_WAVE_DELAY = 20;
+Lifecycle.worldDelay = 0;
+Lifecycle.waveDelay = 20;
 Lifecycle.interval = 5;
 //var cs = ModuleManager.currentModule.allCultures();
 //for (var i in cs) {

@@ -640,6 +640,7 @@ var CitiesModule = CitiesModule || {};
         module.id = 'Cities';
         module.registerSelf();
         module.registerCampaign(CitiesWorlds);
+        module.currentCampaignID = 'Cities';
 
         _.extend(Universe.settings, {
             isometricView: false,
@@ -656,10 +657,12 @@ var CitiesModule = CitiesModule || {};
             currentCampaignID: 'Cities',
             currentWorldPreset: true,
             interval: 500,
-            NEW_WORLD_DELAY: 300
+            worldDelay: 300
         })
-
-        FiercePlanet.Orientation.worldWidth = 600, FiercePlanet.Orientation.worldHeight = 600;
+        _.extend(FiercePlanet.Orientation, {
+            worldWidth: 600,
+            worldHeight: 600
+        })
 
         FiercePlanet.ModuleEditor.buildEditorFromUrl('/javascripts/fp/modules/cities/cities-module.js', 'CitiesModule.init(); FiercePlanet.Game.loadGame();');
     };

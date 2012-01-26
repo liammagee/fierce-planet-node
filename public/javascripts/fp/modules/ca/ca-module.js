@@ -153,7 +153,7 @@ var CellularAutomataModule = CellularAutomataModule || {};
         Lifecycle.currentWorldNumber = localStorage.currentWorldNumber = 0;
         Lifecycle.currentWorldPreset = true;
         Lifecycle.interval = 50;
-        Lifecycle.NEW_WORLD_DELAY = 300;
+        Lifecycle.worldDelay = 300;
 
         FiercePlanet.ModuleEditor.buildEditorFromUrl('/javascripts/fp/modules/ca/ca-module.js', 'CellularAutomataModule.init(); FiercePlanet.Game.loadGame();');
     };
