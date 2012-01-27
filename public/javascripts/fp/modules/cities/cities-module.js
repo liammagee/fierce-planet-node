@@ -432,6 +432,7 @@ var CitiesModule = CitiesModule || {};
                 }
             })
 
+
         this.citiesWorld6  = new World();
         _.extend(this.citiesWorld6,
             {
