@@ -340,6 +340,8 @@ var CitiesModule = CitiesModule || {};
                 scrollingImageVisible: false,
                 initialResourceStore: 0,
                 playIndefinitely: true,
+                noWander: true,
+                noSpeedChange: true,
                 introduction:
                     "<p>Proportion of empty space</p><p><input class='world-parameters' name='EmptySpace' value='0.0'/> </p>" +
                         "",
@@ -386,7 +388,7 @@ var CitiesModule = CitiesModule || {};
                     // Adjust potential for all cells
                     this.currentAgents.forEach(function(agent) {
                         var x = agent.x, y = agent.y;
-                        var positions = world.getMooreNeighbourhood(x, y, true);
+                        var positions = world.getMooreNeighbourhood(x, y, false);
                         var beer = 0, wine = 0;
                         positions.forEach(function(position) {
                             var agents = world.getAgentsAtCell(position.x, position.y);
@@ -409,15 +411,16 @@ var CitiesModule = CitiesModule || {};
 						}
                     });
                     this.currentAgents.forEach(function(agent) {
+                        var x = agent.x, y = agent.y;
                         if (agent.newPreference) {
 							if (agent.newPreference == 'beer') {
-								agent.preference = 'beer';
-								agent.terrain = new Terrain("#ff0", 1.0);
-							}
-							else {
-								agent.preference = 'wine';
-								agent.terrain = new Terrain("#f0f", 1.0);
-							}
+                                agent.preference = 'beer';
+                                agent.color = 'ff0';
+                            }
+							else if (agent.newPreference == 'wine') {
+                                agent.preference = 'wine';
+                                agent.color = 'f0f';
+                            }
 						}
                     });
 
