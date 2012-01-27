@@ -333,72 +333,105 @@ var CitiesModule = CitiesModule || {};
                 id: 5,
                 name: "Schelling's Model: Segregation as Self-Organisation (pp. 51-57)",
                 isPresetWorld: true,
-                interval: 10,
-                cellsAcross: 130,
-                cellsDown: 130,
+                interval: 100,
+                cellsAcross: 100,
+                cellsDown: 100,
                 dontClearCanvas: true,
                 scrollingImageVisible: false,
                 initialResourceStore: 0,
                 playIndefinitely: true,
                 introduction:
-                    "<p>Threshold</p><p><input class='world-parameters' name='Threshold' value='4.5'/> </p>" +
-                        "<p>Add noise:</p><p><input type='checkbox' class='world-parameters' name='AddNoise' checked='checked'/> </p>" +
-                        "<p>Draw development:</p><p><input type='checkbox' class='world-parameters' name='DrawDevelopment' checked='checked'/> </p>" +
-                        "<p>Number of Agents:</p><p><input class='world-parameters' name='NumberOfAgents' value='6000'/> </p>" +
+                    "<p>Proportion of empty space</p><p><input class='world-parameters' name='EmptySpace' value='0.0'/> </p>" +
                         "",
                 conclusion: "Well done.",
                 setup: function () {
+                    DefaultCultures.init();
                     this.generatePath();
                     this.cells.forEach(function(cell) {
-                        cell.potential = Math.random() < 0.5 ? -1 : 1;
-                        cell.development = 0;
-                        cell.terrain = new Terrain("#000", 1.0);
+                        cell.terrain = new Terrain("#666", 1.0);
                         cell.agentsAllowed = true;
                     });
+
+                    /// Set up agents
+                    var culture = _.clone(DefaultCultures.CITIZEN_AGENT_TYPE);
+                    culture.waveNumber = parseInt(FiercePlanet.Parameters.NumberOfAgents);
+                    culture.initialSpeed = 1;
+                    culture.beliefs = [];
+                    culture.desires = [];
+                    culture.capabilities = [];
+                    culture.initFunction = function(agent, world) {
+						var pref = Math.random();
+						if (pref < 0.5) {
+							agent.preference = 'beer';
+	                        agent.color = 'ff0';
+						}
+						else {
+							agent.preference = 'wine';
+	                        agent.color = 'f0f';
+						}
+                    };
+                    culture.updateFunction = function(agent, world) {
+                    };
+                    this.cultures = [culture];
+                    this.placeAgentsOnAllCells = true;
+					var numAgents = this.cellsAcross * this.cellsDown;
+					var emptySpace = parseFloat(FiercePlanet.Parameters.EmptySpace);
+					numAgents = (1 - emptySpace) * numAgents;
+					
+                    this.initialiseWaves(1);
+
                 },
                 tickFunction: function () {
                     var world = this;
                     // Adjust potential for all cells
-                    this.cells.forEach(function(cell) {
-                        var x = cell.x, y = cell.y;
-                        var positions = world.getVonNeumannNeighbourhood(x, y, true);
-                        var totalPotential = 0, counter = 0;
+                    this.currentAgents.forEach(function(agent) {
+                        var x = agent.x, y = agent.y;
+                        var positions = world.getMooreNeighbourhood(x, y, true);
+                        var beer = 0, wine = 0;
                         positions.forEach(function(position) {
-                            var cell = world.getCell(position.x, position.y);
-                            counter++;
-                            totalPotential += cell.potential;
+                            var agents = world.getAgentsAtCell(position.x, position.y);
+                            if (agents && agents.length > 0) {
+								var a = agents[0];
+                                if (a.preference == 'beer')
+                                    beer++;
+	                            else if (a.preference == 'wine')
+	                                wine++;
+                            }
                         });
-                        totalPotential = totalPotential / counter;
-                        if (FiercePlanet.Parameters.AddNoise) {
-                            totalPotential += (Math.random() < 0.5 ? -1 : 1);
-                        }
-                        cell.newPotential = totalPotential;
+						if (beer > 4) {
+	                        agent.newPreference = 'beer';
+						}
+						else if (wine > 4) {
+	                        agent.newPreference = 'wine';
+						}
+						else {
+	                        agent.newPreference = agent.preference;
+						}
+                    });
+                    this.currentAgents.forEach(function(agent) {
+                        if (agent.newPreference) {
+							if (agent.newPreference == 'beer') {
+								agent.preference = 'beer';
+								agent.terrain = new Terrain("#ff0", 1.0);
+							}
+							else {
+								agent.preference = 'wine';
+								agent.terrain = new Terrain("#f0f", 1.0);
+							}
+						}
                     });
 
-                    // Adjust potential for all cells
-                    this.cells.forEach(function(cell) {
-                        if (cell.newPotential)
-                            cell.potential = cell.newPotential;
-                        cell.development =  (cell.potential <= FiercePlanet.Parameters.Threshold && cell.development == 0 ? 0 : 1 );
-                        if (cell.development == 1)
-                            cell.terrain = new Terrain("#fff", 1.0);
-                    });
-                    var potentials = _.map(this.cells, function(cell) { return cell.potential; }),
-                        min = _.min(potentials),
-                        max = _.max(potentials),
-                        range = max - min;
-//                        ,total = _.reduce(potentials, function(memo, num){ return memo + num; }, 0);
-                    var devs = _.map(this.cells, function(cell) { return cell.development; }),
-                        totalDev = _.reduce(devs, function(memo, num){ return memo + num; }, 0);
-                    FiercePlanet.Parameters.Max =  max;
-                    FiercePlanet.Parameters.Range =  range;
-                    FiercePlanet.Drawing.drawPath();
-                    console.log(max, range, totalDev, Lifecycle.waveCounter)
+                    var potentials = _.map(this.currentAgents, function(agent) { return agent.preference == 'beer'; })
+                        ,totalBeer = _.reduce(potentials, function(memo, num){ return memo + num; }, 0);
+                    //FiercePlanet.Drawing.drawPath();
+                    FiercePlanet.Drawing.clearCanvas('#resourceCanvas');
+                    console.log(totalBeer, Lifecycle.waveCounter)
 
 
 
                 }
             })
+
 
         this.citiesWorld6  = new World();
         _.extend(this.citiesWorld6,
@@ -475,7 +508,7 @@ var CitiesModule = CitiesModule || {};
         _.extend(this.citiesWorld7,
             {
                 id: 7,
-                name: "Neighbourhoods (pp. 77)",
+                name: "Neighbourhoods (pp. 77-96)",
                 isPresetWorld: true,
                 interval: 100,
                 cellsAcross: 101,
