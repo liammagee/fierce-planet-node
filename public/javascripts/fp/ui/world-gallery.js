@@ -49,7 +49,7 @@ FiercePlanet.WorldGallery = FiercePlanet.WorldGallery || {};
                     + '<img src="'
                     + img
                     + '"/>'
-                    + '<div><strong>World ' + j + ':</strong>'
+                    + '<div><strong>World ' + world.id + ':</strong>'
                     + '</div>'
                     + '<div>'
                     + world.name
