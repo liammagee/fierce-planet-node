@@ -14,12 +14,12 @@ var DefaultModule = DefaultModule || {};
         var module = new Module();
         module.id = 'Default';
         module.registerSelf();
+        module.registerResourceSet(TBL);
 
         module.registerCampaign(Basic);
         module.registerCampaign(Additional);
 //        module.registerResourceSet(CoS);
 //        FiercePlanet.Game.currentProfile.capabilities = ["farm", "water", "clinic", "legal"];
-        module.registerResourceSet(TBL);
 
         DefaultCultures.init();
         module.registerCulture(DefaultCultures.CITIZEN_AGENT_TYPE);

@@ -258,6 +258,7 @@ var CitiesModule = CitiesModule || {};
 
                     /// Set up agents
                     var culture = _.clone(DefaultCultures.CITIZEN_AGENT_TYPE);
+                    culture.healthCategories = [];
                     culture.waveNumber = parseInt(FiercePlanet.Parameters.NumberOfAgents);
                     culture.initialSpeed = 1;
                     culture.beliefs = [];
@@ -358,6 +359,7 @@ var CitiesModule = CitiesModule || {};
 
                     /// Set up agents
                     var culture = _.clone(DefaultCultures.CITIZEN_AGENT_TYPE);
+                    culture.healthCategories = [];
                     culture.waveNumber = parseInt(FiercePlanet.Parameters.NumberOfAgents);
                     culture.initialSpeed = 1;
                     culture.beliefs = [];
@@ -735,11 +737,116 @@ var CitiesModule = CitiesModule || {};
                 }
             })
 
+        this.citiesWorld9  = new World();
+        _.extend(this.citiesWorld9,
+            {
+                id: 9,
+                name: "Crystal Cities (pp. 131-9)",
+                isPresetWorld: true,
+                interval: 100,
+                cellsAcross: 101,
+                cellsDown: 101,
+                dontClearCanvas: true,
+                scrollingImageVisible: false,
+                initialResourceStore: 0,
+                playIndefinitely: true,
+                introduction:
+                    "<p>Probability</p><p><input class='world-parameters' name='Probability' value='1.0'/> </p>" +
+                    "<p>Diffusion</p><p><input class='world-parameters' name='Diffusion' value='1'/> </p>" +
+                    "<p>Undercooling</p><p><input class='world-parameters' name='Undercooling' value='0.19'/> </p>" +
+                        "<p>Size of interface effect</p><p><input class='world-parameters' name='InterfaceEffect' value='0.15'/> </p>" +
+                    "<p>Amplitude of noise</p><p><input class='world-parameters' name='NoiseAmplitude' value='0.0'/> </p>" +
+                    "",
+                conclusion: "Well done.",
+                setup: function () {
+                    this.generatePath();
+                    this.cells.forEach(function(cell) {
+                        cell.developed = 0;
+                        cell.potential = 0;
+                        cell.terrain = new Terrain("#000", 1.0);
+                        cell.agentsAllowed = true;
+                        cell.attemptsToDevelop = 0;
+                    });
+                    var cell = this.getCell(50, 50);
+                    cell.developed = true;
+                    cell.potential = 1;
+                    cell.terrain = new Terrain("#fff", 1.0);
+                },
+                tickFunction: function () {
+                    this.generateAutomata();
+
+                    var devs = _.map(this.cells, function(cell) { return cell.developed; }),
+                        totalDev = _.reduce(devs, function(memo, num){ return memo + num; }, 0);
+                    FiercePlanet.Drawing.drawPath();
+                    console.log(totalDev, Lifecycle.waveCounter)
+                },
+                generateAutomata: function () {
+                    var world = this,
+                        probability = parseFloat(FiercePlanet.Parameters.Probability),
+                        diffusion = parseFloat(FiercePlanet.Parameters.Diffusion),
+                        undercooling = parseFloat(FiercePlanet.Parameters.Undercooling),
+                        interfaceEffect = parseFloat(FiercePlanet.Parameters.InterfaceEffect),
+                        noiseAmplitude = parseFloat(FiercePlanet.Parameters.NoiseAmplitude);
+                    // Adjust potential for all cells
+                    this.cells.forEach(function(cell) {
+                        var x = cell.x, y = cell.y,
+                            vnPositions = world.getVonNeumannNeighbourhood(x, y, false),
+                            ivnPositions = world.getInverseVonNeumannNeighbourhood(x, y, false);
+                        var counter = 0;
+                        vnPositions.forEach(function(position) {
+                            var testCell = world.getCell(position.x, position.y);
+                            if (testCell.developed)
+                                counter += 2;
+                        });
+                        ivnPositions.forEach(function(position) {
+                            var testCell = world.getCell(position.x, position.y);
+                            if (testCell.developed)
+                                counter += 1;
+                        });
+                        var weightedAverage = interfaceEffect * (counter - 6),
+                            noise = noiseAmplitude * ((Math.random() * 2) - 1),
+                            cooling = undercooling * (1 + noise),
+                            potentialThreshold = weightedAverage + cooling;
+                        if (cell.potential < potentialThreshold) {
+                            cell.needsDevelopment = true;
+                        }
+
+                        // Iterate 't' times
+                        var p = cell.potential, newP = 0, cumPotential = 0, iterations = 1;
+                        for (var i = 0; i < iterations; i++) {
+                            vnPositions.forEach(function(position) {
+                                var testCell = world.getCell(position.x, position.y);
+                                cumPotential += (1 / 6) * (testCell.potential) - p;
+                            });
+                            ivnPositions.forEach(function(position) {
+                                var testCell = world.getCell(position.x, position.y);
+                                cumPotential += (1 / 12) * (testCell.potential) - p;
+                            });
+                            newP = p + (diffusion / iterations) * cumPotential;
+                        }
+                        cell.newPotential = newP;
+                        if (x > 48 && x < 52 && y > 48 && y < 52 )
+                            console.log(potentialThreshold, newP, cumPotential)
+
+                    });
+                    this.cells.forEach(function(cell) {
+                        if (cell.needsDevelopment) {
+                            cell.terrain = new Terrain("#fff", 1.0);
+                            cell.developed = true;
+                            cell.needsDevelopment = false;
+                            cell.age = 0;
+                        }
+                        cell.potential = cell.newPotential;
+                    });
+
+                }
+            })
+
         // Prepare as a module
         this.id = "Cities";
         this.name = "Cities Module - Batty";
         this.position = 1;
-        this.worlds = [this.citiesWorld1, this.citiesWorld2, this.citiesWorld3, this.citiesWorld4, this.citiesWorld5, this.citiesWorld6, this.citiesWorld7 ];
+        this.worlds = [this.citiesWorld1, this.citiesWorld2, this.citiesWorld3, this.citiesWorld4, this.citiesWorld5, this.citiesWorld6, this.citiesWorld7, this.citiesWorld9 ];
     }
 
     this.initCitiesWorlds();

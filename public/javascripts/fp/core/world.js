@@ -1021,6 +1021,15 @@ function World() {
     };
 
     /**
+     * @param x
+     * @param y
+     * @param includeSelf
+     */
+    this.getInverseVonNeumannNeighbourhood = function(x, y, includeSelf) {
+        return this.getMaskedNeighbourhood(x, y, includeSelf, [2, 4, 6, 8]);
+    };
+
+    /**
      * Gets positions surrounding a given co-ordinate.
      *
      * @param x

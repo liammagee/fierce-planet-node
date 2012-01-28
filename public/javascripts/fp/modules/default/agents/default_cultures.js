@@ -20,6 +20,8 @@ var DefaultCultures = DefaultCultures || {};
 
     this.init = function() {
         this.CITIZEN_AGENT_TYPE = new Culture("Citizen", "000");
+        if (ModuleManager.currentModule.resourceSet)
+            this.CITIZEN_AGENT_TYPE.healthCategories = ModuleManager.currentModule.resourceSet.categories;
 
         this.CITIZEN_AGENT_TYPE.initialSpeed = CultureDefaults.DEFAULT_INITIAL_SPEED;
         this.CITIZEN_AGENT_TYPE.characteristics = [
