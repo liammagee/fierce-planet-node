@@ -345,7 +345,7 @@ var CitiesModule = CitiesModule || {};
                 introduction:
                     "<p>Proportion of empty space</p><p><input class='world-parameters' name='EmptySpace' value='0.3'/> </p>" +
                     "<p>Move instead of change:</p><p><input type='checkbox' class='world-parameters' name='Move' checked='checked'/> </p>" +
-                    "<p>Move threshold</p><p><input class='world-parameters' name='Threshold' value='3'/> </p>" +
+                    "<p>Move threshold</p><p><input class='world-parameters' name='Threshold' value='0.5'/> </p>" +
                         "",
                 conclusion: "Well done.",
                 setup: function () {
@@ -410,7 +410,7 @@ var CitiesModule = CitiesModule || {};
                     // Adjust potential for all cells
 					var move = FiercePlanet.Parameters.Move;
 					if (move) {
-						var threshold = parseInt(FiercePlanet.Parameters.Threshold),
+						var threshold = parseFloat(FiercePlanet.Parameters.Threshold),
 							newSpaces = [],
 							agentsToMove = [];
 	                    this.currentAgents.forEach(function(agent) {
@@ -427,7 +427,7 @@ var CitiesModule = CitiesModule || {};
 		                                wine++;
 	                            }
 	                        });
-							if (beer > threshold && agent.preference == 'wine') {
+							if ((wine / (wine + beer)) < threshold && agent.preference == 'wine') {
 								var newPosition = false, len  = positions.length, counter = 0;
 								while (!newPosition && counter < len) {
 									var position = positions[Math.floor(Math.random() * len)];
@@ -442,7 +442,7 @@ var CitiesModule = CitiesModule || {};
 									counter++;
 								}
 							}
-							else if (wine > threshold && agent.preference == 'beer') {
+							else if ((beer / (wine + beer)) < threshold && agent.preference == 'beer') {
 								var newPosition = false, len  = positions.length, counter = 0;
 								while (!newPosition && counter < len) {
 									var position = positions[Math.floor(Math.random() * len)];

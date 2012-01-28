@@ -44,7 +44,7 @@ FiercePlanet.WorldGallery = FiercePlanet.WorldGallery || {};
                 var world = campaign.worlds[j];
                 var img = (world.thumbnail ? world.thumbnail : '/images/worlds/world-thumbnail-default.png');
                 var thumbnail = $('<div class="thumbnail" id="'
-                    + 'tn-' + i + '-' + j
+                    + 'tn-' + i + '-' + world.id
                     + '">'
                     + '<img src="'
                     + img
@@ -111,7 +111,7 @@ FiercePlanet.WorldGallery = FiercePlanet.WorldGallery || {};
      */
     this.highlightGalleryItem = function(tnID, world) {
         $('.thumbnail').css({color:'inherit', backgroundColor:'inherit' });
-        if (world && world >= 0 && world <= 1000) {
+        if (world >= 0 && world <= 1000) {
             $('#' + tnID).animate({
                 color:"#000",
                 backgroundColor:"#ffffaa"
