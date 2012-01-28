@@ -275,8 +275,10 @@ var Lifecycle = Lifecycle || {};
 		Lifecycle.waveCounter = 0;
 		Lifecycle.waveDelayCounter = 0;
 
-		if (this.currentWorld.waves[this.currentWaveNumber])
+		if (this.currentWorld.waves[this.currentWaveNumber]) {
 			Lifecycle.currentWorld.currentAgents = this.currentWorld.waves[this.currentWaveNumber].agents;
+			
+		}
 
 		this._startAgents();
 

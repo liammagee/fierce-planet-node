@@ -434,7 +434,6 @@ function World() {
             }
         }
 
-		console.log(agents.length)
         this.setCurrentAgents(agents);
         return agents;
     };

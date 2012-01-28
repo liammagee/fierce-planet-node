@@ -343,7 +343,9 @@ var CitiesModule = CitiesModule || {};
                 noWander: true,
                 noSpeedChange: true,
                 introduction:
-                    "<p>Proportion of empty space</p><p><input class='world-parameters' name='EmptySpace' value='0.0'/> </p>" +
+                    "<p>Proportion of empty space</p><p><input class='world-parameters' name='EmptySpace' value='0.3'/> </p>" +
+                    "<p>Move instead of change:</p><p><input type='checkbox' class='world-parameters' name='Move' checked='checked'/> </p>" +
+                    "<p>Move threshold</p><p><input class='world-parameters' name='Threshold' value='3'/> </p>" +
                         "",
                 conclusion: "Well done.",
                 setup: function () {
@@ -381,56 +383,130 @@ var CitiesModule = CitiesModule || {};
 					numAgents = (1 - emptySpace) * numAgents;
 					
                     this.initialiseWaves(1);
+					var len = Math.floor(this.cellsAcross * this.cellsDown * emptySpace),
+						removedCells = [];
+					for (var i = 0; i < len; i++) {
+						var x = Math.floor(Math.random() * this.cellsAcross),
+						 	y = Math.floor(Math.random() * this.cellsDown),
+							index = x * this.cellsAcross + y;
+						if (removedCells.indexOf(index) > -1) {
+							i--;
+							continue;
+						}
+						else {
+							this.waves[0].agents.splice(index, 1);
+						}
+					}
+					this.initialiseCells();
+                    this.cells.forEach(function(cell) {
+                        cell.terrain = new Terrain("#666", 1.0);
+                        cell.agentsAllowed = true;
+                    });
+					
 
                 },
                 tickFunction: function () {
                     var world = this;
                     // Adjust potential for all cells
-                    this.currentAgents.forEach(function(agent) {
-                        var x = agent.x, y = agent.y;
-                        var positions = world.getMooreNeighbourhood(x, y, false);
-                        var beer = 0, wine = 0;
-                        positions.forEach(function(position) {
-                            var agents = world.getAgentsAtCell(position.x, position.y);
-                            if (agents && agents.length > 0) {
-								var a = agents[0];
-                                if (a.preference == 'beer')
-                                    beer++;
-	                            else if (a.preference == 'wine')
-	                                wine++;
-                            }
-                        });
-						if (beer > 4) {
-	                        agent.newPreference = 'beer';
-						}
-						else if (wine > 4) {
-	                        agent.newPreference = 'wine';
-						}
-						else {
-	                        agent.newPreference = agent.preference;
-						}
-                    });
-                    this.currentAgents.forEach(function(agent) {
-                        var x = agent.x, y = agent.y;
-                        if (agent.newPreference) {
-							if (agent.newPreference == 'beer') {
-                                agent.preference = 'beer';
-                                agent.color = 'ff0';
-                            }
-							else if (agent.newPreference == 'wine') {
-                                agent.preference = 'wine';
-                                agent.color = 'f0f';
-                            }
-						}
-                    });
+					var move = FiercePlanet.Parameters.Move;
+					if (move) {
+						var threshold = parseInt(FiercePlanet.Parameters.Threshold),
+							newSpaces = [],
+							agentsToMove = [];
+	                    this.currentAgents.forEach(function(agent) {
+	                        var x = agent.x, y = agent.y;
+	                        var positions = world.getMooreNeighbourhood(x, y, false);
+	                        var beer = 0, wine = 0;
+	                        positions.forEach(function(position) {
+	                            var agents = world.getAgentsAtCell(position.x, position.y);
+	                            if (agents && agents.length > 0) {
+									var a = agents[0];
+	                                if (a.preference == 'beer')
+	                                    beer++;
+		                            else if (a.preference == 'wine')
+		                                wine++;
+	                            }
+	                        });
+							if (beer > threshold && agent.preference == 'wine') {
+								var newPosition = false, len  = positions.length, counter = 0;
+								while (!newPosition && counter < len) {
+									var position = positions[Math.floor(Math.random() * len)];
+									var index = position.x * this.cellsDown + position.y;
+		                            var agents = world.getAgentsAtCell(position.x, position.y);
+									if ((_.isUndefined(agents) || agents.length == 0) && newSpaces.indexOf(index) == -1) {
+										newSpaces.push(index);
+										agent.newPosition = position;
+										agentsToMove.push(agent)
+										newPosition = true;
+									}
+									counter++;
+								}
+							}
+							else if (wine > threshold && agent.preference == 'beer') {
+								var newPosition = false, len  = positions.length, counter = 0;
+								while (!newPosition && counter < len) {
+									var position = positions[Math.floor(Math.random() * len)];
+									var index = position.x * this.cellsDown + position.y;
+		                            var agents = world.getAgentsAtCell(position.x, position.y);
+									if ((_.isUndefined(agents) || agents.length == 0) && newSpaces.indexOf(index) == -1) {
+										newSpaces.push(index);
+										agent.newPosition = position;
+										agentsToMove.push(agent)
+										newPosition = true;
+									}
+									counter++;
+								}
+							}
+						});
+	                    agentsToMove.forEach(function(agent) {
+							var newPosition = agent.newPosition;
+							agent.moveTo(newPosition.x, newPosition.y);
+						});
+					}
+					else {
+	                    this.currentAgents.forEach(function(agent) {
+	                        var x = agent.x, y = agent.y;
+	                        var positions = world.getMooreNeighbourhood(x, y, false);
+	                        var beer = 0, wine = 0;
+	                        positions.forEach(function(position) {
+	                            var agents = world.getAgentsAtCell(position.x, position.y);
+	                            if (agents && agents.length > 0) {
+									var a = agents[0];
+	                                if (a.preference == 'beer')
+	                                    beer++;
+		                            else if (a.preference == 'wine')
+		                                wine++;
+	                            }
+	                        });
+							if (beer > 4) {
+		                        agent.newPreference = 'beer';
+							}
+							else if (wine > 4) {
+		                        agent.newPreference = 'wine';
+							}
+							else {
+		                        agent.newPreference = agent.preference;
+							}
+	                    });
+	                    this.currentAgents.forEach(function(agent) {
+	                        var x = agent.x, y = agent.y;
+	                        if (agent.newPreference) {
+								if (agent.newPreference == 'beer') {
+	                                agent.preference = 'beer';
+	                                agent.color = 'ff0';
+	                            }
+								else if (agent.newPreference == 'wine') {
+	                                agent.preference = 'wine';
+	                                agent.color = 'f0f';
+	                            }
+							}
+	                    });
+					}
 
                     var potentials = _.map(this.currentAgents, function(agent) { return agent.preference == 'beer'; })
                         ,totalBeer = _.reduce(potentials, function(memo, num){ return memo + num; }, 0);
-                    //FiercePlanet.Drawing.drawPath();
                     FiercePlanet.Drawing.clearCanvas('#resourceCanvas');
                     console.log(totalBeer, Lifecycle.waveCounter)
-
-
 
                 }
             })
