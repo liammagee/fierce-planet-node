@@ -273,6 +273,9 @@ var CitiesModule = CitiesModule || {};
                     this.cultures = [culture];
                     this.randomiseAgents = true;
                     this.initialiseWaves(1);
+                    var cell = this.getCell(65, 65);
+                    cell.developed = true;
+                    cell.terrain = new Terrain('#f00', 1.0);
                 },
                 tickFunction: function () {
                     var world = this;
@@ -292,9 +295,8 @@ var CitiesModule = CitiesModule || {};
                     })
 
                     var undevelopedCounter = undevelopedAgents.length;
-                    undevelopedAgents.forEach(function(agent) {
-                        var x = agent.x, y = agent.y,
-                            cell = world.getCell(x, y);
+                    this.cells.forEach(function(cell) {
+                        var x = cell.x, y = cell.y;
                         var surroundingPositions = world.getMooreNeighbourhood(x, y, true),
                             agentCounter = 0, developedAgentCounter = 0;
                         surroundingPositions.forEach(function(position) {
@@ -306,24 +308,26 @@ var CitiesModule = CitiesModule || {};
                                     developedAgentCounter++;
                             }
                         });
+//                        if (x > 50 && x < 53 && y > 50 && y < 53)
+//                            console.log(agentCounter)
                         if (agentCounter > parseInt(FiercePlanet.Parameters.Threshold)) {
-                            if ((developedAgentCounter > 0 && developedAgentCounter < 3) || world.currentAgents.length - undevelopedCounter < 5) {
+                            //  || world.currentAgents.length - undevelopedCounter < 5
+                            if ((developedAgentCounter > 0 && developedAgentCounter < 3)) {
                                 cell.needsToBeDeveloped = true;
                                 undevelopedCounter--;
                             }
                         }
                     })
-                    undevelopedAgents.forEach(function(agent) {
-                        var x = agent.x, y = agent.y;
-                        var cell = world.getCell(x, y);
+                    this.cells.forEach(function(cell) {
                         if (cell.needsToBeDeveloped) {
-                            cell.terrain = new Terrain('#fff', 1.0);
+                            cell.terrain = new Terrain('#f00', 1.0);
                             cell.developed = true;
                         }
                     })
-                    var devs = _.map(this.currentAgents, function(agent) { return (agent.color == 'fff' ? 1 : 0); }),
+                    var devs = _.map(this.cells, function(cell) { return (cell.developed ? 1 : 0); }),
                         totalDev = _.reduce(devs, function(memo, num){ return memo + num; }, 0);
                     FiercePlanet.Drawing.clearCanvas('#resourceCanvas');
+                    FiercePlanet.Drawing.drawPath();
                     console.log(totalDev, Lifecycle.waveCounter)
                 }
             })
