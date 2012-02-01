@@ -741,10 +741,330 @@ var CitiesModule = CitiesModule || {};
                 }
             })
 
-        this.citiesWorld9  = new World();
+        this.citiesWorld8a  = new World();
+        _.extend(this.citiesWorld8a,
+            {
+                id: 80,
+                name: "Field-based Cellular Growth (pp. 116-122) - a",
+                isPresetWorld: true,
+                interval: 100,
+                cellsAcross: 101,
+                cellsDown: 101,
+                dontClearCanvas: true,
+                scrollingImageVisible: false,
+                initialResourceStore: 0,
+                playIndefinitely: true,
+                introduction:
+                    "<p>Probability</p><p><input class='world-parameters' name='Probability' value='0.5'/> </p>" +
+                    "<p>Initial Probability</p><p><input class='world-parameters' name='InitialProbability' value='1.0'/> </p>" +
+                    "<p>Use Cumulative Probability</p><p><input type='checkbox' class='world-parameters' name='CumulativeProbability' checked='checked'/> </p>" +
+                    "",
+                conclusion: "Well done.",
+                setup: function () {
+                    this.generatePath();
+                    var probability = parseFloat(FiercePlanet.Parameters.Probability);
+                    var initialProbability = parseFloat(FiercePlanet.Parameters.InitialProbability);
+                    this.cells.forEach(function(cell) {
+                        cell.developed = false;
+                        cell.probability = 1;
+                        cell.initialProbability = initialProbability;
+                        cell.potential = 0;
+                        cell.terrain = new Terrain("#000", 1.0);
+                        cell.agentsAllowed = true;
+                        cell.attemptsToDevelop = 0;
+                    });
+                    var cell = this.getCell(50, 50);
+                    cell.developed = true;
+                    cell.terrain = new Terrain("#fff", 1.0);
+                },
+                tickFunction: function () {
+                    this.generateAutomata();
+
+                    var devs = _.map(this.cells, function(cell) { return cell.developed; }),
+                        totalDev = _.reduce(devs, function(memo, num){ return memo + num; }, 0);
+                    FiercePlanet.Drawing.drawPath();
+                    console.log(totalDev, Lifecycle.waveCounter)
+                },
+                generateAutomata: function () {
+                    var world = this,
+                        probability = parseFloat(FiercePlanet.Parameters.Probability);
+                    // Adjust potential for all cells
+                    this.cells.forEach(function(cell) {
+                        var x = cell.x, y = cell.y,
+                            positions = world.getMooreNeighbourhood(x, y, false);
+                        if (! cell.developed) {
+                            var developedCounter = 0;
+                            positions.forEach(function(position) {
+                                var testCell = world.getCell(position.x, position.y);
+                                if (testCell.developed)
+                                    developedCounter ++;
+                            });
+                            if (developedCounter >= 1 && !cell.blockDevelopment) {
+                                cell.needsToBeDeveloped = true;
+                                if (FiercePlanet.Parameters.CumulativeProbability)
+                                    cell.probability = cell.probability * probability;
+                                else
+                                    cell.probability = cell.initialProbability * probability;
+                            }
+                            }
+                    });
+                    this.cells.forEach(function(cell) {
+                        var r = Math.random();
+                        if (! cell.developed && cell.needsToBeDeveloped) {
+                            if (r < cell.probability) {
+                                cell.developed = true;
+                                cell.terrain = new Terrain("#fff", 1.0);
+                            }
+                        }
+                    });
+
+                }
+            })
+        this.citiesWorld8b  = new World();
+        _.extend(this.citiesWorld8b,
+            {
+                id: 81,
+                name: "Field-based Cellular Growth (pp. 116-122) - b",
+                isPresetWorld: true,
+                interval: 100,
+                cellsAcross: 101,
+                cellsDown: 101,
+                dontClearCanvas: true,
+                scrollingImageVisible: false,
+                initialResourceStore: 0,
+                playIndefinitely: true,
+                introduction:
+                    "<p>Probability</p><p><input class='world-parameters' name='Probability' value='0.5'/> </p>" +
+                    "<p>Initial Probability</p><p><input class='world-parameters' name='InitialProbability' value='1.0'/> </p>" +
+                    "<p>Use Cumulative Probability</p><p><input type='checkbox' class='world-parameters' name='CumulativeProbability'  /> </p>" +
+                    "<p>Potential Threshold</p><p><input class='world-parameters' name='Threshold' value='0.1'/> </p>" +
+                    "<p>Try Development Once</p><p><input type='checkbox' class='world-parameters' name='TryDevelopmentOnce' checked='checked'/> </p>" +
+                    "",
+                conclusion: "Well done.",
+                setup: function () {
+                    this.generatePath();
+                    var probability = parseFloat(FiercePlanet.Parameters.Probability);
+                    console.log(probability)
+                    var initialProbability = parseFloat(FiercePlanet.Parameters.InitialProbability);
+                    this.cells.forEach(function(cell) {
+                        cell.developed = false;
+                        cell.probability = 1;
+                        cell.initialProbability = initialProbability;
+                        cell.potential = 0;
+                        cell.terrain = new Terrain("#000", 1.0);
+                        cell.agentsAllowed = true;
+                        cell.attemptsToDevelop = 0;
+                    });
+                    var cell = this.getCell(50, 50);
+                    cell.developed = true;
+                    cell.potential = 1;
+                    cell.terrain = new Terrain("#fff", 1.0);
+                },
+                tickFunction: function () {
+                    this.generateAutomata();
+
+                    var devs = _.map(this.cells, function(cell) { return cell.developed; }),
+                        totalDev = _.reduce(devs, function(memo, num){ return memo + num; }, 0);
+                    FiercePlanet.Drawing.drawPath();
+                    console.log(totalDev, Lifecycle.waveCounter)
+                },
+                generateAutomata: function () {
+                    var world = this,
+                        probability = parseFloat(FiercePlanet.Parameters.Probability);
+                    // Adjust potential for all cells
+                    this.cells.forEach(function(cell) {
+                        var x = cell.x, y = cell.y,
+                            positions = world.getMooreNeighbourhood(x, y, false);
+                        cell.newPotential = 0;
+                        var developedCounter = 0, potentialCounter = 0;
+                        positions.forEach(function(position) {
+                            var testCell = world.getCell(position.x, position.y);
+                            if (testCell.developed && (position.x != x || position.y != y ))
+                                developedCounter ++;
+                            potentialCounter += testCell.potential / 9;
+                        });
+                        if (developedCounter >= 1 && !cell.developed) {
+                            cell.needsToBeDeveloped = true;
+                            if (FiercePlanet.Parameters.CumulativeProbability)
+                                cell.probability = cell.probability * probability;
+                            else
+                                cell.probability = cell.initialProbability * probability;
+                        }
+                    });
+                    this.cells.forEach(function(cell) {
+                        if (! cell.developed && cell.needsToBeDeveloped && !cell.blockDevelopment) {
+                            var x = cell.x, y = cell.y;
+                            var r = Math.random();
+                            if (x > 48 && x < 52 && y >48 && y < 52)
+                                console.log(x, y, r, cell.probability)
+
+                            if (cell.potential > parseFloat(FiercePlanet.Parameters.Threshold) && r < cell.probability ) {
+//                            if (cell.potential > parseFloat(FiercePlanet.Parameters.Threshold)) {
+                                cell.developed = true;
+                                cell.terrain = new Terrain("#fff", 1.0);
+                            }
+                            if (!cell.developed && FiercePlanet.Parameters.TryDevelopmentOnce && cell.potential > parseFloat(FiercePlanet.Parameters.Threshold)) {
+                                cell.blockDevelopment = true;
+                            }
+                        }
+                    });
+                    this.cells.forEach(function(cell) {
+                        var x = cell.x, y = cell.y,
+                            positions = world.getMooreNeighbourhood(x, y, false);
+                        cell.newPotential = 0;
+                        cell.adjustPotential = false;
+//                        if (! cell.developed) {
+                        var developedCounter = 0, potentialCounter = 0;
+                        positions.forEach(function(position) {
+                            var testCell = world.getCell(position.x, position.y);
+                            if (testCell.developed && (position.x != x || position.y != y ))
+                                developedCounter ++;
+                            potentialCounter += testCell.potential / 9;
+                        });
+                        if (developedCounter >= 1) {
+                            cell.adjustPotential = true;
+                            cell.newPotential = cell.potential + potentialCounter;
+                        }
+                    });
+                    this.cells.forEach(function(cell) {
+                        var x = cell.x, y = cell.y;
+                        if (cell.adjustPotential)
+                            cell.potential = cell.newPotential;
+                    });
+
+                }
+            })
+
+        this.citiesWorld9 = new World();
         _.extend(this.citiesWorld9,
             {
                 id: 9,
+                name: "Limiting Diffusion through Boundary Conditions (pp. 122-131)",
+                isPresetWorld: true,
+                interval: 10,
+                cellsAcross: 101,
+                cellsDown: 101,
+                dontClearCanvas: true,
+                scrollingImageVisible: false,
+                initialResourceStore: 0,
+                playIndefinitely: true,
+                introduction:
+                    "<p>Radius</p><p><input class='world-parameters' name='Radius' value='25'/> </p>" +
+                    "<p>Scale Factor</p><p><input class='world-parameters' name='ScaleFactor' value='1.0'/> </p>" +
+                    "<p>Random Factor</p><p><input class='world-parameters' name='RandomFactor' value='0.1'/> </p>" +
+                    "<p>Convergence Precision</p><p><input class='world-parameters' name='ConvergencePrecision' value='0.01'/> </p>" +
+                    "",
+                conclusion: "Well done.",
+                setup: function () {
+                    this.generatePath();
+                    this.cells.forEach(function(cell) {
+                        cell.developed = false;
+                        cell.terrain = new Terrain("#000", 1.0);
+                        cell.agentsAllowed = true;
+                    });
+                    var cell = this.getCell(50, 50);
+                    cell.developed = true;
+                    cell.potential = 0;
+                    cell.terrain = new Terrain("#fff", 1.0);
+                },
+                tickFunction: function () {
+                    if (Lifecycle.waveCounter == 1) {
+                        var radius = parseFloat(FiercePlanet.Parameters.Radius);
+                        this.cells.forEach(function(cell) {
+                            var x = cell.x, y = cell.y,
+                                cellRadius = Math.sqrt(Math.pow(x - 50, 2) + Math.pow(y - 50, 2));
+                            cell.potential = (Math.floor(cellRadius) - radius > 0 ? 1 : 0);
+                        });
+//                        Lifecycle._stopAgents();
+                    }
+
+                    this.generateAutomata();
+
+                    var devs = _.map(this.cells, function(cell) { return cell.developed; }),
+                        potentials = _.map(this.cells, function(cell) { return cell.potential; }),
+                        totalDev = _.reduce(devs, function(memo, num){ return memo + num; }, 0),
+                        totalPotential = _.reduce(potentials, function(memo, num){ return memo + num; }, 0);
+                    FiercePlanet.Drawing.drawPath();
+                    console.log(totalDev, totalPotential, Lifecycle.waveCounter)
+                },
+                generateAutomata: function () {
+                    var world = this,
+                        probability = parseFloat(FiercePlanet.Parameters.Probability),
+                        precision = parseFloat(FiercePlanet.Parameters.ConvergencePrecision);
+
+                    // Convergence
+                    this.cells.forEach(function(cell) {
+                        cell.oldPotential = cell.potential;
+                    });
+                    var converged = false;
+                    while (!converged) {
+                        var cellsModified = 0;
+                        this.cells.forEach(function(cell) {
+                            if (!cell.developed) {
+                                var x = cell.x, y = cell.y,
+                                    positions = world.getVonNeumannNeighbourhood(x, y, false);
+                                cell.newPotential = 0;
+                                var potentialCounter = 0;
+                                positions.forEach(function(position) {
+                                    var testCell = world.getCell(position.x, position.y);
+                                    potentialCounter += testCell.oldPotential;
+                                });
+                                potentialCounter = potentialCounter / 4;
+                                cell.newPotential = potentialCounter;
+//                                if (x == 49 && y == 49)
+//                                    console.log(cell.newPotential, cell.oldPotential)
+                                if (Math.abs(cell.newPotential - cell.oldPotential) > precision) {
+                                    cell.oldPotential = cell.newPotential;
+                                    cellsModified++;
+                                }
+                            }
+                        });
+                        //console.log('modifying ' + cellsModified)
+                        if (cellsModified == 0)
+                            converged = true;
+                    }
+                    this.cells.forEach(function(cell) {
+                        if (! cell.developed) {
+                            cell.potential = cell.oldPotential;
+                        }
+                    });
+
+                    // Develop cell with highest potential
+                    var cellsToCheck = [];
+                    var randomFactor = parseFloat(FiercePlanet.Parameters.RandomFactor)
+                    this.cells.forEach(function(cell) {
+                        var x = cell.x, y = cell.y,
+                            positions = world.getVonNeumannNeighbourhood(x, y, false);
+                        var developedCounter = 0, potentialCounter = 0;
+                        positions.forEach(function(position) {
+                            var testCell = world.getCell(position.x, position.y);
+                            developedCounter += (testCell.developed ? 1 :0);
+                        });
+                        if (developedCounter >= 1 && !cell.developed) {
+                            cell.needsToBeDeveloped = true;
+//                            var r = 0;// + Math.random()
+                            var r = Math.random() * randomFactor;//randomFactor;
+                            cell.potentialToCheck = cell.potential + r;
+                            cellsToCheck.push(cell);
+                        }
+                    });
+
+                    var scaleFactor = parseFloat(FiercePlanet.Parameters.ScaleFactor)
+                    var maxCell = _.max(cellsToCheck, function(cell) {return Math.pow(cell.potentialToCheck, scaleFactor)});
+                    if (maxCell) {
+                        maxCell.developed = true;
+                        maxCell.potential = 0;
+                        maxCell.terrain = new Terrain("#fff", 1.0);
+                    }
+
+
+                }
+            })
+
+        this.citiesWorld10  = new World();
+        _.extend(this.citiesWorld10,
+            {
+                id: 10,
                 name: "Crystal Cities (pp. 131-9)",
                 isPresetWorld: true,
                 interval: 100,
@@ -850,7 +1170,7 @@ var CitiesModule = CitiesModule || {};
         this.id = "Cities";
         this.name = "Cities Module - Batty";
         this.position = 1;
-        this.worlds = [this.citiesWorld1, this.citiesWorld2, this.citiesWorld3, this.citiesWorld4, this.citiesWorld5, this.citiesWorld6, this.citiesWorld7, this.citiesWorld9 ];
+        this.worlds = [this.citiesWorld1, this.citiesWorld2, this.citiesWorld3, this.citiesWorld4, this.citiesWorld5, this.citiesWorld6, this.citiesWorld7, this.citiesWorld8a, this.citiesWorld8b, this.citiesWorld9, this.citiesWorld10 ];
     }
 
     this.initCitiesWorlds();
