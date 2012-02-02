@@ -7,16 +7,6 @@
 
 
 /**
- * Agent constants
- */
-var CultureDefaults = CultureDefaults || {};
-(function() {
-    this.DEFAULT_INITIAL_HEALTH = 100;
-    this.DEFAULT_INITIAL_SPEED = 10;
-
-}).apply(CultureDefaults);
-
-/**
  * Probability constants
  */
 var ProbabilityFlags = ProbabilityFlags || {};

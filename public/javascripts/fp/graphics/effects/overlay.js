@@ -17,16 +17,22 @@ var symbol = new Symbol(path);
 
 function setupView() {
     // Place the instances of the symbol:
-    for (var i = 0; i < count; i++) {
-        // The center position is a random point in the view:
-        var center = Point.random() * view.size;
-        var placed = symbol.place(center);
-        placed.scale(i / count);
-        placed.data = {};
-        placed.data.vector = new Point({
-            angle: Math.random() * 360,
-            length : (i / count) * (Math.random()) / 5
-        });
+    if (Lifecycle.inPlay &&
+        (_.isUndefined(Lifecycle.currentWorld.scrollingImageVisible) || Lifecycle.currentWorld.scrollingImageVisible)
+        &&
+        (_.isUndefined(Universe.settings.scrollingImageVisible) || Universe.settings.scrollingImageVisible)
+        ) {
+        for (var i = 0; i < count; i++) {
+            // The center position is a random point in the view:
+            var center = Point.random() * view.size;
+            var placed = symbol.place(center);
+            placed.scale(i / count);
+            placed.data = {};
+            placed.data.vector = new Point({
+                angle: Math.random() * 360,
+                length : (i / count) * (Math.random()) / 5
+            });
+        }
     }
 }
 
@@ -44,7 +50,11 @@ function onMouseMove(event) {
 
 // The onFrame function is called up to 60 times a second:
 function onFrame(event) {
-    if (Lifecycle.inPlay && (_.isUndefined(Lifecycle.currentWorld.scrollingImageVisible) || Lifecycle.currentWorld.scrollingImageVisible)) {
+    if (Lifecycle.inPlay &&
+        (_.isUndefined(Lifecycle.currentWorld.scrollingImageVisible) || Lifecycle.currentWorld.scrollingImageVisible)
+        &&
+        (_.isUndefined(Universe.settings.scrollingImageVisible) || Universe.settings.scrollingImageVisible)
+        ) {
         vector = vector + (mouseVector - vector) / 30;
 
         // Run through the active layer's children list and change

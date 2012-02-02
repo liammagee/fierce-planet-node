@@ -9,7 +9,7 @@
  * Terrain constants
  */
 var DEFAULT_TERRAIN_COLOR = "0FFF1F";
-var DEFAULT_TERRAIN_ALPHA = 1.0;
+var DEFAULT_TERRAIN_ALPHA = 0.0;
 
 /**
  * Tile class definition

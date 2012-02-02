@@ -512,24 +512,30 @@ function World() {
      * Find the current resource index
      */
     this.currentAgentHealthStats = function () {
-        var stats = {};
-        for (var i = 0, l = ModuleManager.currentModule.resourceSet.categories.length; i < l; i++) {
-            stats[ModuleManager.currentModule.resourceSet.categories[i].code] = 0;
-        }
-        stats.total = 0;
-        for (var i = 0, l = this.currentAgents.length; i < l; i++) {
-            var agent = this.currentAgents[i];
-            for (var j in agent.culture.healthCategories) {
-                var h = agent.getHealthForResourceCategory(agent.culture.healthCategories[j]);
-                stats[agent.culture.healthCategories[j].code] += h;
+        var stats = {}, resourceSet = ModuleManager.currentModule.resourceSet;
+
+        if (!_.isUndefined(resourceSet)) {
+            for (var i = 0, l = resourceSet.categories.length; i < l; i++) {
+                stats[resourceSet.categories[i].code] = 0;
             }
-            stats.total += agent.health;
+            stats.total = 0;
+            for (var i = 0, l = this.currentAgents.length; i < l; i++) {
+                var agent = this.currentAgents[i];
+
+                if (!_.isUndefined(agent.culture.healthCategories)) {
+                    for (var j = 0; j < agent.culture.healthCategories.length; j ++) {
+                        var h = agent.getHealthForResourceCategory(agent.culture.healthCategories[j]);
+                        stats[agent.culture.healthCategories[j].code] += h;
+                    }
+                }
+                stats.total += agent.health;
+            }
+            // Average values
+            for (var i = 0, l = resourceSet.categories.length; i < l; i++) {
+                stats[resourceSet.categories[i].code] /= this.currentAgents.length;
+            }
+            stats.total += this.currentAgents.length;
         }
-        // Average values
-        for (var i = 0, l = ModuleManager.currentModule.resourceSet.categories.length; i < l; i++) {
-            stats[ModuleManager.currentModule.resourceSet.categories[i].code] /= this.currentAgents.length;
-        }
-        stats.total += this.currentAgents.length;
         return stats;
     };
 

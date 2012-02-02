@@ -123,12 +123,12 @@ var DefaultCultures = DefaultCultures || {};
 
                 // Now draw the figure
                 ctx.lineWidth = 1.5;
-//                ctx.strokeStyle = "#" + newColor;
-                ctx.strokeStyle = "#000";
+                ctx.strokeStyle = "#" + newColor;
+//                ctx.strokeStyle = "#000";
                 ctx.lineCap = "round";
                 ctx.stroke();
-//                ctx.fillStyle = "#" + newColor;
-                ctx.fillStyle = "#000";
+                ctx.fillStyle = "#" + newColor;
+//                ctx.fillStyle = "#000";
                 ctx.fill();
             }
         });
