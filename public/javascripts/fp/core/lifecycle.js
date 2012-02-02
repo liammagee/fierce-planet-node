@@ -219,10 +219,11 @@ var Lifecycle = Lifecycle || {};
                 Lifecycle.currentWorld.teardown();
         }
 
+
         Lifecycle._initialiseGame();
 
 		if (this.doNewWorldCallback)
-			this.doNewWorldCallback();
+            this.doNewWorldCallback();
 		else
         	Lifecycle.startWorld();
 
@@ -254,6 +255,9 @@ var Lifecycle = Lifecycle || {};
     this.startWorld = function() {
 		if (this.preStartWorldCallback)
 			this.preStartWorldCallback();
+
+        if (this.currentWorld && this.currentWorld.handleParameters)
+            this.currentWorld.handleParameters();
 
 		Lifecycle.currentWaveNumber = 0;
 		Lifecycle.numAgents = Lifecycle.currentWorld.initialAgentNumber;

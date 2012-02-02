@@ -12,7 +12,7 @@ var CitiesModule = CitiesModule || {};
 
 (function () {
 
-    this.initCitiesWorlds = function () {
+    this.initNetLogoWorlds = function () {
         this.citiesWorld1  = new World();
         _.extend(this.citiesWorld1,
             {
@@ -35,7 +35,7 @@ var CitiesModule = CitiesModule || {};
                     "<p>Distribute potential normally:</p><p><input type='checkbox' class='world-parameters' name='DistributeNormally' checked='checked'/> </p>" +
                     "",
                 conclusion: "Well done.",
-                setup: function () {
+                handleParameters: function () {
                     this.generatePath();
                     this.cells.forEach(function(cell) {
                         if (FiercePlanet.Parameters.DistributeNormally) {
@@ -96,7 +96,7 @@ var CitiesModule = CitiesModule || {};
                         "<p>Distribute potential normally:</p><p><input type='checkbox' class='world-parameters' name='DistributeNormally' checked='checked'/> </p>" +
                     "",
                 conclusion: "Well done.",
-                setup: function () {
+                handleParameters: function () {
                     this.cells.forEach(function(cell) {
                         if (FiercePlanet.Parameters.DistributeNormally) {
                             var pot = jStat.normal.sample(0.5, 0.15);
@@ -173,7 +173,7 @@ var CitiesModule = CitiesModule || {};
                     "<p>Draw development:</p><p><input type='checkbox' class='world-parameters' name='DrawDevelopment' checked='checked'/> </p>" +
                     "",
                 conclusion: "Well done.",
-                setup: function () {
+                handleParameters: function () {
                     this.generatePath();
                     this.cells.forEach(function(cell) {
                         cell.potential = Math.random() < 0.5 ? -1 : 1;
@@ -246,8 +246,7 @@ var CitiesModule = CitiesModule || {};
                     "<p>Number of Agents:</p><p><input class='world-parameters' name='NumberOfAgents' value='6000'/> </p>" +
                     "",
                 conclusion: "Well done.",
-                setup: function () {
-                    DefaultCultures.init();
+                handleParameters: function () {
                     this.generatePath();
                     this.cells.forEach(function(cell) {
                         cell.potential = Math.random() < 0.5 ? -1 : 1;
@@ -257,7 +256,7 @@ var CitiesModule = CitiesModule || {};
                     });
 
                     /// Set up agents
-                    var culture = _.clone(DefaultCultures.CITIZEN_AGENT_TYPE);
+                    var culture = _.clone(DefaultCultures.Circular);
                     culture.healthCategories = [];
                     culture.waveNumber = parseInt(FiercePlanet.Parameters.NumberOfAgents);
                     culture.initialSpeed = 1;
@@ -272,6 +271,7 @@ var CitiesModule = CitiesModule || {};
                     };
                     this.cultures = [culture];
                     this.randomiseAgents = true;
+                    this.waves = undefined;
                     this.initialiseWaves(1);
                     var cell = this.getCell(65, 65);
                     cell.developed = true;
@@ -353,8 +353,7 @@ var CitiesModule = CitiesModule || {};
                     "<p>Move threshold</p><p><input class='world-parameters' name='Threshold' value='0.5'/> </p>" +
                         "",
                 conclusion: "Well done.",
-                setup: function () {
-                    DefaultCultures.init();
+                handleParameters: function () {
                     this.generatePath();
                     this.cells.forEach(function(cell) {
                         cell.terrain = new Terrain("#666", 1.0);
@@ -362,7 +361,7 @@ var CitiesModule = CitiesModule || {};
                     });
 
                     /// Set up agents
-                    var culture = _.clone(DefaultCultures.CITIZEN_AGENT_TYPE);
+                    var culture = _.clone(DefaultCultures.Circular);
                     culture.healthCategories = [];
                     culture.waveNumber = parseInt(FiercePlanet.Parameters.NumberOfAgents);
                     culture.initialSpeed = 1;
@@ -387,7 +386,8 @@ var CitiesModule = CitiesModule || {};
 					var numAgents = this.cellsAcross * this.cellsDown;
 					var emptySpace = parseFloat(FiercePlanet.Parameters.EmptySpace);
 					numAgents = (1 - emptySpace) * numAgents;
-					
+
+                    this.waves = undefined;
                     this.initialiseWaves(1);
 					var len = Math.floor(this.cellsAcross * this.cellsDown * emptySpace),
 						removedCells = [];
@@ -539,7 +539,7 @@ var CitiesModule = CitiesModule || {};
                     "<p>Number of Agents:</p><p><input class='world-parameters' name='NumberOfAgents' value='6000'/> </p>" +
                     "",
                 conclusion: "Well done.",
-                setup: function () {
+                handleParameters: function () {
                     this.generatePath();
                     this.cells.forEach(function(cell) {
                         cell.potential = Math.random() < 0.5 ? -1 : 1;
@@ -646,7 +646,7 @@ var CitiesModule = CitiesModule || {};
                     "<p>With shading:</p><p><input type='checkbox' class='world-parameters' name='WithShading' checked='checked'/> </p>" +
                     "",
                 conclusion: "Well done.",
-                setup: function () {
+                handleParameters: function () {
                     this.generatePath();
                     this.cells.forEach(function(cell) {
                         cell.developed = 0;
@@ -763,7 +763,7 @@ var CitiesModule = CitiesModule || {};
                     "<p>Amplitude of noise</p><p><input class='world-parameters' name='NoiseAmplitude' value='0.0'/> </p>" +
                     "",
                 conclusion: "Well done.",
-                setup: function () {
+                handleParameters: function () {
                     this.generatePath();
                     this.cells.forEach(function(cell) {
                         cell.developed = 0;
@@ -866,8 +866,7 @@ var CitiesModule = CitiesModule || {};
 	                    "<p>Proportion of empty space</p><p><input class='world-parameters' name='EmptySpace' value='0.8'/> </p>" +
 	                        "",
 	                conclusion: "Well done.",
-	                setup: function () {
-	                    DefaultCultures.init();
+                    handleParameters: function () {
 	                    this.generatePath();
 	                    this.cells.forEach(function(cell) {
 	                        cell.terrain = new Terrain("#000", 1.0);
@@ -875,7 +874,7 @@ var CitiesModule = CitiesModule || {};
 	                    });
 
 	                    /// Set up agents
-	                    var culture = _.clone(DefaultCultures.CITIZEN_AGENT_TYPE);
+	                    var culture = _.clone(DefaultCultures.Circular);
 	                    culture.healthCategories = [];
 	                    culture.waveNumber = parseInt(FiercePlanet.Parameters.NumberOfAgents);
 	                    culture.initialSpeed = 1;
@@ -894,6 +893,7 @@ var CitiesModule = CitiesModule || {};
 						var emptySpace = parseFloat(FiercePlanet.Parameters.EmptySpace);
 						numAgents = (1 - emptySpace) * numAgents;
 
+                        this.waves = undefined;
 	                    this.initialiseWaves(1);
 						var len = Math.floor(this.cellsAcross * this.cellsDown * emptySpace),
 							removedCells = [];
@@ -998,7 +998,7 @@ var CitiesModule = CitiesModule || {};
 			];
     }
 
-    this.initCitiesWorlds();
+    this.initNetLogoWorlds();
 }).apply(CitiesWorlds);
 
 

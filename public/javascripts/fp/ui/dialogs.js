@@ -126,7 +126,7 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
                             }
                         }
                         $( this ).dialog( "close" );
-                        Lifecycle._initialiseGame();
+//                        Lifecycle._initialiseGame();
                         Lifecycle.startWorld();
                     },
                     "Cancel": function() {

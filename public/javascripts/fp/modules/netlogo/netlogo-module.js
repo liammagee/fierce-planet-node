@@ -6,231 +6,228 @@
  */
 
 
-var CitiesWorlds = CitiesWorlds || new Campaign();
-var CitiesModule = CitiesModule || {};
+var NetLogoWorlds = NetLogoWorlds || new Campaign();
+var NetLogoModule = NetLogoModule || {};
 
 
 (function () {
 
-    this.initCitiesWorlds = function () {
-        this.citiesWorld1  = new World();
-        _.extend(this.citiesWorld1,
+    this.initNetLogoWorlds = function () {
+        this.altruism  = new World();
+        _.extend(this.altruism,
             {
                 id: 1,
-                name: "Arthur's Model (pp. 36-40)",
+                name: "Altruism",
                 isPresetWorld: true,
-                interval: 1000,
-                cellsAcross: 21,
-                cellsDown: 21,
-                placeAgentsOnAllCells: true,
-                generateWaveAgentsAutomatically: true,
-                waveNumber: 1,
+                interval: 50,
+                cellsAcross: 41,
+                cellsDown: 41,
                 dontClearCanvas: true,
                 scrollingImageVisible: false,
+                allowOffscreenCycling: true,
                 initialResourceStore: 0,
                 playIndefinitely: true,
+                noWander: true,
+                noSpeedChange: true,
+//                "<p>Threshold</p><p><input class='world-parameters' name='Threshold' value='6'/> </p>" +
+//                    "<p>Number of Agents:</p><p><input class='world-parameters' name='NumberOfAgents' value='100'/> </p>" +
                 introduction:
-                    "<p>Scale Factor</p><p><input class='world-parameters' name='ScaleFactor' value='2'/> </p>" +
-                    "<p>Rate of growth:</p><p><input class='world-parameters' name='RateOfGrowth' value='1.05'/> </p>" +
-                    "<p>Distribute potential normally:</p><p><input type='checkbox' class='world-parameters' name='DistributeNormally' checked='checked'/> </p>" +
-                    "",
+                        "<p>Altruistic probability</p><p><input class='world-parameters' name='AltruisticProbability' value='0.26'/> </p>" +
+                        "<p>Selfish probability</p><p><input class='world-parameters' name='SelfishProbability' value='0.26'/> </p>" +
+                        "<p>Cost of altruism</p><p><input class='world-parameters' name='CostOfAltruism' value='0.13'/> </p>" +
+                        "<p>Benefit from altruism</p><p><input class='world-parameters' name='BenefitFromAltruism' value='0.48'/> </p>" +
+                        "<p>Disease</p><p><input class='world-parameters' name='Disease' value='0.0'/> </p>" +
+                        "<p>Harshness</p><p><input class='world-parameters' name='Harshness' value='0.0'/> </p>" +
+                        "",
                 conclusion: "Well done.",
-                setup: function () {
-                    this.generatePath();
-                    this.cells.forEach(function(cell) {
-                        if (FiercePlanet.Parameters.DistributeNormally) {
-                            var pot = jStat.normal.sample(0.5, 0.15);
-                            pot = (pot < 0 ? 0 : (pot > 1 ? 1 : pot));
-                            cell.potential = pot;
-                        }
-                        // Otherwise, assume uniform distribution
-                        else {
-                            cell.potential = Math.random();
-                        }
-                        cell.development = 0;
-                        cell.terrain = new Terrain("#000", 1.0);
-                        cell.agentsAllowed = true;
-                    });
-                },
-                tickFunction: function () {
-                    var world = this;
-
-                    var potentials = _.map(this.cells, function(cell) { return cell.potential; }),
-                        min = _.min(potentials),
-                        max = _.max(potentials),
-                        range = max - min;
-                    FiercePlanet.Parameters.Range =  range;
-                    FiercePlanet.Drawing.drawPath();
-                    console.log(min, max, range, Lifecycle.waveCounter)
-
-                    // Adjust potential for all cells
-                    this.cells.forEach(function(cell) {
-                        var normalisedPotential = (cell.potential - min) / range;// * FiercePlanet.Parameters.TotalAgents / 2;
-                        cell.potential = FiercePlanet.Parameters.RateOfGrowth * Math.pow(normalisedPotential, FiercePlanet.Parameters.ScaleFactor);// * FiercePlanet.Parameters.TotalPotential;
-                        if (cell.potential > 1)
-                            cell.potential = 1;
-                        var grey = Math.floor(cell.potential * 255);
-//                        var color = 'rgb(' + grey + ', ' + grey + ', ' + grey + ')';
-                        var color = '#' + grey.toString(16) + grey.toString(16) + grey.toString(16);
-                        cell.terrain = new Terrain(color, 1.0);
-                    });
-                }
-            })
-
-        this.citiesWorld2  = new World();
-        _.extend(this.citiesWorld2,
-            {
-                id: 2,
-                name: "Arthur's Model with Neighbourhood (pp. 41-42)",
-                isPresetWorld: true,
-                interval: 1000,
-                cellsAcross: 21,
-                cellsDown: 21,
-                dontClearCanvas: true,
-                scrollingImageVisible: false,
-                initialResourceStore: 0,
-                playIndefinitely: true,
-                introduction:
-                    "<p>Scale Factor</p><p><input class='world-parameters' name='ScaleFactor' value='2'/> </p>" +
-                        "<p>Rate of growth:</p><p><input class='world-parameters' name='RateOfGrowth' value='1.05'/> </p>" +
-                        "<p>Distribute potential normally:</p><p><input type='checkbox' class='world-parameters' name='DistributeNormally' checked='checked'/> </p>" +
-                    "",
-                conclusion: "Well done.",
-                setup: function () {
-                    this.cells.forEach(function(cell) {
-                        if (FiercePlanet.Parameters.DistributeNormally) {
-                            var pot = jStat.normal.sample(0.5, 0.15);
-                            pot = (pot < 0 ? 0 : (pot > 1 ? 1 : pot));
-                            cell.potential = pot;
-                        }
-                        // Otherwise, assume uniform distribution
-                        else {
-                            cell.potential = Math.random();
-                        }
-                        cell.development = 0;
-                        cell.terrain = new Terrain("#000", 1.0);
-                        cell.agentsAllowed = true;
-                    });
-                },
-                tickFunction: function () {
-                    var potentials = _.map(this.cells, function(cell) { return cell.potential; }),
-                        min = _.min(potentials),
-                        max = _.max(potentials),
-                        range = max - min;
-
-                    var world = this;
-                    // Adjust potential for all cells
-                    this.cells.forEach(function(cell) {
-                        var x = cell.x, y = cell.y;
-                        var positions = world.getMooreNeighbourhood(x, y, true);
-                        var totalPotential = 0, counter = 0;
-                        positions.forEach(function(position) {
-                            var cell = world.getCell(position.x, position.y);
-                            totalPotential += cell.potential;
-                            counter++;
-                        });
-                        totalPotential = totalPotential / counter;
-
-                        var normalisedPotential = (totalPotential - min) / range;
-                        cell.newPotential = FiercePlanet.Parameters.RateOfGrowth * Math.pow(normalisedPotential, FiercePlanet.Parameters.ScaleFactor);// * FiercePlanet.Parameters.TotalPotential;
-                        if (cell.newPotential > 1)
-                            cell.newPotential = 1;
-                    });
-
-                    // Adjust potential for all cells
-                    this.cells.forEach(function(cell) {
-                        if (cell.newPotential)
-                            cell.potential = cell.newPotential;
-                        var grey = Math.floor(cell.potential * 255);
-//                        var color = 'rgb(' + grey + ', ' + grey + ', ' + grey + ')';
-                        var color = '#' + grey.toString(16) + grey.toString(16) + grey.toString(16);
-                        cell.terrain = new Terrain(color, 1.0);
-                    });
-
-
-                    FiercePlanet.Drawing.drawPath();
-                    console.log(min, max, range, Lifecycle.waveCounter)
-
-
-                }
-            })
-
-        this.citiesWorld3  = new World();
-        _.extend(this.citiesWorld3,
-            {
-                id: 3,
-                name: "Vicsek-Szalay Model (pp. 43-47)",
-                isPresetWorld: true,
-                interval: 10,
-                cellsAcross: 130,
-                cellsDown: 130,
-                dontClearCanvas: true,
-                scrollingImageVisible: false,
-                initialResourceStore: 0,
-                playIndefinitely: true,
-                introduction: "<p>Threshold</p><p><input class='world-parameters' name='Threshold' value='6'/> </p>" +
-                    "<p>Add noise:</p><p><input type='checkbox' class='world-parameters' name='AddNoise' checked='checked'/> </p>" +
-                    "<p>Draw development:</p><p><input type='checkbox' class='world-parameters' name='DrawDevelopment' checked='checked'/> </p>" +
-                    "",
-                conclusion: "Well done.",
-                setup: function () {
-                    this.generatePath();
+                setup: function() {
                     this.cells.forEach(function(cell) {
                         cell.potential = Math.random() < 0.5 ? -1 : 1;
                         cell.development = 0;
-                        cell.terrain = new Terrain("#000", 1.0);
+                        cell.terrain = new Terrain("#fff", 1.0);
                         cell.agentsAllowed = true;
                     });
                 },
+                handleParameters: function () {
+                    var altruisticProbability = parseFloat(FiercePlanet.Parameters.AltruisticProbability)
+                        , selfishProbability = parseFloat(FiercePlanet.Parameters.SelfishProbability)
+                    /// Set up agents
+                    var culture = _.clone(DefaultCultures.Square);
+                    culture.waveNumber = parseInt(FiercePlanet.Parameters.NumberOfAgents);
+                    culture.initialSpeed = 1;
+                    culture.initFunction = function(agent, world) {
+                        var r = Math.random();
+                        agent.altruisticBenefit = 0;
+                        agent.altruisticCost = 0;
+                        agent.fitness = 0;
+                        agent.selfWeight = 0;
+                        agent.altWeight = 0;
+                        agent.harshness = 0;
+                        if (r < altruisticProbability) {
+                            agent.color = 'faa';
+                            agent.state = 'altruistic';
+                            agent.benefitOut = 1;
+                        }
+                        else if (r < (altruisticProbability + selfishProbability)) {
+                            agent.color = '0f0';
+                            agent.state = 'selfish';
+                            agent.benefitOut = 0;
+                        }
+                        else {
+                            agent.color = '000';
+                            agent.state = 'neither';
+                            agent.benefitOut = 0;
+                          }
+                        console.log(r, altruisticProbability, selfishProbability, agent.state)
+
+                    };
+                    culture.updateFunction = function(agent, world) {
+                    };
+                    this.cultures = [culture];
+//                    this.randomiseAgents = true;
+                    this.placeAgentsOnAllCells = true;
+                    this.waves = undefined;
+                    this.initialiseWaves(1);
+                },
                 tickFunction: function () {
                     var world = this;
-                    // Adjust potential for all cells
-                    this.cells.forEach(function(cell) {
-                        var x = cell.x, y = cell.y;
-                        var positions = world.getVonNeumannNeighbourhood(x, y, true);
-                        var totalPotential = 0, counter = 0;
-                        positions.forEach(function(position) {
-                            var cell = world.getCell(position.x, position.y);
-                            counter++;
-                            totalPotential += cell.potential;
-                        });
-                        totalPotential = totalPotential / counter;
-                        if (FiercePlanet.Parameters.AddNoise) {
-                            totalPotential += (Math.random() < 0.5 ? -1 : 1);
+                    var counter = 0;
+                    var benefitFromAltruism = parseFloat(FiercePlanet.Parameters.BenefitFromAltruism)
+                        , costOfAltruism = parseFloat(FiercePlanet.Parameters.CostOfAltruism)
+                        , disease = parseFloat(FiercePlanet.Parameters.Disease)
+                        , harshness = parseFloat(FiercePlanet.Parameters.Harshness)
+                    world.currentAgents.forEach(function(agent) {
+                        if (agent.state == 'altruistic' || agent.state == 'selfish') {
+                            counter ++;
                         }
-                        cell.newPotential = totalPotential;
+                    });
+                    if (counter == 0) {
+                        Lifecycle._stopAgents();
+                    }
+
+                    // Set altruism benefit
+                    world.currentAgents.forEach(function(agent) {
+                        var positions = world.getVonNeumannNeighbourhood(agent.x, agent.y, false);
+                        var benefits = agent.benefitOut, counter = 1;
+                        positions.forEach(function(position) {
+                            var agents = world.getAgentsAtCell(position.x, position.y);
+                            if (!_.isUndefined(agents) && agents.length > 0) {
+                                var testAgent = agents[0];
+                                benefits += testAgent.benefitOut;
+                                counter++;
+                            }
+                        })
+                        agent.altruisticBenefit = benefitFromAltruism * (benefits / counter);
                     });
 
-                    // Adjust potential for all cells
-                    this.cells.forEach(function(cell) {
-                        if (cell.newPotential)
-                            cell.potential = cell.newPotential;
-                        cell.development =  (cell.potential <= FiercePlanet.Parameters.Threshold && cell.development == 0 ? 0 : 1 );
-                        if (cell.development == 1)
-                            cell.terrain = new Terrain("#fff", 1.0);
+                    // Perform fitness check
+                    world.currentAgents.forEach(function(agent) {
+                        if (agent.state == 'altruistic') {
+                            agent.fitness = (1 - costOfAltruism) + agent.altruisticBenefit;
+                        }
+                        else if (agent.state == 'selfish') {
+                            agent.fitness = 1 + agent.altruisticBenefit;
+                        }
+                        else if (agent.state == 'neither') {
+                            agent.fitness = harshness;
+                        }
                     });
-                    var potentials = _.map(this.cells, function(cell) { return cell.potential; }),
-                        min = _.min(potentials),
-                        max = _.max(potentials),
-                        range = max - min;
-//                        ,total = _.reduce(potentials, function(memo, num){ return memo + num; }, 0);
-                    var devs = _.map(this.cells, function(cell) { return cell.development; }),
-                        totalDev = _.reduce(devs, function(memo, num){ return memo + num; }, 0);
-                    FiercePlanet.Parameters.Max =  max;
-                    FiercePlanet.Parameters.Range =  range;
-                    FiercePlanet.Drawing.drawPath();
-                    console.log(max, range, totalDev, Lifecycle.waveCounter)
 
+                    // Record neighbour fitness
+                    // Find lottery weights
+                    world.currentAgents.forEach(function(agent) {
+                        var altFitness = 0, selfFitness = 0, harshFitness = 0;
+                        if (agent.state == 'altruistic') {
+                            altFitness = agent.fitness;
+                        }
+                        else if (agent.state == 'selfish') {
+                            selfFitness = agent.fitness;
+                        }
+                        else if (agent.state == 'neither') {
+                            harshFitness = agent.fitness;
+                        }
+                        var positions = world.getVonNeumannNeighbourhood(agent.x, agent.y, false);
+                        var benefits = 0;
+                        positions.forEach(function(position) {
+                            var agents = world.getAgentsAtCell(position.x, position.y);
+                            if (!_.isUndefined(agents) && agents.length > 0) {
+                                var testAgent = agents[0];
+                                if (testAgent.state == 'altruistic') {
+                                    altFitness += testAgent.fitness;
+                                }
+                                else if (testAgent.state == 'selfish') {
+                                    selfFitness += testAgent.fitness;
+                                }
+                                else if (testAgent.state == 'neither') {
+                                    harshFitness += testAgent.fitness;
+                                }
+                            }
+                        })
+                        agent.altFitness  = altFitness;
+                        agent.selfFitness  = selfFitness;
+                        agent.harshFitness  = harshFitness;
+                    });
+                    // Find lottery weights
+                    world.currentAgents.forEach(function(agent) {
+                        var fitnessSum = agent.altFitness + agent.selfFitness + agent.harshFitness + disease;
+                        if (fitnessSum > 0) {
+                            agent.altWeight = agent.altFitness / fitnessSum;
+                            agent.selfWeight = agent.selfFitness / fitnessSum;
+                            agent.harshWeight = (agent.harshFitness + disease) / fitnessSum;
+                        }
+                        else {
+                            agent.altWeight = 0;
+                            agent.selfWeight = 0;
+                            agent.harshWeight = 0;
+                        }
+                    });
 
+//                    console.log(world.getAgentsAtCell(10, 10)[0].altruisticBenefit)
+//                    console.log(world.getAgentsAtCell(10, 10)[0].altFitness)
+//                    console.log(world.getAgentsAtCell(10, 10)[0].altWeight)
+                    // Next generation
+                    world.currentAgents.forEach(function(agent) {
+                        var breedChance = Math.random();
+                        if (breedChance < agent.altWeight) {
+                            agent.state = 'altruistic';
+                            agent.color = 'faa';
+                            agent.benefitOut = 1;
+                        }
+                        else if (breedChance < (agent.altWeight + agent.selfWeight)) {
+                            agent.state = 'selfish';
+                            agent.color = '0f0';
+                            agent.benefitOut = 0;
+                        }
+                        else {
+                            agent.state = 'neither';
+                            agent.color = '000';
+                            agent.altruisticBenefit = 0;
+                            agent.benefitOut = 0;
+                            agent.altFitness = 0;
+                            agent.selfFitness = 0;
+                            agent.harshFitness = 0;
+                            agent.altWeight = 0;
+                            agent.selfWeight = 0;
+                            agent.harshWeight = 0;
+                        }
+                    });
+
+                    var alts = _.map(this.currentAgents, function(agent) { return (agent.state == 'altruistic' ? 1 : 0); }),
+                        totalAlt = _.reduce(alts, function(memo, num){ return memo + num; }, 0);
+                    var selfs = _.map(this.currentAgents, function(agent) { return (agent.state == 'selfish' ? 1 : 0); }),
+                        totalSelf = _.reduce(selfs, function(memo, num){ return memo + num; }, 0);
+                    FiercePlanet.Drawing.clearCanvas('#resourceCanvas');
+//                    FiercePlanet.Drawing.drawPath();
+                    console.log(totalAlt, totalSelf, Lifecycle.waveCounter)
 
                 }
             })
 
-        this.citiesWorld4  = new World();
-        _.extend(this.citiesWorld4,
+        this.cooperation  = new World();
+        _.extend(this.cooperation,
             {
-                id: 4,
-                name: "Local Diffusion and Contact: Global Pattern from Local Action (pp. 48-51)",
+                id: 2,
+                name: "Cooperation",
                 isPresetWorld: true,
                 interval: 50,
                 cellsAcross: 130,
@@ -243,11 +240,10 @@ var CitiesModule = CitiesModule || {};
                 noSpeedChange: true,
                 introduction:
                     "<p>Threshold</p><p><input class='world-parameters' name='Threshold' value='6'/> </p>" +
-                    "<p>Number of Agents:</p><p><input class='world-parameters' name='NumberOfAgents' value='6000'/> </p>" +
-                    "",
+                        "<p>Number of Agents:</p><p><input class='world-parameters' name='NumberOfAgents' value='6000'/> </p>" +
+                        "",
                 conclusion: "Well done.",
                 setup: function () {
-                    DefaultCultures.init();
                     this.generatePath();
                     this.cells.forEach(function(cell) {
                         cell.potential = Math.random() < 0.5 ? -1 : 1;
@@ -332,538 +328,25 @@ var CitiesModule = CitiesModule || {};
                 }
             })
 
-        this.citiesWorld5  = new World();
-        _.extend(this.citiesWorld5,
-            {
-                id: 5,
-                name: "Schelling's Model: Segregation as Self-Organisation (pp. 51-57)",
-                isPresetWorld: true,
-                interval: 100,
-                cellsAcross: 100,
-                cellsDown: 100,
-                dontClearCanvas: true,
-                scrollingImageVisible: false,
-                initialResourceStore: 0,
-                playIndefinitely: true,
-                noWander: true,
-                noSpeedChange: true,
-                introduction:
-                    "<p>Proportion of empty space</p><p><input class='world-parameters' name='EmptySpace' value='0.3'/> </p>" +
-                    "<p>Move instead of change:</p><p><input type='checkbox' class='world-parameters' name='Move' checked='checked'/> </p>" +
-                    "<p>Move threshold</p><p><input class='world-parameters' name='Threshold' value='0.5'/> </p>" +
-                        "",
-                conclusion: "Well done.",
-                setup: function () {
-                    DefaultCultures.init();
-                    this.generatePath();
-                    this.cells.forEach(function(cell) {
-                        cell.terrain = new Terrain("#666", 1.0);
-                        cell.agentsAllowed = true;
-                    });
-
-                    /// Set up agents
-                    var culture = _.clone(DefaultCultures.CITIZEN_AGENT_TYPE);
-                    culture.healthCategories = [];
-                    culture.waveNumber = parseInt(FiercePlanet.Parameters.NumberOfAgents);
-                    culture.initialSpeed = 1;
-                    culture.beliefs = [];
-                    culture.desires = [];
-                    culture.capabilities = [];
-                    culture.initFunction = function(agent, world) {
-						var pref = Math.random();
-						if (pref < 0.5) {
-							agent.preference = 'beer';
-	                        agent.color = 'ff0';
-						}
-						else {
-							agent.preference = 'wine';
-	                        agent.color = 'f0f';
-						}
-                    };
-                    culture.updateFunction = function(agent, world) {
-                    };
-                    this.cultures = [culture];
-                    this.placeAgentsOnAllCells = true;
-					var numAgents = this.cellsAcross * this.cellsDown;
-					var emptySpace = parseFloat(FiercePlanet.Parameters.EmptySpace);
-					numAgents = (1 - emptySpace) * numAgents;
-					
-                    this.initialiseWaves(1);
-					var len = Math.floor(this.cellsAcross * this.cellsDown * emptySpace),
-						removedCells = [];
-					for (var i = 0; i < len; i++) {
-						var x = Math.floor(Math.random() * this.cellsAcross),
-						 	y = Math.floor(Math.random() * this.cellsDown),
-							index = x * this.cellsAcross + y;
-						if (removedCells.indexOf(index) > -1) {
-							i--;
-							continue;
-						}
-						else {
-							this.waves[0].agents.splice(index, 1);
-						}
-					}
-					this.initialiseCells();
-                    this.cells.forEach(function(cell) {
-                        cell.terrain = new Terrain("#666", 1.0);
-                        cell.agentsAllowed = true;
-                    });
-					
-
-                },
-                tickFunction: function () {
-                    var world = this;
-                    // Adjust potential for all cells
-					var move = FiercePlanet.Parameters.Move;
-					if (move) {
-						var threshold = parseFloat(FiercePlanet.Parameters.Threshold),
-							newSpaces = [],
-							agentsToMove = [];
-	                    this.currentAgents.forEach(function(agent) {
-	                        var x = agent.x, y = agent.y;
-	                        var positions = world.getMooreNeighbourhood(x, y, false);
-	                        var beer = 0, wine = 0;
-	                        positions.forEach(function(position) {
-	                            var agents = world.getAgentsAtCell(position.x, position.y);
-	                            if (agents && agents.length > 0) {
-									var a = agents[0];
-	                                if (a.preference == 'beer')
-	                                    beer++;
-		                            else if (a.preference == 'wine')
-		                                wine++;
-	                            }
-	                        });
-							if ((wine / (wine + beer)) < threshold && agent.preference == 'wine') {
-								var newPosition = false, len  = positions.length, counter = 0;
-								while (!newPosition && counter < len) {
-									var position = positions[Math.floor(Math.random() * len)];
-									var index = position.x * this.cellsDown + position.y;
-		                            var agents = world.getAgentsAtCell(position.x, position.y);
-									if ((_.isUndefined(agents) || agents.length == 0) && newSpaces.indexOf(index) == -1) {
-										newSpaces.push(index);
-										agent.newPosition = position;
-										agentsToMove.push(agent)
-										newPosition = true;
-									}
-									counter++;
-								}
-							}
-							else if ((beer / (wine + beer)) < threshold && agent.preference == 'beer') {
-								var newPosition = false, len  = positions.length, counter = 0;
-								while (!newPosition && counter < len) {
-									var position = positions[Math.floor(Math.random() * len)];
-									var index = position.x * this.cellsDown + position.y;
-		                            var agents = world.getAgentsAtCell(position.x, position.y);
-									if ((_.isUndefined(agents) || agents.length == 0) && newSpaces.indexOf(index) == -1) {
-										newSpaces.push(index);
-										agent.newPosition = position;
-										agentsToMove.push(agent)
-										newPosition = true;
-									}
-									counter++;
-								}
-							}
-						});
-	                    agentsToMove.forEach(function(agent) {
-							var newPosition = agent.newPosition;
-							agent.moveTo(newPosition.x, newPosition.y);
-						});
-					}
-					else {
-	                    this.currentAgents.forEach(function(agent) {
-	                        var x = agent.x, y = agent.y;
-	                        var positions = world.getMooreNeighbourhood(x, y, false);
-	                        var beer = 0, wine = 0;
-	                        positions.forEach(function(position) {
-	                            var agents = world.getAgentsAtCell(position.x, position.y);
-	                            if (agents && agents.length > 0) {
-									var a = agents[0];
-	                                if (a.preference == 'beer')
-	                                    beer++;
-		                            else if (a.preference == 'wine')
-		                                wine++;
-	                            }
-	                        });
-							if (beer > 4) {
-		                        agent.newPreference = 'beer';
-							}
-							else if (wine > 4) {
-		                        agent.newPreference = 'wine';
-							}
-							else {
-		                        agent.newPreference = agent.preference;
-							}
-	                    });
-	                    this.currentAgents.forEach(function(agent) {
-	                        var x = agent.x, y = agent.y;
-	                        if (agent.newPreference) {
-								if (agent.newPreference == 'beer') {
-	                                agent.preference = 'beer';
-	                                agent.color = 'ff0';
-	                            }
-								else if (agent.newPreference == 'wine') {
-	                                agent.preference = 'wine';
-	                                agent.color = 'f0f';
-	                            }
-							}
-	                    });
-					}
-
-                    var potentials = _.map(this.currentAgents, function(agent) { return agent.preference == 'beer'; })
-                        ,totalBeer = _.reduce(potentials, function(memo, num){ return memo + num; }, 0);
-                    FiercePlanet.Drawing.clearCanvas('#resourceCanvas');
-                    console.log(totalBeer, Lifecycle.waveCounter)
-
-                }
-            })
-
-
-        this.citiesWorld6  = new World();
-        _.extend(this.citiesWorld6,
-            {
-                id: 6,
-                name: "Krugman's Model: Trade and Scale (pp. 57-63)",
-                isPresetWorld: true,
-                interval: 10,
-                cellsAcross: 130,
-                cellsDown: 130,
-                dontClearCanvas: true,
-                scrollingImageVisible: false,
-                initialResourceStore: 0,
-                playIndefinitely: true,
-                introduction:
-                    "<p>Threshold</p><p><input class='world-parameters' name='Threshold' value='4.5'/> </p>" +
-                    "<p>Add noise:</p><p><input type='checkbox' class='world-parameters' name='AddNoise' checked='checked'/> </p>" +
-                    "<p>Draw development:</p><p><input type='checkbox' class='world-parameters' name='DrawDevelopment' checked='checked'/> </p>" +
-                    "<p>Number of Agents:</p><p><input class='world-parameters' name='NumberOfAgents' value='6000'/> </p>" +
-                    "",
-                conclusion: "Well done.",
-                setup: function () {
-                    this.generatePath();
-                    this.cells.forEach(function(cell) {
-                        cell.potential = Math.random() < 0.5 ? -1 : 1;
-                        cell.development = 0;
-                        cell.terrain = new Terrain("#000", 1.0);
-                        cell.agentsAllowed = true;
-                    });
-                },
-                tickFunction: function () {
-                    var world = this;
-                    // Adjust potential for all cells
-                    this.cells.forEach(function(cell) {
-                        var x = cell.x, y = cell.y;
-                        var positions = world.getVonNeumannNeighbourhood(x, y, true);
-                        var totalPotential = 0, counter = 0;
-                        positions.forEach(function(position) {
-                            var cell = world.getCell(position.x, position.y);
-                            counter++;
-                            totalPotential += cell.potential;
-                        });
-                        totalPotential = totalPotential / counter;
-                        if (FiercePlanet.Parameters.AddNoise) {
-                            totalPotential += (Math.random() < 0.5 ? -1 : 1);
-                        }
-                        cell.newPotential = totalPotential;
-                    });
-
-                    // Adjust potential for all cells
-                    this.cells.forEach(function(cell) {
-                        if (cell.newPotential)
-                            cell.potential = cell.newPotential;
-                        cell.development =  (cell.potential <= FiercePlanet.Parameters.Threshold && cell.development == 0 ? 0 : 1 );
-                        if (cell.development == 1)
-                            cell.terrain = new Terrain("#fff", 1.0);
-                    });
-                    var potentials = _.map(this.cells, function(cell) { return cell.potential; }),
-                        min = _.min(potentials),
-                        max = _.max(potentials),
-                        range = max - min;
-//                        ,total = _.reduce(potentials, function(memo, num){ return memo + num; }, 0);
-                    var devs = _.map(this.cells, function(cell) { return cell.development; }),
-                        totalDev = _.reduce(devs, function(memo, num){ return memo + num; }, 0);
-                    FiercePlanet.Parameters.Max =  max;
-                    FiercePlanet.Parameters.Range =  range;
-                    FiercePlanet.Drawing.drawPath();
-                    console.log(max, range, totalDev, Lifecycle.waveCounter)
-
-                }
-            })
-
-        this.citiesWorld7  = new World();
-        _.extend(this.citiesWorld7,
-            {
-                id: 7,
-                name: "Neighbourhoods (pp. 77-96)",
-                isPresetWorld: true,
-                interval: 100,
-                cellsAcross: 101,
-                cellsDown: 101,
-                dontClearCanvas: true,
-                scrollingImageVisible: false,
-                initialResourceStore: 0,
-                playIndefinitely: true,
-                introduction:
-                    "<p>Neighbourhood type</p>" +
-                    "<p><select class='world-parameters' name='NeighbourhoodType'>" +
-                        "<option value='0'>Moore</option>" +
-                        "<option value='1'>von Neumann</option>" +
-                        "<option value='2'>Combined Moore/von Neumann</option>" +
-                        "<option value='3'>Displace von Neumann </option>" +
-                        "<option value='4'>'H'</option>" +
-                        "<option value='5'>Sierpinkski's gasket</option>" +
-                        "<option value='6'>Superblock</option>" +
-                    "</select></p>" +
-                    "<p>Minimum neighbours</p>" +
-                        "<p><select class='world-parameters' name='MinNeighbours'>" +
-                        "<option value='0'>0</option>" +
-                        "<option value='1' selected='true'>1</option>" +
-                        "<option value='2'>2</option>" +
-                        "<option value='3'>3</option>" +
-                        "<option value='4'>4</option>" +
-                        "<option value='5'>5</option>" +
-                        "<option value='6'>6</option>" +
-                        "<option value='7'>7</option>" +
-                        "<option value='8'>8</option>" +
-                        "<option value='9'>9</option>" +
-                        "</select></p>" +
-                    "<p>Maximum neighbours</p>" +
-                        "<p><select class='world-parameters' name='MaxNeighbours'>" +
-                        "<option value='0'>0</option>" +
-                        "<option value='1' selected='true'>1</option>" +
-                        "<option value='2'>2</option>" +
-                        "<option value='3'>3</option>" +
-                        "<option value='4'>4</option>" +
-                        "<option value='5'>5</option>" +
-                        "<option value='6'>6</option>" +
-                        "<option value='7'>7</option>" +
-                        "<option value='8'>8</option>" +
-                        "<option value='9'>9</option>" +
-                        "</select></p>" +
-                    "<p>Probability</p><p><input class='world-parameters' name='Probability' value='1.0'/> </p>" +
-                    "<p>Use Cumulative Probability</p><p><input type='checkbox' class='world-parameters' name='CumulativeProbability'/> </p>" +
-                    "<p>Age to revert: </p><p><input type='text' class='world-parameters' name='AgeToRevert' value='0'/> </p>" +
-                    "<p>With shading:</p><p><input type='checkbox' class='world-parameters' name='WithShading' checked='checked'/> </p>" +
-                    "",
-                conclusion: "Well done.",
-                setup: function () {
-                    this.generatePath();
-                    this.cells.forEach(function(cell) {
-                        cell.developed = 0;
-                        cell.terrain = new Terrain("#000", 1.0);
-                        cell.agentsAllowed = true;
-                        cell.attemptsToDevelop = 0;
-                    });
-                    var cell = this.getCell(50, 50);
-                    cell.developed = true;
-                    cell.terrain = new Terrain("#fff", 1.0);
-                },
-                tickFunction: function () {
-                    this.generateAutomata();
-
-                    var devs = _.map(this.cells, function(cell) { return cell.developed; }),
-                        totalDev = _.reduce(devs, function(memo, num){ return memo + num; }, 0);
-                    FiercePlanet.Drawing.drawPath();
-                    console.log(totalDev, Lifecycle.waveCounter)
-                },
-                generateAutomata: function () {
-                    var world = this,
-                        neighbourhoodType = parseInt(FiercePlanet.Parameters.NeighbourhoodType),
-                        minNeighbours = parseInt(FiercePlanet.Parameters.MinNeighbours),
-                        maxNeighbours = parseInt(FiercePlanet.Parameters.MaxNeighbours),
-                        probability = parseFloat(FiercePlanet.Parameters.Probability),
-                        cumulativeProbability = FiercePlanet.Parameters.CumulativeProbability,
-                        ageToRevert = parseInt(FiercePlanet.Parameters.AgeToRevert),
-                        withShading = FiercePlanet.Parameters.WithShading;
-                    // Adjust potential for all cells
-                    this.cells.forEach(function(cell) {
-                        var x = cell.x, y = cell.y, positions;
-                        switch(neighbourhoodType) {
-                            case 0:
-                                positions = world.getMooreNeighbourhood(x, y, true);
-                                break;
-                            case 1:
-                                positions = world.getVonNeumannNeighbourhood(x, y, true);
-                                break;
-                            case 2:
-                                positions = world.getMvNNeighbourhood(x, y, true);
-                                break;
-                            // Displaced von Neumann
-                            case 3:
-                                positions = world.getMaskedNeighbourhood(x, y, true, [0, 2, 4, 6]);
-                                break;
-                            // 'H'
-                            case 4:
-                                positions = world.getMaskedNeighbourhood(x, y, true, [2, 6]);
-                                break;
-                            // Sierpinkski's gasket
-                            case 5:
-                                positions = world.getMaskedNeighbourhood(x, y, true, [0, 2, 3, 4, 6]);
-                                break;
-                            // Superblock
-                            case 6:
-                                positions = world.getMaskedNeighbourhood(x, y, true, [2, 3]);
-                                break;
-                        }
-                        var totalPotential = 0, counter = 0;
-                        positions.forEach(function(position) {
-                            var testCell = world.getCell(position.x, position.y);
-                            if (testCell.developed)
-                                counter++;
-                        });
-                        if (counter >= minNeighbours && counter <= maxNeighbours && !cell.developed) {
-                            var r = Math.random();
-                            // Apply att
-                            if (cumulativeProbability)
-                                r = Math.pow(r, cell.attemptsToDevelop + 1);
-                            if (r < probability)
-                                cell.needsDevelopment = true;
-                            else if (cumulativeProbability)
-                                cell.attemptsToDevelop++;
-                        }
-                    });
-                    this.cells.forEach(function(cell) {
-                        if (cell.needsDevelopment) {
-                            cell.terrain = new Terrain("#fff", 1.0);
-                            cell.developed = true;
-                            cell.needsDevelopment = false;
-                            cell.age = 0;
-                        }
-                        else if (ageToRevert > 0 && cell.developed && cell.age > 0 && cell.age % ageToRevert == 0) {
-                            cell.terrain = new Terrain("#000", 1.0);
-                            cell.developed = false;
-                            cell.age = 0;
-                        }
-                        else if (cell.developed) {
-                            cell.age++;
-                        }
-                    });
-
-                }
-            })
-
-        this.citiesWorld9  = new World();
-        _.extend(this.citiesWorld9,
-            {
-                id: 9,
-                name: "Crystal Cities (pp. 131-9)",
-                isPresetWorld: true,
-                interval: 100,
-                cellsAcross: 101,
-                cellsDown: 101,
-                dontClearCanvas: true,
-                scrollingImageVisible: false,
-                initialResourceStore: 0,
-                playIndefinitely: true,
-                introduction:
-                    "<p>Probability</p><p><input class='world-parameters' name='Probability' value='1.0'/> </p>" +
-                    "<p>Diffusion</p><p><input class='world-parameters' name='Diffusion' value='1'/> </p>" +
-                    "<p>Undercooling</p><p><input class='world-parameters' name='Undercooling' value='0.19'/> </p>" +
-                        "<p>Size of interface effect</p><p><input class='world-parameters' name='InterfaceEffect' value='0.15'/> </p>" +
-                    "<p>Amplitude of noise</p><p><input class='world-parameters' name='NoiseAmplitude' value='0.0'/> </p>" +
-                    "",
-                conclusion: "Well done.",
-                setup: function () {
-                    this.generatePath();
-                    this.cells.forEach(function(cell) {
-                        cell.developed = 0;
-                        cell.potential = 0;
-                        cell.terrain = new Terrain("#000", 1.0);
-                        cell.agentsAllowed = true;
-                        cell.attemptsToDevelop = 0;
-                    });
-                    var cell = this.getCell(50, 50);
-                    cell.developed = true;
-                    cell.potential = 1;
-                    cell.terrain = new Terrain("#fff", 1.0);
-                },
-                tickFunction: function () {
-                    this.generateAutomata();
-
-                    var devs = _.map(this.cells, function(cell) { return cell.developed; }),
-                        totalDev = _.reduce(devs, function(memo, num){ return memo + num; }, 0);
-                    FiercePlanet.Drawing.drawPath();
-                    console.log(totalDev, Lifecycle.waveCounter)
-                },
-                generateAutomata: function () {
-                    var world = this,
-                        probability = parseFloat(FiercePlanet.Parameters.Probability),
-                        diffusion = parseFloat(FiercePlanet.Parameters.Diffusion),
-                        undercooling = parseFloat(FiercePlanet.Parameters.Undercooling),
-                        interfaceEffect = parseFloat(FiercePlanet.Parameters.InterfaceEffect),
-                        noiseAmplitude = parseFloat(FiercePlanet.Parameters.NoiseAmplitude);
-                    // Adjust potential for all cells
-                    this.cells.forEach(function(cell) {
-                        var x = cell.x, y = cell.y,
-                            vnPositions = world.getVonNeumannNeighbourhood(x, y, false),
-                            ivnPositions = world.getInverseVonNeumannNeighbourhood(x, y, false);
-                        var counter = 0;
-                        vnPositions.forEach(function(position) {
-                            var testCell = world.getCell(position.x, position.y);
-                            if (testCell.developed)
-                                counter += 2;
-                        });
-                        ivnPositions.forEach(function(position) {
-                            var testCell = world.getCell(position.x, position.y);
-                            if (testCell.developed)
-                                counter += 1;
-                        });
-                        var weightedAverage = interfaceEffect * (counter - 6),
-                            noise = noiseAmplitude * ((Math.random() * 2) - 1),
-                            cooling = undercooling * (1 + noise),
-                            potentialThreshold = weightedAverage + cooling;
-                        if (cell.potential < potentialThreshold) {
-                            cell.needsDevelopment = true;
-                        }
-
-                        // Iterate 't' times
-                        var p = cell.potential, newP = 0, cumPotential = 0, iterations = 1;
-                        for (var i = 0; i < iterations; i++) {
-                            vnPositions.forEach(function(position) {
-                                var testCell = world.getCell(position.x, position.y);
-                                cumPotential += (1 / 6) * (testCell.potential) - p;
-                            });
-                            ivnPositions.forEach(function(position) {
-                                var testCell = world.getCell(position.x, position.y);
-                                cumPotential += (1 / 12) * (testCell.potential) - p;
-                            });
-                            newP = p + (diffusion / iterations) * cumPotential;
-                        }
-                        cell.newPotential = newP;
-                        if (x > 48 && x < 52 && y > 48 && y < 52 )
-                            console.log(potentialThreshold, newP, cumPotential)
-
-                    });
-                    this.cells.forEach(function(cell) {
-                        if (cell.needsDevelopment) {
-                            cell.terrain = new Terrain("#fff", 1.0);
-                            cell.developed = true;
-                            cell.needsDevelopment = false;
-                            cell.age = 0;
-                        }
-                        cell.potential = cell.newPotential;
-                    });
-
-                }
-            })
 
         // Prepare as a module
-        this.id = "Cities";
-        this.name = "Cities Module - Batty";
+        this.id = "NetLogo";
+        this.name = "NetLogo";
         this.position = 1;
-        this.worlds = [this.citiesWorld1, this.citiesWorld2, this.citiesWorld3, this.citiesWorld4, this.citiesWorld5, this.citiesWorld6, this.citiesWorld7, this.citiesWorld9 ];
+        this.worlds = [this.altruism, this.cooperation ];
     }
 
-    this.initCitiesWorlds();
-}).apply(CitiesWorlds);
+    this.initNetLogoWorlds();
+}).apply(NetLogoWorlds);
 
 
 (function() {
     this.init = function() {
         var module = new Module();
-        module.id = 'Cities';
+        module.id = 'NetLogo';
         module.registerSelf();
-        module.registerCampaign(CitiesWorlds);
-        module.currentCampaignID = 'Cities';
+        module.registerCampaign(NetLogoWorlds);
+        module.currentCampaignID = 'NetLogo';
 
         _.extend(Universe.settings, {
             isometricView: false,
@@ -877,7 +360,7 @@ var CitiesModule = CitiesModule || {};
         Universe.settings.store();
 
         _.extend(Lifecycle, {
-            currentCampaignID: 'Cities',
+            currentCampaignID: 'NetLogo',
             currentWorldPreset: true,
             interval: 500,
             worldDelay: 300
@@ -887,12 +370,12 @@ var CitiesModule = CitiesModule || {};
             worldHeight: 600
         })
 
-        FiercePlanet.ModuleEditor.buildEditorFromUrl('/javascripts/fp/modules/cities/cities-module.js', 'CitiesModule.init(); FiercePlanet.Game.loadGame();');
+        FiercePlanet.ModuleEditor.buildEditorFromUrl('/javascripts/fp/modules/netlogo/netlogo-module.js', 'NetLogoModule.init(); FiercePlanet.Game.loadGame();');
     };
-}).apply(CitiesModule);
+}).apply(NetLogoModule);
 
 if (typeof exports !== "undefined") {
-    exports.CitiesWorlds = CitiesWorlds;
-    exports.CitiesModule = CitiesModule;
+    exports.NetLogoWorlds = NetLogoWorlds;
+    exports.NetLogoModule = NetLogoModule;
 }
 

@@ -21,8 +21,9 @@ var DefaultModule = DefaultModule || {};
 //        module.registerResourceSet(CoS);
 //        FiercePlanet.Game.currentProfile.capabilities = ["farm", "water", "clinic", "legal"];
 
-        DefaultCultures.init();
-        module.registerCulture(DefaultCultures.CITIZEN_AGENT_TYPE);
+        var culture = DefaultCultures.MovingStickman;
+        culture.healthCategories = module.resourceSet.categories;
+        module.registerCulture(DefaultCultures.MovingStickman);
     };
 }).apply(DefaultModule);
 

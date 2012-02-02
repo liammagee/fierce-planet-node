@@ -234,7 +234,7 @@ FiercePlanet.Game = FiercePlanet.Game || {};
             }
         };
         Lifecycle.postStartWorldCallback = function () {
-
+//            FiercePlanet.Drawing.drawGame();
         };
         Lifecycle.preNewWaveCallback = function () {
             FiercePlanet.Game.currentProfile.currentWorldSavedThisWave = 0;
@@ -310,6 +310,8 @@ FiercePlanet.Game = FiercePlanet.Game || {};
             FiercePlanet.Orientation.pieceHeight = Math.round(FiercePlanet.Orientation.cellHeight * 0.5);
 
             // Draw the game
+//            Lifecycle.currentWorld.initialiseCells();
+//            Lifecycle.currentWorld.generatePath();
             FiercePlanet.Drawing.drawGame();
 
         };
