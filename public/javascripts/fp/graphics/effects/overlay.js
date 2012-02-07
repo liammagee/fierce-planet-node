@@ -3,49 +3,9 @@
  */
 
 
-// The amount of symbol we want to place;
-var count = 150;
-
-// Create a symbol, which we will use to place instances of later:
-var path = new Path.Circle(new Point(0, 0), 5);
-path.style = {
-    fillColor: 'white',
-    strokeColor: 'white'
-};
-
-var symbol = new Symbol(path);
-
-function setupView() {
-    // Place the instances of the symbol:
-    if (Lifecycle.inPlay &&
-        (_.isUndefined(Lifecycle.currentWorld.scrollingImageVisible) || Lifecycle.currentWorld.scrollingImageVisible)
-        &&
-        (_.isUndefined(Universe.settings.scrollingImageVisible) || Universe.settings.scrollingImageVisible)
-        ) {
-        for (var i = 0; i < count; i++) {
-            // The center position is a random point in the view:
-            var center = Point.random() * view.size;
-            var placed = symbol.place(center);
-            placed.scale(i / count);
-            placed.data = {};
-            placed.data.vector = new Point({
-                angle: Math.random() * 360,
-                length : (i / count) * (Math.random()) / 5
-            });
-        }
-    }
-}
-
-
-var vector = new Point({
-    angle: 45,
-    length: 0
-});
-
-var mouseVector = vector.clone();
 
 function onMouseMove(event) {
-    mouseVector = view.center;// - event.point;
+    FiercePlanet.Effects.currentEffect.mouseMove(event);
 }
 
 // The onFrame function is called up to 60 times a second:
@@ -55,21 +15,67 @@ function onFrame(event) {
         &&
         (_.isUndefined(Universe.settings.scrollingImageVisible) || Universe.settings.scrollingImageVisible)
         ) {
-        vector = vector + (mouseVector - vector) / 30;
-
-        // Run through the active layer's children list and change
-        // the position of the placed symbols:
-        for (var i = 0; i < count; i++) {
-            var item = project.activeLayer.children[i];
-            var size = item.bounds.size;
-            var length = vector.length / 200 * size.width / 10;
-            item.position += vector.normalize(length) + item.data.vector;
-            keepInView(item);
-        }
+        FiercePlanet.Effects.currentEffect.drawEffect();
     }
 }
 
-function keepInView(item) {
+FiercePlanet.Effects = FiercePlanet.Effects || {};
+FiercePlanet.Effects.setupView = function() {
+    var currentEffect = FiercePlanet.Effects.Snow;
+    // Place the instances of the symbol:
+    if ((_.isUndefined(Lifecycle.currentWorld.scrollingImageVisible) || Lifecycle.currentWorld.scrollingImageVisible)
+        &&
+        (_.isUndefined(Universe.settings.scrollingImageVisible) || Universe.settings.scrollingImageVisible)) {
+        FiercePlanet.Effects.currentEffect.setupEffect();
+    }
+}
+
+FiercePlanet.Effects.Snow = FiercePlanet.Effects.Snow || {};
+FiercePlanet.Effects.Snow.setupEffect = function() {
+// The amount of symbol we want to place;
+    this.count = 150;
+// Create a symbol, which we will use to place instances of later:
+    this.path = new Path.Circle(new Point(0, 0), 5);
+    this.path.style = {
+        fillColor: 'white',
+        strokeColor: 'white'
+    };
+    this.symbol = new Symbol(this.path);
+    this.vector = new Point({
+        angle: 45,
+        length: 0
+    });
+    this.mouseVector = this.vector.clone();
+
+    for (var i = 0; i < this.count; i++) {
+        // The center position is a random point in the view:
+        var center = Point.random() * view.size;
+        var placed = this.symbol.place(center);
+        placed.scale(i / this.count);
+        placed.data = {};
+        placed.data.vector = new Point({
+            angle: Math.random() * 360,
+            length : (i / this.count) * (Math.random()) / 5
+        });
+    }
+};
+FiercePlanet.Effects.Snow.mouseMove = function(event) {
+    this.mouseVector = view.center;// - event.point;
+};
+FiercePlanet.Effects.Snow.drawEffect = function() {
+    this.vector = this.vector + (this.mouseVector - this.vector) / 30;
+
+    // Run through the active layer's children list and change
+    // the position of the placed symbols:
+    for (var i = 0; i < this.count; i++) {
+        var item = project.activeLayer.children[i];
+        var size = item.bounds.size;
+        var length = this.vector.length / 200 * size.width / 10;
+        item.position += this.vector.normalize(length) + item.data.vector;
+        this.keepInView(item);
+    }
+};
+FiercePlanet.Effects.Snow.keepInView = function(item) {
     var position = item.position;
     var itemBounds = item.bounds;
     var bounds = view.bounds;
@@ -88,6 +94,74 @@ function keepInView(item) {
     if (position.y < -itemBounds.height) {
         position.y = bounds.height  + itemBounds.height / 2;
     }
-}
+};
 
-setupView();
+FiercePlanet.Effects.SnowReverse = FiercePlanet.Effects.SnowReverse || {};
+FiercePlanet.Effects.SnowReverse.setupEffect = function() {
+// The amount of symbol we want to place;
+    this.count = 150;
+// Create a symbol, which we will use to place instances of later:
+    this.path = new Path.Circle(new Point(0, 0), 5);
+    this.path.style = {
+        fillColor: 'white',
+        strokeColor: 'white'
+    };
+    this.symbol = new Symbol(this.path);
+    this.vector = new Point({
+        angle: 275,
+        length: 0
+    });
+    this.mouseVector = this.vector.clone();
+
+    for (var i = 0; i < this.count; i++) {
+        // The center position is a random point in the view:
+        var center = Point.random() * view.size;
+        var placed = this.symbol.place(center);
+        placed.scale(i / this.count);
+        placed.data = {};
+        placed.data.vector = new Point({
+            angle: Math.random() * 360,
+            length : (i / this.count) * (Math.random()) / 5
+        });
+    }
+};
+FiercePlanet.Effects.SnowReverse.mouseMove = function(event) {
+    this.mouseVector = view.center;// - event.point;
+};
+FiercePlanet.Effects.SnowReverse.drawEffect = function() {
+    this.vector = this.vector + (this.mouseVector - this.vector) / 30;
+
+    // Run through the active layer's children list and change
+    // the position of the placed symbols:
+    for (var i = 0; i < this.count; i++) {
+        var item = project.activeLayer.children[i];
+        var size = item.bounds.size;
+        var length = this.vector.length / 200 * size.width / 10;
+        item.position -= this.vector.normalize(length) + item.data.vector;
+        this.keepInView(item);
+    }
+
+};
+FiercePlanet.Effects.SnowReverse.keepInView = function(item) {
+    var position = item.position;
+    var itemBounds = item.bounds;
+    var bounds = view.bounds;
+    if (itemBounds.left > bounds.width) {
+        position.x = -item.bounds.width;
+    }
+
+    if (position.x < -itemBounds.width) {
+        position.x = bounds.width + itemBounds.width;
+    }
+
+    if (itemBounds.top > view.size.height) {
+        position.y = -itemBounds.height;
+    }
+
+    if (position.y < -itemBounds.height) {
+        position.y = bounds.height  + itemBounds.height / 2;
+    }
+};
+
+
+FiercePlanet.Effects.currentEffect = FiercePlanet.Effects.Snow;

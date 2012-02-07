@@ -1,3 +1,5 @@
+require('./helper.spec.js')
+
 describe("world-related classes", function() {
 
     var world;
@@ -107,9 +109,21 @@ describe("world-related classes", function() {
                 expect(world.currentAgents.length).toEqual(1);
             });
 
-            it("should have a agent in the content map", function() {
+            it("should have an agent at a specified cell", function() {
                 var testAgent = world.getAgentsAtCell(10, 10)[0];
                 expect(testAgent).toEqual(agent);
+            });
+
+            it("should have a first agent at a specified cell", function() {
+                var testAgent = world.getFirstAgentAtCell(10, 10);
+                expect(testAgent).toEqual(agent);
+            });
+
+            it("should have no agent at another location", function() {
+                var testAgent = world.getAgentsAtCell(0, 0);
+                expect(testAgent).toEqual([]);
+                testAgent = world.getFirstAgentAtCell(0, 0);
+                expect(testAgent).toBeUndefined();
             });
 
             it("remove a agent", function() {
@@ -158,7 +172,79 @@ describe("world-related classes", function() {
                 expect(world.getCurrentAgents().length).toEqual(51);
             });
         });
+    });
 
+    describe("finding locations", function() {
+        it("should generate positions around a cell", function() {
+        });
+        it("should retrieve cells at a linear distance from a cell location", function() {
+            expect(world.getCellsAtDistance(10, 10, 1).length).toEqual(8);
+            expect(world.getCellsAtDistance(10, 10, 2).length).toEqual(24);
+            expect(world.getCellsAtDistance(10, 10, 3).length).toEqual(48);
+            expect(world.getCellsAtDistance(10, 10, 4).length).toEqual(80);
+            expect(world.getCellsAtDistance(10, 10, 5).length).toEqual(120);
+            expect(world.getCellsAtDistanceViaIteration(10, 10, 5).length).toEqual(120);
+        });
+        it("should retrieve cells at a radial distance from a cell location", function() {
+            expect(world.getCellsAtRadialDistance(10, 10, 1).length).toEqual(4);
+            expect(world.getCellsAtRadialDistance(10, 10, 2).length).toEqual(12);
+            expect(world.getCellsAtRadialDistance(10, 10, 3).length).toEqual(28);
+            expect(world.getCellsAtRadialDistance(10, 10, 4).length).toEqual(48);
+            expect(world.getCellsAtRadialDistance(10, 10, 5).length).toEqual(80);
+        });
+        describe("world-related classes", function() {
+            beforeEach(function() {
+                world.allowOffscreenCycling = true;
+            });
+            it("should retrieve cells at a linear distance from a cell location, with cycling", function() {
+                var cells = world.getCellsAtDistance(0, 0, 1),
+                    positions = _.map(cells, function(cell){ return { x: cell.x, y: cell.y} });
+                expect(cells.length).toEqual(8);
+                expect(positions).toContain({x: 0, y: 1});
+                expect(positions).toContain({x: 1, y: 0});
+                expect(positions).toContain({x: 1, y: 1});
+                expect(positions).toContain({x: 19, y: 0});
+                expect(positions).toContain({x: 19, y: 1});
+                expect(positions).toContain({x: 19, y: 19});
+                expect(positions).toContain({x: 0, y: 19});
+                expect(positions).toContain({x: 1, y: 19});
+                cells = world.getCellsAtDistanceViaIteration(19, 19, 1),
+                    positions = _.map(cells, function(cell){ return { x: cell.x, y: cell.y} })
+                expect(cells.length).toEqual(8);
+                expect(positions).toContain({x: 0, y: 19});
+                expect(positions).toContain({x: 0, y: 0});
+                expect(positions).toContain({x: 19, y: 0});
+                expect(positions).toContain({x: 18, y: 0});
+                expect(positions).toContain({x: 18, y: 19});
+                expect(positions).toContain({x: 18, y: 18});
+                expect(positions).toContain({x: 19, y: 18});
+                expect(positions).toContain({x: 0, y: 18});
+            });
+            it("should retrieve cells at a linear distance from a cell location via iteration through all cells, with cycling", function() {
+                var cells = world.getCellsAtDistanceViaIteration(0, 0, 1),
+                    positions = _.map(cells, function(cell){ return { x: cell.x, y: cell.y} });
+                expect(cells.length).toEqual(8);
+                expect(positions).toContain({x: 0, y: 1});
+                expect(positions).toContain({x: 1, y: 0});
+                expect(positions).toContain({x: 1, y: 1});
+                expect(positions).toContain({x: 19, y: 0});
+                expect(positions).toContain({x: 19, y: 1});
+                expect(positions).toContain({x: 19, y: 19});
+                expect(positions).toContain({x: 0, y: 19});
+                expect(positions).toContain({x: 1, y: 19});
+                cells = world.getCellsAtDistanceViaIteration(19, 19, 1),
+                    positions = _.map(cells, function(cell){ return { x: cell.x, y: cell.y} })
+                expect(cells.length).toEqual(8);
+                expect(positions).toContain({x: 0, y: 19});
+                expect(positions).toContain({x: 0, y: 0});
+                expect(positions).toContain({x: 19, y: 0});
+                expect(positions).toContain({x: 18, y: 0});
+                expect(positions).toContain({x: 18, y: 19});
+                expect(positions).toContain({x: 18, y: 18});
+                expect(positions).toContain({x: 19, y: 18});
+                expect(positions).toContain({x: 0, y: 18});
+            });
+     });
     });
 
 });

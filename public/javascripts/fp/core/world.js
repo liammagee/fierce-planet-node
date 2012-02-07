@@ -21,12 +21,23 @@
 function World() {
 
     this.initWorld = function() {
+
+        // Initialise the set of current and expired agents
         this.setCurrentAgents([]);
         this.expiredAgents = [];
+
+        // Initialise cells
         this.initialiseCells();
+
+        // Generate a path, based on cells that can be moved to
         this.generatePath();
+
         this.waves = undefined;
+
+        // Reset any resources
         this.resetResources();
+
+        // Initialise a catastrophe if one exists
         if (this.catastrophe != undefined)
             this.catastrophe.struck = false;
 
@@ -227,6 +238,11 @@ function World() {
     };
     this.getAgentsAtCell = function(x, y) {
         return this.cells[this.indexify(x, y)].agents;
+    };
+
+    this.getFirstAgentAtCell = function(x, y) {
+        var agents = this.getAgentsAtCell(x, y);
+        return (agents && agents.length > 0) ? agents[0] : void 0;
     };
 
 
@@ -481,30 +497,7 @@ function World() {
         return totalSaveable;
     };
 
-    /**
-     * Find the current resource index
-     */
-    this.isPositionOccupiedByAgent = function (x, y) {
-        for (var i = 0; i < this.currentAgents.length; i++) {
-            var agent = this.currentAgents[i];
-            if (agent.x == x && agent.y == y)
-                return true;
-        }
-        return false;
-    };
 
-    /**
-     * Find the current resource index
-     */
-    this.countAgentsAtPosition = function (x, y) {
-        var count = 0;
-        for (var i = 0; i < this.currentAgents.length; i++) {
-            var agent = this.currentAgents[i];
-            if (agent.x == x && agent.y == y)
-                count++;
-        }
-        return count;
-    };
 
 // Overall agent health functions
 
@@ -576,14 +569,6 @@ function World() {
         this.resourceCategoryCounts = this.resetResourceCategoryCounts();
     };
 
-    /**
-     *
-     * @param resources
-     */
-    this.setWorldResources = function(worldResources) {
-        this.worldResources = worldResources;
-        this.resourceCategoryCounts = this.resetResourceCategoryCounts();
-    };
 
     /**
      *
@@ -902,6 +887,7 @@ function World() {
         return directions;
     };
 
+
     /**
      * Gets positions surrounding a given co-ordinate.
      * The von Neumann neighbourhood returns only positions to the left, right, top and bottom of the current position.
@@ -1061,6 +1047,26 @@ function World() {
         return surroundingPositions;
     };
 
+
+    this.getMaskedNeighbourhood = function(x, y, includeSelf, maskedPositionIndexes) {
+        var surroundingPositions = this.getMooreNeighbourhood(x, y, includeSelf);
+
+        var sortedPositions = maskedPositionIndexes;
+        if (!_.isUndefined(maskedPositionIndexes)) {
+            sortedPositions = maskedPositionIndexes.sort(function(a, b) {
+                return (a < b ? 1 :  (a > b ? -1 : 0));
+            });
+        }
+        sortedPositions.forEach(function(position) {
+            if (includeSelf)
+                position += 1;
+            if (position > 0 && position < surroundingPositions.length - 1)
+                surroundingPositions.splice(position, 1);
+        });
+
+        return surroundingPositions;
+    };
+
     /**
      */
     this.getNeighbouringResources = function(x, y) {
@@ -1078,10 +1084,9 @@ function World() {
         return resources;
     };
 
-    /**
-     */
+
     this.getNeighbouringAgents = function(x, y) {
-        var surroundingPositions = this.getVonNeumannNeighbourhood(x, y, true);
+        var surroundingPositions = this.getMooreNeighbourhood(x, y, true);
         var agents = [];
         for (var i = 0, l = surroundingPositions.length; i < l; i++) {
             var position = surroundingPositions[i];
@@ -1094,6 +1099,97 @@ function World() {
         }
         return agents;
     };
+
+
+    this.getCellsAtDistanceViaIteration = function(x, y, distance) {
+        var world = this;
+        var validCells = [];
+        this.cells.forEach(function(cell) {
+            var cx = cell.x, cy = cell.y, valid = false;
+            if (Math.abs(cx - x) <= distance && Math.abs(cy - y) <= distance && (cx != x || cy != y))
+                valid = true;
+            if (! valid && world.allowOffscreenCycling && (cx != x || cy != y)) {
+                var ox = cx, oy = cy;
+                if (x - distance < 0 && cx - distance > 0)
+                    ox = cx - world.cellsAcross;
+                else if (x + distance > world.cellsAcross - 1 && cx + distance < world.cellsAcross - 1)
+                    ox = cx + world.cellsAcross;
+                if (y - distance < 0 && cy - distance > 0)
+                    oy = cy - world.cellsDown;
+                else if (y + distance > world.cellsDown - 1 && cy + distance < world.cellsDown - 1)
+                    oy = cy + world.cellsDown;
+                if (Math.abs(ox - x) <= distance && Math.abs(oy - y) <= distance) {
+                    valid = true;
+                }
+            }
+            if (valid)
+                validCells.push(cell);
+        });
+        return validCells;
+    };
+
+    this.getCellsAtDistance = function(x, y, distance) {
+        var validCells = [];
+
+        var minX = (x - distance),
+            minY = (y - distance),
+            maxX = (x + distance),
+            maxY = (y + distance);
+
+        for (var i = minX; i <= maxX; i++ ) {
+            for (var j = minY; j <= maxY; j++ ) {
+                if (i == x && j == y)
+                    continue;
+                var cx = i, cy = j;
+                if (this.allowOffscreenCycling) {
+                    if (i < 0)
+                        cx += this.cellsAcross;
+                    else if (i > this.cellsAcross - 1)
+                        cx -= this.cellsAcross;
+                    if (j < 0)
+                        cy += this.cellsDown;
+                    else if (j > this.cellsDown - 1)
+                        cy -= this.cellsDown;
+                }
+                var cell = this.getCell(cx, cy);
+                if (!_.isUndefined(cell))
+                    validCells.push(cell)
+            }
+        }
+        return validCells;
+    };
+
+    this.getCellsAtRadialDistance = function(x, y, distance) {
+        var world = this;
+        var validCells = [];
+        var counter = 0;
+        this.cells.forEach(function(cell) {
+            var cx = cell.x, cy = cell.y, valid = false,
+                radius = Math.sqrt(Math.pow(cx - x, 2) + Math.pow(cy - y, 2));
+            if (radius <= distance && (cx != x || cy != y))
+                valid = true;
+            if (! valid && world.allowOffscreenCycling && (cx != x || cy != y)) {
+                var ox = cx, oy = cy;
+                if (x - distance < 0 && cx - distance > 0)
+                    ox = cx - world.cellsAcross;
+                else if (x + distance > world.cellsAcross - 1 && cx + distance < world.cellsAcross - 1)
+                    ox = cx + world.cellsAcross;
+                if (y - distance < 0 && cy - distance > 0)
+                    oy = cy - world.cellsDown;
+                else if (y + distance > world.cellsDown - 1 && cy + distance < world.cellsDown - 1)
+                    oy = cy + world.cellsDown;
+                radius = Math.sqrt(Math.pow(cx - x, 2) + Math.pow(cy - y, 2))
+                if (radius <= distance)
+                    valid = true;
+            }
+            if (valid)
+                validCells.push(cell);
+        });
+        return validCells;
+    };
+
+
+
 
     // Sets the id, if passed in; otherwise default to 1001
     this.id = 1;

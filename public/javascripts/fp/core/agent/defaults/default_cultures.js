@@ -7,15 +7,6 @@
 
 
 
-/**
- * Agent constants
- */
-var CultureDefaults = CultureDefaults || {};
-(function() {
-    this.DEFAULT_INITIAL_HEALTH = 100;
-    this.DEFAULT_INITIAL_SPEED = 10;
-
-}).apply(CultureDefaults);
 
 var DefaultCultures = DefaultCultures || {};
 
@@ -142,6 +133,9 @@ _.extend(DefaultCultures.MovingStickman, {
 
 
 
-if (typeof exports !== "undefined")
+if (typeof exports !== "undefined") {
     exports.DefaultCultures = DefaultCultures;
+    exports.CultureDefaults = CultureDefaults;
+
+}
 

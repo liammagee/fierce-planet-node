@@ -12,17 +12,16 @@ var PredatorPreyModule = PredatorPreyModule || {};
 
 
     this.init = function() {
-        PredatorPreyCultures.init();
 
         var module = new Module();
         module.id = 'PredatorPrey';
         module.registerSelf();
         module.registerCampaign(PredatorPreyWorlds);
-        //module.registerAgentSet(AgentTypes.CITIZEN_AGENT_TYPE);
+        module.registerResourceSet(TBL);
+
+        PredatorPreyCultures.init();
         module.registerCulture(PredatorPreyCultures.PREDATOR_AGENT_TYPE);
         module.registerCulture(PredatorPreyCultures.PREY_AGENT_TYPE);
-//        module.registerCulture(PredatorPreyCultures.TEST_AGENT_TYPE);
-        module.registerResourceSet(TBL);
 
 		Universe.settings.isometricView = false;
         Universe.settings.showGraph = true;

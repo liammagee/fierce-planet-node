@@ -24,6 +24,8 @@ var DefaultModule = DefaultModule || {};
         var culture = DefaultCultures.MovingStickman;
         culture.healthCategories = module.resourceSet.categories;
         module.registerCulture(DefaultCultures.MovingStickman);
+
+        Universe.settings.scrollingImageVisible = localStorage.universeSettings.scrollingImageVisible = true;
     };
 }).apply(DefaultModule);
 

@@ -1,11 +1,27 @@
 
+//$LAB.script('http://maps.googleapis.com/maps/api/js?sensor=true').wait()
+
+/*
+function loadScript() {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var mapURL = 'http://maps.googleapis.com/maps/api/js?sensor=true';
+//            if (callback)
+//                mapURL += "&callback=" + callback;
+    script.src = mapURL;
+    document.body.appendChild(script);
+}
+$(document).ready(loadScript);
+*/
+
 $LAB
     .setOptions({BasePath:'/javascripts/'})
 
 
     // Load JQuery
    .script('jquery/jquery-1.7.1.min.js')
-    .wait()
+    .wait(function() {
+    })
 
     // Load JQuery UI
     .script([
@@ -49,7 +65,7 @@ $LAB
 
     , 'fp/graphics/drawing.js', 'fp/graphics/orientation.js', 'fp/graphics/isometric.js', 'fp/graphics/fullscreen.js', 'fp/graphics/stick-figure.js'
 
-       , 'fp/ui/dialogs.js'
+       , 'fp/ui/dialogs/dialogs.js'
        , 'fp/ui/controls.js'
        , 'fp/ui/keyboard.js'
        , 'fp/ui/mouse.js'
@@ -70,7 +86,10 @@ $LAB
        , 'fp/utils/fp-utils.js', 'fp/utils/log.js', 'fp/utils/recording.js', 'fp/utils/url-params.js'
        , 'fp/game.js'
    ])
-    .wait()
+    .wait(function() {
+        FiercePlanet.GoogleMapUtils.initMaps();
+    })
+
     .script([
         'fp/modules/default/default-module.js'
         , 'fp/modules/default/worlds/basic.js'
@@ -103,7 +122,7 @@ $LAB
                 CitiesModule.init();
             }
             else if (m == 'nl' || m == 'netlogo') {
-//                $('#moduleEditor').show();
+                $('#moduleEditor').show();
                 NetLogoModule.init();
             }
             else if (m == 'rpg') {
@@ -124,6 +143,13 @@ $LAB
         FiercePlanet.Game.loadGame();
     })
     .script("paperjs-0.22/lib/paper.js")
+    .wait(function() {
+        var canvas = document.getElementById('scrollingCanvas');
+        paper.setup();
+//        paper.install(window);
+    })
+//    .script({src: "fp/graphics/effects/overlay.js"})
+//    .script({src: "fp/graphics/effects/overlay-js.js"})
 
 
 

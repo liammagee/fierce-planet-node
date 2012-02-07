@@ -59,7 +59,7 @@ FiercePlanet.ModuleEditor = FiercePlanet.ModuleEditor || {};
     };
 
     this.buildEditorFromUrl = function (url, additionalText) {
-        var moduleEditor = $('#moduleEditor');
+        var moduleEditor = $('#module-editor');
         $.get(url, function(data) {
             additionalText = additionalText || '';
             moduleEditor.html(data + '\n\n' + additionalText);

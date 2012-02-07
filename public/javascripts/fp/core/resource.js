@@ -104,7 +104,8 @@ Resource.prototype.setInitialTotalYield = function(initialTotalYield) {
 Resource.prototype.incrementTotalYield = function(totalYield) { this.totalYield++; };
 Resource.prototype.getPosition = function() { return [this.x, this.y]; };
 Resource.prototype.moveTo = function(x, y) { this.x =x; this.y = y; };
-Resource.prototype.provideYield = function(agent, resourceEffect, adjustSpeedToYield) { if (this.totalYield > this.perAgentYield) {
+Resource.prototype.provideYield = function(agent, resourceEffect, adjustSpeedToYield) {
+    if (this.totalYield > this.perAgentYield) {
         var adjustment = 0;
         if (Universe.settings.applyGeneralHealth) {
             // Don't be greedy - only yield a benefit if the agent needs it

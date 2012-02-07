@@ -214,7 +214,17 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
         if (world.introduction != undefined) {
             worldHTML += world.introduction;
         }
-        FiercePlanet.Dialogs.newWorldDialog.html(worldHTML).dialog('open');
+        $('#world-introduction').html(worldHTML);
+
+        if (world.parameters != undefined) {
+            $('#world-parameters').html(world.parameters);
+        }
+        if (world.sourceCode != undefined) {
+            $('#world-parameters').html(world.sourceCode);
+        }
+        var modal = ! ModuleManager.currentModule.persistSetupScreen && ! Lifecycle.currentWorld.persistSetupScreen;
+        FiercePlanet.Dialogs.newWorldDialog.dialog('option', 'modal', modal);
+        FiercePlanet.Dialogs.newWorldDialog.dialog('open');
     };
 
 

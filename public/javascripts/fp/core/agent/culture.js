@@ -5,6 +5,17 @@
  * MIT Licensed
  */
 
+/**
+ * Agent constants
+ */
+var CultureDefaults = CultureDefaults || {};
+(function() {
+    this.DEFAULT_INITIAL_HEALTH = 100;
+    this.DEFAULT_INITIAL_SPEED = 10;
+    this.DEFAULT_MOVE_COST = -3;
+
+}).apply(CultureDefaults);
+
 
 /**
  * Probability constants
@@ -32,6 +43,7 @@ function Culture(name, color, healthCategories, initialSpeed, initialHealth, dra
     this.color = color;
     this.initialSpeed = initialSpeed || CultureDefaults.DEFAULT_INITIAL_SPEED;
     this.initialHealth = initialHealth || CultureDefaults.DEFAULT_INITIAL_HEALTH;
+    this.moveCost = CultureDefaults.DEFAULT_MOVE_COST;
     this.healthCategories = healthCategories || [];
     this.generateEachWave = true;
 

@@ -27,11 +27,12 @@ var NetLogoModule = NetLogoModule || {};
                 allowOffscreenCycling: true,
                 initialResourceStore: 0,
                 playIndefinitely: true,
+                persistSetupScreen: true,
                 noWander: true,
                 noSpeedChange: true,
 //                "<p>Threshold</p><p><input class='world-parameters' name='Threshold' value='6'/> </p>" +
 //                    "<p>Number of Agents:</p><p><input class='world-parameters' name='NumberOfAgents' value='100'/> </p>" +
-                introduction:
+                parameters:
                         "<p>Altruistic probability</p><p><input class='world-parameters' name='AltruisticProbability' value='0.26'/> </p>" +
                         "<p>Selfish probability</p><p><input class='world-parameters' name='SelfishProbability' value='0.26'/> </p>" +
                         "<p>Cost of altruism</p><p><input class='world-parameters' name='CostOfAltruism' value='0.13'/> </p>" +
@@ -78,7 +79,7 @@ var NetLogoModule = NetLogoModule || {};
                             agent.state = 'neither';
                             agent.benefitOut = 0;
                           }
-                        console.log(r, altruisticProbability, selfishProbability, agent.state)
+//                        console.log(r, altruisticProbability, selfishProbability, agent.state)
 
                     };
                     culture.updateFunction = function(agent, world) {
@@ -238,7 +239,7 @@ var NetLogoModule = NetLogoModule || {};
                 playIndefinitely: true,
                 noWander: true,
                 noSpeedChange: true,
-                introduction:
+                parameters:
                     "<p>Threshold</p><p><input class='world-parameters' name='Threshold' value='6'/> </p>" +
                         "<p>Number of Agents:</p><p><input class='world-parameters' name='NumberOfAgents' value='6000'/> </p>" +
                         "",
@@ -329,11 +330,156 @@ var NetLogoModule = NetLogoModule || {};
             })
 
 
+        this.diffusionLimitedAggregationWorld  = new World();
+        _.extend(this.diffusionLimitedAggregationWorld,
+            {
+                id: 10,
+                name: "DLA",
+                isPresetWorld: true,
+                interval: 20,
+                cellsAcross: 101,
+                cellsDown: 101,
+                dontClearCanvas: true,
+                scrollingImageVisible: false,
+                initialResourceStore: 0,
+                playIndefinitely: true,
+                noWander: true,
+                noSpeedChange: true,
+                parameters:
+                    "<p>Proportion of empty space</p><p><input class='world-parameters' name='EmptySpace' value='0.8'/> </p>" +
+                        "",
+                conclusion: "Well done.",
+                handleParameters: function () {
+                    this.generatePath();
+                    this.cells.forEach(function(cell) {
+                        cell.terrain = new Terrain("#000", 1.0);
+                        cell.agentsAllowed = true;
+                    });
+
+                    /// Set up agents
+                    var culture = _.clone(DefaultCultures.Circular);
+                    culture.healthCategories = [];
+                    culture.waveNumber = parseInt(FiercePlanet.Parameters.NumberOfAgents);
+                    culture.initialSpeed = 1;
+                    culture.beliefs = [];
+                    culture.desires = [];
+                    culture.capabilities = [];
+                    culture.initFunction = function(agent, world) {
+                        agent.color = 'ff0';
+                        agent.stopped = false;
+                    };
+                    culture.updateFunction = function(agent, world) {
+                    };
+                    this.cultures = [culture];
+                    this.placeAgentsOnAllCells = true;
+                    var numAgents = this.cellsAcross * this.cellsDown;
+                    var emptySpace = parseFloat(FiercePlanet.Parameters.EmptySpace);
+                    numAgents = (1 - emptySpace) * numAgents;
+
+                    this.waves = undefined;
+                    this.initialiseWaves(1);
+                    var len = Math.floor(this.cellsAcross * this.cellsDown * emptySpace),
+                        removedCells = [];
+                    for (var i = 0; i < len; i++) {
+                        var x = Math.floor(Math.random() * this.cellsAcross),
+                            y = Math.floor(Math.random() * this.cellsDown),
+                            index = x * this.cellsAcross + y;
+                        if (removedCells.indexOf(index) > -1) {
+                            i--;
+                            continue;
+                        }
+                        else {
+                            removedCells.push(index)
+                        }
+                    }
+                    removedCells.sort(function(a, b) { return (a < b ? 1 : (a > b ? -1 : 0))})
+                    var world = this;
+                    removedCells.forEach(function(index) {
+                        world.waves[0].agents.splice(index, 1);
+                    })
+                    this.initialiseCells();
+                    this.cells.forEach(function(cell) {
+                        cell.terrain = new Terrain("#000", 1.0);
+                        cell.agentsAllowed = true;
+                    });
+                    var cell = this.getCell(50, 50);
+                    cell.developed = true;
+                    cell.terrain = new Terrain("#f00", 1.0);
+
+
+                },
+                tickFunction: function () {
+                    var world = this;
+                    // Adjust potential for all cells
+                    var threshold = parseFloat(FiercePlanet.Parameters.Threshold),
+                        newSpaces = [],
+                        agentsToMove = [],
+                        candidateAgents = [];
+                    this.currentAgents.forEach(function(agent) {
+                        var x = agent.x, y = agent.y;
+                        var positions = world.getMooreNeighbourhood(x, y, false);
+                        var newPosition = false, len  = positions.length, counter = 0;
+                        var cell = world.getCell(x, y);
+                        for (var i = 0; i < len; i++) {
+                            if (!agent.stopped) {
+                                var position = positions[i];
+                                var testCell = world.getCell(position.x, position.y);
+                                if (testCell.developed) {
+                                    candidateAgents.push(agent);
+                                    break;
+                                }
+                            }
+                        }
+
+                        while (!newPosition && counter < len) {
+                            var position = positions[Math.floor(Math.random() * len)];
+                            var index = position.x * this.cellsDown + position.y;
+                            var agents = world.getAgentsAtCell(position.x, position.y);
+                            if ((_.isUndefined(agents) || agents.length == 0) && newSpaces.indexOf(index) == -1) {
+                                newSpaces.push(index);
+                                agent.newPosition = position;
+                                agentsToMove.push(agent)
+                                newPosition = true;
+                            }
+                            counter++;
+                        }
+                    });
+                    if (candidateAgents.length > 0) {
+                        var agentIndex = Math.floor(Math.random() * candidateAgents.length);
+                        var stoppedAgent = candidateAgents[agentIndex];
+                        stoppedAgent.stopped = true;
+                        stoppedAgent.color = 'f00'
+                        var x = stoppedAgent.x, y = stoppedAgent.y;
+                        var cell = world.getCell(x, y);
+                        cell.terrain = new Terrain('#f00', 1.0);
+                        cell.developed = true;
+                    }
+
+                    agentsToMove.forEach(function(agent) {
+                        if (!agent.stopped) {
+                            var newPosition = agent.newPosition;
+                            agent.moveTo(newPosition.x, newPosition.y);
+                        }
+                    });
+
+                    var potentials = _.map(this.currentAgents, function(agent) { return agent.stopped; })
+                        ,totalStopped = _.reduce(potentials, function(memo, num){ return memo + num; }, 0);
+                    FiercePlanet.Drawing.clearCanvas('#resourceCanvas');
+                    FiercePlanet.Drawing.drawPath();
+                    console.log(totalStopped, Lifecycle.waveCounter)
+
+                }
+            })
+
         // Prepare as a module
         this.id = "NetLogo";
         this.name = "NetLogo";
         this.position = 1;
-        this.worlds = [this.altruism, this.cooperation ];
+        this.worlds = [
+            this.altruism,
+            this.cooperation,
+            this.diffusionLimitedAggregationWorld
+        ];
     }
 
     this.initNetLogoWorlds();

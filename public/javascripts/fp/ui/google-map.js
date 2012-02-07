@@ -24,126 +24,157 @@ FiercePlanet.GoogleMapUtils = FiercePlanet.GoogleMapUtils || {};
 
 (function() {
 
+    var initialised = false;
     var mapTypes = {};
-
-    // set up the map types
-
-    // Externally sourced - relatively low res
-    /*
-    mapTypes['nighttime'] = {
-      getTileUrl: function(coord, zoom) {
-        return getHorizontallyRepeatingTileUrl(coord, zoom, function(coord, zoom) {
-          var bound = Math.pow(2, zoom);
-          return "http://www.cc.gatech.edu/~pesti/night/t-n/" +
-                  + zoom + "/" + coord.x + "-" + coord.y + '.jpeg';
-        });
-      },
-      tileSize: new google.maps.Size(256, 256),
-      isPng: false,
-      maxZoom: 6,
-      minZoom: 0,
-      radius: 1738000,
-      name: 'Earth at Night',
-      credit: 'Image Credit: NASA/USGS'
-    };
-
-    // set up the map types
-    mapTypes['europa'] = {
-      getTileUrl: function(coord, zoom) {
-        return getHorizontallyRepeatingTileUrl(coord, zoom, function(coord, zoom) {
-          var bound = Math.pow(2, zoom);
-          return "http://www.cc.gatech.edu/~pesti/europa/t-e2/" +
-                 + zoom + "/" + coord.x + "-" + coord.y + '.jpeg';
-        });
-      },
-      tileSize: new google.maps.Size(256, 256),
-      isPng: false,
-      maxZoom: 6,
-      minZoom: 0,
-      radius: 1738000,
-      name: 'Europa - the Icy Moon of Jupiter',
-      credit: 'Image Credit: NASA/USGS'
-    };
-    */
-
-    // set up the map types
-    mapTypes['moon'] = {
-      getTileUrl: function(coord, zoom) {
-        return getHorizontallyRepeatingTileUrl(coord, zoom, function(coord, zoom) {
-          var bound = Math.pow(2, zoom);
-          return "http://mw1.google.com/mw-planetary/lunar/lunarmaps_v1/clem_bw/" +
-                 + zoom + "/" + coord.x + "/" + (bound - coord.y - 1) + '.jpg';
-        });
-      },
-      tileSize: new google.maps.Size(256, 256),
-      isPng: false,
-      maxZoom: 9,
-      minZoom: 0,
-      radius: 1738000,
-      name: 'Moon',
-      credit: 'Image Credit: NASA/USGS'
-    };
-
-    mapTypes['sky'] = {
-      getTileUrl: function(coord, zoom) {
-        return getHorizontallyRepeatingTileUrl(coord, zoom, function(coord, zoom) {
-          return "http://mw1.google.com/mw-planetary/sky/skytiles_v1/" +
-                 coord.x + "_" + coord.y + '_' + zoom + '.jpg';
-
-        });
-      },
-      tileSize: new google.maps.Size(256, 256),
-      isPng: false,
-      maxZoom: 13,
-      radius: 57.2957763671875,
-      name: 'Sky',
-      credit: 'Image Credit: SDSS, DSS Consortium, NASA/ESA/STScI'
-    };
-
-    mapTypes['mars_elevation'] = {
-      getTileUrl: function(coord, zoom) {
-        return getHorizontallyRepeatingTileUrl(coord, zoom, function(coord, zoom) {
-          return getMarsTileUrl("http://mw1.google.com/mw-planetary/mars/elevation/", coord, zoom);
-        });
-      },
-      tileSize: new google.maps.Size(256, 256),
-      isPng: false,
-      maxZoom: 8,
-      radius: 3396200,
-      name: 'Mars Elevation',
-      credit: 'Image Credit: NASA/JPL/GSFC'
-    };
-
-    mapTypes['mars_visible'] = {
-      getTileUrl: function(coord, zoom) {
-        return getHorizontallyRepeatingTileUrl(coord, zoom, function(coord, zoom) {
-          return getMarsTileUrl("http://mw1.google.com/mw-planetary/mars/visible/", coord, zoom);
-        });
-      },
-      tileSize: new google.maps.Size(256, 256),
-      isPng: false,
-      maxZoom: 9,
-      radius: 3396200,
-      name: 'Mars Visible',
-      credit: 'Image Credit: NASA/JPL/ASU/MSSS'
-    };
-
-    mapTypes['mars_infrared'] = {
-      getTileUrl: function(coord, zoom) {
-        return getHorizontallyRepeatingTileUrl(coord, zoom, function(coord, zoom) {
-          return getMarsTileUrl("http://mw1.google.com/mw-planetary/mars/infrared/", coord, zoom);
-        });
-      },
-      tileSize: new google.maps.Size(256, 256),
-      isPng: false,
-      maxZoom: 9,
-      radius: 3396200,
-      name: 'Mars Infrared',
-      credit: 'Image Credit: NASA/JPL/ASU'
-    };
 
     var map;
     var mapTypeIds = [];
+
+    var mapControlOptions = {};
+
+    // Setup a copyright/credit line, emulating the standard Google style
+    var creditNode = document.createElement('div');
+    creditNode.id = 'credit-control';
+    creditNode.style.fontSize = '11px';
+    creditNode.style.fontFamily = 'Arial, sans-serif';
+    creditNode.style.margin = '0 2px 2px 0';
+    creditNode.style.whitespace = 'nowrap';
+    creditNode.index = 0;
+
+    this.loadScript = function() {
+        if (!initialised) {
+            var script = document.createElement("script");
+            script.type = "text/javascript";
+            var mapURL = 'http://maps.googleapis.com/maps/api/js?sensor=true&callback=FiercePlanet.GoogleMapUtils.initMaps';
+//            if (callback)
+//                mapURL += "&callback=" + callback;
+            script.src = mapURL;
+            document.body.appendChild(script);
+        }
+    }
+
+
+    this.initMaps = function() {
+        // set up the map types
+
+        // Externally sourced - relatively low res
+        /*
+         mapTypes['nighttime'] = {
+         getTileUrl: function(coord, zoom) {
+         return getHorizontallyRepeatingTileUrl(coord, zoom, function(coord, zoom) {
+         var bound = Math.pow(2, zoom);
+         return "http://www.cc.gatech.edu/~pesti/night/t-n/" +
+         + zoom + "/" + coord.x + "-" + coord.y + '.jpeg';
+         });
+         },
+         tileSize: new google.maps.Size(256, 256),
+         isPng: false,
+         maxZoom: 6,
+         minZoom: 0,
+         radius: 1738000,
+         name: 'Earth at Night',
+         credit: 'Image Credit: NASA/USGS'
+         };
+
+         // set up the map types
+         mapTypes['europa'] = {
+         getTileUrl: function(coord, zoom) {
+         return getHorizontallyRepeatingTileUrl(coord, zoom, function(coord, zoom) {
+         var bound = Math.pow(2, zoom);
+         return "http://www.cc.gatech.edu/~pesti/europa/t-e2/" +
+         + zoom + "/" + coord.x + "-" + coord.y + '.jpeg';
+         });
+         },
+         tileSize: new google.maps.Size(256, 256),
+         isPng: false,
+         maxZoom: 6,
+         minZoom: 0,
+         radius: 1738000,
+         name: 'Europa - the Icy Moon of Jupiter',
+         credit: 'Image Credit: NASA/USGS'
+         };
+         */
+
+        if (typeof(google) !== 'undefined' && typeof(google.maps) !== 'undefined') {
+            // set up the map types
+            mapTypes['moon'] = {
+                getTileUrl: function(coord, zoom) {
+                    return getHorizontallyRepeatingTileUrl(coord, zoom, function(coord, zoom) {
+                        var bound = Math.pow(2, zoom);
+                        return "http://mw1.google.com/mw-planetary/lunar/lunarmaps_v1/clem_bw/" +
+                            + zoom + "/" + coord.x + "/" + (bound - coord.y - 1) + '.jpg';
+                    });
+                },
+                tileSize: new google.maps.Size(256, 256),
+                isPng: false,
+                maxZoom: 9,
+                minZoom: 0,
+                radius: 1738000,
+                name: 'Moon',
+                credit: 'Image Credit: NASA/USGS'
+            };
+
+            mapTypes['sky'] = {
+                getTileUrl: function(coord, zoom) {
+                    return getHorizontallyRepeatingTileUrl(coord, zoom, function(coord, zoom) {
+                        return "http://mw1.google.com/mw-planetary/sky/skytiles_v1/" +
+                            coord.x + "_" + coord.y + '_' + zoom + '.jpg';
+
+                    });
+                },
+                tileSize: new google.maps.Size(256, 256),
+                isPng: false,
+                maxZoom: 13,
+                radius: 57.2957763671875,
+                name: 'Sky',
+                credit: 'Image Credit: SDSS, DSS Consortium, NASA/ESA/STScI'
+            };
+
+            mapTypes['mars_elevation'] = {
+                getTileUrl: function(coord, zoom) {
+                    return getHorizontallyRepeatingTileUrl(coord, zoom, function(coord, zoom) {
+                        return getMarsTileUrl("http://mw1.google.com/mw-planetary/mars/elevation/", coord, zoom);
+                    });
+                },
+                tileSize: new google.maps.Size(256, 256),
+                isPng: false,
+                maxZoom: 8,
+                radius: 3396200,
+                name: 'Mars Elevation',
+                credit: 'Image Credit: NASA/JPL/GSFC'
+            };
+
+            mapTypes['mars_visible'] = {
+                getTileUrl: function(coord, zoom) {
+                    return getHorizontallyRepeatingTileUrl(coord, zoom, function(coord, zoom) {
+                        return getMarsTileUrl("http://mw1.google.com/mw-planetary/mars/visible/", coord, zoom);
+                    });
+                },
+                tileSize: new google.maps.Size(256, 256),
+                isPng: false,
+                maxZoom: 9,
+                radius: 3396200,
+                name: 'Mars Visible',
+                credit: 'Image Credit: NASA/JPL/ASU/MSSS'
+            };
+
+            mapTypes['mars_infrared'] = {
+                getTileUrl: function(coord, zoom) {
+                    return getHorizontallyRepeatingTileUrl(coord, zoom, function(coord, zoom) {
+                        return getMarsTileUrl("http://mw1.google.com/mw-planetary/mars/infrared/", coord, zoom);
+                    });
+                },
+                tileSize: new google.maps.Size(256, 256),
+                isPng: false,
+                maxZoom: 9,
+                radius: 3396200,
+                name: 'Mars Infrared',
+                credit: 'Image Credit: NASA/JPL/ASU'
+            };
+        }
+
+        initialised = true;
+    }
 
 
     // Normalizes the tile URL so that tiles repeat across the x axis (horizontally) like the
@@ -199,23 +230,12 @@ FiercePlanet.GoogleMapUtils = FiercePlanet.GoogleMapUtils || {};
       return baseUrl + quads.join('') + ".jpg";
     }
 
-    var mapControlOptions = {};
-
-    // Setup a copyright/credit line, emulating the standard Google style
-    var creditNode = document.createElement('div');
-    creditNode.id = 'credit-control';
-    creditNode.style.fontSize = '11px';
-    creditNode.style.fontFamily = 'Arial, sans-serif';
-    creditNode.style.margin = '0 2px 2px 0';
-    creditNode.style.whitespace = 'nowrap';
-    creditNode.index = 0;
 
     function setCredit(credit) {
       creditNode.innerHTML = credit + ' -';
     }
 
     this.initializePlanetaryTypes = function() {
-
       // push all mapType keys in to a mapTypeId array to set in the mapTypeControlOptions
       for (var key in mapTypes) {
         mapTypeIds.push(key);
@@ -276,6 +296,8 @@ FiercePlanet.GoogleMapUtils = FiercePlanet.GoogleMapUtils || {};
      * @param value
      */
     this.createMap = function(options, altCanvasName) {
+        if (typeof(google) == 'undefined' || typeof(google.maps) == 'undefined')
+            return;
         var canvasName = altCanvasName || '#actual_map';
 
         // If the map needs rotation, rotate the underlying div
@@ -310,6 +332,10 @@ FiercePlanet.GoogleMapUtils = FiercePlanet.GoogleMapUtils || {};
      * Generates a set of default (and non-interactive) Google Map options
      */
     this.defaultOptions = function() {
+        // If we can't reach the Google Maps API, return an empty object
+        if (typeof(google) == 'undefined' || typeof(google.maps) == 'undefined')
+            return mapOptions;
+
       // push all mapType keys in to a mapTypeId array to set in the mapTypeControlOptions
         mapTypeIds = [
             google.maps.MapTypeId.ROADMAP,
@@ -454,6 +480,7 @@ FiercePlanet.GoogleMapUtils = FiercePlanet.GoogleMapUtils || {};
           }
         return initialLocation;
     }
+
 
 }).apply(FiercePlanet.GoogleMapUtils);
 

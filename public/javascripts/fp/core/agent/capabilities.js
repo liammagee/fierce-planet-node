@@ -79,7 +79,7 @@ Capabilities.RegenerateCapability = new Capability();
                         // Some random chance a new agent is born
                     var birthChance = Math.random();
                     if (birthChance < agent.culture.birthProbability) {
-                        if (world.countAgentsAtPosition(x, y) <= 1 && (Universe.settings.agentsOwnTilesExclusively || world.agentsOwnTilesExclusively)) {
+                        if (world.getAgentsAtCell(x, y).length <= 1 && (Universe.settings.agentsOwnTilesExclusively || world.agentsOwnTilesExclusively)) {
                             var childAgent = new Agent(agent.culture, agent.x, agent.y);
                             childAgent.delay = parseInt(Math.random() * childAgent.culture.initialSpeed * 5);
                             childAgent.bornAt = (Lifecycle.worldCounter);

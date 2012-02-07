@@ -175,6 +175,7 @@ function Agent(culture, x, y) {
      * Gets the current position (x and y co-ordinates) of the agent
      */
     this.getPosition = function() { return [this.x, this.y]; };
+
     /**
      *
      * @param x
@@ -184,6 +185,7 @@ function Agent(culture, x, y) {
         var lastX = this.x, lastY = this.y;
         this.x = x; this.y = y;
         this.incrementMoves();
+        this.adjustGeneralHealth(this.culture.moveCost);
         Lifecycle.currentWorld.changeAgentInCell(this, lastX, lastY);
     };
 

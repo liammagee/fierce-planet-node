@@ -176,21 +176,19 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
      */
     this.drawMap = function() {
         var canvasName = '#actual_map';
-        var mapOptions = FiercePlanet.GoogleMapUtils.defaultOptions();
+
         if (Lifecycle.currentWorld != undefined) {
-            if (Lifecycle.currentWorld.mapOptions) {
+            FiercePlanet.GoogleMapUtils.loadScript();
+            var mapOptions = FiercePlanet.GoogleMapUtils.defaultOptions();
+            if (Lifecycle.currentWorld.mapOptions)
                 $.extend(mapOptions, Lifecycle.currentWorld.mapOptions);
 
-                // Handle built-in zoom
-                if (FiercePlanet.Orientation.zoomWorld > 1)
-                    mapOptions['zoom'] = mapOptions['zoom'] + Math.log(FiercePlanet.Orientation.zoomWorld) / Math.log(1.5);
+            // Handle built-in zoom
+            if (FiercePlanet.Orientation.zoomWorld > 1)
+                mapOptions['zoom'] = mapOptions['zoom'] + Math.log(FiercePlanet.Orientation.zoomWorld) / Math.log(1.5);
 
-                FiercePlanet.Game.googleMap = FiercePlanet.GoogleMapUtils.createMap(mapOptions, canvasName);
-                FiercePlanet.Game.mapOptions = mapOptions;
-            }
-        }
-        else {
-            FiercePlanet.Game.googleMap = new google.maps.Map($(canvasName)[0], mapOptions);
+            FiercePlanet.Game.googleMap = FiercePlanet.GoogleMapUtils.createMap(mapOptions, canvasName);
+            FiercePlanet.Game.mapOptions = mapOptions;
         }
     };
     
