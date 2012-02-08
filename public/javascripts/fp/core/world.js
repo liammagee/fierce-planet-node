@@ -12,6 +12,21 @@
  * @param id
  */
 
+NeighbourhoodConstants = {
+    MooreNeighbourhood: 0,
+    VonNeumannNeighbourhood: 1,
+    MooreVonNeumannNeighbourhood: 2,
+    InverseVonNeumannNeighbourhood: 3,
+    HNeighbourhood: 4
+
+};
+Distance = {
+    CHEBYSHEV_DISTANCE: 0,
+    MINKOWSKI_DISTANCE: 1,
+    TAXICAB_DISTANCE: 2
+};
+
+
 /**
  * World class definition
  *
@@ -898,30 +913,7 @@ function World() {
      * @param includeSelf
      */
     this.getVonNeumannNeighbourhood = function(x, y, includeSelf) {
-        var surroundingPositions = [];
-
-        if (includeSelf)
-            surroundingPositions.push({x: x, y: y});
-
-        var extendRight = (x < this.cellsAcross - 1),
-            extendDown = (y < this.cellsDown - 1),
-            extendLeft = (x > 0),
-            extendUp = (y > 0),
-            nextX = extendRight ? x + 1 : 0,
-            nextY = extendDown ? y + 1 : 0,
-            prevX = extendLeft ? x - 1 : this.cellsAcross - 1,
-            prevY = extendUp ? y - 1 : this.cellsDown - 1;
-
-        if (this.allowOffscreenCycling || (nextX > 0))
-            surroundingPositions.push({x: nextX, y: y});
-        if (this.allowOffscreenCycling || (nextY > 0))
-            surroundingPositions.push({x: x, y: nextY});
-        if (this.allowOffscreenCycling || (prevX < this.cellsAcross - 1))
-            surroundingPositions.push({x: prevX, y: y});
-        if (this.allowOffscreenCycling || (prevY < this.cellsDown - 1))
-            surroundingPositions.push({x: x, y: prevY});
-
-        return surroundingPositions;
+        return _.map(this.getCellsAtDistance(x, y, 1, Distance.TAXICAB_DISTANCE, includeSelf), function(cell) {return {x: cell.x, y: cell.y}});
     };
 
     /**
@@ -933,38 +925,7 @@ function World() {
      * @param includeSelf
      */
     this.getMooreNeighbourhood = function(x, y, includeSelf) {
-        var surroundingPositions = [];
-
-        if (includeSelf)
-            surroundingPositions.push({x: x, y: y});
-
-        var extendRight = (x < this.cellsAcross - 1),
-            extendDown = (y < this.cellsDown - 1),
-            extendLeft = (x > 0),
-            extendUp = (y > 0),
-            nextX = extendRight ? x + 1 : 0,
-            nextY = extendDown ? y + 1 : 0,
-            prevX = extendLeft ? x - 1 : this.cellsAcross - 1,
-            prevY = extendUp ? y - 1 : this.cellsDown - 1;
-
-        if (this.allowOffscreenCycling || (nextX > 0))
-            surroundingPositions.push({x: nextX, y: y});
-        if (this.allowOffscreenCycling || (nextX > 0 && nextY > 0))
-            surroundingPositions.push({x: nextX, y: nextY});
-        if (this.allowOffscreenCycling || (nextY > 0))
-            surroundingPositions.push({x: x, y: nextY});
-        if (this.allowOffscreenCycling || (prevX < this.cellsAcross - 1 && nextY > 0))
-            surroundingPositions.push({x: prevX, y: nextY});
-        if (this.allowOffscreenCycling || (prevX < this.cellsAcross - 1))
-            surroundingPositions.push({x: prevX, y: y});
-        if (this.allowOffscreenCycling || (prevX < this.cellsAcross - 1 && prevY < this.cellsDown - 1))
-            surroundingPositions.push({x: prevX, y: prevY});
-        if (this.allowOffscreenCycling || (prevY < this.cellsDown - 1))
-            surroundingPositions.push({x: x, y: prevY});
-        if (this.allowOffscreenCycling || (nextX > 0 && prevY < this.cellsDown - 1))
-            surroundingPositions.push({x: nextX, y: prevY});
-
-        return surroundingPositions;
+        return _.map(this.getCellsAtDistance(x, y, 1, Distance.CHEBYSHEV_DISTANCE, includeSelf), function(cell) {return {x: cell.x, y: cell.y}});
     };
 
     /**
@@ -976,28 +937,7 @@ function World() {
      * @param includeSelf
      */
     this.getMvNNeighbourhood = function(x, y, includeSelf) {
-        var surroundingPositions = this.getMooreNeighbourhood(x, y, includeSelf);
-
-        // Add extended von Neumann cells
-        var extendRight = (x < this.cellsAcross - 2),
-            extendDown = (y < this.cellsDown - 2),
-            extendLeft = (x > 1),
-            extendUp = (y > 1),
-            nextX = extendRight ? x + 2 : 1,
-            nextY = extendDown ? y + 2 : 1,
-            prevX = extendLeft ? x - 2 : this.cellsAcross - 2,
-            prevY = extendUp ? y - 2 : this.cellsDown - 2;
-
-        if (this.allowOffscreenCycling || (nextX > 1))
-            surroundingPositions.push({x: nextX, y: y});
-        if (this.allowOffscreenCycling || (nextY > 1))
-            surroundingPositions.push({x: x, y: nextY});
-        if (this.allowOffscreenCycling || (prevX < this.cellsAcross - 2))
-            surroundingPositions.push({x: prevX, y: y});
-        if (this.allowOffscreenCycling || (prevY < this.cellsDown - 2))
-            surroundingPositions.push({x: x, y: prevY});
-
-        return surroundingPositions;
+        return _.map(this.getCellsAtDistance(x, y, 2, Distance.TAXICAB_DISTANCE, includeSelf), function(cell) {return {x: cell.x, y: cell.y}});
     };
 
     /**
@@ -1101,35 +1041,10 @@ function World() {
     };
 
 
-    this.getCellsAtDistanceViaIteration = function(x, y, distance) {
-        var world = this;
-        var validCells = [];
-        this.cells.forEach(function(cell) {
-            var cx = cell.x, cy = cell.y, valid = false;
-            if (Math.abs(cx - x) <= distance && Math.abs(cy - y) <= distance && (cx != x || cy != y))
-                valid = true;
-            if (! valid && world.allowOffscreenCycling && (cx != x || cy != y)) {
-                var ox = cx, oy = cy;
-                if (x - distance < 0 && cx - distance > 0)
-                    ox = cx - world.cellsAcross;
-                else if (x + distance > world.cellsAcross - 1 && cx + distance < world.cellsAcross - 1)
-                    ox = cx + world.cellsAcross;
-                if (y - distance < 0 && cy - distance > 0)
-                    oy = cy - world.cellsDown;
-                else if (y + distance > world.cellsDown - 1 && cy + distance < world.cellsDown - 1)
-                    oy = cy + world.cellsDown;
-                if (Math.abs(ox - x) <= distance && Math.abs(oy - y) <= distance) {
-                    valid = true;
-                }
-            }
-            if (valid)
-                validCells.push(cell);
-        });
-        return validCells;
-    };
-
-    this.getCellsAtDistance = function(x, y, distance) {
-        var validCells = [];
+    this.getCellsAtDistance = function(x, y, distance, strategy, includeSelf) {
+        var validCells = []
+            , strategy = strategy || Distance.CHEBYSHEV_DISTANCE
+            , includeSelf = includeSelf || false;
 
         var minX = (x - distance),
             minY = (y - distance),
@@ -1138,7 +1053,7 @@ function World() {
 
         for (var i = minX; i <= maxX; i++ ) {
             for (var j = minY; j <= maxY; j++ ) {
-                if (i == x && j == y)
+                if ((i == x && j == y) && ! includeSelf)
                     continue;
                 var cx = i, cy = j;
                 if (this.allowOffscreenCycling) {
@@ -1151,41 +1066,57 @@ function World() {
                     else if (j > this.cellsDown - 1)
                         cy -= this.cellsDown;
                 }
+                else {
+                    if (i < 0 || i > this.cellsAcross - 1)
+                        continue;
+                    if (j < 0 || j > this.cellsDown - 1)
+                        continue;
+                }
                 var cell = this.getCell(cx, cy);
-                if (!_.isUndefined(cell))
-                    validCells.push(cell)
+                if (!_.isUndefined(cell)) {
+                    switch (strategy) {
+                        // Default: cell x and y values are within range (results in square neighbourhood)
+                        case Distance.CHEBYSHEV_DISTANCE:
+                            validCells.push(cell);
+                            break;
+                        // Radial distance: cell direct line is within range (results in circular neighbourhood)
+                        case Distance.MINKOWSKI_DISTANCE:
+                            var radius = Math.sqrt(Math.pow(i - x, 2) + Math.pow(j - y, 2));
+                            if (radius <= distance)
+                                validCells.push(cell);
+                            break;
+                        // Summed distance: sum of cell values are within range (results in diamond neighbourhood)
+                        case Distance.TAXICAB_DISTANCE:
+                            var sum = Math.abs(i - x) + Math.abs(j - y);
+                            if (sum <= distance)
+                                validCells.push(cell);
+                            break;
+                    }
+                }
             }
         }
         return validCells;
     };
 
-    this.getCellsAtRadialDistance = function(x, y, distance) {
-        var world = this;
-        var validCells = [];
-        var counter = 0;
-        this.cells.forEach(function(cell) {
-            var cx = cell.x, cy = cell.y, valid = false,
-                radius = Math.sqrt(Math.pow(cx - x, 2) + Math.pow(cy - y, 2));
-            if (radius <= distance && (cx != x || cy != y))
-                valid = true;
-            if (! valid && world.allowOffscreenCycling && (cx != x || cy != y)) {
-                var ox = cx, oy = cy;
-                if (x - distance < 0 && cx - distance > 0)
-                    ox = cx - world.cellsAcross;
-                else if (x + distance > world.cellsAcross - 1 && cx + distance < world.cellsAcross - 1)
-                    ox = cx + world.cellsAcross;
-                if (y - distance < 0 && cy - distance > 0)
-                    oy = cy - world.cellsDown;
-                else if (y + distance > world.cellsDown - 1 && cy + distance < world.cellsDown - 1)
-                    oy = cy + world.cellsDown;
-                radius = Math.sqrt(Math.pow(cx - x, 2) + Math.pow(cy - y, 2))
-                if (radius <= distance)
-                    valid = true;
-            }
-            if (valid)
-                validCells.push(cell);
-        });
-        return validCells;
+
+    this.getAgentsAtDistance = function(x, y, distance, strategy, includeSelf) {
+        var cells = this.getCellsAtDistance(x, y, distance, strategy, includeSelf);
+        // Map, compact and flatten the agent collection
+        return _.flatten(
+            _.compact(
+                _.map(cells, function(cell) { return cell.agents; })
+            )
+        );
+    };
+
+    this.getResourcesAtDistance = function(x, y, distance, strategy, includeSelf) {
+        var cells = this.getCellsAtDistance(x, y, distance, strategy, includeSelf);
+        // Map, compact and flatten the agent collection
+        return _.flatten(
+            _.compact(
+                _.map(cells, function(cell) { return cell.resources; })
+            )
+        );
     };
 
 
