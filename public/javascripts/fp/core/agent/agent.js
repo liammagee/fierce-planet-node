@@ -436,23 +436,26 @@ function Agent(culture, x, y) {
         var agent = this,
             rankedDesires = Desires.rankDesires(agent, world);
         if (rankedDesires && rankedDesires.length > 0) {
-            var rankedDesires = Desires.rankDesires(agent, world),
-                desireToExplore = rankedDesires[0],
-                satisfyingObjects = desireToExplore.findSatisfyingObjects(agent);
-            var plans = Plans.getBestPlans(agent, world, satisfyingObjects),
-                len = plans.length,
-                index = Math.floor(Math.random() * len);
+            for (var i = 0, len = rankedDesires.length; i < len; i++) {
+                var desireToExplore = rankedDesires[i],
+                    satisfyingObjects = desireToExplore.findSatisfyingObjects(agent);
+                if (satisfyingObjects.length > 0) {
+                    var plans = Plans.getBestPlans(agent, world, satisfyingObjects),
+                        len = plans.length,
+                        index = Math.floor(Math.random() * len);
+                    this.currentPlan = plans[index];
+                    this.currentPlanStep = 1;
+                    break;
+                }
 
-            this.currentPlan = plans[index];
-            this.currentPlanStep = 1;
-
-            // TODO: Need more planning here
-            /*
-            rankedDesires.forEach(function(desire) {
-                // Now get beliefs
-                //desire.findSatisfyingObjects(agent);
-            });
-            */
+                // TODO: Need more planning here
+                /*
+                 rankedDesires.forEach(function(desire) {
+                 // Now get beliefs
+                 //desire.findSatisfyingObjects(agent);
+                 });
+                 */
+            }
         }
     };
 
@@ -537,7 +540,7 @@ function Agent(culture, x, y) {
     this.chronologicalMemory = [];
     this.memoriesOfPlacesVisited = [];
     this.memoriesOfPathsUntried = [];
-    this.memoriesOfResources = [];
+    this.memoriesOfResources = {};
     this.memoriesOfAgents = [];
     this.memoriesOfPlacesVisitedByOtherAgents = [];
     this.memoriesOfPathsUntriedByOtherAgents = [];

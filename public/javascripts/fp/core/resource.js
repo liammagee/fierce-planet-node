@@ -83,6 +83,55 @@ ResourceType.prototype.clone = function() {
  * @param y
  */
 function Resource(type, x, y) {
+    this.setInitialTotalYield = function(initialTotalYield) {
+        this.initialTotalYield = initialTotalYield;
+        this.totalYield = initialTotalYield;
+    };
+    this.incrementTotalYield = function(totalYield) { this.totalYield++; };
+    this.getPosition = function() { return [this.x, this.y]; };
+    this.moveTo = function(x, y) { this.x =x; this.y = y; };
+    this.calculateEffect = function(world) {
+
+    };
+    this.provideYield = function(agent, resourceEffect, adjustSpeedToYield) {
+        if (this.totalYield > this.perAgentYield) {
+            var adjustment = 0;
+            if (Universe.settings.applyGeneralHealth) {
+                // Don't be greedy - only yield a benefit if the agent needs it
+                if (agent.health < 100) {
+                    adjustment = this.perAgentYield * this.upgradeWorld * resourceEffect;
+                    agent.adjustGeneralHealth(adjustment);
+                    if (adjustSpeedToYield && Universe.settings.agentsCanAdjustSpeed)
+                        agent.speed = (this.perAgentYield);
+                    // This lowers the impact of resources on agents' speed - but need delay for 'followers' to get resources of their own.
+//                    agent.setSpeed(Math.floor(Math.pow(this.perAgentYield, 0.5)));
+                    this.totalYield -= this.perAgentYield;
+                }
+            }
+            else {
+                if (agent.getHealthForResource(this) < 100) {
+                    var rawAdjustment = this.perAgentYield * this.upgradeWorld * ModuleManager.currentModule.resourceSet.categories.length;
+                    adjustment = rawAdjustment * resourceEffect;
+                    agent.adjustHealthForResource(adjustment, this);
+                    if (adjustSpeedToYield && Universe.settings.agentsCanAdjustSpeed) {
+                        agent.speed = (this.perAgentYield);
+                    }
+                    // This lowers the impact of resources on agents' speed - but need delay for 'followers' to get resources of their own.
+//                    agent.setSpeed(Math.floor(Math.pow(this.perAgentYield, 0.5)));
+
+                    if (Universe.settings.resourcesDiminishAtFixedRate) {
+                        // Yields decreases reflect upgrade and actual yield to the agent - VERY HARD
+                        this.totalYield -= rawAdjustment;
+                    }
+                    else {
+                        // Yields are pegged to actual benefits supplied to agents
+                        this.totalYield -= this.perAgentYield;
+                    }
+                }
+            }
+        }
+    };
+
     // Kind properties
     this.category = type.category;
     this.color = type.category.color;
@@ -96,52 +145,9 @@ function Resource(type, x, y) {
     this.totalYield = type.totalYield;
     this.upgradeWorld = 1;
     this.moveTo(x, y);
-}
-Resource.prototype.setInitialTotalYield = function(initialTotalYield) { 
-    this.initialTotalYield = initialTotalYield; 
-    this.totalYield = initialTotalYield; 
-};
-Resource.prototype.incrementTotalYield = function(totalYield) { this.totalYield++; };
-Resource.prototype.getPosition = function() { return [this.x, this.y]; };
-Resource.prototype.moveTo = function(x, y) { this.x =x; this.y = y; };
-Resource.prototype.provideYield = function(agent, resourceEffect, adjustSpeedToYield) {
-    if (this.totalYield > this.perAgentYield) {
-        var adjustment = 0;
-        if (Universe.settings.applyGeneralHealth) {
-            // Don't be greedy - only yield a benefit if the agent needs it
-            if (agent.health < 100) {
-                adjustment = this.perAgentYield * this.upgradeWorld * resourceEffect;
-                agent.adjustGeneralHealth(adjustment);
-                if (adjustSpeedToYield && Universe.settings.agentsCanAdjustSpeed)
-                    agent.speed = (this.perAgentYield);
-                // This lowers the impact of resources on agents' speed - but need delay for 'followers' to get resources of their own.
-//                    agent.setSpeed(Math.floor(Math.pow(this.perAgentYield, 0.5)));
-                this.totalYield -= this.perAgentYield;
-            }
-        }
-        else {
-            if (agent.getHealthForResource(this) < 100) {
-                var rawAdjustment = this.perAgentYield * this.upgradeWorld * ModuleManager.currentModule.resourceSet.categories.length;
-                adjustment = rawAdjustment * resourceEffect;
-                agent.adjustHealthForResource(adjustment, this);
-                if (adjustSpeedToYield && Universe.settings.agentsCanAdjustSpeed) {
-                    agent.speed = (this.perAgentYield);
-                }
-                // This lowers the impact of resources on agents' speed - but need delay for 'followers' to get resources of their own.
-//                    agent.setSpeed(Math.floor(Math.pow(this.perAgentYield, 0.5)));
 
-                if (Universe.settings.resourcesDiminishAtFixedRate) {
-                    // Yields decreases reflect upgrade and actual yield to the agent - VERY HARD
-                    this.totalYield -= rawAdjustment;
-                }
-                else {
-                    // Yields are pegged to actual benefits supplied to agents
-                    this.totalYield -= this.perAgentYield;
-                }
-            }
-        }
-    }
-};
+
+}
 
 if (typeof exports !== "undefined") {
     exports.ResourceCategory = ResourceCategory;

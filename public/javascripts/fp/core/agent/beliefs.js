@@ -131,25 +131,13 @@ Beliefs.BeliefsAboutResources = {};
         positions.forEach(function(position) {
             var resources = world.getResourcesAtCell(position.x, position.y);
             // TODO: Can only add one resource to memory
-            if (resources && resources.length > 0)
-                agent.memoriesOfResources[[x, y]] = resources[0];
+            if (resources && resources.length > 0) {
+                agent.memoriesOfResources[world.indexify(x, y)] = resources[0];
+//                agent.memoriesOfResources[[x, y]] = resources[0];
+            }
+
         });
 
-        /*
-        for (var j = 0; j < resources.length; j++) {
-            var resource = resources[j];
-            var resourceX = resource.x;
-            var resourceY = resource.y;
-            // Is the resource next to our current position?
-            var diffX = Math.abs(resourceX - x);
-            var diffY = Math.abs(resourceY - y);
-            var diff = diffX * diffY;
-            if (diff <= 1) {
-                // Add resource to memory
-                agent.memoriesOfResources[[x, y]] = resource;
-            }
-        }
-        */
     };
 }).apply(Beliefs.BeliefsAboutResources);
 

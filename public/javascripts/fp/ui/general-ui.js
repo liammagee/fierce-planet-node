@@ -181,7 +181,7 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
      *  Makes key elements divs movable (draggable), if the setting is set to true
      */
     this.makeElementsMovable = function() {
-        if (Universe.settings.makeElementsMovable) {
+        if (Universe.settings.makeElementsMovable && ! Universe.settings.mobile) {
             $('#graph-area, #controls').draggable({cursor: "pointer"});
             $('#gameworld').resizable().draggable({handler: '#handle', cancel: '#world-container, #console'});
             $('#global-info-panel').draggable({cancel: '#swatch', cursor: "pointer"});

@@ -21,11 +21,12 @@ function onFrame(event) {
 
 FiercePlanet.Effects = FiercePlanet.Effects || {};
 FiercePlanet.Effects.setupView = function() {
-    var currentEffect = FiercePlanet.Effects.Snow;
+    this.currentEffect = this.currentEffect || FiercePlanet.Effects.Snow;
     // Place the instances of the symbol:
     if ((_.isUndefined(Lifecycle.currentWorld.scrollingImageVisible) || Lifecycle.currentWorld.scrollingImageVisible)
         &&
         (_.isUndefined(Universe.settings.scrollingImageVisible) || Universe.settings.scrollingImageVisible)) {
+        project.activeLayer.removeChildren();
         FiercePlanet.Effects.currentEffect.setupEffect();
     }
 }
@@ -96,19 +97,19 @@ FiercePlanet.Effects.Snow.keepInView = function(item) {
     }
 };
 
-FiercePlanet.Effects.SnowReverse = FiercePlanet.Effects.SnowReverse || {};
-FiercePlanet.Effects.SnowReverse.setupEffect = function() {
+FiercePlanet.Effects.Rain = FiercePlanet.Effects.Rain || {};
+FiercePlanet.Effects.Rain.setupEffect = function() {
 // The amount of symbol we want to place;
     this.count = 150;
 // Create a symbol, which we will use to place instances of later:
-    this.path = new Path.Circle(new Point(0, 0), 5);
+    this.path = new Path.RoundRectangle(new Rectangle(new Point(0, 0), new Size(2, 10)), new Size(1, 1));
     this.path.style = {
-        fillColor: 'white',
-        strokeColor: 'white'
+        fillColor: 'grey',
+        strokeColor: 'grey'
     };
     this.symbol = new Symbol(this.path);
     this.vector = new Point({
-        angle: 275,
+        angle: 15,
         length: 0
     });
     this.mouseVector = this.vector.clone();
@@ -125,10 +126,10 @@ FiercePlanet.Effects.SnowReverse.setupEffect = function() {
         });
     }
 };
-FiercePlanet.Effects.SnowReverse.mouseMove = function(event) {
+FiercePlanet.Effects.Rain.mouseMove = function(event) {
     this.mouseVector = view.center;// - event.point;
 };
-FiercePlanet.Effects.SnowReverse.drawEffect = function() {
+FiercePlanet.Effects.Rain.drawEffect = function() {
     this.vector = this.vector + (this.mouseVector - this.vector) / 30;
 
     // Run through the active layer's children list and change
@@ -137,12 +138,12 @@ FiercePlanet.Effects.SnowReverse.drawEffect = function() {
         var item = project.activeLayer.children[i];
         var size = item.bounds.size;
         var length = this.vector.length / 200 * size.width / 10;
-        item.position -= this.vector.normalize(length) + item.data.vector;
+        item.position += this.vector.normalize(length) + item.data.vector;
         this.keepInView(item);
     }
 
 };
-FiercePlanet.Effects.SnowReverse.keepInView = function(item) {
+FiercePlanet.Effects.Rain.keepInView = function(item) {
     var position = item.position;
     var itemBounds = item.bounds;
     var bounds = view.bounds;

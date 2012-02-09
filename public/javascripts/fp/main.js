@@ -1,18 +1,6 @@
 
 //$LAB.script('http://maps.googleapis.com/maps/api/js?sensor=true').wait()
 
-/*
-function loadScript() {
-    var script = document.createElement("script");
-    script.type = "text/javascript";
-    var mapURL = 'http://maps.googleapis.com/maps/api/js?sensor=true';
-//            if (callback)
-//                mapURL += "&callback=" + callback;
-    script.src = mapURL;
-    document.body.appendChild(script);
-}
-$(document).ready(loadScript);
-*/
 
 $LAB
     .setOptions({BasePath:'/javascripts/'})
@@ -140,12 +128,19 @@ $LAB
         if (!_.isUndefined(world)) {
             Lifecycle.currentWorldNumber = localStorage.currentWorldNumber = world;
         }
+        if (window.location.pathname === '/mobile') {
+            Universe.settings.mobile = true;
+            FiercePlanet.Orientation.worldWidth = $(window).width();
+            FiercePlanet.Orientation.worldHeight = $(window).height() - 160;
+        }
+//        FiercePlanet.Orientation.adjustParameters(FiercePlanet.Orientation.worldWidth, FiercePlanet.Orientation.worldHeight);
+
         FiercePlanet.Game.loadGame();
     })
     .script("paperjs-0.22/lib/paper.js")
     .wait(function() {
-        var canvas = document.getElementById('scrollingCanvas');
-        paper.setup();
+//        var canvas = document.getElementById('scrollingCanvas');
+//        paper.setup();
 //        paper.install(window);
     })
 //    .script({src: "fp/graphics/effects/overlay.js"})

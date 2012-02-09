@@ -32,7 +32,7 @@ Desires.ImproveHealth = {};
         for (var i in agent.memoriesOfResources) {
             if (agent.memoriesOfResources.hasOwnProperty(i)) {
                 var belief = agent.memoriesOfResources[i];
-                satisfyingObjects.push([belief.x, belief.y]);
+                satisfyingObjects.push(Lifecycle.currentWorld.deindexify(parseInt(i)));
             }
         }
         return satisfyingObjects;

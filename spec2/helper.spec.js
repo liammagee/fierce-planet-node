@@ -40,33 +40,18 @@ if (typeof(global) != "undefined") {
     Statistics = require('./../public/javascripts/fp/core/statistics.js').Statistics;
 
     ResourceTypes = require('./../public/javascripts/fp/modules/default/resources/resource_types.js').ResourceTypes;
-    CoS = require('./../public/javascripts/fp/modules/default/resources/cos.js').CoS;
     TBL = require('./../public/javascripts/fp/modules/default/resources/tbl.js').TBL;
-    Basic = require('./../public/javascripts/fp/modules/default/worlds/basic.js').Basic;
-    Additional = require('./../public/javascripts/fp/modules/default/worlds/additional.js').Additional;
-    DefaultModule = require('./../public/javascripts/fp/modules/default/default-module.js').DefaultModule;
 
-    PredatorPreyCultures = require('./../public/javascripts/fp/modules/pp/agents/pp-agent-types.js').PredatorPreyCultures;
-    PredatorPreyWorlds = require('./../public/javascripts/fp/modules/pp/worlds/pp-worlds.js').PredatorPreyWorlds;
-    PredatorPreyModule = require('./../public/javascripts/fp/modules/pp/predator-prey-module.js').PredatorPreyModule;
+    TestWorlds = require('./../public/javascripts/fp/modules/test/test-module.js').TestWorlds;
+    TestModule = require('./../public/javascripts/fp/modules/test/test-module.js').TestModule;
 //jstat = require('./../public/javascripts/jstat-1.0.0/js/jstat-1.0.0.js').jstat;
 //NormalDistribution = require('./../public/javascripts/jstat-1.0.0/js/jstat-1.0.0.js').NormalDistribution;
     jStat = require('./../public/javascripts/jstat-1.0.0/js/jstat.js').jStat;
 
-    /*
-    jsdom = require('jsdom').jsdom
-        , myWindow = jsdom().createWindow()
-        , $ = require('jquery')
-        , jq = require('jquery').create()
-        , jQuery = require('jquery').create(myWindow)
-        ;
-    */
-
 }
 
 (function() {
-    PredatorPreyModule.init();
+    TestModule.init();
     Universe.settings.agentsCanAdjustWander = false;
     Universe.settings.noGameOver = true;
-
 })();

@@ -5,21 +5,6 @@
  * MIT Licensed
  */
 
-/**
- * World class definition
- *
- * @constructor
- * @param id
- */
-
-NeighbourhoodConstants = {
-    MooreNeighbourhood: 0,
-    VonNeumannNeighbourhood: 1,
-    MooreVonNeumannNeighbourhood: 2,
-    InverseVonNeumannNeighbourhood: 3,
-    HNeighbourhood: 4
-
-};
 Distance = {
     CHEBYSHEV_DISTANCE: 0,
     MINKOWSKI_DISTANCE: 1,
@@ -71,6 +56,7 @@ function World() {
     this.areAgentsAllowed = function(x, y) {
         return this.getCell(x, y).agentsAllowed;
     };
+
     /**
      *
      * @param cellPositions
@@ -86,6 +72,7 @@ function World() {
         })
         this.generatePath();
     };
+
     this.forbidAgentOnCell = function(x, y) {
         var cell = this.getCell(x, y);
         if (!_.isUndefined(cell)) {
@@ -171,9 +158,12 @@ function World() {
     };
 
 
-// Object functions
+// Cell functions
     this.indexify = function(x, y) {
         return y * this.cellsAcross + x;
+    };
+    this.deindexify = function(num) {
+        return [num % this.cellsAcross, Math.floor(num / this.cellsAcross)];
     };
     this.getCell = function(x, y) {
         return this.cells[this.indexify(x, y)];
@@ -273,12 +263,7 @@ function World() {
             cell.isEntryPoint = true;
     };
     this.getEntryPoints = function() {
-        var entryPoints = [];
-        this.cells.forEach(function(cell) {
-            if (cell.isEntryPoint)
-                entryPoints.push(cell);
-        });
-        return entryPoints;
+        return _.compact(_.map(this.cells, function(cell) { if (cell.isEntryPoint) return cell;}));
     };
     /**
      * Resets the entry point collection, leaving only one entry point at co-ordinate (0. 0)
@@ -298,14 +283,11 @@ function World() {
     };
 
 // Exit point functions
-    /**
-     *
-     * @param x
-     * @param y
-     */
+
     this.isExitPoint = function(x, y) {
         return this.getCell(x, y).isExitPoint;
-    };
+    }
+
     /**
      *
      * @param x
@@ -333,12 +315,7 @@ function World() {
         this.getCell(x, y).isExitPoint = false;
     };
     this.getExitPoints = function() {
-        var exitPoints = [];
-        this.cells.forEach(function(cell) {
-            if (cell.isExitPoint)
-                exitPoints.push(cell);
-        });
-        return exitPoints;
+        return _.compact(_.map(this.cells, function(cell) { if (cell.isExitPoint) return cell;}));
     };
 
     /**
@@ -409,7 +386,6 @@ function World() {
      * @param number
      */
     this.generateAgents = function(culture, number) {
-//    var agents = this.currentAgents;
         var agents = [],
             world = this;
         if (this.randomiseAgents) {
@@ -424,20 +400,9 @@ function World() {
                     if (cell.agents == 0) {
                         var positions = this.getMooreNeighbourhood(cell.x, cell.y, false);
                         var counter = 0;
-
-//                    agents.forEach(function(agent) {
-//                        positions.forEach(function(position) {
-//                            if (agent.x == position.x && agent.y == position.y)
-//                                counter ++;
-//                        })
-//                    });
-//                    var canPlaceAgent = (counter < 4);
-                        var canPlaceAgent = true;
-                        if (canPlaceAgent) {
-                            var agent = world.generateAgentAtPoint(culture, cell.x, cell.y);
-                            agents.push(agent);
-                            positionFound = true;
-                        }
+                        var agent = world.generateAgentAtPoint(culture, cell.x, cell.y);
+                        agents.push(agent);
+                        positionFound = true;
                     }
                 }
             }
@@ -449,7 +414,6 @@ function World() {
                 var tile = this.pathway[i];
                 var agent = this.generateAgentAtPoint(culture, tile[0], tile[1]);
                 agents.push(agent);
-//            agents.push(new SimpleAgent(culture, tile[0], tile[1]));
             }
         }
         else {
@@ -464,7 +428,6 @@ function World() {
                 }
             }
         }
-
         this.setCurrentAgents(agents);
         return agents;
     };
@@ -552,12 +515,9 @@ function World() {
     /** RESOURCE FUNCTIONS ********************/
     /******************************************/
 
-    /**
-     *
-     */
     this.getResources = function() { return this.resources; };
+
     /**
-     *
      * @param resources
      */
     this.resetResources = function() {
@@ -567,7 +527,6 @@ function World() {
         this.resources = [];
         this.worldResources = this.worldResources || [];
         this.removeAllResourcesFromCells();
-
         for (var i = 0; i < this.worldResources.length; i++) {
             this.resources.push(this.worldResources[i]);
             this.addResourceToCell(this.worldResources[i]);
@@ -584,6 +543,9 @@ function World() {
         this.resourceCategoryCounts = this.resetResourceCategoryCounts();
     };
 
+    this.isPositionOccupiedByResource = function(x, y) {
+        return this.getCell(x, y).resources.length > 0;
+    }
 
     /**
      *
@@ -655,9 +617,6 @@ function World() {
         }
     };
 
-    /**
-     *
-     */
     this.resetResourceCategoryCounts = function() {
         if (_.isUndefined(ModuleManager.currentModule.resourceSet))
             return;
@@ -685,6 +644,7 @@ function World() {
     this.decrementResourceCategoryCount = function(resource) {
         this.resourceCategoryCounts[resource.category.code] -= 1;
     };
+
     /**
      * Gets the recource category count collection
      */
@@ -719,17 +679,6 @@ function World() {
         return -1;
     };
 
-    /**
-     * Find the current resource index
-     */
-    this.isPositionOccupiedByResource = function (x, y) {
-        for (var i = 0; i < this.resources.length; i++) {
-            var resource = this.resources[i];
-            if (resource.x == x && resource.y == y)
-                return true;
-        }
-        return false;
-    };
 
     /**
      * Find the current resource at a position
@@ -1007,39 +956,6 @@ function World() {
         return surroundingPositions;
     };
 
-    /**
-     */
-    this.getNeighbouringResources = function(x, y) {
-        var surroundingPositions = this.getMooreNeighbourhood(x, y, true);
-        var resources = [];
-        for (var i = 0, l = surroundingPositions.length; i < l; i++) {
-            var position = surroundingPositions[i];
-            var cellResources = this.getResourcesAtCell(position.x, position.y);
-            if (cellResources) {
-                cellResources.forEach(function(resource){
-                    resources.push(resource);
-                })
-            }
-        }
-        return resources;
-    };
-
-
-    this.getNeighbouringAgents = function(x, y) {
-        var surroundingPositions = this.getMooreNeighbourhood(x, y, true);
-        var agents = [];
-        for (var i = 0, l = surroundingPositions.length; i < l; i++) {
-            var position = surroundingPositions[i];
-            var cellAgents = this.getAgentsAtCell(position.x, position.y);
-            if (cellAgents) {
-                cellAgents.forEach(function(agent){
-                    agents.push(agent);
-                })
-            }
-        }
-        return agents;
-    };
-
 
     this.getCellsAtDistance = function(x, y, distance, strategy, includeSelf) {
         var validCells = []
@@ -1102,8 +1018,8 @@ function World() {
     this.getAgentsAtDistance = function(x, y, distance, strategy, includeSelf) {
         var cells = this.getCellsAtDistance(x, y, distance, strategy, includeSelf);
         // Map, compact and flatten the agent collection
-        return _.flatten(
-            _.compact(
+        return _.compact(
+            _.flatten(
                 _.map(cells, function(cell) { return cell.agents; })
             )
         );
@@ -1112,11 +1028,20 @@ function World() {
     this.getResourcesAtDistance = function(x, y, distance, strategy, includeSelf) {
         var cells = this.getCellsAtDistance(x, y, distance, strategy, includeSelf);
         // Map, compact and flatten the agent collection
-        return _.flatten(
-            _.compact(
+        return _.compact(
+            _.flatten(
                 _.map(cells, function(cell) { return cell.resources; })
             )
         );
+    };
+
+    this.getNeighbouringResources = function(x, y) {
+        return this.getResourcesAtDistance(x, y, 1, Distance.CHEBYSHEV_DISTANCE, true);
+    };
+
+
+    this.getNeighbouringAgents = function(x, y) {
+        return this.getAgentsAtDistance(x, y, 1, Distance.CHEBYSHEV_DISTANCE, true);
     };
 
 

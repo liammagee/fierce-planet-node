@@ -153,8 +153,8 @@ describe("world-related classes", function() {
 
     describe("obtaining agents from a world", function() {
         it("should have the right number of agents", function() {
-            expect(world.currentAgents.length).toEqual(50);
-            expect(world.getCurrentAgents().length).toEqual(50);
+            expect(world.currentAgents.length).toEqual(10);
+            expect(world.getCurrentAgents().length).toEqual(10);
         });
         describe("returning a subset of current agents from a world", function() {
             var agent;
@@ -166,13 +166,13 @@ describe("world-related classes", function() {
             });
 
             it("should have the right number of agents when a function is provided", function() {
-                expect(world.currentAgents.length).toEqual(51);
+                expect(world.currentAgents.length).toEqual(11);
                 expect(world.getCurrentAgents().length).toEqual(1);
             });
 
             it("should have the right number of agents when no function is provided", function() {
                 world.currentAgentsFunction = undefined;
-                expect(world.getCurrentAgents().length).toEqual(51);
+                expect(world.getCurrentAgents().length).toEqual(11);
             });
         });
     });

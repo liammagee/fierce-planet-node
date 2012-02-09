@@ -89,16 +89,14 @@ FiercePlanet.Orientation = FiercePlanet.Orientation || {};
             canvases.css({width: this.worldWidth, height: this.worldHeight});
             canvases.width(this.worldWidth);
             canvases.height(this.worldHeight);
-            $('#wrapper').css({width: 490 + this.worldWidth});
-			$('#global-info-panel').css({left: this.worldWidth - 90});
-			$('#notifications').css({top: 117 + this.worldHeight, width: this.worldWidth});
-            $('#world-editor').css({top: 190 + this.worldHeight, width: this.worldWidth});
+//            $('#actual_map').css({width: (this.worldWidth * 1), height: (this.worldHeight * 1) });
             $('#actual_map').css({width: (this.worldWidth * 2), height: (this.worldHeight * 2), 'margin-top': -this.worldHeight, 'margin-left': -this.worldWidth });
-            //$('#controls').css({left: 385 - this.worldWidth});
-            //$('#world-container').css({left: 480 - this.worldWidth});
-			//$('#notifications').css({left: 480 - this.worldWidth, top: 117 + this.worldHeight, width: this.worldWidth});
-            //$('#world-editor').css({left: 480 - this.worldWidth, top: 190 + this.worldHeight, width: this.worldWidth});
-    //        $('#graph-area').css({left: 480 - this.worldWidth, top: 190 + this.worldHeight, width: this.worldWidth});
+            if (! Universe.settings.mobile) {
+                $('#wrapper').css({width: 490 + this.worldWidth});
+                $('#global-info-panel').css({left: this.worldWidth - 90});
+                $('#notifications').css({top: 117 + this.worldHeight, width: this.worldWidth});
+                $('#world-editor').css({top: 190 + this.worldHeight, width: this.worldWidth});
+            }
         }
         catch (e) {}
     };
@@ -135,7 +133,7 @@ FiercePlanet.Orientation = FiercePlanet.Orientation || {};
         */
     };
 
-    this.reset();
+//    this.reset();
 
 
 

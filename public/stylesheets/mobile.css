@@ -1,5 +1,28 @@
+html, body {height: 100%;}
+
+#wrapper {min-height: 100%;}
+
+#content-pane {overflow:auto;
+    padding-bottom: 80px;}  /* must be same height as the footer */
+
+#footer {position: relative;
+    margin-top: -80px; /* negative value of footer height */
+    height: 80px;
+    clear:both;
+    background: #1f62c1;
+    z-index: 1000;
+}
+
+/*Opera Fix*/
+body:before {
+    content:"";
+    height:100%;
+    float:left;
+    width:0;
+    margin-top:-32767px;/
+}
+
 html {
-    background: #000 url(../layout/stars.jpg);
 }
 
 body {
@@ -13,27 +36,22 @@ body {
 	display:none;
 }
 #wrapper {
-/*   background: url(../layout/.jpg);*/
-    background: url(../layout/Slice-1.jpg) top left no-repeat, url(../layout/Slice-2.jpg) top right no-repeat;
-     		width: 1210px;
+    /*background: url(../layout/Slice-1.jpg) top left no-repeat, url(../layout/Slice-2.jpg) top right no-repeat; */
+    /*width: 1210px;*/
 }
 #content-pane {
-	position:relative;
-	margin:0;
-    padding:0;
-	width:665px;
-	height:810px;
-	left:400px;
-    text-align: left;
 }
 #main-panel {
 }
 #global-info-panel {
-	position:absolute;
-	padding-bottom: 20px;
-    left:630px;
-    width:170px;
-    z-index: 10;
+	padding-bottom: 0px;
+    top: 0px;
+    left:0px;
+    /*width:170px;*/
+    z-index: 1000;
+    background: #1f62c1;
+    height: 80px
+
 }
 #user-info {
 	clear:both;
@@ -56,14 +74,15 @@ body {
 
 /* map */
 #gameworld  {
+    top: 0px;
 	clear:both;
 	position:relative;
-    z-index: 1;
+    z-index: 2;
 }
 #world {
 	position:absolute;
-	left:-120px;
-	top:110px;
+	left:0px;
+	top:0px;
 	float: left;
 	padding:7px;
 	border-radius:4px;
@@ -74,7 +93,7 @@ body {
 }
 
 #imageCanvas        { z-index: 1 }
-#map_canvas         { z-index: 2 }
+#map_canvas         { z-index: 2; position: absolute; overflow:hidden; }
 #baseCanvas         { z-index: 3 }
 #guideCanvas        { z-index: 4 }
 #agentCanvas        { z-index: 5 }
@@ -166,7 +185,7 @@ body {
 /*controls*/
 #controls {
 	position:absolute;
-	left:-215px;
+	right:0px;
 	top:225px;
 	width:61px;
 	padding:50px 10px 0;
@@ -180,6 +199,7 @@ body {
 }
 #swatch {
 	position:absolute;
+    right:0px;
 	top: 292px;
     width:165px;
 	font-size:10px;
@@ -558,79 +578,6 @@ li.over {
   overflow: hidden;
 }
 
-/* not very important info */
-.notice td, .join td, .part td, .message .date { color: #555; }
-.error td { color: #933; }
-.personal .nick, .notice .nick { color: #cd5; }
-
-.message {
-  margin: 0.1em 0;
-}
-
-.message td {
-  vertical-align: top;
-}
-
-.nick {
-  font-weight: bold;
-  padding: 0 1em 0 0.5em;
-}
-
-.nick a {
-  color: inherit;
-}
-
-#toolbar ul {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-#toolbar li {
-  display: block;
-  float: left;
-  margin: 0 2em 0 0;
-}
-
-#usersLink {
-  color: inherit;
-}
-
-
-
-#alt_gameworld  {
-    /*display: none;*/
-	clear:both;
-	position:relative;
-    z-index: 1000;
-}
-#alt_world {
-	/*top:610px;*/
-    position:absolute;
-    left:0px;
-    /*top:110px;*/
-    float: left;
-    padding:7px;
-    border-radius:4px;
-    background:#1F62C1;
-    display:block;
-    width:480px; height:400px;
-}
-#chat-area {
-    color: #eee; background: #22252a;
-    /*top: 565px; */
-    /*position: absolute;*/
-    left: 0px;
-    font-size: 14pt;
-    line-height: 150%;
-}
-#chat {
-    /*top: 510px; height: 300px; */
-    /*width: 665px; */
-    overflow: auto;
-}
-#chat p { padding: 8px; margin: 0; }
-#chat p:nth-child(odd) { background: #22252a; }
 #form { width: 600px; background: #22252a; padding: 5px 10px; display: none; }
 #form input[type=text] { width: 600px; padding: 5px; background: #fff; border: 1px solid #fff; }
 #form input[type=submit] { cursor: pointer; background: #999; border: none; padding: 6px 8px; -moz-border-radius: 8px; -webkit-border-radius: 8px; margin-left: 5px; text-shadow: 0 1px 0 #fff; }
@@ -660,6 +607,7 @@ li.over {
 	background: #1F62C1;
     border-radius:4px;
     opacity: 0.85;
+    display:none;
 }
 
 .jqconsole {
@@ -753,28 +701,3 @@ padding: 15px;
     width: 100%;
     z-index: 1100;
 }
-
-/*
-www.codecademy.com
-#console{
-    width:100%;min-height:1px;clear:both
-}
-#console #console_overlay{
-    display:none;position:absolute;z-index:100;height:100%;width:100%;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.6);text-align:center
-}
-#console #console_overlay h2{margin:50px 0 20px}
-#console #console_overlay h2,#console #console_overlay p{color:white;text-shadow:none}
-#console .jqconsole{background-color:#EEE;font-family:monospace;font-weight:600;border:2px solid #CCC;line-height:1.5em;overflow-y:auto;position:relative;margin-top:2px}
-#console .jqconsole p{margin:0;padding:0}
-#console .jqconsole .output{color:green;display:block;margin-bottom:10px}
-#console .jqconsole .log{display:block;padding:5px 10px;margin:0 0 10px;position:relative}
-#console .jqconsole-cursor{background-color:#999}
-#console .jqconsole-blurred .jqconsole-cursor{background-color:#666}
-#console .jqconsole-input{color:#dd0}
-#console .jqconsole-old-input{color:#bb0;font-weight:normal}
-#console .brace{color:lime}
-#console .paran{color:lime}
-#console .bracket{color:lime}
-#console .error{color:crimson}
-#console .log{background:beige;border-radius:5px;-moz-border-radius:5px;-webkit-border-radius:5px}
-*/
