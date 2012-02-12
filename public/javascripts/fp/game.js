@@ -233,7 +233,8 @@ FiercePlanet.Game = FiercePlanet.Game || {};
                 }
             }
 
-            FiercePlanet.Effects.setupView();
+            if (FiercePlanet.Effects)
+                FiercePlanet.Effects.setupView();
         };
         Lifecycle.postStartWorldCallback = function () {
 //            FiercePlanet.Drawing.drawGame();

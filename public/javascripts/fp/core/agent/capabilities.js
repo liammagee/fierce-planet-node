@@ -163,6 +163,19 @@ Capabilities.PreyOnOtherAgentsCapability = new Capability();
 }).apply(Capabilities.PreyOnOtherAgentsCapability);
 
 
+Capabilities.MoveRandomlyCapability = new Capability();
+(function() {
+    this.name = 'MoveRandomlyCapability';
+    this.cost = 0;
+    this.exercise = function(agent, world) {
+        var positions = world.getMooreNeighbourhood(agent.x, agent.y, false),
+            index = Math.floor(Math.random() * positions.length),
+            position = positions[index];
+        agent.moveTo(position.x, position.y);
+    };
+}).apply(Capabilities.MoveRandomlyCapability);
+
+
 //Capabilities.MoveUtilities = {};
 //(function() {
 //    /**
@@ -239,97 +252,7 @@ Capabilities.PreyOnOtherAgentsCapability = new Capability();
 //
 //
 //}).apply(Capabilities.MoveUpwardsCapability);
-//
-//
-//Capabilities.MoveRandomlyCapability = new Capability();
-//(function() {
-//    this.name = 'MoveRandomlyCapability';
-//    this.cost = 0;
-//    this.exercise = function(agent, world) {
-//        // TODO: Make these parameters of the world
-//
-//        var options = options || {};
-//        var withNoRepeat = options ? options["withNoRepeat"] : false;
-//        var withNoCollision = options ? options["withNoCollision"] : false;
-//        var withOffscreenCycling = options ? options["withOffscreenCycling"] : false;
-//
-//        var position = this.findPositionRandomly(agent, world, withNoRepeat, withNoCollision, withOffscreenCycling)
-//
-////        console.log(agent.x + ':' +agent.y + ':' +position[0] + ':' +position[1])
-//        // Set the position and add the move to the agent's memory
-//        agent.moveTo(position[0], position[1]);
-//    };
-//
-//
-//
-//    /**
-//     * @param world
-//     * @param withNoRepeat
-//     * @param withNoCollision
-//     * @param withOffscreenCycling
-//     */
-//    this.findPositionRandomly = function(agent, world, withNoRepeat, withNoCollision, withOffscreenCycling) {
-//        var x = agent.x;
-//        var y = agent.y;
-//        var newX = x;
-//        var newY = y;
-//        var lastX = agent.lastMemory.x;
-//        var lastY = agent.lastMemory.y;
-//        var candidateCells = [];
-//        var directions = Capabilities.MoveUtilities.randomDirectionOrder();
-//        var waitOnCurrentCell = false;
-//        for (var i = 0; i < directions.length; i++) {
-//            newX = x;
-//            newY = y;
-//            var dir = directions[i];
-//
-//            var offScreen1 = 0;
-//            var offScreenWidth = world.cellsAcross - 1;
-//            var offScreenHeight = world.cellsDown - 1;
-//            var offset = 1;
-//            var toContinue = false;
-//            switch (dir) {
-//                case 0:
-//                    (x == offScreen1 ? (withOffscreenCycling ? newX = offScreenWidth : toContinue = true) : newX = newX - offset);
-//                    break;
-//                case 1:
-//                    (x == offScreenWidth ? (withOffscreenCycling ? newX = offScreen1 : toContinue = true) : newX = newX + offset);
-//                    break;
-//                case 2:
-//                    (y == offScreen1 ? (withOffscreenCycling ? newY = offScreenHeight : toContinue = true) : newY = newY - offset);
-//                    break;
-//                case 3:
-//                    (y == offScreenHeight ? (withOffscreenCycling ? newY = offScreen1 : toContinue = true) : newY = newY + offset);
-//                    break;
-//            }
-//            // If we can't repeat and the candidate cell is the last visited cell, continue
-//            if (world.isExitPoint(newX, newY))
-//                return [newX, newY];
-//            // If we can't repeat and the candidate cell is the last visited cell, continue
-//            if ((withNoRepeat && lastX == newX && lastY == newY) || toContinue) {
-//                continue;
-//            }
-//            // If the cell is occupied by another agent, don't allow this agent to move there
-//            if (Universe.settings.agentsOwnTilesExclusively && world.isPositionOccupiedByAgent(newX, newY)) {
-//                // Wait till the other agent has moved - don't backtrack if no other cells are available
-//                waitOnCurrentCell = true;
-//                continue;
-//            }
-//            // If the cell is occupied by a resource, don't allow the agent to move there
-//            if ((Universe.settings.resourcesOwnTilesExclusively || world.resourcesOwnTilesExclusively) && world.isPositionOccupiedByResource(newX, newY)) {
-//                continue;
-//            }
-//            // If the candidate cell is valid (part of the path), add it
-//            if (world.getCell(newX, newY) == undefined) {
-//                return ([newX, newY]);
-//            }
-//        }
-//        return [x, y];
-//    }
-//
-//
-//
-//}).apply(Capabilities.MoveRandomlyCapability);
+
 //
 //
 //Capabilities.MoveTowardsNearestExitCapability = new Capability();

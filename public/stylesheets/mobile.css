@@ -2,8 +2,10 @@ html, body {height: 100%;}
 
 #wrapper {min-height: 100%;}
 
-#content-pane {overflow:auto;
-    padding-bottom: 80px;}  /* must be same height as the footer */
+#content-pane {
+    overflow:auto;
+    padding-bottom: 80px;
+}  /* must be same height as the footer */
 
 #footer {position: relative;
     margin-top: -80px; /* negative value of footer height */

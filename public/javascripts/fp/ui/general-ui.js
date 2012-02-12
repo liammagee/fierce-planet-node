@@ -222,6 +222,8 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
         if (world.sourceCode != undefined) {
             $('#world-parameters').html(world.sourceCode);
         }
+        if (world.setupParameters)
+            world.setupParameters();
         var modal = ! ModuleManager.currentModule.persistSetupScreen && ! Lifecycle.currentWorld.persistSetupScreen;
         FiercePlanet.Dialogs.newWorldDialog.dialog('option', 'modal', modal);
         FiercePlanet.Dialogs.newWorldDialog.dialog('open');

@@ -136,6 +136,14 @@ describe("world-related classes", function() {
                 expect(testAgent).toBeUndefined();
             });
 
+
+            it("make an agent die", function() {
+                agent.die(world);
+                var testAgent = world.getAgentsAtCell(10, 10)[0];
+                expect(world.currentAgents.length).toEqual(0);
+                expect(testAgent).toBeUndefined();
+            });
+
             it("should have an agent in the surrounding positions", function() {
                 var positions = world.getVonNeumannNeighbourhood(11, 10);
                 var allAgents = [];

@@ -1,0 +1,55 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title></title>
+    <style>
+        body {
+            font-family: 'Myriad-Pro', 'myriad', helvetica, arial, sans-serif;
+            text-align: center;
+        }
+        input { font-size: 14px; display:inline;}
+
+        input[type=range] {
+            /*height: 2em;*/
+        }
+        /*input[type=range]:before { content: attr(min); padding-right: 5px; margin-left: -1em; margin: 1em;  }*/
+        /*input[type=range]:after { content: attr(max); padding-left: 5px; margin-right: 30em;}*/
+
+        output {
+            display: block;
+            font-size: 5.5em;
+            font-weight: bold;
+        }
+        input[type=range] {
+        }
+        input[type=range]:before {
+            content: attr(min);
+            display: inline;
+            position: relative;
+            float: left;
+            left: -1em;
+        }
+        input[type=range]:after {
+            content: attr(max);
+            display: block;
+            position: relative;
+            float: right;
+            top: -2em;
+            right: -3em;
+        }
+        /*input[type=range]:before { content: '<label for="NumAgents">' + attr(min) + '</label>'; }*/
+
+    </style>
+</head>
+<body>
+        <p>Number of agents</p>
+        <div>
+            <div>
+                <input type="range" min="0" max="3000" class="world-parameters" id="NumAgents" name="NumAgents" value="2000">
+            </div>
+        </div>
+        <p>% similar wanted</p>
+        <p><input type="text" class="world-parameters" name="PercentageSimilarWanted" value="0.30"> </p>
+</body>
+</html>

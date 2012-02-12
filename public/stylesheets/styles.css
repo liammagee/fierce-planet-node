@@ -805,3 +805,9 @@ www.codecademy.com
 #console .error{color:crimson}
 #console .log{background:beige;border-radius:5px;-moz-border-radius:5px;-webkit-border-radius:5px}
 */
+
+/*div > input[type=range] { display: inline;  }*/
+/*input[type=range] { width: 10em; padding: -3em; }*/
+/*input[type=range]:before { content: attr(min);  }*/
+/*input[type=range]:before { display: inline;  content: attr(min); padding-right: 5px; }*/
+/*input[type=range]:after { content: attr(max); padding-left: 5px;}*/

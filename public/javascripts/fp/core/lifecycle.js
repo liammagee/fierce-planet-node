@@ -102,8 +102,9 @@ var Lifecycle = Lifecycle || {};
                 if (Lifecycle.currentWorld.isExitPoint(agent.x, agent.y)) {
                     if (Lifecycle.processSavedCallback)
                         Lifecycle.processSavedCallback();
-                    Lifecycle.currentWorld.addSavedAgent(agent, Lifecycle.worldCounter)
-                    nullifiedAgents.push(i);
+                    Lifecycle.currentWorld.addSavedAgent(agent, Lifecycle.worldCounter);
+                    agent.die(Lifecycle.currentWorld);
+//                    nullifiedAgents.push(i);
                 }
 
                 // Do for all agents
@@ -138,6 +139,9 @@ var Lifecycle = Lifecycle || {};
                 if (agent.health <= 0 && !Universe.settings.godMode) {
                     nullifiedAgents.push(i);
                     Lifecycle.currentWorld.addExpiredAgent(agent, Lifecycle.worldCounter);
+                    agent.die(Lifecycle.currentWorld);
+//                    nullifiedAgents.push(i);
+
                     // TODO: needs to be moved
                     if (agent.culture == DefaultCultures.CITIZEN_AGENT_TYPE)
 						if (typeof(FiercePlanet) !== "undefined")

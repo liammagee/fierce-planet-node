@@ -487,6 +487,12 @@ function Agent(culture, x, y) {
         }
     };
 
+    this.getCell = function() {
+        return Lifecycle.currentWorld.getCell(this.x, this.y);
+    };
+
+
+
     /**
      * Calls the agent type initialise function
      */
@@ -500,7 +506,21 @@ function Agent(culture, x, y) {
         if (this.culture.initFunction)
             this.culture.initFunction(this, world);
     };
-
+    /**
+     * Calls the agent type initialise function
+     */
+    this.destroy = function(world) {
+        var thisIndex = -1, agent = this;
+        world.currentAgents.forEach(function(a, index) {
+            if (a === agent)
+                thisIndex = index;
+        });
+        if (thisIndex > -1) {
+            world.currentAgents.splice(thisIndex, 1);
+            world.removeAgentFromCell(agent);
+        }
+    };
+    this.die = this.destroy;
 
 
     this.culture = culture;
@@ -604,6 +624,7 @@ function SimpleAgent(culture, x, y, color, speed, health, wanderX, wanderY, last
         if (this.culture.initFunction)
             this.culture.initFunction(this, world);
     };
+
 
     /**
      * Updates the agent
