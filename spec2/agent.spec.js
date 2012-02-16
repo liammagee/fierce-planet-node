@@ -34,6 +34,43 @@ describe("agent-related classes", function() {
           expect(agent.y).toEqual(0);
         });
 
+        describe("an agent's lifecycle", function() {
+            beforeEach(function(){
+                world.currentAgents.push(agent);
+                world.addAgentToCell(agent);
+            });
+            it("should include the new agent", function() {
+                expect(world.currentAgents.length).toEqual(11);
+                expect(world.getAgentsAtCell(0, 0)).toContain(agent);
+            });
+            describe("an agent dying", function() {
+                beforeEach(function(){
+                    agent.die(world);
+                });
+                it("should be removed from the world agent collection", function() {
+                    expect(world.currentAgents.length).toEqual(10);
+                });
+                it("should be removed from the world agent collection", function() {
+                    expect(world.getAgentsAtCell(0, 0)).toNotContain(agent);
+                });
+            });
+            describe("an agent spawning", function() {
+                var child;
+                beforeEach(function(){
+                    child = agent.spawn();
+                });
+                it("should be removed from the world agent collection", function() {
+                    expect(world.currentAgents.length).toEqual(12);
+                });
+                it("should be removed from the world agent collection", function() {
+                    expect(world.getAgentsAtCell(0, 0)).toNotContain(child);
+                });
+                it("should have the same attributes as the parent", function() {
+                    expect(child.parents).toContain(agent);
+                });
+            });
+        });
+
         describe("an agent's beliefs", function() {
             it("should have beliefs", function() {
                 expect(agent.culture.beliefs.length).toEqual(3);

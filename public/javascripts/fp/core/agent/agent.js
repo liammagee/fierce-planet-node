@@ -506,8 +506,9 @@ function Agent(culture, x, y) {
         if (this.culture.initFunction)
             this.culture.initFunction(this, world);
     };
+
     /**
-     * Calls the agent type initialise function
+     * Destroys the agent, removing it from world and cell references
      */
     this.destroy = function(world) {
         var thisIndex = -1, agent = this;
@@ -521,6 +522,20 @@ function Agent(culture, x, y) {
         }
     };
     this.die = this.destroy;
+
+    /**
+     * Creates a new agent, with this (and an optional other) as the parent
+     */
+    this.spawn = function(otherParent) {
+        var childAgent = _.clone(this);
+        childAgent.delay = parseInt(Math.random() * childAgent.culture.initialSpeed * 5);
+        childAgent.bornAt = Lifecycle.worldCounter;
+        childAgent.parents = [this];
+        if (otherParent)
+            childAgent.parents.push(otherParent)
+        Lifecycle.currentWorld.currentAgents.push(childAgent);
+        Lifecycle.currentWorld.addAgentToCell(childAgent);
+    };
 
 
     this.culture = culture;

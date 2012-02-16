@@ -12,7 +12,7 @@ var NetLogoModule = NetLogoModule || {};
 
 (function () {
 
-    this.initNetLogoWorlds = function () {
+    this.initWVWorlds = function () {
         this.altruism  = new World();
         _.extend(this.altruism,
             {
@@ -220,8 +220,8 @@ var NetLogoModule = NetLogoModule || {};
             })
 
 
-        this.cooperation  = new World();
-        _.extend(this.cooperation,
+        this.wasteInSurabaya  = new World();
+        _.extend(this.wasteInSurabaya,
             {
                 id: 2,
                 name: "Cooperation",
@@ -301,8 +301,6 @@ var NetLogoModule = NetLogoModule || {};
                             agent.breed = 'greedy';
                             agent.color = '00f';
                         }
-//                        console.log(r, altruisticProbability, selfishProbability, agent.state)
-
                     };
                     /*
                     */
@@ -330,14 +328,13 @@ var NetLogoModule = NetLogoModule || {};
                         , lowHighThreshold = parseInt(FiercePlanet.Parameters.LowHighThreshold)
                         , moveProbability = parseFloat(FiercePlanet.Parameters.MoveProbability)
 
-                    var capability = Capabilities.MoveRandomlyCapability, nullifiedAgents = [];
+                    var moveCapability = Capabilities.MoveRandomlyCapability, nullifiedAgents = [];
                     var died = 0;
                     // Move
                     world.currentAgents.forEach(function(agent) {
                         var r = Math.random();
-                        if (r < moveProbability) {
-                            capability.exercise(agent, world);
-                        }
+                        if (r < moveProbability)
+                            moveCapability.exercise(agent, world);
                         agent.energy -= metabolism;
                         if (agent.energy < 0) {
                             agent.die(world);
@@ -360,6 +357,8 @@ var NetLogoModule = NetLogoModule || {};
                     world.currentAgents.forEach(function(agent) {
                         if (agent.energy > reproductionThreshold) {
                             agent.energy -= reproductionCost;
+                            var childAgent = agent.spawn();
+
                             var childAgent = new Agent(agent.culture, agent.x, agent.y);
                             childAgent.delay = parseInt(Math.random() * childAgent.culture.initialSpeed * 5);
                             childAgent.bornAt = (Lifecycle.worldCounter);
@@ -1172,7 +1171,7 @@ var NetLogoModule = NetLogoModule || {};
         this.position = 1;
         this.worlds = [
             this.altruism,
-            this.cooperation,
+            this.wasteInSurabaya,
             this.segregation,
             this.rumorMill,
             this.rebellion,
@@ -1182,7 +1181,7 @@ var NetLogoModule = NetLogoModule || {};
         ];
     }
 
-    this.initNetLogoWorlds();
+    this.initWVWorlds();
 }).apply(NetLogoWorlds);
 
 

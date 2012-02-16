@@ -90,6 +90,7 @@ $LAB
     , 'fp/modules/gol/game-of-life-module.js', 'fp/modules/ca/ca-module.js'
     , 'fp/modules/cities/cities-module.js'
     , 'fp/modules/netlogo/netlogo-module.js'
+    , 'fp/modules/wv/wv-module.js'
     ])
     .wait(function() {
         var m = urlParams.module;
@@ -116,6 +117,10 @@ $LAB
             else if (m == 'rpg') {
 //                $('#moduleEditor').show();
                 GameOfLifeModule.init();
+            }
+            else if (m == 'wv') {
+//                $('#moduleEditor').show();
+                WorldVisionModule.init();
             }
             else if (m == 'default' || m == 'fp') {
                 DefaultModule.init();
