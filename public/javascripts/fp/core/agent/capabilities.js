@@ -176,6 +176,22 @@ Capabilities.MoveRandomlyCapability = new Capability();
 }).apply(Capabilities.MoveRandomlyCapability);
 
 
+Capabilities.MoveRandomlyToFreeCellCapability = new Capability();
+(function() {
+    this.name = 'MoveRandomlyToFreeCellCapability';
+    this.cost = 0;
+    this.exercise = function(agent, world) {
+        var positions = world.getMooreNeighbourhood(agent.x, agent.y, false),
+            randomisePositions = _.shuffle(positions);
+        for (var i = 0; i < randomisePositions.length; i++) {
+            var position = randomisePositions[i];
+            if (world.getAgentsAtCell(position.x, position.y).length == 0)
+                agent.moveTo(position.x, position.y);
+        }
+    };
+}).apply(Capabilities.MoveRandomlyToFreeCellCapability);
+
+
 //Capabilities.MoveUtilities = {};
 //(function() {
 //    /**

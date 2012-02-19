@@ -145,6 +145,20 @@ FiercePlanet.StickFigure = function(x, _y, _figureWidth, _figureHeight) {
         this.generateCoordinates();
     };
 
+    // Stick figure actions
+    this.explode = function(frame, direction) {
+        fShoulderAngle = Math.PI * (14 / 12);
+        fElbowAngle = Math.PI * (14 / 12);
+        bShoulderAngle = Math.PI * (22 / 12);
+        bElbowAngle = Math.PI * (22 / 12);
+
+        fHipAngle = Math.PI * (10 / 12);
+        fKneeAngle = Math.PI * (10 / 12);
+        bHipAngle = Math.PI * (2 / 12);
+        bKneeAngle = Math.PI * (2 / 12);
+        this.generateCoordinates();
+    };
+
     this.flipHorizontalDirection = function() {
         fShoulderAngle = (Math.PI / 2) + ((Math.PI / 2) - fShoulderAngle);
         fElbowAngle = (Math.PI / 2) + ((Math.PI / 2) - fElbowAngle);

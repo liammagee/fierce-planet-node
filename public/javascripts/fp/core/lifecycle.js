@@ -143,7 +143,8 @@ var Lifecycle = Lifecycle || {};
 //                    nullifiedAgents.push(i);
 
                     // TODO: needs to be moved
-                    if (agent.culture == DefaultCultures.CITIZEN_AGENT_TYPE)
+                    if (ModuleManager.currentModule.id = 'Default')
+//                    if (agent.culture == DefaultCultures.CITIZEN_AGENT_TYPE)
 						if (typeof(FiercePlanet) !== "undefined")
                         	FiercePlanet.Game.currentProfile.currentWorldExpired++;
                 }

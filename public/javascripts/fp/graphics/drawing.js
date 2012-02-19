@@ -1243,20 +1243,15 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
      * Draw agents on the agent canvas
      */
     this.drawExpiredAgent = function(agent, altCanvasName) {
-        var canvasName = altCanvasName || '#scrollingCanvas';
+        var canvasName = altCanvasName || '#agentCanvas';
         var canvas = $(canvasName)[0];
         var ctx = canvas.getContext('2d');
 
 
-        // Rotation logic here - TODO: Refactor out
-        var midTilePosX = (FiercePlanet.Orientation.worldWidth) / 2;
-        var midTilePosY = (FiercePlanet.Orientation.worldHeight) / 2;
-
         ctx.save();
-        ctx.translate(midTilePosX, midTilePosY);
+        ctx.translate(FiercePlanet.Orientation.halfWorldWidth, FiercePlanet.Orientation.halfWorldHeight);
         ctx.rotate(FiercePlanet.Orientation.rotationAngle);
 
-        // Get co-ordinates
         var wx = agent.wanderX;
         var wy = agent.wanderY;
         var __ret = this.getDrawingPosition(agent, Lifecycle.waveCounter);
@@ -1271,7 +1266,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
             x = newOrigin.x + wx + FiercePlanet.Orientation.cellWidth / 2;
             y = newOrigin.y + wy + FiercePlanet.Orientation.cellHeight / 4;
         }
-    
+
         // Rotation logic here - TODO: Refactor out
         x = x - (FiercePlanet.Orientation.worldWidth) / 2;
         y = y - (FiercePlanet.Orientation.worldHeight) / 2;

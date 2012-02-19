@@ -111,7 +111,34 @@ _.extend(DefaultCultures.Stickman, {
         ctx.fillStyle = "#" + newColor;
 //                ctx.fillStyle = "#000";
         ctx.fill();
+    }),
+
+    drawExpired: (function (ctx, agent, x, y, pieceWidth, pieceHeight, newColor, counter, direction) {
+        // Draw an explosion here
+        var explosionX = x;
+        var explosionY = y + pieceWidth / 2;
+
+        var radgrad = ctx.createRadialGradient(explosionX, explosionY, 0, explosionX, explosionY, pieceWidth / 2);
+        radgrad.addColorStop(0, 'rgba(255, 168, 81,1)');
+        radgrad.addColorStop(0.8, '#FFF354');
+        radgrad.addColorStop(1, 'rgba(255, 168, 81,0)');
+        ctx.fillStyle = radgrad;
+        ctx.fillRect(x - pieceWidth / 2, y, pieceWidth, pieceHeight);
+
+        var sf = new FiercePlanet.StickFigure(x, y, pieceWidth, pieceHeight);
+        sf.explode();
+        sf.drawFigure(ctx);
+        // Now draw the figure
+        ctx.lineWidth = 1.5;
+        ctx.strokeStyle = "#" + newColor;
+//                ctx.strokeStyle = "#000";
+        ctx.lineCap = "round";
+        ctx.stroke();
+        ctx.fillStyle = "#" + newColor;
+//                ctx.fillStyle = "#000";
+        ctx.fill();
     })
+
 });
 
 DefaultCultures.MovingStickman = _.clone(DefaultCultures.Stickman);
@@ -124,7 +151,7 @@ _.extend(DefaultCultures.MovingStickman, {
     , desires: [
         Desires.ExploreSpace
         , Desires.Flee
-        , Desires.ImproveHealth
+//        , Desires.ImproveHealth
     ]
     , capabilities: [
         Capabilities.ConsumeResourcesCapability

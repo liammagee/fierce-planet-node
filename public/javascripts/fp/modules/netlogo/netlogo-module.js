@@ -220,8 +220,8 @@ var NetLogoModule = NetLogoModule || {};
             })
 
 
-        this.wasteInSurabaya  = new World();
-        _.extend(this.wasteInSurabaya,
+        this.cooperation  = new World();
+        _.extend(this.cooperation,
             {
                 id: 2,
                 name: "Cooperation",
@@ -407,13 +407,13 @@ var NetLogoModule = NetLogoModule || {};
                 scrollingImageVisible: false,
                 initialResourceStore: 0,
                 playIndefinitely: true,
-                noWander: false,
+                noWander: true,
                 noSpeedChange: true,
                 mapOptions: ({mapTypeId: google.maps.MapTypeId.SATELLITE, center: new google.maps.LatLng(-33.434969, -70.655254), zoom: 18, tilt: 45}), // Santiago: -33.434969,-70.655254
                 parameters:
                     "<p>Number of agents</p>" +
                         "<div>" +
-                            "<input type='range' min='0' max='3000' class='world-parameters' id='NumAgents' name='NumAgents' value='2000'/>" +
+                            "0 <input type='range' min='0' max='3000' class='world-parameters' id='NumAgents' name='NumAgents' value='2000'/> 3000" +
                         "</div>" +
                         "<p>% similar wanted</p><p><input class='world-parameters' name='PercentageSimilarWanted' value='0.30'/> </p>" +
 
@@ -432,10 +432,9 @@ var NetLogoModule = NetLogoModule || {};
                     culture.initialSpeed = 1;
                     world.cells.forEach(function(cell) {
                         cell.terrain = new Terrain('#090', 0.5);
-                        cell.grass = maxGrassHeight;
                     })
                     culture.initFunction = function(agent, world) {
-                        agent.isHappy = true;
+                        agent.isHappy = false;
                         agent.similarNearby = 0;
                         agent.otherNearby = 0;
                         agent.totalNearby = 0;
@@ -447,7 +446,15 @@ var NetLogoModule = NetLogoModule || {};
                     this.randomiseAgents = true;
                     this.cultures = [culture];
                     this.waves = undefined;
-                    this.initialiseWaves(1);
+                    world.initialiseWaves(1);
+                    for (var i = 0; i < world.currentAgents.length; i++) {
+                        var agent = world.currentAgents[i];
+                        if (i % 2 == 0)
+                            agent.color = 'f00';
+                        else
+                            agent.color = '0f0';
+                    }
+
                     FiercePlanet.Drawing.drawPath();
                 },
                 tickFunction: function () {
@@ -456,69 +463,56 @@ var NetLogoModule = NetLogoModule || {};
 
                     var numAgents = parseInt(FiercePlanet.Parameters.NumAgents)
                         , percentageSimilarWanted = parseFloat(FiercePlanet.Parameters.PercentageSimilarWanted)
+                    var capability = Capabilities.MoveRandomlyToFreeCellCapability, nullifiedAgents = [];
 
-                    var capability = Capabilities.MoveRandomlyCapability, nullifiedAgents = [];
-                    var died = 0;
-                    // Move
+                    var allHappy = true;
+                    for (var i = 0; i < world.currentAgents.length; i++) {
+                        var agent = world.currentAgents[i];
+                        if (! agent.isHappy) {
+                            allHappy = false;
+                            break;
+                        }
+                    }
+
+                    if (allHappy) {
+                        Lifecycle._stopAgents();
+                    }
+
+                    // Move unhappy agents
                     world.currentAgents.forEach(function(agent) {
-                        var r = Math.random();
-                        if (r < moveProbability) {
+                        if (! agent.isHappy)
                             capability.exercise(agent, world);
-                        }
-                        agent.energy -= metabolism;
-                        if (agent.energy < 0) {
-                            agent.die(world);
-                            died++;
-                        }
                     });
-                    // Eat
+
+                    // Update agent variables
+                    var totalSelfColor = 0, totalTotalColors = 0;
                     world.currentAgents.forEach(function(agent) {
-                        var cell = world.getCell(agent.x, agent.y);
-                        if (agent.breed == 'cooperative' && cell.grass > lowHighThreshold) {
-                            cell.grass -= 1;
-                            agent.energy += grassEnergy;
-                        }
-                        else if (agent.breed == 'greedy' && cell.grass > 0) {
-                            cell.grass -= 1;
-                            agent.energy += grassEnergy;
-                        }
+                        var x = agent.x, y = agent.y;
+                        var surroundingAgents = world.getAgentsAtDistance(x, y, 1, Distance.CHEBYSHEV_DISTANCE, false);
+                        var selfColor = 0, otherColor = 0, totalColor = 0;
+                        surroundingAgents.forEach(function(otherAgent) {
+                            if (agent.color == otherAgent.color)
+                                selfColor++
+                            else
+                                otherColor++;
+                        });
+                        totalColor = selfColor + otherColor;
+                        agent.isHappy = (selfColor >= (percentageSimilarWanted * totalColor / 100));
+                        totalSelfColor += selfColor;
+                        totalTotalColors += totalColor;
                     });
-                    // Reproduce
-                    world.currentAgents.forEach(function(agent) {
-                        if (agent.energy > reproductionThreshold) {
-                            agent.energy -= reproductionCost;
-                            var childAgent = new Agent(agent.culture, agent.x, agent.y);
-                            childAgent.delay = parseInt(Math.random() * childAgent.culture.initialSpeed * 5);
-                            childAgent.bornAt = (Lifecycle.worldCounter);
-                            childAgent.parents = [agent];
-                            childAgent.breed = agent.breed;
-                            childAgent.color = agent.color;
-                            Lifecycle.currentWorld.currentAgents.push(childAgent);
-                            Lifecycle.currentWorld.addAgentToCell(childAgent);
-                        }
-                    });
-                    // Regenerate grass
-                    world.cells.forEach(function(cell) {
-                        var r = Math.random() * 100;
-                        if (cell.grass >= lowHighThreshold) {
-                            if (highGrowthChance >= r)
-                                cell.grass += 1;
-                        }
-                        else if (lowGrowthChance >= r)
-                            cell.grass += 1;
-                        if (cell.grass > maxGrassHeight)
-                            cell.grass = maxGrassHeight
-                        cell.terrain = new Terrain('#0' + (cell.grass >= 10 ? 'a' : cell.grass) + '0', 0.5);
-                    })
+
+
+                    // Update global variables
                     FiercePlanet.Drawing.clearCanvas('#baseCanvas');
                     FiercePlanet.Drawing.clearCanvas('#resourceCanvas');
                     FiercePlanet.Drawing.drawPath();
 
-                    var coops = _.map(this.currentAgents, function(agent) { return (agent.breed == 'cooperative' ? 1 : 0); }),
-                        totalCoops = _.reduce(coops, function(memo, num){ return memo + num; }, 0);
-                    var greedy = _.map(this.currentAgents, function(agent) { return (agent.breed == 'greedy' ? 1 : 0); }),
-                        totalGreedy = _.reduce(greedy, function(memo, num){ return memo + num; }, 0);
-                    console.log(totalCoops, totalGreedy, died, Lifecycle.waveCounter)
+                    var percentSimilar = totalSelfColor / totalTotalColors;
+                    var unhappy = _.map(this.currentAgents, function(agent) { return (! agent.isHappy ? 1 : 0); }),
+                        totalUnhappy = _.reduce(unhappy, function(memo, num){ return memo + num; }, 0);
+
+                    console.log(percentSimilar, totalUnhappy, Lifecycle.waveCounter)
                 }
             })
 
@@ -1171,7 +1165,7 @@ var NetLogoModule = NetLogoModule || {};
         this.position = 1;
         this.worlds = [
             this.altruism,
-            this.wasteInSurabaya,
+            this.cooperation,
             this.segregation,
             this.rumorMill,
             this.rebellion,

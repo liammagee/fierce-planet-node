@@ -1046,6 +1046,16 @@ function World() {
 
 
 
+    this.randomiseAgentCollection = function() {
+        return _.shuffle(this.currentAgents);
+    };
+
+    this.randomiseCellCollection = function() {
+        return _.shuffle(this.cells);
+    };
+
+
+
 
     // Sets the id, if passed in; otherwise default to 1001
     this.id = 1;

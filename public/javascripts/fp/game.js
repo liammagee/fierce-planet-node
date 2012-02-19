@@ -135,6 +135,7 @@ FiercePlanet.Game = FiercePlanet.Game || {};
             FiercePlanet.Drawing.drawExpired();
 
             // Check whether we have too many
+            FiercePlanet.Drawing.clearCanvas('#agentCanvas');
             for (var i = 0; i < Lifecycle.currentWorld.expiredAgents.length; i++) {
                 var deadAgent = Lifecycle.currentWorld.expiredAgents[i];
                 if (deadAgent.diedAt > Lifecycle.worldCounter - 20)
