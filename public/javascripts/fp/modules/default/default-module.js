@@ -18,14 +18,13 @@ var DefaultModule = DefaultModule || {};
 
         module.registerCampaign(Basic);
         module.registerCampaign(Additional);
+        module.currentCampaignID = 'Basic';
 //        module.registerResourceSet(CoS);
 //        FiercePlanet.Game.currentProfile.capabilities = ["farm", "water", "clinic", "legal"];
 
         var culture = DefaultCultures.MovingStickman;
         culture.healthCategories = module.resourceSet.categories;
         module.registerCulture(DefaultCultures.MovingStickman);
-
-        Universe.settings.scrollingImageVisible = localStorage.universeSettings.scrollingImageVisible = true;
     };
 }).apply(DefaultModule);
 
