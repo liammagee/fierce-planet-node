@@ -419,8 +419,7 @@ var NetLogoModule = NetLogoModule || {};
 
                         "",
                 conclusion: "Well done.",
-                setup: function() {
-                },
+                setup: function() {},
                 handleParameters: function () {
                     var world = this;
                     var numAgents = parseInt(FiercePlanet.Parameters.NumAgents)
@@ -898,18 +897,19 @@ var NetLogoModule = NetLogoModule || {};
                 name: "Voting",
                 isPresetWorld: true,
                 interval: 100,
-                cellsAcross: 50,
-                cellsDown: 50,
+                cellsAcross: 150,
+                cellsDown: 150,
                 dontClearCanvas: true,
                 scrollingImageVisible: false,
                 initialResourceStore: 0,
                 playIndefinitely: true,
-                noWander: false,
+                noWander: true,
                 noSpeedChange: true,
-                mapOptions: ({mapTypeId: google.maps.MapTypeId.SATELLITE, center: new google.maps.LatLng(-33.434969, -70.655254), zoom: 18, tilt: 45}), // Santiago: -33.434969,-70.655254
                 parameters:
-                    "<p>Number of agents</p><p><input class='world-parameters' name='NumAgents' value='2000'/> </p>" +
-                        "<p>% similar wanted</p><p><input class='world-parameters' name='PercentageSimilarWanted' value='0.30'/> </p>" +
+                    "<p>Number of agents</p>" +
+                        "<p><input type='checkbox' class='world-parameters' name='ChangeVoteIfTied'/> </p>" +
+                        "<p>% similar wanted</p>" +
+                        "<p><input type='checkbox' class='world-parameters' name='AwardCloseCallsToLoser'/> </p>" +
 
                         "",
                 conclusion: "Well done.",

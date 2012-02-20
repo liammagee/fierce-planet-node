@@ -39,11 +39,11 @@ app.configure('development', function() {
 
 app.configure('production', function() {
 //    fpProvider = new FPProvider('mongodb://heroku:password@staff.mongohq.com:10089/app708577?auto_reconnect=true', function(error, res) {
-	fpProvider = new FPProvider('app708577', 'staff.mongohq.com', '10089', 'heroku', 'password', function(error, res) {
+	fpProvider = new FPProvider('app708577', 'staff.mongohq.com', '10089', function(error, res) {
 	    if( error ) console.log(error);
 	    else if (res) {
 	    }
-	});
+	}, 'heroku', 'password');
 });
 /*
 
