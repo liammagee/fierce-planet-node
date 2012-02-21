@@ -617,7 +617,7 @@ var CitiesModule = CitiesModule || {};
                     "",
                 introduction:
                     "<p>Taken from Batty, M. (2007). <a href='http://www.amazon.com/Cities-Complexity-Understanding-Cellular-Agent-Based/dp/0262524791/ref=sr_1_1?ie=UTF8&qid=1329817389&sr=8-1'><em>Cities and Complexity</em></a>. MIT Press: Cambridge, MA.</p>" +
-                        "<p>(Currently not working).</p>" +
+                        "<p>(Currently not working).</p>"
                 ,
                 conclusion: "Well done.",
                 handleParameters: function () {
@@ -726,6 +726,8 @@ var CitiesModule = CitiesModule || {};
                     "<p>Age to revert: </p><p><input type='text' class='world-parameters' name='AgeToRevert' value='0'/> </p>" +
                     "<p>With shading:</p><p><input type='checkbox' class='world-parameters' name='WithShading' checked='checked'/> </p>" +
                     "",
+                introduction: "<p>Taken from Batty, M. (2007). <a href='http://www.amazon.com/Cities-Complexity-Understanding-Cellular-Agent-Based/dp/0262524791/ref=sr_1_1?ie=UTF8&qid=1329817389&sr=8-1'><em>Cities and Complexity</em></a>. MIT Press: Cambridge, MA.</p>" +
+                    "<p>Shows a range of basic deterministic neighbourhood-based cellular automata. </p>",
                 conclusion: "Well done.",
                 handleParameters: function () {
                     this.generatePath();
