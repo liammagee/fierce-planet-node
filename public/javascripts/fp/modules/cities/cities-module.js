@@ -19,7 +19,7 @@ var CitiesModule = CitiesModule || {};
                 id: 1,
                 name: "Arthur's Model (pp. 36-40)",
                 isPresetWorld: true,
-                interval: 1000,
+                interval: 500,
                 cellsAcross: 21,
                 cellsDown: 21,
                 placeAgentsOnAllCells: true,
@@ -30,11 +30,22 @@ var CitiesModule = CitiesModule || {};
                 initialResourceStore: 0,
                 playIndefinitely: true,
                 parameters:
-                    "<p>Scale Factor</p><p><input class='world-parameters' name='ScaleFactor' value='2'/> </p>" +
+                    "<p>Scale Factor: </p><p><input class='world-parameters' name='ScaleFactor' value='2'/> </p>" +
                     "<p>Rate of growth:</p><p><input class='world-parameters' name='RateOfGrowth' value='1.05'/> </p>" +
                     "<p>Distribute potential normally:</p><p><input type='checkbox' class='world-parameters' name='DistributeNormally' checked='checked'/> </p>" +
                     "",
-                conclusion: "Well done.",
+                introduction:
+                    "<p>Taken from Batty, M. (2007). <a href='http://www.amazon.com/Cities-Complexity-Understanding-Cellular-Agent-Based/dp/0262524791/ref=sr_1_1?ie=UTF8&qid=1329817389&sr=8-1'><em>Cities and Complexity</em></a>. MIT Press: Cambridge, MA.</p>" +
+                    "<p>This model shows 'Growth and spatial redistribution through increasing returns to scale' (p. 40).</p>" +
+                    "<p>Parameters include:" +
+                        "<ul>" +
+                        "<li><em>Scale factor</em>: the exponent at which potential is developed.</li>" +
+                        "<li><em>Rate of growth</em>: the growth rate at which potential is developed.</li>" +
+                        "<li><em>Distribute potential normally</em>: Distributes initial potential around a mean of 0.5.</li>" +
+                        "</ul>" +
+                        "</p>"
+                ,
+                conclusion: "",
                 handleParameters: function () {
                     this.generatePath();
                     this.cells.forEach(function(cell) {
@@ -83,7 +94,7 @@ var CitiesModule = CitiesModule || {};
                 id: 2,
                 name: "Arthur's Model with Neighbourhood (pp. 41-42)",
                 isPresetWorld: true,
-                interval: 1000,
+                interval: 500,
                 cellsAcross: 21,
                 cellsDown: 21,
                 dontClearCanvas: true,
@@ -95,6 +106,17 @@ var CitiesModule = CitiesModule || {};
                         "<p>Rate of growth:</p><p><input class='world-parameters' name='RateOfGrowth' value='1.05'/> </p>" +
                         "<p>Distribute potential normally:</p><p><input type='checkbox' class='world-parameters' name='DistributeNormally' checked='checked'/> </p>" +
                     "",
+                introduction:
+                    "<p>Taken from Batty, M. (2007). <a href='http://www.amazon.com/Cities-Complexity-Understanding-Cellular-Agent-Based/dp/0262524791/ref=sr_1_1?ie=UTF8&qid=1329817389&sr=8-1'><em>Cities and Complexity</em></a>. MIT Press: Cambridge, MA.</p>" +
+                        "<p>This model is the same as 'Arthur's Model', but with growth rate determined by the average of surrounding cells.</p>" +
+                        "<p>Parameters include:" +
+                        "<ul>" +
+                        "<li><em>Scale factor</em>: the exponent at which potential is developed.</li>" +
+                        "<li><em>Rate of growth</em>: the growth rate at which potential is developed.</li>" +
+                        "<li><em>Distribute potential normally</em>: Distributes initial potential around a mean of 0.5.</li>" +
+                        "</ul>" +
+                        "</p>"
+                ,
                 conclusion: "Well done.",
                 handleParameters: function () {
                     this.cells.forEach(function(cell) {
@@ -168,10 +190,21 @@ var CitiesModule = CitiesModule || {};
                 scrollingImageVisible: false,
                 initialResourceStore: 0,
                 playIndefinitely: true,
-                parameters: "<p>Threshold</p><p><input class='world-parameters' name='Threshold' value='6'/> </p>" +
+                parameters: "<p>Threshold</p><p><input class='world-parameters' name='Threshold' value='4.5'/> </p>" +
                     "<p>Add noise:</p><p><input type='checkbox' class='world-parameters' name='AddNoise' checked='checked'/> </p>" +
                     "<p>Draw development:</p><p><input type='checkbox' class='world-parameters' name='DrawDevelopment' checked='checked'/> </p>" +
                     "",
+                introduction:
+                    "<p>Taken from Batty, M. (2007). <a href='http://www.amazon.com/Cities-Complexity-Understanding-Cellular-Agent-Based/dp/0262524791/ref=sr_1_1?ie=UTF8&qid=1329817389&sr=8-1'><em>Cities and Complexity</em></a>. MIT Press: Cambridge, MA.</p>" +
+                        "<p>This model is the same as 'Arthur's Model', but with growth rate determined by the average of surrounding cells.</p>" +
+                        "<p>Parameters include:" +
+                        "<ul>" +
+                        "<li><em>Threshold</em>: the threshold at which potential is developed.</li>" +
+                        "<li><em>Add noise</em>: whether to add random noise.</li>" +
+                        "<li><em>Draw development</em>: whether cell development (rather than potential) should be drawn.</li>" +
+                        "</ul>" +
+                        "</p>"
+                ,
                 conclusion: "Well done.",
                 handleParameters: function () {
                     this.generatePath();
@@ -180,12 +213,16 @@ var CitiesModule = CitiesModule || {};
                         cell.development = 0;
                         cell.terrain = new Terrain("#000", 1.0);
                         cell.agentsAllowed = true;
+                        FiercePlanet.Parameters.Min = -1;
+                        FiercePlanet.Parameters.Max = 1;
+                        FiercePlanet.Parameters.Range = 2;
                     });
                 },
                 tickFunction: function () {
                     var world = this;
+                    var threshold = parseFloat(FiercePlanet.Parameters.Threshold);
                     // Adjust potential for all cells
-                    this.cells.forEach(function(cell) {
+                    _.shuffle(this.cells).forEach(function(cell) {
                         var x = cell.x, y = cell.y;
                         var positions = world.getVonNeumannNeighbourhood(x, y, true);
                         var totalPotential = 0, counter = 0;
@@ -202,13 +239,12 @@ var CitiesModule = CitiesModule || {};
                     });
 
                     // Adjust potential for all cells
-                    this.cells.forEach(function(cell) {
+                    _.shuffle(this.cells).forEach(function(cell) {
                         if (cell.newPotential)
                             cell.potential = cell.newPotential;
-                        cell.development =  (cell.potential <= FiercePlanet.Parameters.Threshold && cell.development == 0 ? 0 : 1 );
-                        if (cell.development == 1)
-                            cell.terrain = new Terrain("#fff", 1.0);
+                        cell.development =  ((cell.potential <= threshold && cell.development == 0) ? 0 : 1 );
                     });
+
                     var potentials = _.map(this.cells, function(cell) { return cell.potential; }),
                         min = _.min(potentials),
                         max = _.max(potentials),
@@ -216,10 +252,28 @@ var CitiesModule = CitiesModule || {};
 //                        ,total = _.reduce(potentials, function(memo, num){ return memo + num; }, 0);
                     var devs = _.map(this.cells, function(cell) { return cell.development; }),
                         totalDev = _.reduce(devs, function(memo, num){ return memo + num; }, 0);
+                    FiercePlanet.Parameters.Min =  min;
                     FiercePlanet.Parameters.Max =  max;
                     FiercePlanet.Parameters.Range =  range;
+
+
+                    // Color the cells
+                    this.cells.forEach(function(cell) {
+                        if (FiercePlanet.Parameters.DrawDevelopment) {
+                            if (cell.development == 1)
+                                cell.terrain = new Terrain("#fff", 1.0);
+                            else
+                                cell.terrain = new Terrain("#000", 1.0);
+                        }
+                        else {
+                            // Convert potential to a hexidecimal
+                            var hex = Math.floor(((cell.potential - min) / range) * 16).toString(16);
+                            var color = "#" + hex + hex + hex;
+                            cell.terrain = new Terrain(color, 1.0);
+                        }
+                    });
                     FiercePlanet.Drawing.drawPath();
-                    console.log(max, range, totalDev, Lifecycle.waveCounter)
+                    console.log(min, max, range, totalDev, Lifecycle.waveCounter)
 
 
 
@@ -245,6 +299,16 @@ var CitiesModule = CitiesModule || {};
                     "<p>Threshold</p><p><input class='world-parameters' name='Threshold' value='6'/> </p>" +
                     "<p>Number of Agents:</p><p><input class='world-parameters' name='NumberOfAgents' value='6000'/> </p>" +
                     "",
+                introduction:
+                    "<p>Taken from Batty, M. (2007). <a href='http://www.amazon.com/Cities-Complexity-Understanding-Cellular-Agent-Based/dp/0262524791/ref=sr_1_1?ie=UTF8&qid=1329817389&sr=8-1'><em>Cities and Complexity</em></a>. MIT Press: Cambridge, MA.</p>" +
+                        "<p>This model will develop cells when the number of surrounding agents exceeds the threshold.</p>" +
+                        "<p>Parameters include:" +
+                        "<ul>" +
+                        "<li><em>Threshold</em>: the threshold at which potential is developed.</li>" +
+                        "<li><em>Number of agents</em>: whether to add random noise.</li>" +
+                        "</ul>" +
+                        "</p>"
+                ,
                 conclusion: "Well done.",
                 handleParameters: function () {
                     this.generatePath();
@@ -279,10 +343,12 @@ var CitiesModule = CitiesModule || {};
                 },
                 tickFunction: function () {
                     var world = this;
+                    var threshold = parseFloat(FiercePlanet.Parameters.Threshold);
+
                     var undevelopedAgents = _.compact(_.map(this.currentAgents, function(agent) {if (! agent.isDeveloped) return agent;} ));
                     undevelopedAgents.forEach(function(agent) {
-//                        var positions = world.getVonNeumannNeighbourhood(agent.x, agent.y, false);
-                        var positions = world.getMooreNeighbourhood(agent.x, agent.y, false);
+                        var positions = world.getVonNeumannNeighbourhood(agent.x, agent.y, false);
+//                        var positions = world.getMooreNeighbourhood(agent.x, agent.y, false);
                         var position = positions[Math.floor(Math.random() * positions.length)],
                             newX = position.x,
                             newY = position.y;
@@ -298,6 +364,7 @@ var CitiesModule = CitiesModule || {};
                     this.cells.forEach(function(cell) {
                         var x = cell.x, y = cell.y;
                         var surroundingPositions = world.getMooreNeighbourhood(x, y, true),
+                            len = surroundingPositions.length,
                             agentCounter = 0, developedAgentCounter = 0;
                         surroundingPositions.forEach(function(position) {
                             var testCell = world.getCell(position.x, position.y);
@@ -308,20 +375,19 @@ var CitiesModule = CitiesModule || {};
                                     developedAgentCounter++;
                             }
                         });
-//                        if (x > 50 && x < 53 && y > 50 && y < 53)
-//                            console.log(agentCounter)
-                        if (agentCounter > parseInt(FiercePlanet.Parameters.Threshold)) {
-                            //  || world.currentAgents.length - undevelopedCounter < 5
-                            if ((developedAgentCounter > 0 && developedAgentCounter < 3)) {
-                                cell.needsToBeDeveloped = true;
-                                undevelopedCounter--;
-                            }
+                        if ((agentCounter) > threshold) {
+                            cell.needsToBeDeveloped = true;
+                            undevelopedCounter--;
                         }
                     })
                     this.cells.forEach(function(cell) {
                         if (cell.needsToBeDeveloped) {
                             cell.terrain = new Terrain('#f00', 1.0);
                             cell.developed = true;
+                            var agents = world.getAgentsAtCell(cell.x, cell.y);
+                            agents.forEach(function(agent) {
+                                agent.isDeveloped = true;
+                            })
                         }
                     })
                     var devs = _.map(this.cells, function(cell) { return (cell.developed ? 1 : 0); }),
@@ -352,6 +418,17 @@ var CitiesModule = CitiesModule || {};
                     "<p>Move instead of change:</p><p><input type='checkbox' class='world-parameters' name='Move' checked='checked'/> </p>" +
                     "<p>Move threshold</p><p><input class='world-parameters' name='Threshold' value='0.5'/> </p>" +
                         "",
+                introduction:
+                    "<p>Taken from Batty, M. (2007). <a href='http://www.amazon.com/Cities-Complexity-Understanding-Cellular-Agent-Based/dp/0262524791/ref=sr_1_1?ie=UTF8&qid=1329817389&sr=8-1'><em>Cities and Complexity</em></a>. MIT Press: Cambridge, MA.</p>" +
+                        "<p>A simplified form of a segregation model. Agents with different drinking preferences will change their preferences or move, depending on those around them.</p>" +
+                        "<p>Parameters include:" +
+                        "<ul>" +
+                        "<li><em>Proportion of empty space</em>: what percentage of the world should be empty.</li>" +
+                        "<li><em>Move instead of change</em>: indicates agents should move rather than change opinion.</li>" +
+                        "<li><em>Move threshold</em>: the threshold to force a move.</li>" +
+                        "</ul>" +
+                        "</p>"
+                ,
                 conclusion: "Well done.",
                 handleParameters: function () {
                     this.generatePath();
@@ -538,6 +615,10 @@ var CitiesModule = CitiesModule || {};
                     "<p>Draw development:</p><p><input type='checkbox' class='world-parameters' name='DrawDevelopment' checked='checked'/> </p>" +
                     "<p>Number of Agents:</p><p><input class='world-parameters' name='NumberOfAgents' value='6000'/> </p>" +
                     "",
+                introduction:
+                    "<p>Taken from Batty, M. (2007). <a href='http://www.amazon.com/Cities-Complexity-Understanding-Cellular-Agent-Based/dp/0262524791/ref=sr_1_1?ie=UTF8&qid=1329817389&sr=8-1'><em>Cities and Complexity</em></a>. MIT Press: Cambridge, MA.</p>" +
+                        "<p>(Currently not working).</p>" +
+                ,
                 conclusion: "Well done.",
                 handleParameters: function () {
                     this.generatePath();
@@ -680,29 +761,29 @@ var CitiesModule = CitiesModule || {};
                         var x = cell.x, y = cell.y, positions;
                         switch(neighbourhoodType) {
                             case 0:
-                                positions = world.getMooreNeighbourhood(x, y, true);
+                                positions = world.getMooreNeighbourhood(x, y, false);
                                 break;
                             case 1:
-                                positions = world.getVonNeumannNeighbourhood(x, y, true);
+                                positions = world.getVonNeumannNeighbourhood(x, y, false);
                                 break;
                             case 2:
-                                positions = world.getMvNNeighbourhood(x, y, true);
+                                positions = world.getMvNNeighbourhood(x, y, false);
                                 break;
                             // Displaced von Neumann
                             case 3:
-                                positions = world.getMaskedNeighbourhood(x, y, true, [0, 2, 4, 6]);
+                                positions = world.getMaskedNeighbourhood(x, y, false, [1, 3, 4, 6]);
                                 break;
                             // 'H'
                             case 4:
-                                positions = world.getMaskedNeighbourhood(x, y, true, [2, 6]);
+                                positions = world.getMaskedNeighbourhood(x, y, false, [3, 4]);
                                 break;
                             // Sierpinkski's gasket
                             case 5:
-                                positions = world.getMaskedNeighbourhood(x, y, true, [0, 2, 3, 4, 6]);
+                                positions = world.getMaskedNeighbourhood(x, y, false, [1, 3, 4, 5, 6]);
                                 break;
                             // Superblock
                             case 6:
-                                positions = world.getMaskedNeighbourhood(x, y, true, [2, 3]);
+                                positions = world.getMaskedNeighbourhood(x, y, false, [3, 5]);
                                 break;
                         }
                         var totalPotential = 0, counter = 0;

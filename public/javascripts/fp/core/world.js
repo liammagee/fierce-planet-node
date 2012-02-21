@@ -898,7 +898,7 @@ function World() {
      * @param includeSelf
      */
     this.getHNeighbourhood = function(x, y, includeSelf) {
-        return this.getMaskedNeighbourhood(x, y, includeSelf, [2, 6]);
+        return this.getMaskedNeighbourhood(x, y, includeSelf, [3, 7]);
     };
 
     /**
@@ -907,7 +907,7 @@ function World() {
      * @param includeSelf
      */
     this.getInverseVonNeumannNeighbourhood = function(x, y, includeSelf) {
-        return this.getMaskedNeighbourhood(x, y, includeSelf, [2, 4, 6, 8]);
+        return this.getMaskedNeighbourhood(x, y, includeSelf, [1, 3, 5, 7]);
     };
 
     /**
@@ -929,32 +929,15 @@ function World() {
         sortedPositions.forEach(function(position) {
             if (includeSelf)
                 position += 1;
-            if (position > 0 && position < surroundingPositions.length - 1)
+            if (position >= 0 && position < surroundingPositions.length) {
                 surroundingPositions.splice(position, 1);
+
+            }
         });
 
         return surroundingPositions;
     };
 
-
-    this.getMaskedNeighbourhood = function(x, y, includeSelf, maskedPositionIndexes) {
-        var surroundingPositions = this.getMooreNeighbourhood(x, y, includeSelf);
-
-        var sortedPositions = maskedPositionIndexes;
-        if (!_.isUndefined(maskedPositionIndexes)) {
-            sortedPositions = maskedPositionIndexes.sort(function(a, b) {
-                return (a < b ? 1 :  (a > b ? -1 : 0));
-            });
-        }
-        sortedPositions.forEach(function(position) {
-            if (includeSelf)
-                position += 1;
-            if (position > 0 && position < surroundingPositions.length - 1)
-                surroundingPositions.splice(position, 1);
-        });
-
-        return surroundingPositions;
-    };
 
 
     this.getCellsAtDistance = function(x, y, distance, strategy, includeSelf) {

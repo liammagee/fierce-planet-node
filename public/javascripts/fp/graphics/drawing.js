@@ -139,7 +139,13 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
                         if (yPos == 0 || !Lifecycle.currentWorld.areAgentsAllowed(xPos, yPos - 1)) {
                             var my_gradient = ctx.createLinearGradient(x, y, x, y + FiercePlanet.Orientation.cellHeight / 4);
                             my_gradient.addColorStop(0, "#ccc");
-                            my_gradient.addColorStop(1, pathColor);
+                            try {
+                                my_gradient.addColorStop(1, pathColor);
+                            }
+                            catch (err) {
+                                if (console !== undefined)
+                                    console.log(pathColor)
+                            }
                             ctx.fillStyle = my_gradient;
                         }
                         else {
