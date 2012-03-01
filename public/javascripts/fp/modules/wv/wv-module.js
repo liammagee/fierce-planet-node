@@ -63,6 +63,7 @@ var WorldVisionModule = WorldVisionModule || {};
                 setup: function() {
                 },
 
+
                 setupParameters: function() {
                     $( "#initialAgentsSlider" ).slider({
                         value: 20,
