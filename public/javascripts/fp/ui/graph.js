@@ -16,7 +16,8 @@ var FiercePlanet = FiercePlanet || {};
 FiercePlanet.Graph = FiercePlanet.Graph || {};
 
 (function() {
-    var plot, plotUpdateInterval, plotIntervalId, plotStats, counter, graphDialog;
+    this.plot;
+    var plotUpdateInterval, plotIntervalId, plotStats, counter, graphDialog;
     var graphMap = {
         'pop-count': this.PopulationStats
         , 'pop-health': this.HealthStats
@@ -41,7 +42,7 @@ FiercePlanet.Graph = FiercePlanet.Graph || {};
             var option = $("#graph-config option:selected")[0].getAttribute('name');
             plotStats = graphMap[option];
 
-            plot = plotStats.setup();
+            FiercePlanet.Graph.plot = plotStats.setup();
         });
 
         if (!graphDialog) {
@@ -84,7 +85,7 @@ FiercePlanet.Graph = FiercePlanet.Graph || {};
         if ($("#world-graph")[0]) {
             counter = 0;
             plotStats = this.PopulationStats;
-            plot = plotStats.setup();
+            this.plot = plotStats.setup();
         }
     };
 
@@ -94,7 +95,7 @@ FiercePlanet.Graph = FiercePlanet.Graph || {};
     this.clearGraph = function () {
         if ($("#world-graph")[0]) {
             $("#world-graph").hide();
-            plot = null;
+            this.plot = null;
             plotUpdateInterval = 250;
             clearTimeout(plotIntervalId);
         }
@@ -107,17 +108,60 @@ FiercePlanet.Graph = FiercePlanet.Graph || {};
         if ($("#world-graph")[0] && Universe.settings.showGraph) {
 //            if (true) {
             if (Lifecycle.inPlay) {
-                plotStats.update(plot);
+                plotStats.update(FiercePlanet.Graph.plot);
                 counter++;
 
                 // Do this less often
                 var updateInterval = 1;
                 if (counter % updateInterval == 0) {
-                    plot.setupGrid();
-                    plot.draw();
+                    FiercePlanet.Graph.plot.setupGrid();
+                    FiercePlanet.Graph.plot.draw();
                 }
             }
             plotIntervalId = setTimeout(FiercePlanet.Graph.updateGraph, plotUpdateInterval);
+        }
+    };
+
+    /**
+     * Clears the default graph
+     */
+    this.setupData = function() {
+        if (plotIntervalId)
+            clearTimeout(plotIntervalId);
+        var options = {
+            series: { shadowSize: 0 }, // drawing is faster without shadows
+            yaxis: { min: 0, max: 100 }
+        };
+        var seedData = [];
+        var arguments = FiercePlanet.Graph.setupData.arguments;
+        for (var i = 0, l = arguments.length; i < l; i++) {
+            var line = arguments[i];
+            seedData.push({ color: line.color, data: [[0, 0] ], lines: { show: true } });
+        }
+        FiercePlanet.Graph.plot = $.plot($("#world-graph"), seedData, options);
+    };
+
+    /**
+     * Updates the flot graph directly
+     */
+    this.plotData = function() {
+        if ($("#world-graph")[0]) {
+            if (Lifecycle.inPlay) {
+                var data = FiercePlanet.Graph.plot.getData();
+                var arguments = FiercePlanet.Graph.plotData.arguments;
+                for (var i = 0; i < arguments.length; i++) {
+                    console.log(arguments[i])
+                    data[i].data.push([Lifecycle.worldCounter, arguments[i]]);
+                }
+            FiercePlanet.Graph.plot.setData(data);
+                counter++;
+                // Do this less often
+                var updateInterval = 1;
+                if (counter % updateInterval == 0) {
+                    FiercePlanet.Graph.plot.setupGrid();
+                    FiercePlanet.Graph.plot.draw();
+                }
+            }
         }
     };
 

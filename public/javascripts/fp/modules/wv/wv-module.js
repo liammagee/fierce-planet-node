@@ -25,10 +25,11 @@ var WorldVisionModule = WorldVisionModule || {};
                 cellsDown: 21,
                 dontClearCanvas: true,
                 scrollingImageVisible: false,
-                initialResourceStore: 0,
+                initialResourceStore: 1000,
                 playIndefinitely: true,
                 noWander: false,
                 noSpeedChange: true,
+                allowResourcesOnPath: true,
                 mapOptions: ({
                     mapTypeId: google.maps.MapTypeId.HYBRID,
                     center: new google.maps.LatLng(-7.307, 112.7955),
@@ -36,9 +37,13 @@ var WorldVisionModule = WorldVisionModule || {};
                     tilt: 0
                 }),
                 parameters:
-                    "<p>Initial cows</p>" +
-                        "<div id='initialCowsSlider' />" +
-                        "<input type='hidden' id='initialCows' class='world-parameters' name='InitialCows' value='20'/>" +
+                    "<p>Initial agents</p>" +
+                        "<div id='initialAgentsSlider' />" +
+                        "<input type='hidden' id='initialAgents' class='world-parameters' name='InitialAgents' value='1'/>" +
+                        "<p>Rate of personal waste emission</p><p><input class='world-parameters' name='RateOfWasteEmission' value='1'/> </p>" +
+                        "<p>No. of waste disposal units</p><p><input class='world-parameters' name='NumWasteDisposalUnits' value='1'/> </p>" +
+
+                        "<p>Health cost</p><p><input class='world-parameters' name='HealthCost' value='1'/> </p>" +
 
                         "<p>Stride length</p><p><input class='world-parameters' name='StrideLength' value='0.08'/> </p>" +
                         "<p>Cooperative probability</p><p><input class='world-parameters' name='CooperativeProbability' value='0.50'/> </p>" +
@@ -57,21 +62,30 @@ var WorldVisionModule = WorldVisionModule || {};
                 conclusion: "Well done.",
                 setup: function() {
                 },
+
                 setupParameters: function() {
-                    $( "#initialCowsSlider" ).slider({
+                    $( "#initialAgentsSlider" ).slider({
                         value: 20,
                         min: 0,
                         max: 100,
                         step: 1,
                         slide: function( event, ui ) {
-                            $( "#initialCows" ).val( ui.value );
+                            $( "#initialAgents" ).val( ui.value );
                         }
                     });
+                    FiercePlanet.Graph.openDialog();
+                    $("#world-graph").show();
+                    FiercePlanet.Graph.setupData(
+                        {name: 'Agents', color: '#f00', maxValue: 100}
+                        , {name: 'Health', color: '#0f0', maxValue: 100}
+                        , {name: 'Mortality', color: '#00f', maxValue: 100}
+                    );
                 },
                 handleParameters: function () {
                     var world = this;
-                    var initialCows = parseInt(FiercePlanet.Parameters.InitialCows)
-                        , strideLength = parseFloat(FiercePlanet.Parameters.StrideLength)
+                    var initialAgents = parseInt(FiercePlanet.Parameters.InitialAgents)
+                        , healthCost = parseInt(FiercePlanet.Parameters.HealthCost)
+                        , moveProbability = parseFloat(FiercePlanet.Parameters.MoveProbability)
                         , cooperativeProbability = parseFloat(FiercePlanet.Parameters.CooperativeProbability)
                         , metabolism = parseInt(FiercePlanet.Parameters.Metabolism)
                         , reproductionCost = parseInt(FiercePlanet.Parameters.ReproductionCost)
@@ -83,11 +97,31 @@ var WorldVisionModule = WorldVisionModule || {};
                         , lowHighThreshold = parseInt(FiercePlanet.Parameters.LowHighThreshold)
                     /// Set up agents
                     var culture = _.clone(DefaultCultures.Stickman);
-                    culture.waveNumber = initialCows;
+                    _.extend(culture, {
+//                        beliefs: [
+//                            Beliefs.BeliefsAboutPaths
+//                            , Beliefs.BeliefsAboutResources
+//                            , Beliefs.BeliefsBasedOnOtherAgentsBeliefs
+//                        ]
+//                        , desires: [
+//                            Desires.ExploreSpace
+//                            , Desires.Flee
+////        , Desires.ImproveHealth
+//                        ]
+//                        ,
+                        capabilities: [
+                            Capabilities.ConsumeResourcesCapability
+                            , Capabilities.MoveRandomlyCapability
+                        ]
+                    });
+                    culture.waveNumber = initialAgents;
                     culture.initialSpeed = 1;
+                    culture.moveCost = -healthCost;
+                    culture.healthCategories = ModuleManager.currentModule.resourceSet.categories;
                     world.cells.forEach(function(cell) {
-                        cell.terrain = new Terrain('#090', 0.2);
+                        cell.terrain = new Terrain('#090', 0.4);
                         cell.grass = maxGrassHeight;
+                        cell.allowResourcesOnPath = true;
                     })
                     culture.initFunction = function(agent, world) {
                         agent.energy = metabolism * 4;
@@ -101,9 +135,8 @@ var WorldVisionModule = WorldVisionModule || {};
                             agent.color = '00f';
                         }
                     };
-                    /*
-                    */
-                    culture.updateFunction = function(agent, world) {};
+                    culture.drawExpired = function(){};
+//                    culture.updateFunction = function(agent, world) {};
                     this.randomiseAgents = true;
                     this.cultures = [culture];
                     this.waves = undefined;
@@ -114,8 +147,9 @@ var WorldVisionModule = WorldVisionModule || {};
                     var world = this;
                     var counter = 0;
 
-                    var initialCows = parseInt(FiercePlanet.Parameters.InitialCows)
-                        , strideLength = parseFloat(FiercePlanet.Parameters.StrideLength)
+                    var initialAgents = parseInt(FiercePlanet.Parameters.InitialAgents)
+                        , healthCost = parseInt(FiercePlanet.Parameters.HealthCost)
+                        , moveProbability = parseFloat(FiercePlanet.Parameters.MoveProbability)
                         , cooperativeProbability = parseFloat(FiercePlanet.Parameters.CooperativeProbability)
                         , metabolism = parseInt(FiercePlanet.Parameters.Metabolism)
                         , reproductionCost = parseInt(FiercePlanet.Parameters.ReproductionCost)
@@ -125,21 +159,29 @@ var WorldVisionModule = WorldVisionModule || {};
                         , lowGrowthChance = parseInt(FiercePlanet.Parameters.LowGrowthChance)
                         , maxGrassHeight = parseInt(FiercePlanet.Parameters.MaxGrassHeight)
                         , lowHighThreshold = parseInt(FiercePlanet.Parameters.LowHighThreshold)
-                        , moveProbability = parseFloat(FiercePlanet.Parameters.MoveProbability)
 
                     var moveCapability = Capabilities.MoveRandomlyCapability, nullifiedAgents = [];
                     var died = 0;
                     // Move
-                    world.currentAgents.forEach(function(agent) {
-                        var r = Math.random();
-                        if (r < moveProbability)
-                            moveCapability.exercise(agent, world);
-                        agent.energy -= metabolism;
-                        if (agent.energy < 0) {
-                            agent.die(world);
-                            died++;
-                        }
-                    });
+//                    world.currentAgents.forEach(function(agent) {
+//                        var r = Math.random();
+//                        if (r < moveProbability)
+//                            moveCapability.exercise(agent, world);
+//                        agent.energy -= metabolism;
+//                        if (agent.energy < 0) {
+//                            agent.die(world);
+//                            died++;
+//                        }
+//                    });
+                    // Adjust health
+//                    world.currentAgents.forEach(function(agent) {
+//                        agent.health -= healthCost;
+//                    });
+                    // Die
+//                    world.currentAgents.forEach(function(agent) {
+//                        if (agent.health < 0)
+//                            agent.die(world);
+//                    });
                     // Eat
                     world.currentAgents.forEach(function(agent) {
                         var cell = world.getCell(agent.x, agent.y);
@@ -156,16 +198,7 @@ var WorldVisionModule = WorldVisionModule || {};
                     world.currentAgents.forEach(function(agent) {
                         if (agent.energy > reproductionThreshold) {
                             agent.energy -= reproductionCost;
-                            var childAgent = agent.spawn();
-
-                            var childAgent = new Agent(agent.culture, agent.x, agent.y);
-                            childAgent.delay = parseInt(Math.random() * childAgent.culture.initialSpeed * 5);
-                            childAgent.bornAt = (Lifecycle.worldCounter);
-                            childAgent.parents = [agent];
-                            childAgent.breed = agent.breed;
-                            childAgent.color = agent.color;
-                            Lifecycle.currentWorld.currentAgents.push(childAgent);
-                            Lifecycle.currentWorld.addAgentToCell(childAgent);
+                            agent.spawn();
                         }
                     });
                     // Regenerate grass
@@ -185,11 +218,20 @@ var WorldVisionModule = WorldVisionModule || {};
                     FiercePlanet.Drawing.clearCanvas('#resourceCanvas');
                     FiercePlanet.Drawing.drawPath();
 
+
                     var coops = _.map(this.currentAgents, function(agent) { return (agent.breed == 'cooperative' ? 1 : 0); }),
                         totalCoops = _.reduce(coops, function(memo, num){ return memo + num; }, 0);
                     var greedy = _.map(this.currentAgents, function(agent) { return (agent.breed == 'greedy' ? 1 : 0); }),
                         totalGreedy = _.reduce(greedy, function(memo, num){ return memo + num; }, 0);
-                    console.log(totalCoops, totalGreedy, died, Lifecycle.waveCounter)
+                    var health = _.map(this.currentAgents, function(agent) { return agent.health ; }),
+                        totalHealth = _.reduce(health, function(memo, num){ return memo + num; }, 0);
+                    var ageAtDeath = _.map(this.expiredAgents, function(agent) { return agent.diedAt - agent.bornAt; }),
+                        totalAgeAtDeath = _.reduce(health, function(memo, num){ return memo + num; }, 0);
+//                    FiercePlanet.Graph.plotData(world.currentAgents.length);
+                    FiercePlanet.Graph.plotData(world.currentAgents.length, totalHealth / world.currentAgents.length, totalAgeAtDeath / world.expiredAgents.length);
+                    console.log(world.currentAgents.length, totalHealth / world.currentAgents.length, totalAgeAtDeath / world.expiredAgents.length, Lifecycle.waveCounter)
+                    if (world.currentAgents.length <= 0)
+                        Lifecycle._stopAgents();
                 }
             })
 
@@ -213,6 +255,7 @@ var WorldVisionModule = WorldVisionModule || {};
         module.registerSelf();
         module.registerCampaign(WorldVisionWorlds);
         module.currentCampaignID = 'WorldVision';
+        module.registerResourceSet(TBL);
 
         _.extend(Universe.settings, {
             isometricView: false,

@@ -531,6 +531,7 @@ function Agent(culture, x, y) {
         childAgent.delay = parseInt(Math.random() * childAgent.culture.initialSpeed * 5);
         childAgent.bornAt = Lifecycle.worldCounter;
         childAgent.parents = [this];
+        childAgent.registerHealthStats();
         if (otherParent)
             childAgent.parents.push(otherParent)
         Lifecycle.currentWorld.currentAgents.push(childAgent);
