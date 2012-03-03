@@ -188,6 +188,7 @@ var WorldVisionModule = WorldVisionModule || {};
                     var moveCapability = Capabilities.MoveRandomlyCapability, nullifiedAgents = [];
                     var died = 0;
 
+
                     // Adjust water quality
                     var totalWaste = world.currentAgents.length * rateOfWasteEmission / 10000;
                     var  currentWaterQuality = this.currentWaterQuality;
