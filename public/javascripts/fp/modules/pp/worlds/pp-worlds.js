@@ -74,7 +74,7 @@ var PredatorPreyWorlds = PredatorPreyWorlds || new Campaign();
 
             this.setup = function () {
 //                    Universe.settings.firstPerson = true;
-                var bg = new Terrain('#ABBB2A', 0.01);
+                var bg = new Terrain(one.color('#ABBB2A').alpha(0.01));
                 this.addTerrainToPath(bg);
 //                    this.addTerrainToBackground(bg);
 //                this.generatePath();

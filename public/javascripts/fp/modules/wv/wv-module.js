@@ -21,8 +21,8 @@ var WorldVisionModule = WorldVisionModule || {};
                 name: "Waste in Surabaya",
                 isPresetWorld: true,
                 interval: 100,
-                cellsAcross: 21,
-                cellsDown: 21,
+                cellsAcross: 40,
+                cellsDown: 40,
                 dontClearCanvas: true,
                 scrollingImageVisible: false,
                 initialResourceStore: 1000,
@@ -32,16 +32,19 @@ var WorldVisionModule = WorldVisionModule || {};
                 allowResourcesOnPath: true,
                 mapOptions: ({
                     mapTypeId: google.maps.MapTypeId.HYBRID,
-                    center: new google.maps.LatLng(-7.307, 112.7955),
+                    center: new google.maps.LatLng(-7.3075, 112.7952),
                     zoom: 20,
                     tilt: 0
                 }),
                 parameters:
                     "<p>Initial agents</p>" +
                         "<div id='initialAgentsSlider' />" +
-                        "<input type='hidden' id='initialAgents' class='world-parameters' name='InitialAgents' value='1'/>" +
-                        "<p>Rate of personal waste emission</p><p><input class='world-parameters' name='RateOfWasteEmission' value='1'/> </p>" +
-                        "<p>No. of waste disposal units</p><p><input class='world-parameters' name='NumWasteDisposalUnits' value='1'/> </p>" +
+                        "<input type='hidden' id='initialAgents' class='world-parameters' name='InitialAgents' value='100'/>" +
+                        "<p>Rate of personal waste emission</p><p><input class='world-parameters' name='RateOfWasteEmission' value='250'/> </p>" +
+                        "<p>No. of waste disposal units</p><p><input class='world-parameters' name='NumWasteDisposalUnits' value='0'/> </p>" +
+                        "<p>Water consumed</p><p><input class='world-parameters' name='WaterConsumed' value='1000'/> </p>" +
+                        "<p>Quality of water</p><p><input class='world-parameters' name='WaterQuality' value='100'/> </p>" +
+                        "<p>Natural rate of improvement</p><p><input class='world-parameters' name='NaturalRateOfImprovement' value='1'/> </p>" +
 
                         "<p>Health cost</p><p><input class='world-parameters' name='HealthCost' value='1'/> </p>" +
 
@@ -85,7 +88,13 @@ var WorldVisionModule = WorldVisionModule || {};
                 handleParameters: function () {
                     var world = this;
                     var initialAgents = parseInt(FiercePlanet.Parameters.InitialAgents)
+                        , rateOfWasteEmission = parseInt(FiercePlanet.Parameters.RateOfWasteEmission)
+                        , numWasteDisposalUnits = parseInt(FiercePlanet.Parameters.NumWasteDisposalUnits)
+                        , waterConsumed = parseInt(FiercePlanet.Parameters.WaterConsumed)
+                        , waterQuality = parseInt(FiercePlanet.Parameters.WaterQuality)
+                        , naturalRateOfImprovement = parseInt(FiercePlanet.Parameters.NaturalRateOfImprovement)
                         , healthCost = parseInt(FiercePlanet.Parameters.HealthCost)
+
                         , moveProbability = parseFloat(FiercePlanet.Parameters.MoveProbability)
                         , cooperativeProbability = parseFloat(FiercePlanet.Parameters.CooperativeProbability)
                         , metabolism = parseInt(FiercePlanet.Parameters.Metabolism)
@@ -116,32 +125,42 @@ var WorldVisionModule = WorldVisionModule || {};
                         ]
                     });
                     culture.waveNumber = initialAgents;
-                    culture.initialSpeed = 1;
+                    culture.initialSpeed = 5;
                     culture.moveCost = -healthCost;
                     culture.healthCategories = ModuleManager.currentModule.resourceSet.categories;
+                    var c = one.color('#009000');
                     world.cells.forEach(function(cell) {
-                        cell.terrain = new Terrain('#090', 0.4);
-                        cell.grass = maxGrassHeight;
-                        cell.allowResourcesOnPath = true;
+                        if (cell.y > 23 && cell.y < 33) {
+                            cell.terrain = new Terrain(one.color('#090').alpha(.4));
+                            cell.waterQuality = waterQuality;
+                        }
+                        else {
+                            cell.allowResourcesOnPath = true;
+                        }
                     })
                     culture.initFunction = function(agent, world) {
                         agent.energy = metabolism * 4;
-                        var r = Math.random();
-                        if (r < cooperativeProbability) {
-                            agent.breed = 'cooperative';
-                            agent.color = 'f00';
-                        }
-                        else {
-                            agent.breed = 'greedy';
-                            agent.color = '00f';
-                        }
+                        agent.color = 'f00';
+//                        var r = Math.random();
+//                        if (r < cooperativeProbability) {
+//                            agent.breed = 'cooperative';
+//                            agent.color = 'f00';
+//                        }
+//                        else {
+//                            agent.breed = 'greedy';
+//                            agent.color = '00f';
+//                        }
                     };
+
+                    this.currentWaterQuality = waterQuality;
+
+
                     culture.drawExpired = function(){};
 //                    culture.updateFunction = function(agent, world) {};
                     this.randomiseAgents = true;
                     this.cultures = [culture];
                     this.waves = undefined;
-                    this.initialiseWaves(1);
+                        this.initialiseWaves(1);
                     FiercePlanet.Drawing.drawPath();
                 },
                 tickFunction: function () {
@@ -149,7 +168,12 @@ var WorldVisionModule = WorldVisionModule || {};
                     var counter = 0;
 
                     var initialAgents = parseInt(FiercePlanet.Parameters.InitialAgents)
+                        , rateOfWasteEmission = parseInt(FiercePlanet.Parameters.RateOfWasteEmission)
+                        , numWasteDisposalUnits = parseInt(FiercePlanet.Parameters.NumWasteDisposalUnits)
+                        , waterQuality = parseInt(FiercePlanet.Parameters.WaterQuality)
+                        , naturalRateOfImprovement = parseInt(FiercePlanet.Parameters.NaturalRateOfImprovement)
                         , healthCost = parseInt(FiercePlanet.Parameters.HealthCost)
+
                         , moveProbability = parseFloat(FiercePlanet.Parameters.MoveProbability)
                         , cooperativeProbability = parseFloat(FiercePlanet.Parameters.CooperativeProbability)
                         , metabolism = parseInt(FiercePlanet.Parameters.Metabolism)
@@ -163,6 +187,28 @@ var WorldVisionModule = WorldVisionModule || {};
 
                     var moveCapability = Capabilities.MoveRandomlyCapability, nullifiedAgents = [];
                     var died = 0;
+
+                    // Adjust water quality
+                    var totalWaste = world.currentAgents.length * rateOfWasteEmission / 10000;
+                    var  currentWaterQuality = this.currentWaterQuality;
+                    currentWaterQuality -= totalWaste;
+                    currentWaterQuality += naturalRateOfImprovement;
+                    currentWaterQuality = (currentWaterQuality > 100 ? 100 : (currentWaterQuality < 0 ? 0 : currentWaterQuality));
+                    this.currentWaterQuality = currentWaterQuality;
+                    console.log('params', totalWaste, this.currentWaterQuality)
+
+                    world.cells.forEach(function(cell) {
+                        if (cell.y > 23 && cell.y < 33) {
+                            cell.terrain.color = cell.terrain.color.green(currentWaterQuality / 100);
+                            cell.waterQuality = waterQuality;
+                        }
+                        else {
+                            cell.allowResourcesOnPath = true;
+                        }
+                    })
+
+
+
                     // Move
 //                    world.currentAgents.forEach(function(agent) {
 //                        var r = Math.random();
@@ -183,38 +229,39 @@ var WorldVisionModule = WorldVisionModule || {};
 //                        if (agent.health < 0)
 //                            agent.die(world);
 //                    });
+
                     // Eat
-                    world.currentAgents.forEach(function(agent) {
-                        var cell = world.getCell(agent.x, agent.y);
-                        if (agent.breed == 'cooperative' && cell.grass > lowHighThreshold) {
-                            cell.grass -= 1;
-                            agent.energy += grassEnergy;
-                        }
-                        else if (agent.breed == 'greedy' && cell.grass > 0) {
-                            cell.grass -= 1;
-                            agent.energy += grassEnergy;
-                        }
-                    });
+//                    world.currentAgents.forEach(function(agent) {
+//                        var cell = world.getCell(agent.x, agent.y);
+//                        if (agent.breed == 'cooperative' && cell.grass > lowHighThreshold) {
+//                            cell.grass -= 1;
+//                            agent.energy += grassEnergy;
+//                        }
+//                        else if (agent.breed == 'greedy' && cell.grass > 0) {
+//                            cell.grass -= 1;
+//                            agent.energy += grassEnergy;
+//                        }
+//                    });
                     // Reproduce
-                    world.currentAgents.forEach(function(agent) {
-                        if (agent.energy > reproductionThreshold) {
-                            agent.energy -= reproductionCost;
-                            agent.spawn();
-                        }
-                    });
+//                    world.currentAgents.forEach(function(agent) {
+//                        if (agent.energy > reproductionThreshold) {
+//                            agent.energy -= reproductionCost;
+//                            agent.spawn();
+//                        }
+//                    });
                     // Regenerate grass
-                    world.cells.forEach(function(cell) {
-                        var r = Math.random() * 100;
-                        if (cell.grass >= lowHighThreshold) {
-                            if (highGrowthChance >= r)
-                                cell.grass += 1;
-                        }
-                        else if (lowGrowthChance >= r)
-                            cell.grass += 1;
-                        if (cell.grass > maxGrassHeight)
-                            cell.grass = maxGrassHeight
-                        cell.terrain = new Terrain('#0' + (cell.grass >= 10 ? 'a' : cell.grass) + '0', 0.2);
-                    })
+//                    world.cells.forEach(function(cell) {
+//                        var r = Math.random() * 100;
+//                        if (cell.grass >= lowHighThreshold) {
+//                            if (highGrowthChance >= r)
+//                                cell.grass += 1;
+//                        }
+//                        else if (lowGrowthChance >= r)
+//                            cell.grass += 1;
+//                        if (cell.grass > maxGrassHeight)
+//                            cell.grass = maxGrassHeight
+//                        cell.terrain = new Terrain('#0' + (cell.grass >= 10 ? 'a' : cell.grass) + '0', 0.2);
+//                    })
                     FiercePlanet.Drawing.clearCanvas('#baseCanvas');
                     FiercePlanet.Drawing.clearCanvas('#resourceCanvas');
                     FiercePlanet.Drawing.drawPath();
@@ -230,7 +277,7 @@ var WorldVisionModule = WorldVisionModule || {};
                         totalAgeAtDeath = _.reduce(health, function(memo, num){ return memo + num; }, 0);
 //                    FiercePlanet.Graph.plotData(world.currentAgents.length);
                     FiercePlanet.Graph.plotData(world.currentAgents.length, totalHealth / world.currentAgents.length, totalAgeAtDeath / world.expiredAgents.length);
-                    console.log(world.currentAgents.length, totalHealth / world.currentAgents.length, totalAgeAtDeath / world.expiredAgents.length, Lifecycle.waveCounter)
+//                    console.log(world.currentAgents.length, totalHealth / world.currentAgents.length, totalAgeAtDeath / world.expiredAgents.length, Lifecycle.waveCounter)
                     if (world.currentAgents.length <= 0)
                         Lifecycle._stopAgents();
                 }

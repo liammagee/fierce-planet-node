@@ -27,6 +27,7 @@ $LAB
    .script("underscore/underscore-min.js")
 
     // Load other plugins
+   .script("one-color/one-color-all.js")
    .script("spin.js/spin.min.js")
    .script("sylvester/sylvester.js")
    .script("flot-0.7/flot/jquery.flot.min.js")

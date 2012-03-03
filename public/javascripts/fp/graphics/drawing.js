@@ -79,7 +79,8 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         var canvas = $(canvasName)[0];
         var ctx = canvas.getContext('2d');
         var terrain = Lifecycle.currentWorld.backgroundTerrain;
-        var pathColor = terrain ? this.insertAlpha(terrain.color, terrain.alpha) : "#fff";
+        var pathColor = terrain ? terrain.color.cssa() : "#fff";
+//        var pathColor = terrain ? this.insertAlpha(terrain.color, terrain.alpha) : "#fff";
 
         ctx.fillStyle = pathColor;
         ctx.fillRect(0, 0, FiercePlanet.Orientation.worldWidth, FiercePlanet.Orientation.worldHeight);
@@ -111,7 +112,9 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
                 var y = yPos * FiercePlanet.Orientation.cellHeight;
 
                 var terrain = Lifecycle.currentWorld.getCell(xPos, yPos).terrain;
-                var pathColor = terrain ? this.insertAlpha(terrain.color, terrain.alpha) : "#000";
+                var pathColor = terrain ? terrain.color.cssa() : "#000";
+//                console.log(pathColor)
+//                var pathColor = terrain ? this.insertAlpha(terrain.color, terrain.alpha) : "#000";
 
                 if ((Universe.settings.isometricView || Lifecycle.currentWorld.isometricView)) {
                     var newOrigin = FiercePlanet.Isometric.doIsometricOffset(xPos, yPos);
@@ -126,7 +129,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
                     }
                     if (!Universe.settings.hidePathBorder) {
                         ctx.lineWidth = 1 / FiercePlanet.Orientation.zoomWorld;
-                        ctx.strokeStyle = '#ccc'; //pathColor;
+                        ctx.strokeStyle = one.color('#ccc').hex(); //pathColor;
                         ctx.stroke();
                     }
                 }

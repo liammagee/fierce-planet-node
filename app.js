@@ -457,4 +457,5 @@ io.sockets.on('connection', function (socket) {
 });
 
 */
-console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
+console.log("Express server listening on port %d in %s mode");
+//console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);

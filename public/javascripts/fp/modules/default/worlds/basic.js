@@ -90,7 +90,7 @@ var Basic = Basic || new Campaign();
             this.allowAgentsOnCellRange(34, 9);
             this.allowAgentsOnCellRange(23, 1);
             this.allowAgentsOnCellRange(12, 10);
-            this.addTerrainToPath(new Terrain('#aaa', 0.8));
+            this.addTerrainToPath(new Terrain(one.color('#aaa').alpha(0.8)));
 
             // Add predators and rivals
 //            this.worldAgents = ([new Agent(AgentTypes.PREDATOR_AGENT_TYPE, 0, 9)]);
@@ -148,7 +148,7 @@ var Basic = Basic || new Campaign();
             this.allowAgentsOnCellRange(13, 1);
             this.allowAgentsOnCellRange(0, 2);
 
-            this.addTerrainToPath(new Terrain('#BFB3A7', 0.8));
+            this.addTerrainToPath(new Terrain(one.color('#BFB3A7').alpha(0.8)));
             FiercePlanet.Effects.currentEffect = FiercePlanet.Effects.Rain;
         };
 
@@ -216,7 +216,7 @@ var Basic = Basic || new Campaign();
             this.allowAgentsOnCellRange(27, 1);
             this.allowAgentsOnCellRange(14, 11);
 
-            this.addTerrainToPath(new Terrain('#BBB1B0', 0.8));
+            this.addTerrainToPath(new Terrain(one.color('#BBB1B0').alpha(0.8)));
             this.addEntryPoint(5, 12);
             this.addExitPoint(3, 3);
         };
@@ -295,8 +295,8 @@ var Basic = Basic || new Campaign();
             this.allowAgentsOnCellRange(0, 1);
 
             // Experimental terrain support
-            this.addTerrainToPath(new Terrain('#CEA98F', 0.5));
-            var lowerHalfTerrain = new Terrain('#645C51', 0.5);
+            this.addTerrainToPath(new Terrain(one.color('#CEA98F').alpha(0.5)));
+            var lowerHalfTerrain = new Terrain(one.color('#645C51').alpha(0.5));
             
             this.getCell(0, 4).terrain = lowerHalfTerrain;
             this.getCell(0, 5).terrain = lowerHalfTerrain;
@@ -421,7 +421,7 @@ var Basic = Basic || new Campaign();
             this.allowAgentsOnCellRange(15, 4);
             this.allowAgentsOnCellRange(13, 1);
 
-            this.addTerrainToPath(new Terrain('#A7A493', 0.8));
+            this.addTerrainToPath(new Terrain(one.color('#A7A493').alpha(0.8)));
             this.addEntryPoint(13, 0);
             this.addExitPoint(0, 1);
         };
@@ -473,7 +473,7 @@ var Basic = Basic || new Campaign();
             this.allowAgentsOnCellRange(46, 1);
             this.allowAgentsOnCellRange(16, 15);
 
-            this.addTerrainToPath(new Terrain('#EBBA99', 0.8));
+            this.addTerrainToPath(new Terrain(one.color('#EBBA99').alpha(0.8)));
             this.addEntryPoint(0, 1);
             this.addExitPoint(2, 14);
         };
@@ -522,7 +522,7 @@ var Basic = Basic || new Campaign();
             this.allowAgentsOnCellRange(24, 3);
             this.allowAgentsOnCellRange(8, 1);
 
-            this.addTerrainToPath(new Terrain('#DCDCDE', 0.9));
+            this.addTerrainToPath(new Terrain(one.color('#DCDCDE').alpha(0.9)));
             // Add predators and rivals
         //    this.addWorldAgent(new Agent(AgentTypes.PREDATOR_AGENT_TYPE, 8, 4));
         //    this.addWaveAgent(new Agent(AgentTypes.RIVAL_AGENT_TYPE, 9, 4));
@@ -628,7 +628,7 @@ var Basic = Basic || new Campaign();
             this.allowAgentsOnCellRange(19, 16);
             this.allowAgentsOnCellRange(0, 2);
 
-            this.addTerrainToPath(new Terrain('#CCB09A', 0.9));
+            this.addTerrainToPath(new Terrain(one.color('#CCB09A').alpha(0.9)));
             this.addEntryPoint(0, 0);
             this.addExitPoint(17, 17);
         };
@@ -706,7 +706,7 @@ var Basic = Basic || new Campaign();
             this.allowAgentsOnCellRange(20, 17);
             this.allowAgentsOnCellRange(9, 1);
 
-            this.addTerrainToPath(new Terrain('#ECDDCA', 0.9));
+            this.addTerrainToPath(new Terrain(one.color('#ECDDCA').alpha(0.9)));
             this.addEntryPoint(9, 0);
             this.addExitPoint(9, 18);
 
@@ -813,7 +813,7 @@ var Basic = Basic || new Campaign();
             this.allowAgentsOnCellRange(41, 1);
             this.allowAgentsOnCellRange(21, 18);
 
-            this.addTerrainToPath(new Terrain('#FAF6ED', 0.9));
+            this.addTerrainToPath(new Terrain(one.color('#FAF6ED').alpha(0.9)));
             this.addEntryPoint(18, 19);
             this.addExitPoint(16, 19);
         };
@@ -845,7 +845,7 @@ var Basic = Basic || new Campaign();
             this.addEntryPoint(18, 12);
             this.addExitPoint(12, 17);
             this.addExitPoint(17, 7);
-            this.addTerrainToPath(new Terrain('#848A64', 0.7));
+            this.addTerrainToPath(new Terrain(one.color('#848A64').alpha(0.7)));
             if (! this.preState) {
                 this.preState = {};
                 this.preState.ignoreResourceBalance = Universe.settings.ignoreResourceBalance;

@@ -59,7 +59,7 @@ var CitiesModule = CitiesModule || {};
                             cell.potential = Math.random();
                         }
                         cell.development = 0;
-                        cell.terrain = new Terrain("#000", 1.0);
+                        cell.terrain = new Terrain(one.color("#000").alpha(1.0));
                         cell.agentsAllowed = true;
                     });
                 },
@@ -83,7 +83,7 @@ var CitiesModule = CitiesModule || {};
                         var grey = Math.floor(cell.potential * 255);
 //                        var color = 'rgb(' + grey + ', ' + grey + ', ' + grey + ')';
                         var color = '#' + grey.toString(16) + grey.toString(16) + grey.toString(16);
-                        cell.terrain = new Terrain(color, 1.0);
+                        cell.terrain = new Terrain(one.color(color).alpha(1.0));
                     });
                 }
             })
@@ -130,7 +130,7 @@ var CitiesModule = CitiesModule || {};
                             cell.potential = Math.random();
                         }
                         cell.development = 0;
-                        cell.terrain = new Terrain("#000", 1.0);
+                        cell.terrain = new Terrain(one.color("#000").alpha(1.0));
                         cell.agentsAllowed = true;
                     });
                 },
@@ -166,7 +166,7 @@ var CitiesModule = CitiesModule || {};
                         var grey = Math.floor(cell.potential * 255);
 //                        var color = 'rgb(' + grey + ', ' + grey + ', ' + grey + ')';
                         var color = '#' + grey.toString(16) + grey.toString(16) + grey.toString(16);
-                        cell.terrain = new Terrain(color, 1.0);
+                        cell.terrain = new Terrain(one.color(color).alpha(1.0));
                     });
 
 
@@ -211,7 +211,7 @@ var CitiesModule = CitiesModule || {};
                     this.cells.forEach(function(cell) {
                         cell.potential = Math.random() < 0.5 ? -1 : 1;
                         cell.development = 0;
-                        cell.terrain = new Terrain("#000", 1.0);
+                        cell.terrain = new Terrain(one.color("#000").alpha(1.0));
                         cell.agentsAllowed = true;
                         FiercePlanet.Parameters.Min = -1;
                         FiercePlanet.Parameters.Max = 1;
@@ -261,15 +261,15 @@ var CitiesModule = CitiesModule || {};
                     this.cells.forEach(function(cell) {
                         if (FiercePlanet.Parameters.DrawDevelopment) {
                             if (cell.development == 1)
-                                cell.terrain = new Terrain("#fff", 1.0);
+                                cell.terrain = new Terrain(one.color("#fff").alpha(1.0));
                             else
-                                cell.terrain = new Terrain("#000", 1.0);
+                                cell.terrain = new Terrain(one.color("#000").alpha(1.0));
                         }
                         else {
                             // Convert potential to a hexidecimal
                             var hex = Math.floor(((cell.potential - min) / range) * 16).toString(16);
                             var color = "#" + hex + hex + hex;
-                            cell.terrain = new Terrain(color, 1.0);
+                            cell.terrain = new Terrain(one.color(color).alpha(1.0));
                         }
                     });
                     FiercePlanet.Drawing.drawPath();
@@ -315,7 +315,7 @@ var CitiesModule = CitiesModule || {};
                     this.cells.forEach(function(cell) {
                         cell.potential = Math.random() < 0.5 ? -1 : 1;
                         cell.development = 0;
-                        cell.terrain = new Terrain("#000", 1.0);
+                        cell.terrain = new Terrain(one.color("#000").alpha(1.0));
                         cell.agentsAllowed = true;
                     });
 
@@ -339,7 +339,7 @@ var CitiesModule = CitiesModule || {};
                     this.initialiseWaves(1);
                     var cell = this.getCell(65, 65);
                     cell.developed = true;
-                    cell.terrain = new Terrain('#f00', 1.0);
+                    cell.terrain = new Terrain(one.color('#f00').alpha(1.0));
                 },
                 tickFunction: function () {
                     var world = this;
@@ -382,7 +382,7 @@ var CitiesModule = CitiesModule || {};
                     })
                     this.cells.forEach(function(cell) {
                         if (cell.needsToBeDeveloped) {
-                            cell.terrain = new Terrain('#f00', 1.0);
+                            cell.terrain = new Terrain(one.color('#f00').alpha(1.0));
                             cell.developed = true;
                             var agents = world.getAgentsAtCell(cell.x, cell.y);
                             agents.forEach(function(agent) {
@@ -433,7 +433,7 @@ var CitiesModule = CitiesModule || {};
                 handleParameters: function () {
                     this.generatePath();
                     this.cells.forEach(function(cell) {
-                        cell.terrain = new Terrain("#666", 1.0);
+                        cell.terrain = new Terrain(one.color("#666").alpha(1.0));
                         cell.agentsAllowed = true;
                     });
 
@@ -483,7 +483,7 @@ var CitiesModule = CitiesModule || {};
 					}
 					this.initialiseCells();
                     this.cells.forEach(function(cell) {
-                        cell.terrain = new Terrain("#666", 1.0);
+                        cell.terrain = new Terrain(one.color("#666").alpha(1.0));
                         cell.agentsAllowed = true;
                     });
 					
@@ -625,7 +625,7 @@ var CitiesModule = CitiesModule || {};
                     this.cells.forEach(function(cell) {
                         cell.potential = Math.random() < 0.5 ? -1 : 1;
                         cell.development = 0;
-                        cell.terrain = new Terrain("#000", 1.0);
+                        cell.terrain = new Terrain(one.color("#000").alpha(1.0));
                         cell.agentsAllowed = true;
                     });
                 },
@@ -654,7 +654,7 @@ var CitiesModule = CitiesModule || {};
                             cell.potential = cell.newPotential;
                         cell.development =  (cell.potential <= FiercePlanet.Parameters.Threshold && cell.development == 0 ? 0 : 1 );
                         if (cell.development == 1)
-                            cell.terrain = new Terrain("#fff", 1.0);
+                            cell.terrain = new Terrain(one.color("#fff").alpha(1.0));
                     });
                     var potentials = _.map(this.cells, function(cell) { return cell.potential; }),
                         min = _.min(potentials),
@@ -733,13 +733,13 @@ var CitiesModule = CitiesModule || {};
                     this.generatePath();
                     this.cells.forEach(function(cell) {
                         cell.developed = 0;
-                        cell.terrain = new Terrain("#000", 1.0);
+                        cell.terrain = new Terrain(one.color("#000").alpha(1.0));
                         cell.agentsAllowed = true;
                         cell.attemptsToDevelop = 0;
                     });
                     var cell = this.getCell(50, 50);
                     cell.developed = true;
-                    cell.terrain = new Terrain("#fff", 1.0);
+                    cell.terrain = new Terrain(one.color("#fff").alpha(1.0));
                 },
                 tickFunction: function () {
                     this.generateAutomata();
@@ -807,13 +807,13 @@ var CitiesModule = CitiesModule || {};
                     });
                     this.cells.forEach(function(cell) {
                         if (cell.needsDevelopment) {
-                            cell.terrain = new Terrain("#fff", 1.0);
+                            cell.terrain = new Terrain(one.color("#fff").alpha(1.0));
                             cell.developed = true;
                             cell.needsDevelopment = false;
                             cell.age = 0;
                         }
                         else if (ageToRevert > 0 && cell.developed && cell.age > 0 && cell.age % ageToRevert == 0) {
-                            cell.terrain = new Terrain("#000", 1.0);
+                            cell.terrain = new Terrain(one.color("#000").alpha(1.0));
                             cell.developed = false;
                             cell.age = 0;
                         }
@@ -853,13 +853,13 @@ var CitiesModule = CitiesModule || {};
                         cell.probability = 1;
                         cell.initialProbability = initialProbability;
                         cell.potential = 0;
-                        cell.terrain = new Terrain("#000", 1.0);
+                        cell.terrain = new Terrain(one.color("#000").alpha(1.0));
                         cell.agentsAllowed = true;
                         cell.attemptsToDevelop = 0;
                     });
                     var cell = this.getCell(50, 50);
                     cell.developed = true;
-                    cell.terrain = new Terrain("#fff", 1.0);
+                    cell.terrain = new Terrain(one.color("#fff").alpha(1.0));
                 },
                 tickFunction: function () {
                     this.generateAutomata();
@@ -897,7 +897,7 @@ var CitiesModule = CitiesModule || {};
                         if (! cell.developed && cell.needsToBeDeveloped) {
                             if (r < cell.probability) {
                                 cell.developed = true;
-                                cell.terrain = new Terrain("#fff", 1.0);
+                                cell.terrain = new Terrain(one.color("#fff").alpha(1.0));
                             }
                         }
                     });
@@ -935,14 +935,14 @@ var CitiesModule = CitiesModule || {};
                         cell.probability = 1;
                         cell.initialProbability = initialProbability;
                         cell.potential = 0;
-                        cell.terrain = new Terrain("#000", 1.0);
+                        cell.terrain = new Terrain(one.color("#000").alpha(1.0));
                         cell.agentsAllowed = true;
                         cell.attemptsToDevelop = 0;
                     });
                     var cell = this.getCell(50, 50);
                     cell.developed = true;
                     cell.potential = 1;
-                    cell.terrain = new Terrain("#fff", 1.0);
+                    cell.terrain = new Terrain(one.color("#fff").alpha(1.0));
                 },
                 tickFunction: function () {
                     this.generateAutomata();
@@ -985,7 +985,7 @@ var CitiesModule = CitiesModule || {};
                             if (cell.potential > parseFloat(FiercePlanet.Parameters.Threshold) && r < cell.probability ) {
 //                            if (cell.potential > parseFloat(FiercePlanet.Parameters.Threshold)) {
                                 cell.developed = true;
-                                cell.terrain = new Terrain("#fff", 1.0);
+                                cell.terrain = new Terrain(one.color("#fff").alpha(1.0));
                             }
                             if (!cell.developed && FiercePlanet.Parameters.TryDevelopmentOnce && cell.potential > parseFloat(FiercePlanet.Parameters.Threshold)) {
                                 cell.blockDevelopment = true;
@@ -1043,13 +1043,13 @@ var CitiesModule = CitiesModule || {};
                     this.generatePath();
                     this.cells.forEach(function(cell) {
                         cell.developed = false;
-                        cell.terrain = new Terrain("#000", 1.0);
+                        cell.terrain = new Terrain(one.color("#000").alpha(1.0));
                         cell.agentsAllowed = true;
                     });
                     var cell = this.getCell(50, 50);
                     cell.developed = true;
                     cell.potential = 0;
-                    cell.terrain = new Terrain("#fff", 1.0);
+                    cell.terrain = new Terrain(one.color("#fff").alpha(1.0));
                 },
                 tickFunction: function () {
                     if (Lifecycle.waveCounter == 1) {
@@ -1138,7 +1138,7 @@ var CitiesModule = CitiesModule || {};
                     if (maxCell) {
                         maxCell.developed = true;
                         maxCell.potential = 0;
-                        maxCell.terrain = new Terrain("#fff", 1.0);
+                        maxCell.terrain = new Terrain(one.color("#fff").alpha(1.0));
                     }
 
 
@@ -1171,14 +1171,14 @@ var CitiesModule = CitiesModule || {};
                     this.cells.forEach(function(cell) {
                         cell.developed = 0;
                         cell.potential = 0;
-                        cell.terrain = new Terrain("#000", 1.0);
+                        cell.terrain = new Terrain(one.color("#000").alpha(1.0));
                         cell.agentsAllowed = true;
                         cell.attemptsToDevelop = 0;
                     });
                     var cell = this.getCell(50, 50);
                     cell.developed = true;
                     cell.potential = 1;
-                    cell.terrain = new Terrain("#fff", 1.0);
+                    cell.terrain = new Terrain(one.color("#fff").alpha(1.0));
                 },
                 tickFunction: function () {
                     this.generateAutomata();
@@ -1239,7 +1239,7 @@ var CitiesModule = CitiesModule || {};
                     });
                     this.cells.forEach(function(cell) {
                         if (cell.needsDevelopment) {
-                            cell.terrain = new Terrain("#fff", 1.0);
+                            cell.terrain = new Terrain(one.color("#fff").alpha(1.0));
                             cell.developed = true;
                             cell.needsDevelopment = false;
                             cell.age = 0;

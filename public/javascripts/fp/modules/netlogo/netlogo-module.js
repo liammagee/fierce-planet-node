@@ -43,7 +43,7 @@ var NetLogoModule = NetLogoModule || {};
                     this.cells.forEach(function(cell) {
                         cell.potential = Math.random() < 0.5 ? -1 : 1;
                         cell.development = 0;
-                        cell.terrain = new Terrain("#fff", 1.0);
+                        cell.terrain = new Terrain(one.color("#fff").alpha(1.0));
                         cell.agentsAllowed = true;
                     });
                 },
@@ -287,7 +287,7 @@ var NetLogoModule = NetLogoModule || {};
                     culture.waveNumber = initialCows;
                     culture.initialSpeed = 1;
                     world.cells.forEach(function(cell) {
-                        cell.terrain = new Terrain('#090', 0.5);
+                        cell.terrain = new Terrain(one.color('#090').alpha(0.5));
                         cell.grass = maxGrassHeight;
                     })
                     culture.initFunction = function(agent, world) {
@@ -380,7 +380,8 @@ var NetLogoModule = NetLogoModule || {};
                             cell.grass += 1;
                         if (cell.grass > maxGrassHeight)
                             cell.grass = maxGrassHeight
-                        cell.terrain = new Terrain('#0' + (cell.grass >= 10 ? 'a' : cell.grass) + '0', 0.5);
+                        var color = one.color('#000').alpha(0.5).green(cell.grass / 10);
+                        cell.terrain = new Terrain(color);
                     })
                     FiercePlanet.Drawing.clearCanvas('#baseCanvas');
                     FiercePlanet.Drawing.clearCanvas('#resourceCanvas');
@@ -430,7 +431,7 @@ var NetLogoModule = NetLogoModule || {};
                     culture.waveNumber = numAgents;
                     culture.initialSpeed = 1;
                     world.cells.forEach(function(cell) {
-                        cell.terrain = new Terrain('#090', 0.5);
+                        cell.terrain = new Terrain(one.color('#090').alpha(0.5));
                     })
                     culture.initFunction = function(agent, world) {
                         agent.isHappy = false;
@@ -549,7 +550,7 @@ var NetLogoModule = NetLogoModule || {};
                     culture.waveNumber = numAgents;
                     culture.initialSpeed = 1;
                     world.cells.forEach(function(cell) {
-                        cell.terrain = new Terrain('#090', 0.5);
+                        cell.terrain = new Terrain(one.color('#090').alpha(0.5));
                         cell.grass = maxGrassHeight;
                     })
                     culture.initFunction = function(agent, world) {
@@ -626,7 +627,8 @@ var NetLogoModule = NetLogoModule || {};
                             cell.grass += 1;
                         if (cell.grass > maxGrassHeight)
                             cell.grass = maxGrassHeight
-                        cell.terrain = new Terrain('#0' + (cell.grass >= 10 ? 'a' : cell.grass) + '0', 0.5);
+                        var color = one.color('#000').alpha(0.5).green(cell.grass / 10);
+                        cell.terrain = new Terrain(color);
                     })
                     FiercePlanet.Drawing.clearCanvas('#baseCanvas');
                     FiercePlanet.Drawing.clearCanvas('#resourceCanvas');
@@ -674,7 +676,7 @@ var NetLogoModule = NetLogoModule || {};
                     culture.waveNumber = numAgents;
                     culture.initialSpeed = 1;
                     world.cells.forEach(function(cell) {
-                        cell.terrain = new Terrain('#090', 0.5);
+                        cell.terrain = new Terrain(one.color('#090').alpha(0.5));
                         cell.grass = maxGrassHeight;
                     })
                     culture.initFunction = function(agent, world) {
@@ -751,7 +753,8 @@ var NetLogoModule = NetLogoModule || {};
                             cell.grass += 1;
                         if (cell.grass > maxGrassHeight)
                             cell.grass = maxGrassHeight
-                        cell.terrain = new Terrain('#0' + (cell.grass >= 10 ? 'a' : cell.grass) + '0', 0.5);
+                        var color = one.color('#000').alpha(0.5).green(cell.grass / 10);
+                        cell.terrain = new Terrain(color);
                     })
                     FiercePlanet.Drawing.clearCanvas('#baseCanvas');
                     FiercePlanet.Drawing.clearCanvas('#resourceCanvas');
@@ -799,7 +802,7 @@ var NetLogoModule = NetLogoModule || {};
                     culture.waveNumber = numAgents;
                     culture.initialSpeed = 1;
                     world.cells.forEach(function(cell) {
-                        cell.terrain = new Terrain('#090', 0.5);
+                        cell.terrain = new Terrain(one.color('#090').alpha(0.5));
                         cell.grass = maxGrassHeight;
                     })
                     culture.initFunction = function(agent, world) {
@@ -876,7 +879,8 @@ var NetLogoModule = NetLogoModule || {};
                             cell.grass += 1;
                         if (cell.grass > maxGrassHeight)
                             cell.grass = maxGrassHeight
-                        cell.terrain = new Terrain('#0' + (cell.grass >= 10 ? 'a' : cell.grass) + '0', 0.5);
+                        var color = one.color('#000').alpha(0.5).green(cell.grass / 10);
+                        cell.terrain = new Terrain(color);
                     })
                     FiercePlanet.Drawing.clearCanvas('#baseCanvas');
                     FiercePlanet.Drawing.clearCanvas('#resourceCanvas');
@@ -921,11 +925,11 @@ var NetLogoModule = NetLogoModule || {};
                     world.cells.forEach(function(cell) {
                         var r = Math.random();
                         if (r < 0.5) {
-                            cell.terrain = new Terrain('#0f0', 1.0);
+                            cell.terrain = new Terrain(one.color('#0f0').alpha(1.0));
                             cell.vote = 0;
                         }
                         else {
-                            cell.terrain = new Terrain('#00f', 1.0);
+                            cell.terrain = new Terrain(one.color('#00f').alpha(1.0));
                             cell.vote = 1;
                         }
                         cell.total = 0;
@@ -969,10 +973,10 @@ var NetLogoModule = NetLogoModule || {};
                         }
                         var r = Math.random();
                         if (cell.vote == 0) {
-                            cell.terrain = new Terrain('#0f0', 1.0);
+                            cell.terrain = new Terrain(one.color('#0f0').alpha(1.0));
                         }
                         else {
-                            cell.terrain = new Terrain('#00f', 1.0);
+                            cell.terrain = new Terrain(one.color('#00f').alpha(1.0));
                         }
                     })
 
@@ -1010,7 +1014,7 @@ var NetLogoModule = NetLogoModule || {};
                 handleParameters: function () {
                     this.generatePath();
                     this.cells.forEach(function(cell) {
-                        cell.terrain = new Terrain("#000", 1.0);
+                        cell.terrain = new Terrain(one.color('#000').alpha(1.0));
                         cell.agentsAllowed = true;
                     });
 
@@ -1057,12 +1061,12 @@ var NetLogoModule = NetLogoModule || {};
                     })
                     this.initialiseCells();
                     this.cells.forEach(function(cell) {
-                        cell.terrain = new Terrain("#000", 1.0);
+                        cell.terrain = new Terrain(one.color('#000').alpha(1.0));
                         cell.agentsAllowed = true;
                     });
                     var cell = this.getCell(50, 50);
                     cell.developed = true;
-                    cell.terrain = new Terrain("#f00", 1.0);
+                    cell.terrain = new Terrain(one.color('#f00').alpha(1.0));
 
 
                 },
@@ -1109,7 +1113,7 @@ var NetLogoModule = NetLogoModule || {};
                         stoppedAgent.color = 'f00'
                         var x = stoppedAgent.x, y = stoppedAgent.y;
                         var cell = world.getCell(x, y);
-                        cell.terrain = new Terrain('#f00', 1.0);
+                        cell.terrain = new Terrain(one.color('#f00').alpha(1.0));
                         cell.developed = true;
                     }
 

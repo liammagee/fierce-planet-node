@@ -163,7 +163,7 @@ var GameOfLifeModule = GameOfLifeModule || {};
                     this.expiredAgents = [];
                 }
 
-                var bg = new Terrain('#000', 0.9);
+                var bg = new Terrain(one.color('#000').alpha(0.9));
                 this.addTerrainToPath(bg);
 //                this.generatePath();
 //                for (var i = 0; i < this.cellsAcross; i++) {

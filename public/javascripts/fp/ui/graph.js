@@ -150,7 +150,6 @@ FiercePlanet.Graph = FiercePlanet.Graph || {};
                 var data = FiercePlanet.Graph.plot.getData();
                 var arguments = FiercePlanet.Graph.plotData.arguments;
                 for (var i = 0; i < arguments.length; i++) {
-                    console.log(arguments[i])
                     data[i].data.push([Lifecycle.worldCounter, arguments[i]]);
                 }
             FiercePlanet.Graph.plot.setData(data);
