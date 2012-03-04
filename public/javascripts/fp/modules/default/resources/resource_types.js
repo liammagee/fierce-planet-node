@@ -31,6 +31,8 @@ var ResourceTypes = ResourceTypes || {};
 	this.DEMOCRACY_RESOURCE_TYPE = new ResourceType("Democracy", "democracy", "/images/icons/microphone.png", 25, 40, 250, 20);
 	this.FESTIVAL_RESOURCE_TYPE = new ResourceType("Festival", "festival", "/images/icons/martini.png", 30, 50, 300, 25);
 
+    this.WASTE_RESOURCE_TYPE = new ResourceType("Waste", "waste", "/images/icons/liquid-waste.png", 10, 20, 100, 5);
+
 
 	// Additional resources - uncategorised
 	this.AEROPLANE = new ResourceType("Aeroplane", "aeroplane", "/images/icons/aeroplane.png", 30, 50, 300, 25);

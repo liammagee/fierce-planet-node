@@ -170,8 +170,11 @@ Capabilities.MoveRandomlyCapability = new Capability();
     this.exercise = function(agent, world) {
         var positions = world.getMooreNeighbourhood(agent.x, agent.y, false),
             index = Math.floor(Math.random() * positions.length),
-            position = positions[index];
-        agent.moveTo(position.x, position.y);
+            position = positions[index],
+            cell = world.getCell(position.x, position.y);
+
+        if (cell.agentsAllowed)
+            agent.moveTo(position.x, position.y);
     };
 }).apply(Capabilities.MoveRandomlyCapability);
 
@@ -184,8 +187,10 @@ Capabilities.MoveRandomlyToFreeCellCapability = new Capability();
         var positions = world.getMooreNeighbourhood(agent.x, agent.y, false),
             randomisePositions = _.shuffle(positions);
         for (var i = 0; i < randomisePositions.length; i++) {
-            var position = randomisePositions[i];
-            if (world.getAgentsAtCell(position.x, position.y).length == 0)
+            var position = randomisePositions[i],
+                cell = world.getCell(position.x, position.y);
+
+            if (cell.agentsAllowed && cell.agents.length == 0)
                 agent.moveTo(position.x, position.y);
         }
     };

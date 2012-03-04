@@ -136,7 +136,8 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
                     y = y - FiercePlanet.Orientation.halfWorldHeight;
 
                     if (!Universe.settings.hidePath) {
-                        if (yPos == 0 || !Lifecycle.currentWorld.areAgentsAllowed(xPos, yPos - 1)) {
+//                        if (yPos == 0 || !Lifecycle.currentWorld.areAgentsAllowed(xPos, yPos - 1)) {
+                        if (yPos == 0) {
                             var my_gradient = ctx.createLinearGradient(x, y, x, y + FiercePlanet.Orientation.cellHeight / 4);
                             my_gradient.addColorStop(0, "#ccc");
                             try {
@@ -160,6 +161,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
                         ctx.strokeRect(x, y, FiercePlanet.Orientation.cellWidth, FiercePlanet.Orientation.cellHeight);
                     }
                 }
+
             }
         }
         ctx.restore();
@@ -1687,6 +1689,8 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
 
         if (Lifecycle.currentWorld.getCell(xPos, yPos).agentsAllowed && !Universe.settings.allowResourcesOnPath)
             return;
+//        if (! Lifecycle.currentWorld.getCell(xPos, yPos).resourcesAllowed)
+//            return;
 
         var scrollingCanvas = $('#guideCanvas')[0];
         var ctx = scrollingCanvas.getContext('2d');

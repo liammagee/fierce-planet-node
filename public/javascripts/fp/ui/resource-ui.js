@@ -232,6 +232,8 @@ FiercePlanet.ResourceUI = FiercePlanet.ResourceUI || {};
     this.dropItem = function(posX, posY) {
         if (Lifecycle.currentWorld.areAgentsAllowed(posX, posY) && ! Lifecycle.currentWorld.allowResourcesOnPath)
             return;
+//        if (! Lifecycle.currentWorld.getCell(posX, posY).resourcesAllowed)
+//            return;
         if (Lifecycle.currentWorld.isPositionOccupiedByResource(posX, posY))
             return;
 

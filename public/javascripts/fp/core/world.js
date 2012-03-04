@@ -397,7 +397,7 @@ function World() {
                 while (!positionFound) {
                     var ci = Math.floor(Math.random() * pl);
                     var cell = this.cells[ci];
-                    if (cell.agents == 0) {
+                    if (cell.agents == 0 && cell.agentsAllowed) {
                         var positions = this.getMooreNeighbourhood(cell.x, cell.y, false);
                         var counter = 0;
                         var agent = world.generateAgentAtPoint(culture, cell.x, cell.y);
@@ -587,6 +587,25 @@ function World() {
         var resourceCategory = resource.category.code;
         this.currentResourceStore -= resource.cost;
         this.currentResourceSpent += resource.cost;
+    };
+
+    /**
+     *
+     * @param resource
+     */
+    this.addResourceRandomly = function(resourceType) {
+        var foundPosition = false,
+            clength = this.cells.length;
+
+        for (var i = 0; i < clength; i ++) {
+            var rx = Math.floor(Math.random() * this.cellsAcross),
+                ry = Math.floor(Math.random() * this.cellsDown);
+            var cell = this.getCell(rx, ry);
+            if (cell.resources.length == 0 && cell.resourcesAllowed) {
+                this.addResource(new Resource(ResourceTypes.WASTE_RESOURCE_TYPE, rx, ry));
+                break;
+            }
+        }
     };
 
     /**

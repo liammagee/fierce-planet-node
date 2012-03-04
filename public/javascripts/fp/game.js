@@ -204,7 +204,6 @@ FiercePlanet.Game = FiercePlanet.Game || {};
              else
              Lifecycle.startWorld();
              */
-
         };
         Lifecycle.preRestartWorldCallback = function () {
             // Reset the score
