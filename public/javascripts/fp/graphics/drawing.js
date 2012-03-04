@@ -80,7 +80,6 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         var ctx = canvas.getContext('2d');
         var terrain = Lifecycle.currentWorld.backgroundTerrain;
         var pathColor = terrain ? terrain.color.cssa() : "#fff";
-//        var pathColor = terrain ? this.insertAlpha(terrain.color, terrain.alpha) : "#fff";
 
         ctx.fillStyle = pathColor;
         ctx.fillRect(0, 0, FiercePlanet.Orientation.worldWidth, FiercePlanet.Orientation.worldHeight);
@@ -113,8 +112,6 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
 
                 var terrain = Lifecycle.currentWorld.getCell(xPos, yPos).terrain;
                 var pathColor = terrain ? terrain.color.cssa() : "#000";
-//                console.log(pathColor)
-//                var pathColor = terrain ? this.insertAlpha(terrain.color, terrain.alpha) : "#000";
 
                 if ((Universe.settings.isometricView || Lifecycle.currentWorld.isometricView)) {
                     var newOrigin = FiercePlanet.Isometric.doIsometricOffset(xPos, yPos);
@@ -335,7 +332,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
             var duration = FiercePlanet.Game.currentNotice.duration;
             var strengthOfNotice = (duration - (Lifecycle.worldCounter - start)) / duration;
             var startingTransparency = 0.1;
-            var alphaWorld = Math.pow(strengthOfNotice - startingTransparency, 0.5);
+            var alpha = Math.pow(strengthOfNotice - startingTransparency, 0.5);
     
     
             // Notice dimensions
@@ -345,8 +342,8 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
             var height = FiercePlanet.Game.currentNotice.height;
     
             // Styles
-            var foregroundColor = this.insertAlpha(FiercePlanet.Game.currentNotice.foregroundColor, alphaWorld);
-            var backgroundColor = this.insertAlpha(FiercePlanet.Game.currentNotice.backgroundColor, alphaWorld);
+            var foregroundColor = this.insertAlpha(FiercePlanet.Game.currentNotice.foregroundColor, alpha);
+            var backgroundColor = this.insertAlpha(FiercePlanet.Game.currentNotice.backgroundColor, alpha);
             var lineWidth = FiercePlanet.Game.currentNotice.lineWidth;
             var font = FiercePlanet.Game.currentNotice.font;
     
@@ -572,8 +569,8 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
             var rgye = - FiercePlanet.Orientation.halfWorldHeight + y + FiercePlanet.Orientation.cellHeight;
             var resourceGradient = ctx.createLinearGradient(rgx, rgys, rgx, rgye);
             resourceGradient.addColorStop(0, "#fff");
-            resourceGradient.addColorStop(0.5, "#" + c);
-            resourceGradient.addColorStop(1, "#" + c);
+            resourceGradient.addColorStop(0.5, c);
+            resourceGradient.addColorStop(1, c);
 
             if ((Universe.settings.isometricView || Lifecycle.currentWorld.isometricView)) {
                 var tileOffset = FiercePlanet.Isometric.offsets3DPoint([FiercePlanet.Orientation.cellHeight, 0, 0]);
@@ -594,7 +591,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
                 // Use box style - computationally expensive
                 if (Universe.settings.showResourcesAsBoxes) {
                     boxHeight = (s / 100) * 20;
-                    ctx.fillStyle = "#" + c;
+                    ctx.fillStyle = c;
                     ctx.strokeStyle = "#eee";
                     FiercePlanet.Isometric.box(ctx, originXp, originYp, 0, 0, 0, FiercePlanet.Orientation.cellHeight, boxHeight, FiercePlanet.Orientation.cellHeight);
                     ctx.fill();
@@ -603,8 +600,8 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
                 else {
                     resourceGradient = ctx.createLinearGradient(originXp, originYp - FiercePlanet.Orientation.cellHeight + yOffset, originXp, originYp);
                     resourceGradient.addColorStop(0, "#fff");
-                    resourceGradient.addColorStop(0.5, "#" + c);
-                    resourceGradient.addColorStop(1, "#" + c);
+                    resourceGradient.addColorStop(0.5, c);
+                    resourceGradient.addColorStop(1, c);
                     ctx.fillStyle = resourceGradient;
                     FiercePlanet.Isometric.draw3DTile(ctx, [originXp, originYp], FiercePlanet.Orientation.cellHeight);
                     ctx.fill();
@@ -637,7 +634,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
                 ctx.fillRect(x, y + yOffset, FiercePlanet.Orientation.cellWidth, (FiercePlanet.Orientation.cellHeight - yOffset));
 
                 ctx.lineWidth = 4 / FiercePlanet.Orientation.zoomWorld;
-                ctx.strokeStyle = "#" + newColor;
+                ctx.strokeStyle = newColor;
 
 
                 // Draw resource-specific representation here
@@ -682,8 +679,8 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         var rgye = - FiercePlanet.Orientation.halfWorldHeight + y + FiercePlanet.Orientation.cellHeight;
         var resourceGradient = ctx.createLinearGradient(rgx, rgys, rgx, rgye);
         resourceGradient.addColorStop(0, "#fff");
-        resourceGradient.addColorStop(0.5, "#" + c);
-        resourceGradient.addColorStop(1, "#" + c);
+        resourceGradient.addColorStop(0.5, c);
+        resourceGradient.addColorStop(1, c);
 
         if ((Universe.settings.isometricView || Lifecycle.currentWorld.isometricView)) {
             var tileOffset = FiercePlanet.Isometric.offsets3DPoint([FiercePlanet.Orientation.cellHeight, 0, 0]);
@@ -704,7 +701,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
             // Use box style - computationally expensive
             if (Universe.settings.showResourcesAsBoxes) {
                 boxHeight = (s / 100) * 20;
-                ctx.fillStyle = "#" + c;
+                ctx.fillStyle = c;
                 ctx.strokeStyle = "#eee";
                 FiercePlanet.Isometric.box(ctx, originXp, originYp, 0, 0, 0, FiercePlanet.Orientation.cellHeight, boxHeight, FiercePlanet.Orientation.cellHeight);
                 ctx.fill();
@@ -713,8 +710,8 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
             else {
                 resourceGradient = ctx.createLinearGradient(originXp, originYp - FiercePlanet.Orientation.cellHeight + yOffset, originXp, originYp);
                 resourceGradient.addColorStop(0, "#fff");
-                resourceGradient.addColorStop(0.5, "#" + c);
-                resourceGradient.addColorStop(1, "#" + c);
+                resourceGradient.addColorStop(0.5, c);
+                resourceGradient.addColorStop(1, c);
                 ctx.fillStyle = resourceGradient;
                 FiercePlanet.Isometric.draw3DTile(ctx, [originXp, originYp], FiercePlanet.Orientation.cellHeight);
                 ctx.fill();
@@ -747,7 +744,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
             ctx.fillRect(x, y + yOffset, FiercePlanet.Orientation.cellWidth, (FiercePlanet.Orientation.cellHeight - yOffset));
 
             ctx.lineWidth = 4;
-            ctx.strokeStyle = "#" + newColor;
+            ctx.strokeStyle = newColor;
 
             // Draw resource-specific representation here
             if (resource.kind.image) {
@@ -781,8 +778,8 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         var rgye = - FiercePlanet.Orientation.halfWorldHeight + y + FiercePlanet.Orientation.cellHeight;
         var resourceGradient = ctx.createLinearGradient(rgx, rgys, rgx, rgye);
         resourceGradient.addColorStop(0, "#fff");
-        resourceGradient.addColorStop(0.5, "#" + c);
-        resourceGradient.addColorStop(1, "#" + c);
+        resourceGradient.addColorStop(0.5, c);
+        resourceGradient.addColorStop(1, c);
 
         if ((Universe.settings.isometricView || Lifecycle.currentWorld.isometricView)) {
             var tileOffset = FiercePlanet.Isometric.offsets3DPoint([FiercePlanet.Orientation.cellHeight, 0, 0]);
@@ -803,7 +800,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
             // Use box style - computationally expensive
             if (Universe.settings.showResourcesAsBoxes) {
                 boxHeight = (s / 100) * 20;
-                ctx.fillStyle = "#" + c;
+                ctx.fillStyle = c;
                 ctx.strokeStyle = "#eee";
                 FiercePlanet.Isometric.box(ctx, originXp, originYp, 0, 0, 0, FiercePlanet.Orientation.cellHeight, boxHeight, FiercePlanet.Orientation.cellHeight);
                 ctx.fill();
@@ -812,8 +809,8 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
             else {
                 resourceGradient = ctx.createLinearGradient(originXp, originYp - FiercePlanet.Orientation.cellHeight + yOffset, originXp, originYp);
                 resourceGradient.addColorStop(0, "#fff");
-                resourceGradient.addColorStop(0.5, "#" + c);
-                resourceGradient.addColorStop(1, "#" + c);
+                resourceGradient.addColorStop(0.5, c);
+                resourceGradient.addColorStop(1, c);
                 ctx.fillStyle = resourceGradient;
                 FiercePlanet.Isometric.draw3DTile(ctx, [originXp, originYp], FiercePlanet.Orientation.cellHeight);
                 ctx.fill();
@@ -849,7 +846,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
             ctx.fillRect(x, y + yOffset, FiercePlanet.Orientation.cellWidth, (FiercePlanet.Orientation.cellHeight - yOffset));
 
             ctx.lineWidth = 4;
-            ctx.strokeStyle = "#" + newColor;
+            ctx.strokeStyle = newColor;
 
             // Draw resource-specific representation here
             if (resource.kind.image) {
@@ -902,7 +899,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
 
         var s = (resource.totalYield / resource.initialTotalYield) * 100;
         var c = resource.color;
-        ctx.strokeStyle = "#" + c;
+        ctx.strokeStyle = c;
         ctx.lineWidth = 2;
         ctx.beginPath();
         ctx.moveTo(x, y);
@@ -1045,8 +1042,8 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         rOffset = (rOffset.length < charOffset ? rOffset + "0" : rOffset);
         gOffset = (gOffset.length < charOffset ? gOffset + "0" : gOffset);
         bOffset = (bOffset.length < charOffset ? bOffset + "0" : bOffset);
-        var newColor = rOffset + gOffset + bOffset;
-        return newColor;
+        var newColor = '#' + rOffset + gOffset + bOffset;
+        return one.color(newColor).hex();
     };
     
     /**

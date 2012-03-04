@@ -19,9 +19,9 @@ _.extend(DefaultCultures.Circular, {
         ctx.beginPath();
         ctx.arc(x + radius, y + radius, radius, 0, Math.PI * 2, false);
         ctx.closePath();
-        ctx.strokeStyle = "#" + newColor;
+        ctx.strokeStyle = agent.color; //"#" + newColor;
         ctx.stroke();
-        ctx.fillStyle = "#" + newColor;
+        ctx.fillStyle = agent.color; //"#" + newColor;
         ctx.fill();
     })
 });
@@ -30,7 +30,7 @@ DefaultCultures.Square = new Culture("Square", "000");
 _.extend(DefaultCultures.Square, {
     drawFunction: (function(ctx, agent, x, y, pieceWidth, pieceHeight, newColor, counter, direction) {
 
-        ctx.fillStyle = "#" + newColor;
+        ctx.fillStyle = agent.color;
         ctx.fillRect(x - FiercePlanet.Orientation.cellWidth / 2, y - FiercePlanet.Orientation.cellHeight / 2, FiercePlanet.Orientation.cellWidth, FiercePlanet.Orientation.cellHeight);
     })
 });
@@ -72,7 +72,7 @@ _.extend(DefaultCultures.Stickman, {
             ctx.lineTo(x - pieceWidth / 4 + barLength, y + yHealthOffset);
             ctx.closePath();
 
-            ctx.strokeStyle = "#" + rc.color;
+            ctx.strokeStyle = rc.color;
             ctx.stroke();
 
             yHealthOffset -= 3;
@@ -104,12 +104,10 @@ _.extend(DefaultCultures.Stickman, {
 
         // Now draw the figure
         ctx.lineWidth = 1.5;
-        ctx.strokeStyle = "#" + newColor;
-//                ctx.strokeStyle = "#000";
+        ctx.strokeStyle = agent.color;
         ctx.lineCap = "round";
         ctx.stroke();
-        ctx.fillStyle = "#" + newColor;
-//                ctx.fillStyle = "#000";
+        ctx.fillStyle = agent.color;
         ctx.fill();
     }),
 

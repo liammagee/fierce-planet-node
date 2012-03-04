@@ -128,7 +128,6 @@ var WorldVisionModule = WorldVisionModule || {};
                     culture.initialSpeed = 5;
                     culture.moveCost = -healthCost;
                     culture.healthCategories = ModuleManager.currentModule.resourceSet.categories;
-                    var c = one.color('#009000');
                     world.cells.forEach(function(cell) {
                         if (cell.y > 23 && cell.y < 33) {
                             cell.terrain = new Terrain(one.color('#090').alpha(.4));

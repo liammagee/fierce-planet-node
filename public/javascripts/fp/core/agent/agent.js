@@ -183,6 +183,7 @@ function Agent(culture, x, y) {
      */
     this.moveTo = function(x, y) {
         var lastX = this.x, lastY = this.y;
+        this.lastMemory = { x: lastX, y: lastY};
         this.x = x; this.y = y;
         this.incrementMoves();
         this.adjustGeneralHealth(this.culture.moveCost);

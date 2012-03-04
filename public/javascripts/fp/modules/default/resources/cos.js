@@ -13,10 +13,10 @@ var CoS = CoS || {};
 CoS.id = 'CoS';
 
 // Resource categories
-CoS.ECO_CATEGORY = new ResourceCategory("Economy", "eco", "44ABE0");
-CoS.ENV_CATEGORY = new ResourceCategory("Ecology", "enl", "CBDB2A");
-CoS.POL_CATEGORY = new ResourceCategory("Political", "pol", "DE1F2A");
-CoS.CUL_CATEGORY = new ResourceCategory("Cultural", "cul", "2ADBCB");
+CoS.ECO_CATEGORY = new ResourceCategory("Economy", "eco", "#44ABE0");
+CoS.ENV_CATEGORY = new ResourceCategory("Ecology", "enl", "#CBDB2A");
+CoS.POL_CATEGORY = new ResourceCategory("Political", "pol", "#DE1F2A");
+CoS.CUL_CATEGORY = new ResourceCategory("Cultural", "cul", "#2ADBCB");
 
 /**
  * Do setup of this resource set

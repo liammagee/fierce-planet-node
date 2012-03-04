@@ -285,7 +285,7 @@ FiercePlanet.ResourceUI = FiercePlanet.ResourceUI || {};
             var swatchCategoryElement = $('#' + category.code);
             var swatchCategoryTitleHTML = '<div class="title">' + category.name + '</div>';
             swatchCategoryElement.append(swatchCategoryTitleHTML);
-            swatchCategoryElement.css('background', '#' + category.color);
+            swatchCategoryElement.css('background', category.color);
 
             // Add to gallery
             var galleryCategoryHTML = '<div class="gallery-category" id="gallery-' + category.code + '"></div>';
@@ -293,7 +293,7 @@ FiercePlanet.ResourceUI = FiercePlanet.ResourceUI || {};
             var galleryCategoryElement = $('#gallery-' + category.code);
             var galleryCategoryTitleHTML = '<div class="title">' + category.name + '</div>';
             galleryCategoryElement.append(galleryCategoryTitleHTML);
-            galleryCategoryElement.css('background', '#' + category.color);
+            galleryCategoryElement.css('background', category.color);
 
             var categoryInstanceCounter = 0;
             for (var j = 0; j < category.types.length; j++) {
