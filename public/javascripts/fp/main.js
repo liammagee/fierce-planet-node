@@ -8,8 +8,8 @@ $LAB
 
     // Load JQuery
    .script('jquery/jquery-1.7.1.min.js')
-    .wait(function() {
-    })
+//    .wait(function() {
+//    })
 
     // Load JQuery UI
     .script([
@@ -37,7 +37,7 @@ $LAB
    // .script("/socket.io/socket.io.js")
    .script("CodeMirror-2.2/lib/codemirror.js")
    .script("CodeMirror-2.2/mode/javascript/javascript.js")
-    .wait()
+//    .wait()
 
         // Load FiercePlanet other plugins
    .script([
@@ -70,9 +70,8 @@ $LAB
        , 'fp/utils/fp-utils.js', 'fp/utils/log.js', 'fp/utils/recording.js', 'fp/utils/url-params.js'
        , 'fp/game.js'
    ])
-    .wait(function() {
-        FiercePlanet.GoogleMapUtils.initMaps();
-    })
+//    .wait(function() {
+//    })
 
     .script([
         'fp/modules/default/default-module.js'
@@ -88,6 +87,7 @@ $LAB
     , 'fp/modules/wv/wv-module.js'
     ])
     .wait(function() {
+        FiercePlanet.GoogleMapUtils.initMaps();
         var m = urlParams.module;
         if (!_.isUndefined(m)) {
             if (m == 'pp') {
