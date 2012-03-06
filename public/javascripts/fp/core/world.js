@@ -1110,7 +1110,7 @@ function World() {
     this.conclusion = "Congratulations! You have completed world " + this.id + ".";
 
     // Google map, image and sound options
-    this.backgroundTerrain = null, this.mapOptions = null, this.mapURL = null;
+    this.backgroundTerrain = null, this.mapOptions = null, this.mapURL = null, this.noMap = false;
     this.thumbnail = undefined, this.image = null, this.imageAttribution = null, this.soundSrc = null;
 }
 

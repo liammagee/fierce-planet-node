@@ -86,7 +86,7 @@ WorldVisionResources.doSetup = function() {
                 }),
                 parameters:
                     "<p>Initial agents</p>" +
-                        "<div id='initialAgentsSlider' />" +
+                        "0 <div id='initialAgentsSlider' /> 200" +
                         "<input type='hidden' id='initialAgents' class='world-parameters' name='InitialAgents' value='100'/>" +
                         "<p>Rate of personal waste emission</p><p><input class='world-parameters' name='RateOfWasteEmission' value='250'/> </p>" +
                         "<p>No. of waste disposal units</p><p><input class='world-parameters' name='NumWasteDisposalUnits' value='10'/> </p>" +
@@ -95,36 +95,16 @@ WorldVisionResources.doSetup = function() {
                         "<p>Health cost of infection</p><p><input class='world-parameters' name='HealthCostOfInfection' value='1'/> </p>" +
                         "<p>Water consumed</p><p><input class='world-parameters' name='WaterConsumed' value='1000'/> </p>" +
                         "<p>Quality of water</p><p><input class='world-parameters' name='WaterQuality' value='100'/> </p>" +
+                        "<p>Reproduction probability</p><p><input class='world-parameters' name='ReproductionProbability' value='0.5'/> </p>" +
 
-/*
-                        "<p>Stride length</p><p><input class='world-parameters' name='StrideLength' value='0.08'/> </p>" +
-                        "<p>Cooperative probability</p><p><input class='world-parameters' name='CooperativeProbability' value='0.50'/> </p>" +
-                        "<p>Metabolism</p><p><input class='world-parameters' name='Metabolism' value='6'/> </p>" +
-                        "<p>Reproduction cost</p><p><input class='world-parameters' name='ReproductionCost' value='54'/> </p>" +
-                        "<p>Reproduction threshold</p><p><input class='world-parameters' name='ReproductionThreshold' value='102'/> </p>" +
-
-                        "<p>Grass energy</p><p><input class='world-parameters' name='GrassEnergy' value='51'/> </p>" +
-                        "<p>High growth chance</p><p><input class='world-parameters' name='HighGrowthChance' value='77'/> </p>" +
-                        "<p>Low growth chance</p><p><input class='world-parameters' name='LowGrowthChance' value='30'/> </p>" +
-                        "<p>Max grass height</p><p><input class='world-parameters' name='MaxGrassHeight' value='10'/> </p>" +
-                        "<p>Low high threshold</p><p><input class='world-parameters' name='LowHighThreshold' value='5'/> </p>" +
-                        "<p>Move probability</p><p><input class='world-parameters' name='MoveProbability' value='0.01'/> </p>" +
-                        */
                         "",
                 conclusion: "Well done.",
                 setup: function() {
                 },
-
-
                 setupParameters: function() {
                     $( "#initialAgentsSlider" ).slider({
-                        value: 20,
-                        min: 0,
-                        max: 100,
-                        step: 1,
-                        slide: function( event, ui ) {
-                            $( "#initialAgents" ).val( ui.value );
-                        }
+                        value: 100, min: 0, max: 200, step: 1,
+                        slide: function( event, ui ) { $("#initialAgents").val( ui.value ); }
                     });
                     FiercePlanet.Graph.openDialog();
                     $("#world-graph").show();
@@ -143,21 +123,9 @@ WorldVisionResources.doSetup = function() {
                         , waterConsumed = parseInt(FiercePlanet.Parameters.WaterConsumed)
                         , waterQuality = parseInt(FiercePlanet.Parameters.WaterQuality)
                         , naturalRateOfImprovement = parseInt(FiercePlanet.Parameters.NaturalRateOfImprovement)
+                        , infectionProbability = parseFloat(FiercePlanet.Parameters.InfectionProbability)
                         , healthCostOfInfection = parseInt(FiercePlanet.Parameters.HealthCostOfInfection)
-
-
-                    /*
-                     , moveProbability = parseFloat(FiercePlanet.Parameters.MoveProbability)
-                     , cooperativeProbability = parseFloat(FiercePlanet.Parameters.CooperativeProbability)
-                     , metabolism = parseInt(FiercePlanet.Parameters.Metabolism)
-                     , reproductionCost = parseInt(FiercePlanet.Parameters.ReproductionCost)
-                     , reproductionThreshold = parseInt(FiercePlanet.Parameters.ReproductionThreshold)
-                     , grassEnergy = parseInt(FiercePlanet.Parameters.GrassEnergy)
-                     , highGrowthChance = parseInt(FiercePlanet.Parameters.HighGrowthChance)
-                     , lowGrowthChance = parseInt(FiercePlanet.Parameters.LowGrowthChance)
-                     , maxGrassHeight = parseInt(FiercePlanet.Parameters.MaxGrassHeight)
-                     , lowHighThreshold = parseInt(FiercePlanet.Parameters.LowHighThreshold)
-                     */
+                        , reproductionProbability = parseFloat(FiercePlanet.Parameters.ReproductionProbability)
 
                     /// Set up agents
                     var culture = _.clone(DefaultCultures.Stickman);
@@ -179,12 +147,16 @@ WorldVisionResources.doSetup = function() {
                         agent.infected = false;
                         agent.generalHealth = 100;
                         agent.color = '#f00';
+                        agent.age = Math.floor(Math.random() * 100);
+                        agent.gender = (Math.random() < .5 ? 'm' : 'f');
+                        agent.childCount = 0;
                     };
 
                     for (var i = 0; i < numWasteDisposalUnits; i++) {
                         world.addResourceRandomly(ResourceTypes.WASTE_RESOURCE_TYPE);
                     }
                     this.currentWaterQuality = waterQuality;
+                    this.children = 0;
 
                     culture.drawExpired = function(){};
 //                    culture.updateFunction = function(agent, world) {};
@@ -204,20 +176,9 @@ WorldVisionResources.doSetup = function() {
                         , proximityToDisposalUnit = parseInt(FiercePlanet.Parameters.ProximityToDisposalUnit)
                         , waterQuality = parseInt(FiercePlanet.Parameters.WaterQuality)
                         , naturalRateOfImprovement = parseInt(FiercePlanet.Parameters.NaturalRateOfImprovement)
+                        , infectionProbability = parseFloat(FiercePlanet.Parameters.InfectionProbability)
                         , healthCostOfInfection = parseInt(FiercePlanet.Parameters.HealthCostOfInfection)
-
-                        /*
-                        , moveProbability = parseFloat(FiercePlanet.Parameters.MoveProbability)
-                        , cooperativeProbability = parseFloat(FiercePlanet.Parameters.CooperativeProbability)
-                        , metabolism = parseInt(FiercePlanet.Parameters.Metabolism)
-                        , reproductionCost = parseInt(FiercePlanet.Parameters.ReproductionCost)
-                        , reproductionThreshold = parseInt(FiercePlanet.Parameters.ReproductionThreshold)
-                        , grassEnergy = parseInt(FiercePlanet.Parameters.GrassEnergy)
-                        , highGrowthChance = parseInt(FiercePlanet.Parameters.HighGrowthChance)
-                        , lowGrowthChance = parseInt(FiercePlanet.Parameters.LowGrowthChance)
-                        , maxGrassHeight = parseInt(FiercePlanet.Parameters.MaxGrassHeight)
-                        , lowHighThreshold = parseInt(FiercePlanet.Parameters.LowHighThreshold)
-                        */
+                        , reproductionProbability = parseInt(FiercePlanet.Parameters.ReproductionProbability)
 
                     var moveCapability = Capabilities.MoveRandomlyCapability, nullifiedAgents = [];
                     var died = 0;
@@ -240,26 +201,31 @@ WorldVisionResources.doSetup = function() {
                     world.cells.forEach(function(cell) {
                         if (cell.y > 23 && cell.y < 33) {
                             cell.terrain.color = cell.terrain.color.blue(currentWaterQuality / 100);
-                            cell.waterQuality = waterQuality;
                         }
                     })
 
                     // Move agents
                     world.currentAgents.forEach(function(agent) {
-                        if (agent.countdownToMove % agent.speed == 0)
+                        if (Lifecycle.waveCounter >= agent.delay && agent.countdownToMove % agent.speed == 0)
                             moveCapability.exercise(agent, world);
                     });
                     // Adjust health
                     world.currentAgents.forEach(function(agent) {
                         var r = Math.random() * 100;
-                        if (r > world.currentWaterQuality)
+                        if (r > world.currentWaterQuality)    {
                             agent.infected = true;
+                        }
                     });
                     world.currentAgents.forEach(function(agent) {
                         if (agent.infected) {
-                            agent.adjustGeneralHealth(-healthCostOfInfection);
-                            agent.color = one.color(agent.color).red(agent.health / 100).hex();
+                            // Infection-driven health decline
+                            agent.adjustGeneralHealth(-healthCostOfInfection - 1);
                         }
+                        else {
+                            // Naturally aging
+                            agent.adjustGeneralHealth(-1);
+                        }
+                        agent.color = one.color(agent.color).red(agent.health / 100).hex();
                     });
                     // Die
                     world.currentAgents.forEach(function(agent) {
@@ -268,12 +234,23 @@ WorldVisionResources.doSetup = function() {
                     });
 
                     // Reproduce
-//                    world.currentAgents.forEach(function(agent) {
-//                        if (agent.energy > reproductionThreshold) {
-//                            agent.energy -= reproductionCost;
-//                            agent.spawn();
-//                        }
-//                    });
+                    if (world.currentAgents.length < 400) {
+                        world.currentAgents.forEach(function(agent) {
+                            if (agent.gender == 'f' && agent.age >= 15 && agent.age <= 45) {
+                                var r = Math.random();
+                                // Diminishing likelihood of children
+                                if (r < Math.pow(reproductionProbability,  agent.childCount)) {
+                                    var child = agent.spawn();
+                                    child.infected = false;
+                                    child.generalHealth = 100;
+                                    child.color = '#f00';
+                                    child.gender = (Math.random() < .5 ? 'm' : 'f');
+                                    child.childCount = 0;
+                                    world.children ++;
+                                }
+                            }
+                        });
+                    }
                     FiercePlanet.Drawing.clearCanvas('#baseCanvas');
                     FiercePlanet.Drawing.clearCanvas('#resourceCanvas');
                     FiercePlanet.Drawing.drawPath();
@@ -284,10 +261,10 @@ WorldVisionResources.doSetup = function() {
                         totalInfected = _.reduce(infected, function(memo, num){ return memo + num; }, 0);
                     var ageAtDeath = _.map(this.expiredAgents, function(agent) { return agent.diedAt - agent.bornAt; }),
                         totalAgeAtDeath = _.reduce(health, function(memo, num){ return memo + num; }, 0);
-                    console.log(totalInfected, world.currentWaterQuality, totalHealth / initialAgents, totalInfected * 100 / initialAgents)
+                    console.log(totalInfected, world.currentAgents.length, world.children, Lifecycle.waveCounter)
                     FiercePlanet.Graph.plotData(world.currentWaterQuality, totalHealth / initialAgents, totalInfected * 100 / initialAgents);
-                    if (world.currentAgents.length <= 0)
-                        Lifecycle._stopAgents();
+//                    if (world.currentAgents.length <= 0)
+//                        Lifecycle._stopAgents();
                 }
             })
 
@@ -314,6 +291,7 @@ WorldVisionResources.doSetup = function() {
 //        module.registerResourceSet(TBL);
         module.registerResourceSet(WorldVisionResources);
         FiercePlanet.Game.currentProfile.capabilities = ['waste'];
+        Lifecycle.waveDelay = 3000;
 
         _.extend(Universe.settings, {
             isometricView: false,

@@ -531,12 +531,14 @@ function Agent(culture, x, y) {
         var childAgent = _.clone(this);
         childAgent.delay = parseInt(Math.random() * childAgent.culture.initialSpeed * 5);
         childAgent.bornAt = Lifecycle.worldCounter;
+        childAgent.age = 0;
         childAgent.parents = [this];
         childAgent.registerHealthStats();
         if (otherParent)
             childAgent.parents.push(otherParent)
         Lifecycle.currentWorld.currentAgents.push(childAgent);
         Lifecycle.currentWorld.addAgentToCell(childAgent);
+        return childAgent;
     };
 
 
@@ -546,8 +548,6 @@ function Agent(culture, x, y) {
     // Position-related
     this.x = x, this.y = y;
 
-
-    // REVISED MODEL
 
     // Need alternative theories of mind
     this.characteristics = {};

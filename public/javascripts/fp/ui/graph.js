@@ -48,14 +48,25 @@ FiercePlanet.Graph = FiercePlanet.Graph || {};
         if (!graphDialog) {
             graphDialog = $('#graph-dialog')
                 .dialog({
-                   position: [1100, 35],
+                   position: [1300, 35],
                    width: 550,
                    height: 560,
                     autoOpen: false,
                     modal: false,
                     title: 'Fierce Planet Graph',
                     buttons: {
-                        "Cancel": function() {
+                        "Pause / Play": function() {
+                            FiercePlanet.Game.playGame();
+                        },
+                        "Step": function() {
+                            if (Lifecycle.inPlay)
+                                FiercePlanet.Game.pauseGame();
+                            Lifecycle.processAgents();
+                        },
+                        "Restart": function() {
+                            Lifecycle.restartWorld();
+                        },
+                        "Close": function() {
                             $( this ).dialog( "close" );
                         }
                     }

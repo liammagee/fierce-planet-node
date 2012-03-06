@@ -104,11 +104,7 @@ var Lifecycle = Lifecycle || {};
                         Lifecycle.processSavedCallback();
                     Lifecycle.currentWorld.addSavedAgent(agent, Lifecycle.worldCounter);
                     agent.die(Lifecycle.currentWorld);
-//                    nullifiedAgents.push(i);
                 }
-
-                // Do for all agents
-//                agent.evaluateMove(Lifecycle.currentWorld, options);
 
                 // Reset countdown
                 agent.resetCountdownToMove();

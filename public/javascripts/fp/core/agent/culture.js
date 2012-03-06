@@ -11,7 +11,7 @@
 var CultureDefaults = CultureDefaults || {};
 (function() {
     this.DEFAULT_INITIAL_HEALTH = 100;
-    this.DEFAULT_INITIAL_SPEED = 10;
+    this.DEFAULT_INITIAL_SPEED = 15;
     this.DEFAULT_MOVE_COST = -3;
 
 }).apply(CultureDefaults);

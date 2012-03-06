@@ -185,7 +185,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
     this.drawMap = function() {
         var canvasName = '#actual_map';
 
-        if (Lifecycle.currentWorld != undefined) {
+        if (Lifecycle.currentWorld != undefined && !Lifecycle.currentWorld.noMap) {
             FiercePlanet.GoogleMapUtils.loadScript();
             var mapOptions = FiercePlanet.GoogleMapUtils.defaultOptions();
             if (Lifecycle.currentWorld.mapOptions)

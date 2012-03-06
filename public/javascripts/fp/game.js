@@ -143,9 +143,9 @@ FiercePlanet.Game = FiercePlanet.Game || {};
             }
 
 
-            if (Lifecycle.currentWorld.getCurrentAgents().length > 0) {
+//            if (Lifecycle.currentWorld.getCurrentAgents().length > 0) {
                 FiercePlanet.Drawing.drawResourceAndAgents();
-            }
+//            }
 
             // Broadcast moves - TODO: Move elsewhere
             if (Universe.settings.sendEventsToServer) {

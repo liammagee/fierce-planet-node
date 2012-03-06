@@ -29,6 +29,7 @@ var Basic = Basic || new Campaign();
         this.world0.waveNumber = 3;
         this.world0.expiryLimit = 20;
         this.world0.name = ("Tutorial");
+        this.world0.noMap = true;
         this.world0.introduction = ("" +
                 "<p>The citizens of Fierce Planet are in danger of extinction. Their cities have been destroyed &mdash; there is a shortage of food and water, law and order has broken down, and disease is rampant.</p>" +
                 "<p>The aim of the game is to help citizens survive as they build a sustainable city. Their start point is marked by a green circle, and the goal by a white circle. Both circles reflect your progress as more waves of citizens come through.</p> " +
@@ -50,6 +51,7 @@ var Basic = Basic || new Campaign();
             this.allowAgentsOnCellRange(10, 5);
             this.allowAgentsOnCellRange(9, 1);
             this.allowAgentsOnCellRange(0, 5);
+            this.addTerrainToPath(new Terrain(one.color('#aaa').alpha(0.8)));
         };
 
 

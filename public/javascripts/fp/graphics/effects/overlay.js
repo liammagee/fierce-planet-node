@@ -10,11 +10,9 @@ function onMouseMove(event) {
 
 // The onFrame function is called up to 60 times a second:
 function onFrame(event) {
-    if (Lifecycle.inPlay &&
-        (_.isUndefined(Lifecycle.currentWorld.scrollingImageVisible) || Lifecycle.currentWorld.scrollingImageVisible)
-        &&
-        (_.isUndefined(Universe.settings.scrollingImageVisible) || Universe.settings.scrollingImageVisible)
-        ) {
+    if (Lifecycle.inPlay
+        && (_.isUndefined(Lifecycle.currentWorld.scrollingImageVisible) || Lifecycle.currentWorld.scrollingImageVisible)
+        && (_.isUndefined(Universe.settings.scrollingImageVisible) || Universe.settings.scrollingImageVisible)) {
         FiercePlanet.Effects.currentEffect.drawEffect();
     }
 }
