@@ -78,7 +78,22 @@ WorldVisionResources.doSetup = function() {
                     "<p>This model explores waste management in Surabaya.</p>" +
                     "<p>Using the default settings, residents of the area shown pollute available fresh water with waste.</p>" +
                     "<p>This causes pathogenic bacteria (such as E. coli) to proliferate, impacting upon the health of residents.</p>" +
-                    "<p>By introducing waste disposal mechanisms, the residents can reduce the rate of infectious disease, and improve both morbidity and mortality rates.</p>",
+                    "<p>By introducing waste disposal mechanisms, the residents can reduce the rate of infectious disease, and improve both morbidity and mortality rates.</p>" +
+                    "<p>There are a number of parameters that control how this simulation works:" +
+                        "<ul>" +
+                        "<li><em>Initial agents: </em> Number of agents to 'seed' the simulation</li>" +
+                        "<li><em>Rate of personal waste emission: </em> How much waste each person contributes (in grams/day)</li>" +
+                        "<li><em>No. of waste disposal units: </em> Number of waste disposal 'units' (latrines, collection sites, etc.) to include in the area. </li>" +
+                        "<li><em>Proximity to waste disposal unit: </em> How close an agent needs to be to a unit to make use of it (the assumption here is that units will not be used if they are too far away). </li>" +
+                        "<li><em>Natural rate of water improvement: </em> How quickly the water supply improves in quality per turn, with no human activity. Water quality is ranged from 0-100.</li>" +
+                        "<li><em>Health cost of infection: </em> How much health is lost to infection per turn. Health is ranged from 0-100.</li>" +
+                        "<li><em>Water quality: </em> Inital water quality.</li>" +
+                        "<li><em>Reproduction probability: </em> The likelihood a female will reproduce in the model.</li>" +
+                        "</ul>" +
+                        "</p>" +
+                        ""
+                ,
+
                 isPresetWorld: true,
                 interval: 100,
                 cellsAcross: 40,
@@ -105,7 +120,7 @@ WorldVisionResources.doSetup = function() {
                         "<p>Proximity to waste disposal unit</p><p><input class='world-parameters' name='ProximityToDisposalUnit' value='1'/> </p>" +
                         "<p>Natural rate of water improvement</p><p><input class='world-parameters' name='NaturalRateOfImprovement' value='1'/> </p>" +
                         "<p>Health cost of infection</p><p><input class='world-parameters' name='HealthCostOfInfection' value='1'/> </p>" +
-                        "<p>Water consumed</p><p><input class='world-parameters' name='WaterConsumed' value='1000'/> </p>" +
+//                        "<p>Water consumed</p><p><input class='world-parameters' name='WaterConsumed' value='1000'/> </p>" +
                         "<p>Quality of water</p><p><input class='world-parameters' name='WaterQuality' value='100'/> </p>" +
                         "<p>Reproduction probability</p><p><input class='world-parameters' name='ReproductionProbability' value='0.5'/> </p>" +
 
@@ -286,8 +301,22 @@ WorldVisionResources.doSetup = function() {
                 id: 2,
                 name: "Pegirian Village",
                 introduction:
-                    "<p>This model examines impacts of waste collection on households in the Pegirian Village.</p>"
-                        + ""
+                    "<p>This model examines impacts of waste collection on households in the Pegirian Village.</p>" +
+                    "<p>If not enough waste is collected, the total amount of waste and pollution increases.</p>" +
+                    "<p>In addition, having enough resources in the environment, in a very abstract sense, improves the efficiency of waste collection.</p>" +
+                "<p>There are a number of parameters that control how this simulation works:" +
+                    "<ul>" +
+                    "<li><em>No. of households: </em> Number of households to 'seed' the simulation</li>" +
+                    "<li><em>Ave. persons per household: </em> Average number of people per household</li>" +
+                    "<li><em>No. of waste collectors: </em> How many waste collectors work in the area. </li>" +
+                    "<li><em>Waste removed per collector: </em> Maximum daily waste removed by each collector. </li>" +
+                    "<li><em>Daily waste emissions: </em> How much waste is produced per person per day.</li>" +
+                    "<li><em>% Composted: </em> What percentage of waste is composted.</li>" +
+                    "<li><em>% Recycled: </em> What percentage of waste is recycled.</li>" +
+                    "<li><em>Number of resources: </em> How many resources (economic, ecological, political, cultural) to 'seed' in the area.</li>" +
+                    "</ul>" +
+                    "</p>" +
+                    ""
                 ,
                 isPresetWorld: true,
                 interval: 100,
@@ -312,7 +341,7 @@ WorldVisionResources.doSetup = function() {
                             "0 <div id='numberOfHouseholdsSlider' /> 3000" +
                             "<input type='hidden' id='numberOfHouseholds' class='world-parameters' name='NumberOfHouseholds' value='1500'/>" +
                         "<p>Ave. Persons/households</p><p><input class='world-parameters' name='AvePersonPerHousehold' value='4'/> </p>" +
-                        "<p>Number of waste collectors</p>" +
+                        "<p>No. of waste collectors</p>" +
                             "0 <div id='numberOfWasteCollectorsSlider' /> 200" +
                             "<input type='hidden' id='numberOfWasteCollectors' class='world-parameters' name='NumberOfWasteCollectors' value='40'/>" +
 
@@ -494,7 +523,7 @@ WorldVisionResources.doSetup = function() {
                     FiercePlanet.Drawing.drawPath();
 
 //                    console.log(sustainabilityIndex, world.totalResidents, totalWasteRemaining)
-                    FiercePlanet.Graph.plotData(sustainabilityIndex, totalWasteRemaining / 200);
+                    FiercePlanet.Graph.plotData(sustainabilityIndex * 100, totalWasteRemaining / 200);
                 }
             })
 
