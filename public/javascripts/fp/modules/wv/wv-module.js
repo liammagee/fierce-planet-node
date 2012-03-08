@@ -493,9 +493,8 @@ WorldVisionResources.doSetup = function() {
                     FiercePlanet.Drawing.clearCanvas('#resourceCanvas');
                     FiercePlanet.Drawing.drawPath();
 
-                    console.log(sustainabilityIndex, world.totalResidents, totalWasteRemaining)
+//                    console.log(sustainabilityIndex, world.totalResidents, totalWasteRemaining)
                     FiercePlanet.Graph.plotData(sustainabilityIndex, totalWasteRemaining / 200);
-
                 }
             })
 
