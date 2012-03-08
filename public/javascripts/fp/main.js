@@ -23,7 +23,8 @@ $LAB
 //   .script("jquery.mousewheel.3.0.2/jquery.mousewheel.js")
 //   .script("jquery-animate-css-rotate-scale.js")
 //   .script("jquery/jquery.zoom.js")
-   .script("underscore/underscore-min.js")
+   .script(
+        "underscore/underscore-min.js")
 
     // Load other plugins
    .script("one-color/one-color-all.js")

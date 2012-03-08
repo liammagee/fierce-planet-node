@@ -602,7 +602,7 @@ function World() {
                 ry = Math.floor(Math.random() * this.cellsDown);
             var cell = this.getCell(rx, ry);
             if (cell.resources.length == 0 && cell.resourcesAllowed) {
-                this.addResource(new Resource(ResourceTypes.WASTE_RESOURCE_TYPE, rx, ry));
+                this.addResource(new Resource(resourceType, rx, ry));
                 break;
             }
         }

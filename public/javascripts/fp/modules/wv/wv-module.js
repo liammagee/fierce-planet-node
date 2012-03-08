@@ -33,22 +33,34 @@ WorldVisionResources.doSetup = function() {
     // Resource categories
     WorldVisionResources.ECO_CATEGORY = new ResourceCategory("Economic", "eco", "#44ABE0");
     WorldVisionResources.ENV_CATEGORY = new ResourceCategory("Environmental", "env", "#ABBB2A");
-    WorldVisionResources.SOC_CATEGORY = new ResourceCategory("Social", "soc", "#DE1F2A");
+    WorldVisionResources.POL_CATEGORY = new ResourceCategory("Political", "pol", "#DE1F2A");
+    WorldVisionResources.CUL_CATEGORY = new ResourceCategory("Cultural", "cul", "#2ADBCB");
 
     // Arrays of resource kinds
-    WorldVisionResources.ECONOMIC_RESOURCE_TYPES = [];
-    WorldVisionResources.ENVIRONMENTAL_RESOURCE_TYPES = [];
-    WorldVisionResources.SOCIAL_RESOURCE_TYPES = [ResourceTypes.WASTE_RESOURCE_TYPE];
+    WorldVisionResources.ECONOMIC_RESOURCE_TYPES = [ResourceTypes.STOCKMARKET_RESOURCE_TYPE];
+    WorldVisionResources.ENVIRONMENTAL_RESOURCE_TYPES = [ResourceTypes.WASTE_RESOURCE_TYPE];
+    WorldVisionResources.POLITICAL_RESOURCE_TYPES = [ResourceTypes.DEMOCRACY_RESOURCE_TYPE];
+    WorldVisionResources.CULTURAL_RESOURCE_TYPES = [ResourceTypes.SCHOOL_RESOURCE_TYPE];
 
     // Clear types
     WorldVisionResources.ECO_CATEGORY.clearTypes();
     WorldVisionResources.ENV_CATEGORY.clearTypes();
-    WorldVisionResources.SOC_CATEGORY.clearTypes();
+    WorldVisionResources.POL_CATEGORY.clearTypes();
+    WorldVisionResources.CUL_CATEGORY.clearTypes();
 
-    WorldVisionResources.SOC_CATEGORY.addType(ResourceTypes.WASTE_RESOURCE_TYPE);
+    WorldVisionResources.ECO_CATEGORY.addType(ResourceTypes.STOCKMARKET_RESOURCE_TYPE);
+    WorldVisionResources.ENV_CATEGORY.addType(ResourceTypes.WASTE_RESOURCE_TYPE);
+    WorldVisionResources.POL_CATEGORY.addType(ResourceTypes.DEMOCRACY_RESOURCE_TYPE);
+    WorldVisionResources.CUL_CATEGORY.addType(ResourceTypes.SCHOOL_RESOURCE_TYPE);
 
-    WorldVisionResources.categories = [WorldVisionResources.ECO_CATEGORY, WorldVisionResources.ENV_CATEGORY, WorldVisionResources.SOC_CATEGORY];
-    WorldVisionResources.types = WorldVisionResources.ECONOMIC_RESOURCE_TYPES.concat(WorldVisionResources.ENVIRONMENTAL_RESOURCE_TYPES.concat(WorldVisionResources.SOCIAL_RESOURCE_TYPES));
+    WorldVisionResources.categories = [WorldVisionResources.ECO_CATEGORY, WorldVisionResources.ENV_CATEGORY, WorldVisionResources.POL_CATEGORY, WorldVisionResources.CUL_CATEGORY];
+    WorldVisionResources.types =
+        _.union(
+            WorldVisionResources.ECONOMIC_RESOURCE_TYPES
+            , WorldVisionResources.ENVIRONMENTAL_RESOURCE_TYPES
+            , WorldVisionResources.POLITICAL_RESOURCE_TYPES
+            , WorldVisionResources.CULTURAL_RESOURCE_TYPES
+        )
 };
 
 
@@ -268,12 +280,231 @@ WorldVisionResources.doSetup = function() {
                 }
             })
 
+        this.pegirianVillage  = new World();
+        _.extend(this.pegirianVillage,
+            {
+                id: 2,
+                name: "Pegirian Village",
+                introduction:
+                    "<p>This model examines impacts of waste collection on households in the Pegirian Village.</p>"
+                        + ""
+                ,
+                isPresetWorld: true,
+                interval: 100,
+                cellsAcross: 60,
+                cellsDown: 60,
+                dontClearCanvas: true,
+                scrollingImageVisible: false,
+                initialResourceStore: 1000,
+                playIndefinitely: true,
+                noWander: false,
+                noSpeedChange: true,
+                allowResourcesOnPath: true,
+                mapOptions: ({
+                    mapTypeId: google.maps.MapTypeId.HYBRID,
+                    center: new google.maps.LatLng(
+                        -7.228373, 112.755032),
+                    zoom: 18,
+                    tilt: 0
+                }),
+                parameters:
+                        "<p>Number of households</p>" +
+                            "0 <div id='numberOfHouseholdsSlider' /> 3000" +
+                            "<input type='hidden' id='numberOfHouseholds' class='world-parameters' name='NumberOfHouseholds' value='1500'/>" +
+                        "<p>Ave. Persons/households</p><p><input class='world-parameters' name='AvePersonPerHousehold' value='4'/> </p>" +
+                        "<p>Number of waste collectors</p>" +
+                            "0 <div id='numberOfWasteCollectorsSlider' /> 200" +
+                            "<input type='hidden' id='numberOfWasteCollectors' class='world-parameters' name='NumberOfWasteCollectors' value='40'/>" +
+
+                        "<p>Waste removed per collector (ltrs)</p><p><input class='world-parameters' name='WasteRemovedPerCollector' value='200'/> </p>" +
+//                        "<p>Waste collector cost</p><p><input class='world-parameters' name='WasteCollectionCost' value='3000'/> </p>" +
+                        "<p>Daily waste emission (lts/cap/day)</p><p><input class='world-parameters' name='DailyWasteEmission' value='2.95'/> </p>" +
+
+                        "<p>% Composted</p><p><input class='world-parameters' name='PercentageComposted' value='10'/> </p>" +
+                        "<p>% Recycled</p><p><input class='world-parameters' name='PercentageRecyled' value='10'/> </p>" +
+
+                        "<p>Number of resources</p><p><input class='world-parameters' name='NumberOfResources' value='40'/> </p>" +
+
+                        "",
+                conclusion: "Well done.",
+                setup: function() {
+                },
+                setupParameters: function() {
+                    $( "#numberOfHouseholdsSlider" ).slider({
+                        value: 1500, min: 0, max: 3000, step: 1,
+                        slide: function( event, ui ) { $("#numberOfHouseholds").val( ui.value ); }
+                    });
+                    $( "#numberOfWasteCollectorsSlider" ).slider({
+                        value: 40, min: 0, max: 200, step: 1,
+                        slide: function( event, ui ) { $("#numberOfWasteCollectors").val( ui.value ); }
+                    });
+                    FiercePlanet.Graph.openDialog();
+                    $("#world-graph").show();
+                    FiercePlanet.Graph.setupData(
+                        {name: 'Sustainability Index', color: '#f00', maxValue: 1}
+                        , {name: 'Pollution level', color: '#0f0', maxValue: 100}
+                    );
+                },
+                handleParameters: function () {
+                    var world = this;
+                    var numberOfHouseholds = parseInt(FiercePlanet.Parameters.NumberOfHouseholds)
+                        , aveRersonPerHouseholdwaterQuality = parseInt(FiercePlanet.Parameters.AvePersonPerHousehold)
+                        , numberOfWasteCollectors = parseInt(FiercePlanet.Parameters.NumberOfWasteCollectors)
+                        , wasteRemovedPerCollector = parseFloat(FiercePlanet.Parameters.WasteRemovedPerCollector)
+                        , wasteCollectionCost = parseInt(FiercePlanet.Parameters.WasteCollectionCost)
+                        , dailyWasteEmission = parseFloat(FiercePlanet.Parameters.DailyWasteEmission)
+                        , percentageComposted = parseFloat(FiercePlanet.Parameters.PercentageComposted)
+                        , percentageRecycled = parseFloat(FiercePlanet.Parameters.PercentageRecyled)
+                        , numberOfResources = parseFloat(FiercePlanet.Parameters.NumberOfResources)
+
+                    /// Set up agents
+                    var culture = _.clone(DefaultCultures.Stickman);
+                    culture.waveNumber = numberOfWasteCollectors;
+                    culture.initialSpeed = 5;
+                    culture.moveCost = 0;
+//                    culture.healthCategories = ModuleManager.currentModule.resourceSet.categories;
+                    world.cells.forEach(function(cell) {
+                        cell.resourcesAllowed = true;
+                    })
+                    culture.initFunction = function(agent, world) {
+                        agent.infected = false;
+                        agent.generalHealth = 100;
+                        agent.color = '#f00';
+                        agent.age = Math.floor(Math.random() * 100);
+                        agent.gender = (Math.random() < .5 ? 'm' : 'f');
+                        agent.childCount = 0;
+                    };
+
+                    world.totalResidents = 0;
+                    for (var i = 0; i < numberOfHouseholds; i++) {
+                        var rx = Math.floor(Math.random() * world.cellsAcross), ry = Math.floor(Math.random() * world.cellsDown);
+                        var cell = world.getCell(rx, ry);
+                        if (cell.isHousehold) {
+                            i--;
+                            continue;
+                        }
+                        else {
+                            cell.isHousehold = true;
+                            var rooftopRed = Math.floor(Math.random() * 100) + 100;
+                            cell.terrain = new Terrain(one.color('rgba( ' + rooftopRed + ', 76, 86, 0.5)'));
+                            cell.householdSize = jStat.normal.sample(aveRersonPerHouseholdwaterQuality, 0.15);
+                            world.totalResidents += cell.householdSize;
+                        }
+                    }
+                    for (var i = 0; i < numberOfResources; i++) {
+                        world.addResourceRandomly(ResourceTypes.STOCKMARKET_RESOURCE_TYPE);
+                        world.addResourceRandomly(ResourceTypes.WASTE_RESOURCE_TYPE);
+                        world.addResourceRandomly(ResourceTypes.DEMOCRACY_RESOURCE_TYPE);
+                        world.addResourceRandomly(ResourceTypes.SCHOOL_RESOURCE_TYPE);
+                    }
+
+                    culture.drawExpired = function(){};
+                    this.randomiseAgents = true;
+                    this.cultures = [culture];
+                    this.waves = undefined;
+                    this.initialiseWaves(1);
+                    FiercePlanet.Drawing.drawPath();
+                },
+                tickFunction: function () {
+                    var world = this;
+                    var counter = 0;
+
+                    var numberOfHouseholds = parseInt(FiercePlanet.Parameters.NumberOfHouseholds)
+                        , aveRersonPerHouseholdwaterQuality = parseInt(FiercePlanet.Parameters.AvePersonPerHousehold)
+                        , dailyWasteEmission = parseFloat(FiercePlanet.Parameters.DailyWasteEmission)
+                        , numberOfWasteCollectors = parseInt(FiercePlanet.Parameters.NumberOfWasteCollectors)
+                        , wasteRemovedPerCollector = parseFloat(FiercePlanet.Parameters.WasteRemovedPerCollector)
+                        , wasteCollectionCost = parseInt(FiercePlanet.Parameters.WasteCollectionCost)
+                        , percentageComposted = parseFloat(FiercePlanet.Parameters.PercentageComposted)
+                        , percentageRecycled = parseFloat(FiercePlanet.Parameters.PercentageRecyled)
+                        , numberOfResources = parseFloat(FiercePlanet.Parameters.NumberOfResources)
+
+                    var moveCapability = Capabilities.MoveRandomlyCapability, nullifiedAgents = [];
+
+                    // Count overall resources
+                    var sustainabilityIndex = 0;
+                    var pol = 0, cul = 0, eco = 0, elo = 0;
+                    world.cells.forEach(function(cell) {
+                        if (cell.resources.length > 0) {
+                            var resource = cell.resources[0];
+                            if (resource.category.code == 'cul') {
+                                cul++;
+                            }
+                            else if (resource.category.code == 'pol') {
+                                pol++;
+                            }
+                            else if (resource.category.code == 'eco') {
+                                eco++;
+                            }
+                            else if (resource.category.code == 'elo') {
+                                elo++;
+                            }
+                        }
+                    })
+                    // Normalise index around a value of 50
+                    sustainabilityIndex = (pol * 25 + cul * 25 + eco * 25 + elo * 25) / world.totalResidents;
+
+                    // Generate waste
+                    world.cells.forEach(function(cell) {
+                        if (cell.isHousehold) {
+                            var numPersons = cell.householdSize;
+                            var householdWaste = numPersons * dailyWasteEmission;
+                            cell.wasteToBeCollected = householdWaste * (1 - (percentageComposted / 100) - (percentageRecycled / 100) );
+                        }
+                    })
+
+                    // Move agents
+                    world.currentAgents.forEach(function(agent) {
+                        if (Lifecycle.waveCounter >= agent.delay && agent.countdownToMove % agent.speed == 0)
+                            moveCapability.exercise(agent, world);
+                        var cellsAtDistince = world.getCellsAtDistance(agent.x, agent.y, 3, Distance.MINKOWSKI_DISTANCE, true);
+                        var wasteCollected = 0;
+                        var wasteCollectible = wasteRemovedPerCollector * sustainabilityIndex;
+                        _.shuffle(cellsAtDistince).forEach(function(cell) {
+                            if (cell.isHousehold) {
+                                if (wasteCollected + cell.wasteToBeCollected < wasteCollectible) {
+                                    wasteCollected += cell.wasteToBeCollected;
+                                    cell.wasteToBeCollected = 0;
+                                }
+                            }
+})
+                    });
+                    var totalWasteRemaining = 0;
+                    world.cells.forEach(function(cell) {
+                        if (cell.isHousehold) {
+                            totalWasteRemaining += cell.wasteToBeCollected;
+                            var l = cell.terrain.color.green();
+                            var adjustment = - cell.wasteToBeCollected / 100;
+                            if (cell.wasteToBeCollected > 100)
+                                adjustment = -0.1;
+                            else if (cell.wasteToBeCollected == 0)
+                                adjustment = 0.1;
+                            if (l + adjustment < 0)
+                                l = 0;
+                            else if (l + adjustment > 1)
+                                l = 1;
+                            else
+                                l += adjustment;
+                            cell.terrain.color = cell.terrain.color.green(l);
+                        }
+                    })
+
+                    FiercePlanet.Drawing.clearCanvas('#baseCanvas');
+                    FiercePlanet.Drawing.clearCanvas('#resourceCanvas');
+                    FiercePlanet.Drawing.drawPath();
+
+                    console.log(sustainabilityIndex, world.totalResidents, totalWasteRemaining)
+                    FiercePlanet.Graph.plotData(sustainabilityIndex, totalWasteRemaining / 200);
+
+                }
+            })
+
         // Prepare as a module
         this.id = "WorldVision";
         this.name = "WorldVision";
         this.position = 1;
         this.worlds = [
-            this.wasteInSurabaya
+            this.wasteInSurabaya, this.pegirianVillage
         ];
     }
 
@@ -290,7 +521,7 @@ WorldVisionResources.doSetup = function() {
         module.currentCampaignID = 'WorldVision';
 //        module.registerResourceSet(TBL);
         module.registerResourceSet(WorldVisionResources);
-        FiercePlanet.Game.currentProfile.capabilities = ['waste'];
+        FiercePlanet.Game.currentProfile.capabilities = ['stockmarket', 'democracy', 'school', 'waste'];
         Lifecycle.waveDelay = 3000;
 
         _.extend(Universe.settings, {
