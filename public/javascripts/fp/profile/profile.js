@@ -217,10 +217,12 @@ Profile.prototype.updateScore = function() {
  */
 Profile.prototype.processSavedAgent = function(currentWave) {
     this.currentScore += FiercePlanet.Game.SAVE_SCORE;
+    if (this.highestScore < this.currentScore)
+        this.highestScore = this.currentScore;
     this.currentWorldSaved++;
     this.currentWorldSavedThisWave++;
-    var resource_bonus = (currentWave < 5 ? 4 : (currentWave < 10 ? 3 : (currentWave < 20 ? 2 : 1)));
-    this.currentWorldResourcesInStore += resource_bonus;
+    var resourceBonus = (currentWave < 5 ? 4 : (currentWave < 10 ? 3 : (currentWave < 20 ? 2 : 1)));
+    this.currentWorldResourcesInStore += resourceBonus;
 };
 
 

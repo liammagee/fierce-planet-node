@@ -19,6 +19,7 @@ FiercePlanet.Game = FiercePlanet.Game || {};
 
 (function () {
 
+    this.SAVE_SCORE = 10;
     this.globalRecordingCounter = 0;
 
     // Start with medium difficulty - TODO: Revise

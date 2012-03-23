@@ -557,7 +557,7 @@ WorldVisionResources.doSetup = function() {
             hidePathBorder: true,
             scrollingImageVisible: false,
             showGraph: false,
-            showEditor: false,
+            showEditor: true,
             animateWorldAtStart: false
         })
         localStorage.scrollingImageVisible = false;
