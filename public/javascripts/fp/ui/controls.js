@@ -30,6 +30,7 @@ FiercePlanet.Controls = FiercePlanet.Controls || {};
         $('#login').click(FiercePlanet.Dialogs.showLogin);
         $('#logout').click(FiercePlanet.ProfileUI.logout);
         $('#welcome-link').click(FiercePlanet.ProfileUI.editProfile);
+        $('#about').click(function() { window.open('http://blog.fierce-planet.com')});
 
         // Control panel functions
         $('#playAgents').click(FiercePlanet.Game.playGame);

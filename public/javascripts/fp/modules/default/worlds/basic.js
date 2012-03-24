@@ -151,7 +151,7 @@ var Basic = Basic || new Campaign();
             this.allowAgentsOnCellRange(0, 2);
 
             this.addTerrainToPath(new Terrain(one.color('#BFB3A7').alpha(0.8)));
-            FiercePlanet.Effects.currentEffect = FiercePlanet.Effects.Rain;
+//            FiercePlanet.Effects.currentEffect = FiercePlanet.Effects.Rain;
         };
 
 

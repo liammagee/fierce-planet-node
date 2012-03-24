@@ -26,9 +26,22 @@
   div.divide
 
   div
+    a#tutorial(href='#') Tutorial
+  div
+    a#openWorldGallery(href='#') Levels
+  div
+    a#settings(href='#') Settings
+  //- if (everyauth && everyauth.user)
+  div
+    a#editor(href='#',style="display:none") Editor
+  div
+    a#debug(href='#',style="display:none") Step
+  div.divide
+
+  div
     a#3d(href='#') View 3D
   div
-    a#resetView(href='#') Reset
+    a#resetView(href='#') Reset View
   // div
   //  a#tiltUp(href='#') Tilt Up
   // div
@@ -39,18 +52,6 @@
   //  a#rotateRight(href='#') Rotate Right
   div.divide
 
-  div
-    a#tutorial(href='#') Tutorial
-  div
-    a#openWorldGallery(href='#') Worlds
-  div
-    a#settings(href='#') Settings
-  //- if (everyauth && everyauth.user)
-  div
-    a#editor(href='#') Editor
-  div
-    a#debug(href='#') Step
-  div.divide
 
   //#admin-controls
   //  button#debug Debug
