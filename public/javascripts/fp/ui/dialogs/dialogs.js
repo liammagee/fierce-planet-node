@@ -115,19 +115,6 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
                         // Animation effect
                         // For spinning, try: http://www.zachstronaut.com/posts/2009/08/07/jquery-animate-css-rotate-scale.html
 
-                        // Add parameters to the FiercePlanet.Parameters object
-                        FiercePlanet.Parameters = FiercePlanet.Parameters || {};
-                        var paramElements = $('.world-parameters');
-                        for (var i = 0; i < paramElements.length; i++) {
-                            var param = paramElements[i];
-                            if (param.type && param.type == 'checkbox') {
-                                FiercePlanet.Parameters[param.name] = param.checked;
-                            }
-                            else {
-                                FiercePlanet.Parameters[param.name] = param.value;
-                            }
-                        }
-
                         if (! ModuleManager.currentModule.persistSetupScreen && ! Lifecycle.currentWorld.persistSetupScreen)          {
                             $(this).dialog( "close" );
                         }
@@ -254,7 +241,6 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
                         $('#resource-gallery-tabs').tabs();
                     }
             });
-
 
         FiercePlanet.WorldGallery.renderCampaigns();
         this.worldGalleryDialog = $('#world-gallery-dialog')

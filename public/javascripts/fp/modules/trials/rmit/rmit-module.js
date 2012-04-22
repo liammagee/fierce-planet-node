@@ -6,9 +6,9 @@
  */
 
 
-var WorldVisionWorlds = WorldVisionWorlds || new Campaign();
-var WorldVisionModule = WorldVisionModule || {};
-var WorldVisionResources = WorldVisionResources || {};
+var RMITWorlds = RMITWorlds || new Campaign();
+var RMITModule = RMITModule || {};
+var RMITResources = RMITResources || {};
 
 
 /*!
@@ -22,44 +22,44 @@ var WorldVisionResources = WorldVisionResources || {};
 /**
  * Declare the ResourceTypes namespace
  */
-WorldVisionResources.id = 'WorldVisionResources';
+RMITResources.id = 'RMITResources';
 
 
 
 /**
  * Do setup of this resource set
  */
-WorldVisionResources.doSetup = function() {
+RMITResources.doSetup = function() {
     // Resource categories
-    WorldVisionResources.ECO_CATEGORY = new ResourceCategory("Economic", "eco", "#44ABE0");
-    WorldVisionResources.ENV_CATEGORY = new ResourceCategory("Environmental", "env", "#ABBB2A");
-    WorldVisionResources.POL_CATEGORY = new ResourceCategory("Political", "pol", "#DE1F2A");
-    WorldVisionResources.CUL_CATEGORY = new ResourceCategory("Cultural", "cul", "#2ADBCB");
+    RMITResources.ECO_CATEGORY = new ResourceCategory("Economic", "eco", "#44ABE0");
+    RMITResources.ENV_CATEGORY = new ResourceCategory("Environmental", "env", "#ABBB2A");
+    RMITResources.POL_CATEGORY = new ResourceCategory("Political", "pol", "#DE1F2A");
+    RMITResources.CUL_CATEGORY = new ResourceCategory("Cultural", "cul", "#2ADBCB");
 
     // Arrays of resource kinds
-    WorldVisionResources.ECONOMIC_RESOURCE_TYPES = [ResourceTypes.STOCKMARKET_RESOURCE_TYPE];
-    WorldVisionResources.ENVIRONMENTAL_RESOURCE_TYPES = [ResourceTypes.WASTE_RESOURCE_TYPE];
-    WorldVisionResources.POLITICAL_RESOURCE_TYPES = [ResourceTypes.DEMOCRACY_RESOURCE_TYPE];
-    WorldVisionResources.CULTURAL_RESOURCE_TYPES = [ResourceTypes.SCHOOL_RESOURCE_TYPE];
+    RMITResources.ECONOMIC_RESOURCE_TYPES = [ResourceTypes.STOCKMARKET_RESOURCE_TYPE];
+    RMITResources.ENVIRONMENTAL_RESOURCE_TYPES = [ResourceTypes.WASTE_RESOURCE_TYPE];
+    RMITResources.POLITICAL_RESOURCE_TYPES = [ResourceTypes.DEMOCRACY_RESOURCE_TYPE];
+    RMITResources.CULTURAL_RESOURCE_TYPES = [ResourceTypes.SCHOOL_RESOURCE_TYPE];
 
     // Clear types
-    WorldVisionResources.ECO_CATEGORY.clearTypes();
-    WorldVisionResources.ENV_CATEGORY.clearTypes();
-    WorldVisionResources.POL_CATEGORY.clearTypes();
-    WorldVisionResources.CUL_CATEGORY.clearTypes();
+    RMITResources.ECO_CATEGORY.clearTypes();
+    RMITResources.ENV_CATEGORY.clearTypes();
+    RMITResources.POL_CATEGORY.clearTypes();
+    RMITResources.CUL_CATEGORY.clearTypes();
 
-    WorldVisionResources.ECO_CATEGORY.addType(ResourceTypes.STOCKMARKET_RESOURCE_TYPE);
-    WorldVisionResources.ENV_CATEGORY.addType(ResourceTypes.WASTE_RESOURCE_TYPE);
-    WorldVisionResources.POL_CATEGORY.addType(ResourceTypes.DEMOCRACY_RESOURCE_TYPE);
-    WorldVisionResources.CUL_CATEGORY.addType(ResourceTypes.SCHOOL_RESOURCE_TYPE);
+    RMITResources.ECO_CATEGORY.addType(ResourceTypes.STOCKMARKET_RESOURCE_TYPE);
+    RMITResources.ENV_CATEGORY.addType(ResourceTypes.WASTE_RESOURCE_TYPE);
+    RMITResources.POL_CATEGORY.addType(ResourceTypes.DEMOCRACY_RESOURCE_TYPE);
+    RMITResources.CUL_CATEGORY.addType(ResourceTypes.SCHOOL_RESOURCE_TYPE);
 
-    WorldVisionResources.categories = [WorldVisionResources.ECO_CATEGORY, WorldVisionResources.ENV_CATEGORY, WorldVisionResources.POL_CATEGORY, WorldVisionResources.CUL_CATEGORY];
-    WorldVisionResources.types =
+    RMITResources.categories = [RMITResources.ECO_CATEGORY, RMITResources.ENV_CATEGORY, RMITResources.POL_CATEGORY, RMITResources.CUL_CATEGORY];
+    RMITResources.types =
         _.union(
-            WorldVisionResources.ECONOMIC_RESOURCE_TYPES
-            , WorldVisionResources.ENVIRONMENTAL_RESOURCE_TYPES
-            , WorldVisionResources.POLITICAL_RESOURCE_TYPES
-            , WorldVisionResources.CULTURAL_RESOURCE_TYPES
+            RMITResources.ECONOMIC_RESOURCE_TYPES
+            , RMITResources.ENVIRONMENTAL_RESOURCE_TYPES
+            , RMITResources.POLITICAL_RESOURCE_TYPES
+            , RMITResources.CULTURAL_RESOURCE_TYPES
         )
 };
 
@@ -67,7 +67,7 @@ WorldVisionResources.doSetup = function() {
 
 (function () {
 
-    this.initWorldVisionWorlds = function () {
+    this.initRMITWorlds = function () {
 
         this.wasteInSurabaya  = new World();
         _.extend(this.wasteInSurabaya,
@@ -528,27 +528,27 @@ WorldVisionResources.doSetup = function() {
             })
 
         // Prepare as a module
-        this.id = "WorldVision";
-        this.name = "WorldVision";
+        this.id = "RMIT";
+        this.name = "RMIT";
         this.position = 1;
         this.worlds = [
             this.wasteInSurabaya, this.pegirianVillage
         ];
     }
 
-    this.initWorldVisionWorlds();
-}).apply(WorldVisionWorlds);
+    this.initRMITWorlds();
+}).apply(RMITWorlds);
 
 
 (function() {
     this.init = function() {
         var module = new Module();
-        module.id = 'WorldVision';
+        module.id = 'RMIT';
         module.registerSelf();
-        module.registerCampaign(WorldVisionWorlds);
-        module.currentCampaignID = 'WorldVision';
+        module.registerCampaign(RMITWorlds);
+        module.currentCampaignID = 'RMIT';
 //        module.registerResourceSet(TBL);
-        module.registerResourceSet(WorldVisionResources);
+        module.registerResourceSet(RMITResources);
         FiercePlanet.Game.currentProfile.capabilities = ['stockmarket', 'democracy', 'school', 'waste'];
         Lifecycle.waveDelay = 3000;
 
@@ -564,7 +564,7 @@ WorldVisionResources.doSetup = function() {
         Universe.settings.store();
 
         _.extend(Lifecycle, {
-            currentCampaignID: 'WorldVision',
+            currentCampaignID: 'RMIT',
             currentWorldPreset: true,
             interval: 500,
             worldDelay: 300
@@ -574,13 +574,13 @@ WorldVisionResources.doSetup = function() {
             worldHeight: 600
         })
 
-        FiercePlanet.ModuleEditor.buildEditorFromUrl('/javascripts/fp/modules/wv/wv-module.js', 'WorldVisionModule.init(); FiercePlanet.Game.loadGame();');
+        FiercePlanet.ModuleEditor.buildEditorFromUrl('/javascripts/fp/modules/trials/rmit/rmit-module.js', 'RMITModule.init(); FiercePlanet.Game.loadGame();');
     };
-}).apply(WorldVisionModule);
+}).apply(RMITModule);
 
 if (typeof exports !== "undefined") {
-    exports.WorldVisionWorlds = WorldVisionWorlds;
-    exports.WorldVisionModule = WorldVisionModule;
-    exports.WorldVisionResources = WorldVisionResources;
+    exports.RMITWorlds = RMITWorlds;
+    exports.RMITModule = RMITModule;
+    exports.RMITResources = RMITResources;
 }
 

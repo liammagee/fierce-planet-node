@@ -64,16 +64,20 @@ FiercePlanet.Graph = FiercePlanet.Graph || {};
                             Lifecycle.processAgents();
                         },
                         "Restart": function() {
-                            Lifecycle.restartWorld();
+                            Lifecycle.startWorld();
                         },
                         "Close": function() {
                             $( this ).dialog( "close" );
                         }
+                    },
+                    open: function(){
+                        $("#model-tabs").tabs();
                     }
 
                 });
 
         }
+        $("#model-tabs").tabs();
         graphDialog.dialog('open');
     };
 

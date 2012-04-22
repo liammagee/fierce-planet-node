@@ -312,6 +312,16 @@ FiercePlanet.GoogleMapUtils = FiercePlanet.GoogleMapUtils || {};
 //        map = new google.maps.Map($(canvasName)[0], this.defaultOptions());
         map = new google.maps.Map($(canvasName)[0], options);
 
+        var trafficLayer = new google.maps.TrafficLayer();
+        trafficLayer.setMap(map);
+        var weatherLayer = new google.maps.weather.WeatherLayer({
+            temperatureUnits: google.maps.weather.TemperatureUnit.FAHRENHEIT
+        });
+        weatherLayer.setMap(map);
+
+        var cloudLayer = new google.maps.weather.CloudLayer();
+        cloudLayer.setMap(map);
+
         // push the credit/copyright custom control
         map.controls[google.maps.ControlPosition.BOTTOM_RIGHT].push(creditNode);
 

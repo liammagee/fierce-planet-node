@@ -1107,6 +1107,7 @@ function World() {
     // User interface elements
     this.tip = null, this.catastrophe = null;
     this.introduction = "Welcome to world " + this.id + ".";
+    this.information;
     this.conclusion = "Congratulations! You have completed world " + this.id + ".";
 
     // Google map, image and sound options

@@ -81,63 +81,162 @@ $LAB
         , 'fp/modules/default/resources/tbl.js'
         , 'fp/modules/default/resources/cos.js'
        , 'fp/modules/default/resources/resource_types.js'
-    , 'fp/modules/pp/predator-prey-module.js' , 'fp/modules/pp/worlds/pp-worlds.js' , 'fp/modules/pp/agents/pp-agent-types.js'
-    , 'fp/modules/gol/game-of-life-module.js', 'fp/modules/ca/ca-module.js'
-    , 'fp/modules/cities/cities-module.js'
-    , 'fp/modules/netlogo/netlogo-module.js'
-    , 'fp/modules/wv/wv-module.js'
+    , 'fp/modules/tests/pp/predator-prey-module.js' , 'fp/modules/tests/pp/worlds/pp-worlds.js' , 'fp/modules/tests/pp/agents/pp-agent-types.js'
+    , 'fp/modules/tests/gol/game-of-life-module.js'
+    , 'fp/modules/tests/ca/ca-module.js'
+    , 'fp/modules/tests/cities/cities-module.js'
+    , 'fp/modules/tests/netlogo/netlogo-module.js'
+    , 'fp/modules/trials/wv/wv-module.js'
+    , 'fp/modules/trials/mpm/mpm-module.js'
+    , 'fp/modules/trials/techo/techo-module.js'
+    , 'fp/modules/trials/whittlesea/ws-module.js'
+    , 'fp/modules/trials/rmit/rmit-module.js'
     ])
     .wait(function() {
         FiercePlanet.GoogleMapUtils.initMaps();
         var m = urlParams.module;
         if (!_.isUndefined(m)) {
             if (m == 'pp') {
-                PredatorPreyModule.init();
+                $LAB.setOptions({BasePath:'/javascripts/'}).script([
+                    'fp/modules/tests/pp/predator-prey-module.js' , 'fp/modules/tests/pp/worlds/pp-worlds.js' , 'fp/modules/tests/pp/agents/pp-agent-types.js'
+                ]).wait(function() {
+                    PredatorPreyModule.init();
+                        $('#content-pane').show();
+                        FiercePlanet.Game.loadGame();
+                    })
             }
             else if (m == 'gol') {
-//                $('#moduleEditor').show();
-                GameOfLifeModule.init();
+                $LAB.setOptions({BasePath:'/javascripts/'}).script([
+                    'fp/modules/tests/gol/game-of-life-module.js'
+                ]).wait(function() {
+                    GameOfLifeModule.init();
+                        $('#content-pane').show();
+                        FiercePlanet.Game.loadGame();
+                    })
             }
             else if (m == 'ca') {
+                $LAB.setOptions({BasePath:'/javascripts/'}).script([
+                    'fp/modules/tests/ca/ca-module.js'
+                ]).wait(function() {
 //                $('#moduleEditor').show();
-                CellularAutomataModule.init();
+                        CellularAutomataModule.init();
+                        $('#content-pane').show();
+                        FiercePlanet.Game.loadGame();
+                    })
             }
             else if (m == 'cities') {
+                $LAB.setOptions({BasePath:'/javascripts/'}).script([
+                    , 'fp/modules/tests/cities/cities-module.js'
+                ]).wait(function() {
 //                $('#moduleEditor').show();
-                CitiesModule.init();
+                    CitiesModule.init();
+                        $('#content-pane').show();
+                        FiercePlanet.Game.loadGame();
+                    })
             }
             else if (m == 'nl' || m == 'netlogo') {
-                $('#moduleEditor').show();
-                NetLogoModule.init();
+                $LAB.setOptions({BasePath:'/javascripts/'}).script([
+                    , 'fp/modules/tests/netlogo/netlogo-module.js'
+                ]).wait(function() {
+                        $('#moduleEditor').show();
+                        NetLogoModule.init();
+                        $('#content-pane').show();
+                        FiercePlanet.Game.loadGame();
+                    })
             }
             else if (m == 'rpg') {
+                $LAB.setOptions({BasePath:'/javascripts/'}).script([
+                    , 'fp/modules/sandbox/rpg/rpg-module.js'
+                ]).wait(function() {
 //                $('#moduleEditor').show();
-                GameOfLifeModule.init();
+                        GameOfLifeModule.init();
+                        $('#content-pane').show();
+                        FiercePlanet.Game.loadGame();
+                    })
+            }
+            else if (m == 'mpm') {
+                $LAB.setOptions({BasePath:'/javascripts/'}).script([
+                    , 'fp/modules/trials/mpm/mpm-module.js'
+                ]).wait(function() {
+//                $('#moduleEditor').show();
+                        MPMModule.init();
+                        $('#content-pane').show();
+                        FiercePlanet.Game.loadGame();
+                    })
+            }
+            else if (m == 'rmit') {
+                $LAB.setOptions({BasePath:'/javascripts/'}).script([
+                    , 'fp/modules/trials/rmit/rmit-module.js'
+                ]).wait(function() {
+//                $('#moduleEditor').show();
+                        RMITModule.init();
+                        $('#content-pane').show();
+                        FiercePlanet.Game.loadGame();
+                    })
+            }
+            else if (m == 'techo') {
+                $LAB.setOptions({BasePath:'/javascripts/'}).script([
+                    , 'fp/modules/trials/techo/techo-module.js'
+                ]).wait(function() {
+//                $('#moduleEditor').show();
+                        TechoModule.init();
+                        $('#content-pane').show();
+                        FiercePlanet.Game.loadGame();
+                    })
+            }
+            else if (m == 'whittlesea' || m == 'ws') {
+                $LAB.setOptions({BasePath:'/javascripts/'}).script([
+                    , 'fp/modules/trials/whittlesea/ws-module.js'
+                ]).wait(function() {
+//                $('#moduleEditor').show();
+                        WhittleseaModule.init();
+                        $('#content-pane').show();
+                        FiercePlanet.Game.loadGame();
+                    })
+            }
+            else if (m == 'uofi') {
+                $LAB.setOptions({BasePath:'/javascripts/'}).script([
+                    'fp/modules/trials/uofi/uofi-module.js'
+                ]).wait(function() {
+//                $('#moduleEditor').show();
+                        UofIModule.init();
+                        $('#content-pane').show();
+                        FiercePlanet.Game.loadGame();
+                    })
             }
             else if (m == 'wv') {
+                $LAB.setOptions({BasePath:'/javascripts/'}).script([
+                    , 'fp/modules/trials/wv/wv-module.js'
+                ]).wait(function() {
 //                $('#moduleEditor').show();
-                WorldVisionModule.init();
+                        WorldVisionModule.init();
+                        $('#content-pane').show();
+                        FiercePlanet.Game.loadGame();
+                    })
             }
             else if (m == 'default' || m == 'fp') {
                 DefaultModule.init();
+                $('#content-pane').show();
+                FiercePlanet.Game.loadGame();
             }
         }
         else {
             DefaultModule.init();
+            $('#content-pane').show();
+            if (window.location.pathname === '/mobile') {
+                Universe.settings.mobile = true;
+                Universe.settings.useInlineResourceSwatch = true;
+                FiercePlanet.Orientation.worldWidth = $(window).width();
+                FiercePlanet.Orientation.worldHeight = $(window).height() - 160;
+            }
+            FiercePlanet.Game.loadGame();
         }
         var world = urlParams.world;
         if (!_.isUndefined(world)) {
             Lifecycle.currentWorldNumber = localStorage.currentWorldNumber = world;
         }
-        if (window.location.pathname === '/mobile') {
-            Universe.settings.mobile = true;
-            FiercePlanet.Orientation.worldWidth = $(window).width();
-            FiercePlanet.Orientation.worldHeight = $(window).height() - 160;
-        }
-        $('#content-pane').show();
-        FiercePlanet.Game.loadGame();
     })
-    .script("paperjs-0.22/lib/paper.js")
+        .script("paperjs-0.22/lib/paper.js")
     .wait(function() {
         //        var canvas = document.getElementById('scrollingCanvas');
 //        paper.setup();

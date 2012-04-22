@@ -545,8 +545,10 @@ function Agent(culture, x, y) {
     this.culture = culture;
     this.color = culture.color;
 
-    // Position-related
+    // Grid positions
     this.x = x, this.y = y;
+    // Co-ordinate positions
+    this.coordX = 0, this.coordY = 0;
 
 
     // Need alternative theories of mind

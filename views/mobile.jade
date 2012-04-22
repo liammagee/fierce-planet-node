@@ -6,14 +6,7 @@ html
     link(rel='stylesheet', href='/stylesheets/mobile.css')
     link(rel='stylesheet', href='/stylesheets/jqconsole.css')
     link(rel='stylesheet', href='/stylesheets/custom/jquery-ui-1.8.14.custom.css')
-
     != partial('scripts')
-  script
-    $(document).ready(function() {
-      FiercePlanet.Orientation.worldWidth = $(window).width();
-      FiercePlanet.Orientation.worldHeight = $(window).height();
-      FiercePlanet.Game.loadGame();
-    });
 
   body
     #wrapper

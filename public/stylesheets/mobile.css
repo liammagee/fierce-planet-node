@@ -1,4 +1,5 @@
-html, body {height: 100%;}
+html, body {height: 100%;    background: #1f62c1;
+}
 
 #wrapper {min-height: 100%;}
 
@@ -12,7 +13,7 @@ html, body {height: 100%;}
     height: 80px;
     clear:both;
     background: #1f62c1;
-    z-index: 1000;
+    z-index: 999;
 }
 
 /*Opera Fix*/
@@ -187,23 +188,22 @@ body {
 /*controls*/
 #controls {
 	position:absolute;
-	right:0px;
-	top:225px;
-	width:61px;
-	padding:50px 10px 0;
-	z-index: 100;
-    background: #1F62C1;
-	background: -webkit-gradient(linear, 0% 0%, 100% 0%, from(#1F62C1), to(#203275));
-	background: -moz-linear-gradient(0% 100% 0deg,#1F62C1, #203275);
+	bottom:0px;
+	width:100%;
+    height: 120px;
+    padding:50px 10px 0;
+	z-index: 1000;
+    /*background: #1F62C1;*/
+	/*background: -webkit-gradient(linear, 0% 0%, 100% 0%, from(#1F62C1), to(#203275));*/
+	/*background: -moz-linear-gradient(0% 100% 0deg,#1F62C1, #203275);*/
 	border-radius:4px;
 	line-height:24px;
 	text-align:center;
 }
 #swatch {
-	position:absolute;
-    right:0px;
-	top: 292px;
-    width:165px;
+	position:relative;
+	top: 2px;
+    width:100%;
 	font-size:10px;
     z-index: 100;
 }
@@ -247,19 +247,25 @@ body {
 .pausing{
 	background:url(../layout/play.png);
 	width:101px; height:101px;
-	position:absolute;
-	top:-50px;
-	left:-10px;
+    position:relative;
+    text-align:center;
+    left:50%;
+    z-index: 1000;
+    /*top:-50px;*/
+	/*left:-10px;*/
 }
 .pausing{
-    background-position: -101px 0;
+    /*background-position: -101px 0;*/
 }
 .playing{
 	background:url(../layout/play.png) 0 -101px;
 	width:101px; height:101px;
-	position:absolute;
-	top:-50px;
-	left:-10px;
+	position:relative;
+	text-align:center;
+    left:50%;
+    z-index: 1000;
+    /*top:-50px;*/
+	/*left:-10px;*/
 }
 .playing:hover{
 background-position: -101px -101px;
@@ -272,7 +278,10 @@ background-position: -101px -101px;
 	background-image:url(../layout/buttons.png);
 	background-position: -5px -3px;
 	width: 31px; height:22px;
-	float:left;
+    position:relative;
+    text-align:center;
+    left:50%;
+    float:left;
 }
 #speedUp{
 	background-image:url(../layout/buttons.png);
@@ -482,17 +491,6 @@ li.over {
     z-index: 1000;
 }
 
-/* Resource swatch styles */
-/*#swatch_economic {*/
-	/*background:#44ABE0;*/
-/*}*/
-/*#swatch_environmental{*/
-	/*background:#CBDB2A;*/
-/*}*/
-/*#swatch_social{*/
-	/*background:#DE1F2A;*/
-/*}*/
-
 /* For dialogs */
 
 .quests {
@@ -695,11 +693,4 @@ white-space: pre;
 white-space: pre-wrap;
 word-wrap: break-word;
 padding: 15px;
-}
-.tilda {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 1100;
 }

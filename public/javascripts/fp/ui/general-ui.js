@@ -201,26 +201,33 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
      * Show world information
      */
     this.worldInfo = function() {
-        var worldHTML = "";
+        var worldIntroduction = "", worldInformation = "";
         var world = Lifecycle.currentWorld;
         if (world.image != undefined) {
-            worldHTML += '<img src="' + world.image + '" alt="City Image" width="460" height="140">';
+            worldIntroduction += '<img src="' + world.image + '" alt="City Image" width="460" height="140">';
             if (world.imageAttribution)
-                worldHTML += '<div style="font-size: 0.8em; text-align: right">' + world.imageAttribution + '</div>';
+                worldIntroduction += '<div style="font-size: 0.8em; text-align: right">' + world.imageAttribution + '</div>';
         }
         if (world.name != undefined) {
-            worldHTML += "<h3>" + world.name + "</h3>";
+            worldIntroduction += "<h3>" + world.name + "</h3>";
         }
         if (world.introduction != undefined) {
-            worldHTML += world.introduction;
+            worldIntroduction += world.introduction;
         }
-        $('#world-introduction').html(worldHTML);
+        $('#world-introduction').html(worldIntroduction);
+
+        if (! _.isUndefined(world.information)) {
+            $('#world-information').html(world.information);
+        }
+        else if (! _.isUndefined(world.introduction)) {
+            $('#world-information').html(world.introduction);
+        }
 
         if (world.parameters != undefined) {
             $('#world-parameters').html(world.parameters);
         }
         if (world.sourceCode != undefined) {
-            $('#world-parameters').html(world.sourceCode);
+            $('#world-code').html(world.sourceCode);
         }
         if (world.setupParameters)
             world.setupParameters();

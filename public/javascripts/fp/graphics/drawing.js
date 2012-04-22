@@ -1577,6 +1577,16 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
             Universe.settings.isometricView = false;
             $('#resourceCanvas').css({zIndex: 5});
             $('#agentCanvas').css({zIndex: 6});
+            $('#map_canvas').css({
+                'width': FiercePlanet.Orientation.worldWidth + 'px',
+                'height': FiercePlanet.Orientation.worldHeight + 'px',
+                'top': '7px',
+                'left': '7px',
+                '-webkit-transform': 'rotate(0deg) skew(0deg, 0deg)',
+                '-moz-transform': 'rotate(0deg) skew(0deg, 0deg)',
+                '-o-transform': 'rotate(0deg) skew(0deg, 0deg)',
+                '-ms-transform': 'rotate(0deg) skew(0deg, 0deg)'
+            });
             Lifecycle.currentWorld.mapOptions.rotate = 0;
             $('#3d')[0].innerHTML = 'View 3D';
         }
@@ -1584,7 +1594,20 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
             Universe.settings.isometricView = true;
             $('#resourceCanvas').css({zIndex: 6});
             $('#agentCanvas').css({zIndex: 5});
-            Lifecycle.currentWorld.mapOptions.rotate = 30;
+            $('#map_canvas').css({
+                'width': FiercePlanet.Orientation.worldHeight + 'px',
+                'height': FiercePlanet.Orientation.worldHeight + 'px',
+                'top': '5px',
+                'left': '100px',
+                '-webkit-transform': 'rotate(-45deg) skew(19deg, 19deg)',
+                '-moz-transform': 'rotate(-45deg) skew(15deg, 15deg)',
+                '-o-transform': 'rotate(-45deg) skew(15deg, 15deg)',
+                '-ms-transform': 'rotate(-45deg) skew(15deg, 15deg)',
+                'filter': "progid:DXImageTransform.Microsoft.Matrix(M11=0.70710678, M12=0.70710678, M21=-0.70710678, M22=0.70710678, sizingMethod='auto expand')"
+            });
+//            Lifecycle.currentWorld.mapOptions.rotate = 0;
+//            Lifecycle.currentWorld.mapOptions.rotate = 30;
+
             $('#3d')[0].innerHTML = 'View 2D';
         }
         FiercePlanet.Drawing.drawMap();

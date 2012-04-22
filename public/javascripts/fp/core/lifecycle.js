@@ -257,6 +257,7 @@ var Lifecycle = Lifecycle || {};
 		if (this.preStartWorldCallback)
 			this.preStartWorldCallback();
 
+        FiercePlanet.Parameters.processParameters();
         if (this.currentWorld && this.currentWorld.handleParameters)
             this.currentWorld.handleParameters();
 

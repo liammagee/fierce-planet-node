@@ -36,9 +36,9 @@ Basic = require('./public/javascripts/fp/modules/default/worlds/basic.js').Basic
 Additional = require('./public/javascripts/fp/modules/default/worlds/additional.js').Additional;
 DefaultModule = require('./public/javascripts/fp/modules/default/default-module.js').DefaultModule;
 
-PredatorPreyCultures = require('./public/javascripts/fp/modules/pp/agents/pp-agent-types.js').PredatorPreyCultures;
-PredatorPreyLevels = require('./public/javascripts/fp/modules/pp/worlds/pp-levels.js').PredatorPreyLevels;
-PredatorPreyModule = require('./public/javascripts/fp/modules/pp/predator-prey-module.js').PredatorPreyModule;
+PredatorPreyCultures = require('./public/javascripts/fp/modules/tests/pp/agents/pp-agent-types.js').PredatorPreyCultures;
+PredatorPreyLevels = require('./public/javascripts/fp/modules/tests/pp/worlds/pp-levels.js').PredatorPreyLevels;
+PredatorPreyModule = require('./public/javascripts/fp/modules/tests/pp/predator-prey-module.js').PredatorPreyModule;
 //jstat = require('./public/javascripts/jstat-1.0.0/js/jstat-1.0.0.js').jstat;
 //NormalDistribution = require('./public/javascripts/jstat-1.0.0/js/jstat-1.0.0.js').NormalDistribution;
 jStat = require('./public/javascripts/jstat-1.0.0/js/jstat.js').jStat;

@@ -1,5 +1,5 @@
 /**
- * Note: assumes
+ * Note: assumes paper.js is loaded
  */
 
 
