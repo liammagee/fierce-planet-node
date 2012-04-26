@@ -23,8 +23,8 @@ FiercePlanet.Orientation = FiercePlanet.Orientation || {};
     this.DEFAULT_ROTATION_ANGLE = 0;
     // "0.46365 (radians) - it's a “classic” 1:2 isometric angle which lays up perfectly into pixel grid of the computer screen. "
     this.DEFAULT_PERSPECTIVE_ANGLE = 0.46365;
-//    this.DEFAULT_PERSPECTIVE_ANGLE = 0.3;
-    this.DEFAULT_MAP_ROTATION_ANGLE = 0;
+    this.DEFAULT_MAP_ROTATION_ANGLE = -0.78540;
+    this.DEFAULT_MAP_PERSPECTIVE_ANGLE = 0.33161;
 
     this.worldWidth = this.DEFAULT_WORLD_WIDTH, this.worldHeight = this.DEFAULT_WORLD_HEIGHT;
     this.halfWorldWidth = this.worldWidth / 2, this.halfWorldHeight = this.worldHeight / 2;
@@ -33,15 +33,27 @@ FiercePlanet.Orientation = FiercePlanet.Orientation || {};
     this.pieceWidth = 0, this.pieceHeight = 0;
     this.offsetX = 0, this.offsetY = 0;
     this.zoomWorld = 1, this.externalZoomWorld = 1, this.zoomMagnificationFactor = 1.5;
-    this.rotationAngle = this.DEFAULT_ROTATION_ANGLE, this.perspectiveAngle = this.DEFAULT_PERSPECTIVE_ANGLE, this.mapRotationAngle = this.DEFAULT_MAP_ROTATION_ANGLE;
+    this.rotationAngle = this.DEFAULT_ROTATION_ANGLE, this.perspectiveAngle = this.DEFAULT_PERSPECTIVE_ANGLE;
+    this.mapRotationAngle = this.DEFAULT_MAP_ROTATION_ANGLE, this.mapPerspectiveAngle = this.DEFAULT_MAP_PERSPECTIVE_ANGLE;
 
     
     this.reset = function() {
         this.offsetX = 0, this.offsetY = 0;
         this.zoomWorld = 1, this.externalZoomWorld = 1, this.zoomMagnificationFactor = 1.5;
-        this.rotationAngle = this.DEFAULT_ROTATION_ANGLE, this.perspectiveAngle = this.DEFAULT_PERSPECTIVE_ANGLE, this.mapRotationAngle = this.DEFAULT_MAP_ROTATION_ANGLE;
-
+        this.rotationAngle = this.DEFAULT_ROTATION_ANGLE, this.perspectiveAngle = this.DEFAULT_PERSPECTIVE_ANGLE;
         this.adjustParameters(this.DEFAULT_WORLD_WIDTH, this.DEFAULT_WORLD_HEIGHT);
+    };
+
+    this.initialiseParameters = function(width, height) {
+        if (Universe.settings.isometricView) {
+            this.mapRotationAngle = this.DEFAULT_MAP_ROTATION_ANGLE;
+            this.mapPerspectiveAngle = this.DEFAULT_MAP_PERSPECTIVE_ANGLE;
+        }
+        else {
+            this.mapRotationAngle = 0;
+            this.mapPerspectiveAngle = 0;
+        }
+        this.adjustParameters(width, height)
     };
 
     this.recalibrateParameters = function() {
@@ -69,11 +81,12 @@ FiercePlanet.Orientation = FiercePlanet.Orientation || {};
 
     this.resizeWorld = function() {
         try {
-            var canvases = $('#world-container, #imageCanvas, #map_canvas,#baseCanvas, #guideCanvas, #noticeCanvas, #agentCanvas, #resourceCanvas, #scrollingCanvas');
+            //#world-container,
+            var canvases = $('#imageCanvas, #map_canvas,#baseCanvas, #guideCanvas, #noticeCanvas, #agentCanvas, #resourceCanvas, #scrollingCanvas');
 //
             //, #alt_map_canvas
-//            $('#map_canvas')[0].width = this.worldWidth;
-//            $('#map_canvas')[0].height = this.worldHeight;
+            $('#map_canvas')[0].width = this.worldWidth;
+            $('#map_canvas')[0].height = this.worldHeight;
             $('#baseCanvas')[0].width = this.worldWidth;
             $('#baseCanvas')[0].height = this.worldHeight;
             $('#noticeCanvas')[0].width = this.worldWidth;
@@ -86,16 +99,16 @@ FiercePlanet.Orientation = FiercePlanet.Orientation || {};
             $('#resourceCanvas')[0].height = this.worldHeight;
             $('#scrollingCanvas')[0].width = this.worldWidth;
             $('#scrollingCanvas')[0].height = this.worldHeight;
-            canvases.css({width: this.worldWidth, height: this.worldHeight});
             canvases.width(this.worldWidth);
             canvases.height(this.worldHeight);
+
 //            $('#actual_map').css({width: (this.worldWidth * 1), height: (this.worldHeight * 1) });
             $('#actual_map').css({width: (this.worldWidth * 2), height: (this.worldHeight * 2), 'margin-top': -this.worldHeight, 'margin-left': -this.worldWidth });
             if (! Universe.settings.mobile) {
-                $('#wrapper').css({width: 490 + this.worldWidth});
-                $('#global-info-panel').css({left: this.worldWidth - 90});
-                $('#notifications').css({top: 117 + this.worldHeight, width: this.worldWidth});
-                $('#world-editor').css({top: 190 + this.worldHeight, width: this.worldWidth});
+//                $('#wrapper').css({width: 490 + this.worldWidth});
+//                $('#global-info-panel').css({left: this.worldWidth - 90});
+//                $('#notifications').css({top: 117 + this.worldHeight, width: this.worldWidth});
+//                $('#world-editor').css({top: 190 + this.worldHeight, width: this.worldWidth});
             }
         }
         catch (e) {}

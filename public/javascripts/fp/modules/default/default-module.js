@@ -25,6 +25,9 @@ var DefaultModule = DefaultModule || {};
         var culture = DefaultCultures.MovingStickman;
         culture.healthCategories = module.resourceSet.categories;
         module.registerCulture(DefaultCultures.MovingStickman);
+
+        Universe.settings.animateWorldAtStart = true;
+
     };
 }).apply(DefaultModule);
 

@@ -183,7 +183,7 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
     this.makeElementsMovable = function() {
         if (Universe.settings.makeElementsMovable && ! Universe.settings.mobile) {
             $('#graph-area, #controls').draggable({cursor: "pointer"});
-            $('#gameworld').resizable().draggable({handler: '#handle', cancel: '#world-container, #console'});
+//            $('#gameworld').resizable().draggable({handler: '#handle', cancel: '#world-container, #console'});
             $('#global-info-panel').draggable({cancel: '#swatch', cursor: "pointer"});
         }
         else {
@@ -232,7 +232,7 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
         if (world.setupParameters)
             world.setupParameters();
         var modal = ! ModuleManager.currentModule.persistSetupScreen && ! Lifecycle.currentWorld.persistSetupScreen;
-        FiercePlanet.Dialogs.newWorldDialog.dialog('option', 'modal', modal);
+        FiercePlanet.Dialogs.newWorldDialog.dialog('option', 'modal', false);
         FiercePlanet.Dialogs.newWorldDialog.dialog('open');
     };
 

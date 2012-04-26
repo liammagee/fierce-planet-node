@@ -3,7 +3,7 @@ html
   head
     meta(http-equiv='X-UA-Compatible', content='IE=Edge')
     title= typeof(title) !== 'undefined' ? title : "Fierce Planet"
-    link(rel='stylesheet', href='/stylesheets/styles.css')
+    link(rel='stylesheet', href='/stylesheets/styles_relative.css')
     link(rel='stylesheet', href='/stylesheets/jqconsole.css')
     link(rel='stylesheet', href='/stylesheets/custom/jquery-ui-1.8.14.custom.css')
     link(rel='stylesheet', href='/javascripts/CodeMirror-2.2/lib/codemirror.css')
@@ -12,4 +12,5 @@ html
 
   body
     #wrapper
+      img.bg(src='../layout/backgound.jpg')
       #content-pane!= body

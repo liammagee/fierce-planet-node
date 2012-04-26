@@ -63,9 +63,13 @@ FiercePlanet.Game = FiercePlanet.Game || {};
      */
     this.loadGame = function () {
         //FiercePlanet.Utils.loadScripts();
+        $(window).resize(function() {
+            FiercePlanet.Orientation.adjustParameters($('#world-container').width(), $('#world-container').height());
+            FiercePlanet.Drawing.drawCanvases();
+        });
 
-        // Load relevant settings, if available
-        FiercePlanet.Orientation.adjustParameters(FiercePlanet.Orientation.worldWidth, FiercePlanet.Orientation.worldHeight);
+        // Set world width and height
+        FiercePlanet.Orientation.initialiseParameters($('#world-container').width(), $('#world-container').height());
 
         // Load relevant settings, if available
         FiercePlanet.ProfileUI.loadProfileSettingsFromStorage();

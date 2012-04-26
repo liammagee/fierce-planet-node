@@ -71,12 +71,6 @@ FiercePlanet.Mouse = FiercePlanet.Mouse || {};
             FiercePlanet.Game.currentX = e.offsetX;
             FiercePlanet.Game.currentY = e.offsetY;
         }
-        /*
-        else if (e.layerX || e.layerX == 0) { // Firefox
-            FiercePlanet.Game.currentX = e.layerX;
-            FiercePlanet.Game.currentY = e.layerY;
-        }
-        */
     };
 
     /**
@@ -108,19 +102,24 @@ FiercePlanet.Mouse = FiercePlanet.Mouse || {};
             var offsetX = ex - FiercePlanet.Game.currentX;
             var offsetY = ey - FiercePlanet.Game.currentY;
 
-			var midX = FiercePlanet.Orientation.halfWorldWidth;
-			var midY = FiercePlanet.Orientation.halfWorldHeight;
-			var	cx = FiercePlanet.Game.currentX - midX;
-			var	cy = FiercePlanet.Game.currentY - midY;
-			var	nx = ex - midX;
-			var	ny = ey - midY;
-			var ct = Math.atan2(cy, cx);
-			var nt = Math.atan2(ny, nx);
-			var dt = (nt - ct) * ((Math.abs(nx) / midX) + (Math.abs(ny) / midY));
-
             if ((!Universe.settings.reverseMouseClickEffects && e.which != 1) || (Universe.settings.reverseMouseClickEffects && e.which == 1)) {
+                var midX = FiercePlanet.Orientation.halfWorldWidth;
+                var midY = FiercePlanet.Orientation.halfWorldHeight;
+                var	cx = FiercePlanet.Game.currentX - midX;
+                var	cy = FiercePlanet.Game.currentY - midY;
+                var	nx = ex - midX;
+                var	ny = ey - midY;
+                var ct = Math.atan2(cy, cx);
+                var nt = Math.atan2(ny, nx);
+                var dt = (nt - ct) * ((Math.abs(nx) / midX) + (Math.abs(ny) / midY));
+
                 FiercePlanet.Orientation.rotationAngle = FiercePlanet.Orientation.rotationAngle + dt;
                 FiercePlanet.Orientation.perspectiveAngle = FiercePlanet.Orientation.perspectiveAngle + (offsetY / (FiercePlanet.Orientation.halfWorldHeight));
+                FiercePlanet.Orientation.mapRotationAngle = FiercePlanet.Orientation.mapRotationAngle + dt;
+                FiercePlanet.Orientation.mapPerspectiveAngle = FiercePlanet.Orientation.mapPerspectiveAngle - (offsetY / (FiercePlanet.Orientation.halfWorldHeight * 2));
+                console.log(FiercePlanet.Orientation.perspectiveAngle, FiercePlanet.Orientation.mapPerspectiveAngle)
+
+                FiercePlanet.Drawing.transformMap();
             }
             else {
                 FiercePlanet.Drawing.panByDrag(offsetX, offsetY);

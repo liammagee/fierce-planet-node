@@ -163,6 +163,7 @@ FiercePlanet.Utils = FiercePlanet.Utils || {};
     this.setAndStoreProperties = function() {
 
         // Set the settings on the World object
+        console.log(Universe.settings)
 
         // Add checkbox values
         var inputs = $('#settings-dialog input[type="checkbox"]');
@@ -234,7 +235,7 @@ FiercePlanet.Utils = FiercePlanet.Utils || {};
 
         if (Universe.settings.makeSquare) {
 //        $('#world-container').height($('#world-container').width());
-            $('#world-container').height(480);
+//            $('#world-container').height(480);
             $('#map_canvas').height(480);
             $('canvas').height(480);
             $('canvas').width(480);

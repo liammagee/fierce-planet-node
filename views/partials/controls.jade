@@ -1,56 +1,53 @@
 #controls
   #spinner
     img(src='/images/ajax-loader.gif')
-  #playAgents
-  #slowDown
-  #speedUp
-  #newGame
-  #restartLevel
-  div.divide
+  #playAgents(title='Play/Pause')
+  #slowDown(title='Slow')
+  #speedUp(title='Fast')
+  #newGame(title='New Game')
+  #restartLevel(title='Restart Level')
+  #divide1
+  #panUp(title='Pan Up')
+  #panLeft(title='Pan Left')
+  #panReset(title='Pan Reset')
+  #panRight(title='Pan Right')
+  #panDown(title='Pan Down')
+  #divide2
+  #zoomOut(title='Zoom Out')
+  #zoomReset(title='Zoom Reset')
+  #zoomIn(title='Zoom In')
+  #divide3
+  #contract(title='Contract Screen')
+  #expand(title='Expand Screen')
+  #fullscreen(title='Full Screen')
+  #divide4
+  #control-links
+    div.control-link(title='Tutorial')
+      a#tutorial(href='#') Tutorial
+    div(title='Levels')
+      a#openWorldGallery(href='#') Levels
+    div(title='Settings')
+      a#settings(href='#') Settings
+    //- if (everyauth && everyauth.user)
+    div
+      a#editor(href='#',style="display:none") Editor
+    div
+      a#debug(href='#',style="display:none") Step
+    div.divide
 
-  #panUp
-  #panLeft
-  #panReset
-  #panRight
-  #panDown
-  div.divide
-
-  #zoomOut
-  #zoomReset
-  #zoomIn
-  div.divide
-
-  #contract
-  #expand
-  #fullscreen
-  div.divide
-
-  div
-    a#tutorial(href='#') Tutorial
-  div
-    a#openWorldGallery(href='#') Levels
-  div
-    a#settings(href='#') Settings
-  //- if (everyauth && everyauth.user)
-  div
-    a#editor(href='#',style="display:none") Editor
-  div
-    a#debug(href='#',style="display:none") Step
-  div.divide
-
-  div
-    a#3d(href='#') View 3D
-  div
-    a#resetView(href='#') Reset View
-  // div
-  //  a#tiltUp(href='#') Tilt Up
-  // div
-  //  a#tiltDown(href='#') Tilt Down
-  // div
-  //  a#rotateLeft(href='#') Rotate Left
-  // div
-  //  a#rotateRight(href='#') Rotate Right
-  div.divide
+    div.control-link(title='View 3D/2D')
+      a#3d(href='#') View 3D
+    div(title='Reset View')
+      a#resetView(href='#') Reset View
+    div
+      a#tiltUp(href='#') Tilt Up
+    div
+      a#tiltDown(href='#') Tilt Down
+    div
+      a#rotateLeft(href='#') Rotate Left
+    div
+      a#rotateRight(href='#') Rotate Right
+    div.divide
 
 
   //#admin-controls
@@ -59,3 +56,6 @@
   //  button#script-editor Script Editor
   //  button#story-board Story Board
   //div.divide
+
+
+

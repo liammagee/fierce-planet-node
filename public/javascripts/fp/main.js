@@ -236,7 +236,7 @@ $LAB
             Lifecycle.currentWorldNumber = localStorage.currentWorldNumber = world;
         }
     })
-        .script("paperjs-0.22/lib/paper.js")
+//        .script("paperjs-0.22/lib/paper.js")
     .wait(function() {
         //        var canvas = document.getElementById('scrollingCanvas');
 //        paper.setup();

@@ -98,6 +98,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         var midTilePosX = FiercePlanet.Orientation.halfWorldWidth;
         var midTilePosY = FiercePlanet.Orientation.halfWorldHeight;
         ctx.save();
+//        ctx.scale(0.33, 0.33);
         ctx.translate(midTilePosX, midTilePosY);
         ctx.rotate(FiercePlanet.Orientation.rotationAngle);
 
@@ -1544,7 +1545,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         var rw = rwl + Math.floor(Math.random() * ww);
         var rh = rwt + Math.floor(Math.random() * wh);
         world.css({'width': 0, 'height' : 0, 'left': rw, 'top': rh});
-        world.animate({'width': ww, 'height': wh, 'left': rwl, 'top': rwt}, 1500);
+        world.animate({'width': '100%', 'height': '68%', 'left': rwl, 'top': rwt}, 1500);
         canvases.css({'width': 0, 'height' : 0});
         canvases.animate({'width': ww, 'height': wh}, 1500);
     };
@@ -1577,40 +1578,34 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
             Universe.settings.isometricView = false;
             $('#resourceCanvas').css({zIndex: 5});
             $('#agentCanvas').css({zIndex: 6});
+            FiercePlanet.Orientation.mapPerspectiveAngle -= FiercePlanet.Orientation.DEFAULT_MAP_PERSPECTIVE_ANGLE;
+            FiercePlanet.Orientation.mapRotationAngle -= FiercePlanet.Orientation.DEFAULT_MAP_ROTATION_ANGLE;
             $('#map_canvas').css({
                 'width': FiercePlanet.Orientation.worldWidth + 'px',
                 'height': FiercePlanet.Orientation.worldHeight + 'px',
-                'top': '7px',
-                'left': '7px',
-                '-webkit-transform': 'rotate(0deg) skew(0deg, 0deg)',
-                '-moz-transform': 'rotate(0deg) skew(0deg, 0deg)',
-                '-o-transform': 'rotate(0deg) skew(0deg, 0deg)',
-                '-ms-transform': 'rotate(0deg) skew(0deg, 0deg)'
+                'top': '1%',
+                'left': '1%',
             });
-            Lifecycle.currentWorld.mapOptions.rotate = 0;
             $('#3d')[0].innerHTML = 'View 3D';
         }
         else {
             Universe.settings.isometricView = true;
             $('#resourceCanvas').css({zIndex: 6});
             $('#agentCanvas').css({zIndex: 5});
+            var ratio = FiercePlanet.Orientation.worldHeight / FiercePlanet.Orientation.worldWidth,
+                leftOffsetPercent = (1 / ratio) * 12;
+            FiercePlanet.Orientation.mapPerspectiveAngle += FiercePlanet.Orientation.DEFAULT_MAP_PERSPECTIVE_ANGLE;
+            FiercePlanet.Orientation.mapRotationAngle += FiercePlanet.Orientation.DEFAULT_MAP_ROTATION_ANGLE;
             $('#map_canvas').css({
                 'width': FiercePlanet.Orientation.worldHeight + 'px',
                 'height': FiercePlanet.Orientation.worldHeight + 'px',
-                'top': '5px',
-                'left': '100px',
-                '-webkit-transform': 'rotate(-45deg) skew(19deg, 19deg)',
-                '-moz-transform': 'rotate(-45deg) skew(15deg, 15deg)',
-                '-o-transform': 'rotate(-45deg) skew(15deg, 15deg)',
-                '-ms-transform': 'rotate(-45deg) skew(15deg, 15deg)',
-                'filter': "progid:DXImageTransform.Microsoft.Matrix(M11=0.70710678, M12=0.70710678, M21=-0.70710678, M22=0.70710678, sizingMethod='auto expand')"
+                'top': '1%',
+                'left': leftOffsetPercent + '%'
             });
-//            Lifecycle.currentWorld.mapOptions.rotate = 0;
-//            Lifecycle.currentWorld.mapOptions.rotate = 30;
 
             $('#3d')[0].innerHTML = 'View 2D';
         }
-        FiercePlanet.Drawing.drawMap();
+        FiercePlanet.Drawing.transformMap();
         FiercePlanet.Drawing.drawCanvases();
     };
 
@@ -1643,7 +1638,9 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
      */
     this.tilt = function (amount) {
         FiercePlanet.Orientation.perspectiveAngle = FiercePlanet.Orientation.perspectiveAngle + amount;
+        FiercePlanet.Orientation.mapPerspectiveAngle = FiercePlanet.Orientation.mapPerspectiveAngle - (amount * 2);
         FiercePlanet.Drawing.drawCanvases();
+        FiercePlanet.Drawing.transformMap();
     };
 
     /**
@@ -1665,7 +1662,49 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
      */
     this.rotate = function (amount) {
         FiercePlanet.Orientation.rotationAngle = FiercePlanet.Orientation.rotationAngle + amount;
+        FiercePlanet.Orientation.mapRotationAngle = FiercePlanet.Orientation.mapRotationAngle + amount;
         FiercePlanet.Drawing.drawCanvases();
+        FiercePlanet.Drawing.transformMap();
+    };
+
+    /**
+     * Transform map
+     // Experimental rotate support - for Chrome only
+     */
+    this.transformMap = function() {
+        // Strip matrix values, and construct Sylvestor matrix
+        // With help from:
+        // http://stackoverflow.com/questions/8270612/get-element-moz-transformrotate-value-in-jquery
+        // http://www.useragentman.com/blog/2011/01/07/css3-matrix-transform-for-the-mathematically-challenged/
+        // http://www.impressivewebs.com/alternative-units-css3-rotate-transforms/
+        /*
+         // SAMPLE CODE FOR DETERMINING ROTATION AND SKEW. NOT YET WORKING
+         var m = $('#map_canvas').css('-webkit-transform');
+         var m1 = m.slice(7, m.length - 1).split(', ');
+         var m2 = _.map(m1, function(e) { return parseFloat(e); });
+         var a = m2[0], b = m2[1], c = m2[2], d = m2[3];
+         var currentAngleRads = Math.acos(a);
+         var currentAngleDirection = Math.asin(b);
+         currentAngleRads = (currentAngleDirection < 0 ? -currentAngleRads : currentAngleRads);
+         // Get rid of values close to zero
+         var currentSkewY = b;
+         var currentSkewX = c;
+
+         var newAngleRads = currentAngleRads + amount;
+         console.log(currentAngleRads)
+         console.log(amount)
+         newAngleRads = (Math.round(newAngleRads * 1000) == 0 ? 0 : newAngleRads);
+         console.log(newAngleRads)
+         */
+
+        var mapRotate = FiercePlanet.Orientation.mapRotationAngle,
+            mapPerspective = FiercePlanet.Orientation.mapPerspectiveAngle;
+        $('#map_canvas').css({
+            '-webkit-transform': 'rotate(' + mapRotate + 'rad) skewX(' + mapPerspective + 'rad) skewY(' + mapPerspective + 'rad)',
+            '-moz-transform': 'rotate(' + mapRotate + 'rad) skewX(' + mapPerspective + 'rad) skewY(' + mapPerspective + 'rad)',
+            '-o-transform': 'rotate(' + mapRotate + 'rad) skewX(' + mapPerspective + 'rad) skewY(' + mapPerspective + 'rad)',
+            '-ms-transform': 'rotate(' + mapRotate + 'rad) skewX(' + mapPerspective + 'rad) skewY( ' + mapPerspective + 'rad)'
+        });
     };
 
     /**

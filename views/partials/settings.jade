@@ -66,6 +66,9 @@
       div
         input#makeSquare(type='checkbox')
         label(for='makeSquare') Make world square
+      div
+        input#animateWorldAtStart(type='checkbox')
+        label(for='animateWorldAtStart') Animate world
     #agent-settings
       div
         input#agentsCanCommunicate(type='checkbox', checked='checked')
@@ -154,8 +157,8 @@
         input#tilesRemovable(type='checkbox')
         label(for='tilesRemovable') Allow tiles to be removed
       div
-        input#skewTiles(type='checkbox', checked='checked')
-        label(for='skewTiles') View in 3D
+        input#isometricView(type='checkbox', checked='checked')
+        label(for='isometricView') View in 3D
       div
         input#showResourcesAsBoxes(type='checkbox', checked='checked')
         label(for='showResourcesAsBoxes') Show resources as boxes in 3D
