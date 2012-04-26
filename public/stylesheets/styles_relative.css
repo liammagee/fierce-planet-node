@@ -319,28 +319,28 @@ body {
         position:absolute;
         background-image:url(../layout/buttons.png);
         /*background-position: -5px -175px;*/
-        background-position: 3% 91%;
-        background-size: 320% 700%;
+        background-position: 3% 90%;
+        background-size: 320% 800%;
         width: 28%; height:6%;
-        top: 47%; left: 10%;
+        top: 47%; left: 8%;
     }
     #expand{
         position:absolute;
         background-image:url(../layout/buttons.png);
         /*background-position: -25px -175px;*/
-        background-position: 50% 91%;
-        background-size: 320% 700%;
+        background-position: 50% 90%;
+        background-size: 320% 800%;
         width: 28%; height:6%;
-        top: 47%; left: 40%;
+        top: 47%; left: 38%;
     }
     #fullscreen{
         position:absolute;
         background-image:url(../layout/buttons.png);
         /*background-position: -46px -175px;*/
-        background-position: 95% 91%;
-        background-size: 320% 700%;
+        background-position: 95% 90%;
+        background-size: 320% 800%;
         width: 28%; height:6%;
-        top: 47%; left: 68%;
+        top: 47%; left: 67%;
     }
     #divide4 {
         position:absolute;
