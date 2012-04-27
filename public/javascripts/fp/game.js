@@ -110,6 +110,12 @@ FiercePlanet.Game = FiercePlanet.Game || {};
         // Add callbacks to lifecycle
         FiercePlanet.Game.setupLifecycle();
 
+        // Push graph set up elsewhere
+        $("#model-tabs").tabs();
+        $("#world-graph").width(FiercePlanet.Orientation.worldWidth * 0.9);
+        $("#world-graph").height(FiercePlanet.Orientation.worldHeight * 0.2);
+        FiercePlanet.Graph.drawGraph();
+
         // Draw the game
         Lifecycle.newWorld();
     };

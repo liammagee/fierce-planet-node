@@ -214,6 +214,16 @@ $LAB
                         FiercePlanet.Game.loadGame();
                     })
             }
+            else if (m == 'game2') {
+                $LAB.setOptions({BasePath:'/javascripts/'}).script([
+                    , 'fp/modules/game2/game2-module.js'
+                ]).wait(function() {
+//                $('#moduleEditor').show();
+                        WorldVisionModule.init();
+                        $('#content-pane').show();
+                        FiercePlanet.Game.loadGame();
+                    })
+            }
             else if (m == 'default' || m == 'fp') {
                 DefaultModule.init();
                 $('#content-pane').show();

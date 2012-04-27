@@ -102,8 +102,8 @@ FiercePlanet.Orientation = FiercePlanet.Orientation || {};
             canvases.width(this.worldWidth);
             canvases.height(this.worldHeight);
 
-//            $('#actual_map').css({width: (this.worldWidth * 1), height: (this.worldHeight * 1) });
-            $('#actual_map').css({width: (this.worldWidth * 2), height: (this.worldHeight * 2), 'margin-top': -this.worldHeight, 'margin-left': -this.worldWidth });
+            $('#actual_map').css({width: (this.worldWidth * 1), height: (this.worldHeight * 1) });
+//            $('#actual_map').css({width: (this.worldWidth * 2), height: (this.worldHeight * 2), 'margin-top': -this.worldHeight, 'margin-left': -this.worldWidth });
             if (! Universe.settings.mobile) {
 //                $('#wrapper').css({width: 490 + this.worldWidth});
 //                $('#global-info-panel').css({left: this.worldWidth - 90});

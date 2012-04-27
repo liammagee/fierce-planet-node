@@ -1580,13 +1580,14 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
             $('#agentCanvas').css({zIndex: 6});
             FiercePlanet.Orientation.mapPerspectiveAngle -= FiercePlanet.Orientation.DEFAULT_MAP_PERSPECTIVE_ANGLE;
             FiercePlanet.Orientation.mapRotationAngle -= FiercePlanet.Orientation.DEFAULT_MAP_ROTATION_ANGLE;
-            $('#map_canvas').css({
+            $('#3d')[0].innerHTML = 'View 3D';
+//            $('#map_canvas').css({
+            $('#map_canvas').animate({
                 'width': FiercePlanet.Orientation.worldWidth + 'px',
                 'height': FiercePlanet.Orientation.worldHeight + 'px',
                 'top': '1%',
                 'left': '1%',
-            });
-            $('#3d')[0].innerHTML = 'View 3D';
+            }, 1000);
         }
         else {
             Universe.settings.isometricView = true;
@@ -1596,14 +1597,15 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
                 leftOffsetPercent = (1 / ratio) * 12;
             FiercePlanet.Orientation.mapPerspectiveAngle += FiercePlanet.Orientation.DEFAULT_MAP_PERSPECTIVE_ANGLE;
             FiercePlanet.Orientation.mapRotationAngle += FiercePlanet.Orientation.DEFAULT_MAP_ROTATION_ANGLE;
-            $('#map_canvas').css({
+            $('#3d')[0].innerHTML = 'View 2D';
+//            $('#map_canvas').css({
+            $('#map_canvas').animate({
                 'width': FiercePlanet.Orientation.worldHeight + 'px',
                 'height': FiercePlanet.Orientation.worldHeight + 'px',
                 'top': '1%',
                 'left': leftOffsetPercent + '%'
-            });
+            }, 1000);
 
-            $('#3d')[0].innerHTML = 'View 2D';
         }
         FiercePlanet.Drawing.transformMap();
         FiercePlanet.Drawing.drawCanvases();
@@ -1638,7 +1640,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
      */
     this.tilt = function (amount) {
         FiercePlanet.Orientation.perspectiveAngle = FiercePlanet.Orientation.perspectiveAngle + amount;
-        FiercePlanet.Orientation.mapPerspectiveAngle = FiercePlanet.Orientation.mapPerspectiveAngle - (amount * 2);
+        FiercePlanet.Orientation.mapPerspectiveAngle = FiercePlanet.Orientation.mapPerspectiveAngle - (amount * 2.15);
         FiercePlanet.Drawing.drawCanvases();
         FiercePlanet.Drawing.transformMap();
     };

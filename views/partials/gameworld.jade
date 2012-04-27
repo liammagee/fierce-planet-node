@@ -10,5 +10,32 @@
     canvas#scrollingCanvas(z-index='7', resize='true')
     canvas#noticeCanvas(z-index='8')
   #notifications
-    #console
+    #model-tabs
+      ul
+        li
+          a(href='#console') Console
+        li
+          a(href='#graph-area') Graph
+        li
+          a(href='#world-parameters') Parameters
+        li
+          a(href='#world-information') Information
+        li
+          a(href='#world-code') Code
+      #console
+      #graph-area
+        #world-graph
+        #graph-controls
+          label(for='graph-config') Show graph for:
+          select#graph-config(name='graph-config')
+            option(name='pop-count') Population
+            option(name='pop-health') Population Health
+            option(name='saved-expired') Survived/Expired
+            option(name='hdi') Human Development Index
+            option(name='hpi') Happy Planet Index
+      #world-parameters
+      #world-information
+      #world-code
+        textarea#module-editor
+
     #handle(style='height: 10px;')

@@ -905,7 +905,7 @@ var Basic = Basic || new Campaign();
 
         /* Google Map links */
         if (typeof google !== "undefined" && typeof google.maps !== "undefined") {
-	        this.world1.mapOptions = ({mapTypeId: google.maps.MapTypeId.SATELLITE, center: new google.maps.LatLng(-30.0305, -51.2270), zoom: 18, tilt: 45}); // Porto Allegre: -30.031137, -51.232837
+	        this.world1.mapOptions = ({mapTypeId: google.maps.MapTypeId.SATELLITE, center: new google.maps.LatLng(-30.029, -51.230), zoom: 18, tilt: 45}); // Porto Allegre: -30.031137, -51.232837
 	        this.world2.mapOptions = ({mapTypeId: google.maps.MapTypeId.SATELLITE, rotate: -0, center: new google.maps.LatLng(37.390296, -5.954579), zoom: 18, tilt: 45}); // Seville: 37.390296,-5.954579
 	        this.world3.mapOptions = ({mapTypeId: google.maps.MapTypeId.SATELLITE, center: new google.maps.LatLng(45.433607, 12.338124), zoom: 18, tilt: 45}); // Venice: 45.433607,12.338124
 	        this.world4.mapOptions = ({mapTypeId: google.maps.MapTypeId.SATELLITE, center: new google.maps.LatLng(41.890384354793554, 12.49228627979709), zoom: 19, tilt: 45}); // Rome, Colosseum: 41.890384354793554, 12.49228627979709

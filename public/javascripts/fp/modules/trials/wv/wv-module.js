@@ -556,9 +556,9 @@ WorldVisionResources.doSetup = function() {
             isometricView: false,
             hidePathBorder: true,
             scrollingImageVisible: false,
-            showGraph: false,
-            showEditor: true,
-            animateWorldAtStart: false
+//            showGraph: false,
+//            showEditor: true,
+//            animateWorldAtStart: false
         })
         localStorage.scrollingImageVisible = false;
         Universe.settings.store();
@@ -569,10 +569,10 @@ WorldVisionResources.doSetup = function() {
             interval: 500,
             worldDelay: 300
         })
-        _.extend(FiercePlanet.Orientation, {
-            worldWidth: 800,
-            worldHeight: 600
-        })
+//        _.extend(FiercePlanet.Orientation, {
+//            worldWidth: 800,
+//            worldHeight: 600
+//        })
 
         FiercePlanet.ModuleEditor.buildEditorFromUrl('/javascripts/fp/modules/trials/wv/wv-module.js', 'WorldVisionModule.init(); FiercePlanet.Game.loadGame();');
     };

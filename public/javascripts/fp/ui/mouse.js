@@ -116,8 +116,8 @@ FiercePlanet.Mouse = FiercePlanet.Mouse || {};
                 FiercePlanet.Orientation.rotationAngle = FiercePlanet.Orientation.rotationAngle + dt;
                 FiercePlanet.Orientation.perspectiveAngle = FiercePlanet.Orientation.perspectiveAngle + (offsetY / (FiercePlanet.Orientation.halfWorldHeight));
                 FiercePlanet.Orientation.mapRotationAngle = FiercePlanet.Orientation.mapRotationAngle + dt;
-                FiercePlanet.Orientation.mapPerspectiveAngle = FiercePlanet.Orientation.mapPerspectiveAngle - (offsetY / (FiercePlanet.Orientation.halfWorldHeight * 2));
-                console.log(FiercePlanet.Orientation.perspectiveAngle, FiercePlanet.Orientation.mapPerspectiveAngle)
+                if (Universe.settings.isometricView)
+                    FiercePlanet.Orientation.mapPerspectiveAngle = FiercePlanet.Orientation.mapPerspectiveAngle - ((offsetY  * 2.15) / (FiercePlanet.Orientation.halfWorldHeight));
 
                 FiercePlanet.Drawing.transformMap();
             }

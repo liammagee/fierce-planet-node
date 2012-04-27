@@ -166,9 +166,10 @@ FiercePlanet.ResourceUI = FiercePlanet.ResourceUI || {};
                 modal: true
             });
         $('#inline-swatch div[class="title"]').remove();
-        var links = $('#inline-swatch .swatch-instance'), el = null;
+        var links = $('#inline-swatch .swatch-draggable'), el = null;
         for (var i = 0; i < links.length; i++) {
             el = links[i];
+            console.log(el.id)
             if (el.id && $.inArray(el.id, FiercePlanet.Game.currentProfile.capabilities) != -1) {
                 el.addEventListener('click', function (event) {
                     var __ret = FiercePlanet.GeneralUI.getCurrentPosition(e);
