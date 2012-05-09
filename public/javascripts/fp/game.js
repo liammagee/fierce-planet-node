@@ -113,7 +113,7 @@ FiercePlanet.Game = FiercePlanet.Game || {};
         // Push graph set up elsewhere
         $("#model-tabs").tabs();
         $("#world-graph").width(FiercePlanet.Orientation.worldWidth * 0.9);
-        $("#world-graph").height(FiercePlanet.Orientation.worldHeight * 0.2);
+        $("#world-graph").height(FiercePlanet.Orientation.worldHeight * 0.25);
         FiercePlanet.Graph.drawGraph();
 
         // Draw the game

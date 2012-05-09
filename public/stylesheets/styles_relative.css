@@ -721,8 +721,28 @@ li.over {
 }
 
 .slider-container {
-    /*float: left;*/
+    height: 1em;
 }
+.slider-container > * {
+    float: left;
+    /*padding-left: 1em;*/
+
+}
+
+.min-slider {
+    padding-right: 1em;
+}
+
+.max-slider {
+    padding-left: 1em;
+}
+
+.param-slider {
+    width: 90%;
+    padding-left: 1em;
+    padding-right: 1em;
+}
+
 #cost-per-move {
     margin: 10px;
 }
@@ -862,7 +882,7 @@ li.over {
 /*.ui-tabs-selected { margin-top: -3px !important; }*/
 #graph-area {
     height:65%;
-    width:100%;
+    width:90%;
 }
 #world-graph {
     /*position:absolute;*/

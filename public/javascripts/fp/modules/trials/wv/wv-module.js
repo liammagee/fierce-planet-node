@@ -113,28 +113,46 @@ WorldVisionResources.doSetup = function() {
                 }),
                 parameters:
                     "<p>Initial agents</p>" +
-                        "0 <div id='initialAgentsSlider' /> 200" +
-                        "<input type='hidden' id='initialAgents' class='world-parameters' name='InitialAgents' value='100'/>" +
-                        "<p>Rate of personal waste emission</p><p><input class='world-parameters' name='RateOfWasteEmission' value='250'/> </p>" +
-                        "<p>No. of waste disposal units</p><p><input class='world-parameters' name='NumWasteDisposalUnits' value='10'/> </p>" +
-                        "<p>Proximity to waste disposal unit</p><p><input class='world-parameters' name='ProximityToDisposalUnit' value='1'/> </p>" +
-                        "<p>Natural rate of water improvement</p><p><input class='world-parameters' name='NaturalRateOfImprovement' value='1'/> </p>" +
-                        "<p>Health cost of infection</p><p><input class='world-parameters' name='HealthCostOfInfection' value='1'/> </p>" +
+                    "<input type='hidden' id='initialAgents' class='world-parameters' name='InitialAgents' value='100'/>" +
+
+                    "<p>Rate of personal waste emission</p>" +
+                    "<input type='hidden' id='rateOfWasteEmission' class='world-parameters' name='RateOfWasteEmission' value='250'/>" +
+
+                    "<p>No. of waste disposal units</p>" +
+                        "<input type='hidden' id='numWasteDisposalUnits' class='world-parameters' name='NumWasteDisposalUnits' value='10'/>" +
+
+                        "<p>Proximity to waste disposal unit</p>" +
+                        "<input type='hidden' id='proximityToDisposalUnit' class='world-parameters' name='ProximityToDisposalUnit' value='1'/>" +
+
+                        "<p>Natural rate of water improvement</p>" +
+                        "<input type='hidden' id='naturalRateOfImprovement' class='world-parameters' name='NaturalRateOfImprovement' value='1'/>" +
+
+                        "<p>Health cost of infection</p>" +
+                        "<input type='hidden' id='healthCostOfInfection' class='world-parameters' name='HealthCostOfInfection' value='1'/>" +
 //                        "<p>Water consumed</p><p><input class='world-parameters' name='WaterConsumed' value='1000'/> </p>" +
-                        "<p>Quality of water</p><p><input class='world-parameters' name='WaterQuality' value='100'/> </p>" +
-                        "<p>Reproduction probability</p><p><input class='world-parameters' name='ReproductionProbability' value='0.5'/> </p>" +
+
+                    "<p>Quality of water</p>" +
+                        "<input type='hidden' id='waterQuality' class='world-parameters' name='WaterQuality' value='100'/>" +
+
+                        "<p>Reproduction probability</p>" +
+                        "<input type='hidden' id='reproductionProbability' class='world-parameters' name='ReproductionProbability' value='0.5'/>" +
 
                         "",
                 conclusion: "Well done.",
                 setup: function() {
                 },
                 setupParameters: function() {
-                    $( "#initialAgentsSlider" ).slider({
-                        value: 100, min: 0, max: 200, step: 1,
-                        slide: function( event, ui ) { $("#initialAgents").val( ui.value ); }
-                    });
-                    FiercePlanet.Graph.openDialog();
-                    $("#world-graph").show();
+                    FiercePlanet.Slider.createSlider("initialAgents", 0, 200, 5, 100);
+                    FiercePlanet.Slider.createSlider("rateOfWasteEmission", 0, 500, 5, 250);
+                    FiercePlanet.Slider.createSlider("numWasteDisposalUnits", 0, 50, 1, 10);
+                    FiercePlanet.Slider.createSlider("proximityToDisposalUnit", 0, 10, 1, 1);
+                    FiercePlanet.Slider.createSlider("naturalRateOfImprovement", 0, 10, 1, 1);
+                    FiercePlanet.Slider.createSlider("healthCostOfInfection", 0, 5, 1, 1);
+                    FiercePlanet.Slider.createSlider("waterQuality", 0, 200, 10, 100);
+                    FiercePlanet.Slider.createSlider("reproductionProbability", 0, 1, 0.05, 0.5);
+
+//                    FiercePlanet.Graph.openDialog();
+//                    $("#world-graph").show();
                     FiercePlanet.Graph.setupData(
                         {name: 'Water', color: '#f00', maxValue: 100}
                         , {name: 'Health', color: '#0f0', maxValue: 100}
@@ -338,37 +356,47 @@ WorldVisionResources.doSetup = function() {
                 }),
                 parameters:
                         "<p>Number of households</p>" +
-                            "0 <div id='numberOfHouseholdsSlider' /> 3000" +
                             "<input type='hidden' id='numberOfHouseholds' class='world-parameters' name='NumberOfHouseholds' value='1500'/>" +
-                        "<p>Ave. Persons/households</p><p><input class='world-parameters' name='AvePersonPerHousehold' value='4'/> </p>" +
+
+                        "<p>Ave. Persons/households</p>" +
+                            "<input type='hidden' id='avePersonPerHousehold' class='world-parameters' name='AvePersonPerHousehold' value='4'/>" +
+
                         "<p>No. of waste collectors</p>" +
-                            "0 <div id='numberOfWasteCollectorsSlider' /> 200" +
                             "<input type='hidden' id='numberOfWasteCollectors' class='world-parameters' name='NumberOfWasteCollectors' value='40'/>" +
 
-                        "<p>Waste removed per collector (ltrs)</p><p><input class='world-parameters' name='WasteRemovedPerCollector' value='200'/> </p>" +
+                        "<p>Waste removed per collector (ltrs)</p>" +
+                            "<input type='hidden' id='wasteRemovedPerCollector' class='world-parameters' name='WasteRemovedPerCollector' value='200'/>" +
+
 //                        "<p>Waste collector cost</p><p><input class='world-parameters' name='WasteCollectionCost' value='3000'/> </p>" +
-                        "<p>Daily waste emission (lts/cap/day)</p><p><input class='world-parameters' name='DailyWasteEmission' value='2.95'/> </p>" +
+                        "<p>Daily waste emission (lts/cap/day)</p>" +
+                            "<input type='hidden' id='dailyWasteEmission' class='world-parameters' name='DailyWasteEmission' value='2.95'/>" +
 
-                        "<p>% Composted</p><p><input class='world-parameters' name='PercentageComposted' value='10'/> </p>" +
-                        "<p>% Recycled</p><p><input class='world-parameters' name='PercentageRecyled' value='10'/> </p>" +
 
-                        "<p>Number of resources</p><p><input class='world-parameters' name='NumberOfResources' value='40'/> </p>" +
+                        "<p>% Composted</p>" +
+                            "<input type='hidden' id='percentageComposted' class='world-parameters' name='PercentageComposted' value='10'/>" +
+
+                        "<p>% Recycled</p>" +
+                            "<input type='hidden' id='percentageRecyled' class='world-parameters' name='PercentageRecyled' value='10'/>" +
+
+                        "<p>Number of resources</p>" +
+                            "<input type='hidden' id='numberOfResources' class='world-parameters' name='NumberOfResources' value='40'/>" +
 
                         "",
                 conclusion: "Well done.",
                 setup: function() {
                 },
                 setupParameters: function() {
-                    $( "#numberOfHouseholdsSlider" ).slider({
-                        value: 1500, min: 0, max: 3000, step: 1,
-                        slide: function( event, ui ) { $("#numberOfHouseholds").val( ui.value ); }
-                    });
-                    $( "#numberOfWasteCollectorsSlider" ).slider({
-                        value: 40, min: 0, max: 200, step: 1,
-                        slide: function( event, ui ) { $("#numberOfWasteCollectors").val( ui.value ); }
-                    });
-                    FiercePlanet.Graph.openDialog();
-                    $("#world-graph").show();
+                    FiercePlanet.Slider.createSlider("numberOfHouseholds", 0, 3000, 100, 1500);
+                    FiercePlanet.Slider.createSlider("avePersonPerHousehold", 0, 10, 1, 4);
+                    FiercePlanet.Slider.createSlider("numberOfWasteCollectors", 0, 200, 5, 40);
+                    FiercePlanet.Slider.createSlider("wasteRemovedPerCollector", 0, 500, 10, 200);
+                    FiercePlanet.Slider.createSlider("dailyWasteEmission", 0, 5, 0.05, 2.95);
+                    FiercePlanet.Slider.createSlider("percentageComposted", 0, 100, 1, 10);
+                    FiercePlanet.Slider.createSlider("percentageRecyled", 0, 100, 1, 10);
+                    FiercePlanet.Slider.createSlider("numberOfResources", 0, 100, 5, 40);
+
+//                    FiercePlanet.Graph.openDialog();
+//                    $("#world-graph").show();
                     FiercePlanet.Graph.setupData(
                         {name: 'Sustainability Index', color: '#f00', maxValue: 1}
                         , {name: 'Pollution level', color: '#0f0', maxValue: 100}

@@ -62,6 +62,7 @@ $LAB
        , 'fp/ui/profile-ui.js'
        , 'fp/ui/resource-ui.js'
        , 'fp/ui/graph.js'
+       , 'fp/ui/slider.js'
        , 'fp/ui/module-editor.js'
        , 'fp/ui/parameters.js'
        , 'fp/ui/console.js'

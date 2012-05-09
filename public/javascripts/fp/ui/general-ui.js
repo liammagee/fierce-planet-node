@@ -223,12 +223,37 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
             $('#world-information').html(world.introduction);
         }
 
-        if (world.parameters != undefined) {
-            $('#world-parameters').html(world.parameters);
-        }
         if (world.sourceCode != undefined) {
             $('#world-code').html(world.sourceCode);
         }
+
+        // Setup parameters
+        $('#world-parameters').html('');
+        if (world.parameters != undefined) {
+            $('#world-parameters').html(world.parameters);
+        }
+        // Add buttons
+        $('#world-parameters').prepend('<button id="paramRestart">Restart</button>');
+        $('#world-parameters').prepend('<button id="paramStep">Step</button>');
+        $('#world-parameters').prepend('<button id="paramPausePlay">Pause / Play</button>');
+        $('button').button();
+        $('#paramPausePlay').click(function() {
+            FiercePlanet.Game.playGame();
+        });
+        $('#paramStep').click(function() {
+            if (Lifecycle.inPlay)
+                FiercePlanet.Game.pauseGame();
+            Lifecycle.processAgents();
+        });
+        $('#paramRestart').click(function() {
+            if (Lifecycle.inPlay)
+                FiercePlanet.Game.pauseGame();
+            Lifecycle._initialiseGame();
+
+            if (Lifecycle.currentWorld)
+                Lifecycle.currentWorld.setupParameters();
+            Lifecycle.startWorld();
+        });
         if (world.setupParameters)
             world.setupParameters();
         var modal = ! ModuleManager.currentModule.persistSetupScreen && ! Lifecycle.currentWorld.persistSetupScreen;
