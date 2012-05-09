@@ -136,9 +136,9 @@ UofIResources.doSetup = function() {
                     FiercePlanet.Graph.openDialog();
                     $("#world-graph").show();
                     FiercePlanet.Graph.setupData(
-                        {name: 'Water', color: '#f00', maxValue: 100}
-                        , {name: 'Health', color: '#0f0', maxValue: 100}
-                        , {name: 'Mortality', color: '#00f', maxValue: 100}
+                        {label: 'Water', color: '#f00', maxValue: 100}
+                        , {label: 'Health', color: '#0f0', maxValue: 100}
+                        , {label: 'Mortality', color: '#00f', maxValue: 100}
                     );
                 },
                 handleParameters: function () {

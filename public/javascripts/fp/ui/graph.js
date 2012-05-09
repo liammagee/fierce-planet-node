@@ -151,7 +151,7 @@ FiercePlanet.Graph = FiercePlanet.Graph || {};
         var arguments = FiercePlanet.Graph.setupData.arguments;
         for (var i = 0, l = arguments.length; i < l; i++) {
             var line = arguments[i];
-            seedData.push({ color: line.color, data: [[0, 0] ], lines: { show: true } });
+            seedData.push({ label: line.label, color: line.color, data: [[0, 0] ], lines: { show: true } });
         }
         FiercePlanet.Graph.plot = $.plot($("#world-graph"), seedData, options);
     };
@@ -167,7 +167,7 @@ FiercePlanet.Graph = FiercePlanet.Graph || {};
                 for (var i = 0; i < arguments.length; i++) {
                     data[i].data.push([Lifecycle.worldCounter, arguments[i]]);
                 }
-            FiercePlanet.Graph.plot.setData(data);
+                FiercePlanet.Graph.plot.setData(data);
                 counter++;
                 // Do this less often
                 var updateInterval = 1;
