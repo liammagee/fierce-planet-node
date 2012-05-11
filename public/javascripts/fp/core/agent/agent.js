@@ -444,6 +444,12 @@ function Agent(culture, x, y) {
                     var plans = Plans.getBestPlans(agent, world, satisfyingObjects),
                         len = plans.length,
                         index = Math.floor(Math.random() * len);
+//                    if (plans.length > 1) {
+//                        console.log(plans)
+//                        console.log(satisfyingObjects)
+//                        console.log(agent)
+//                        FiercePlanet.Game.pauseGame();
+//                    }
                     this.currentPlan = plans[index];
                     this.currentPlanStep = 1;
                     break;

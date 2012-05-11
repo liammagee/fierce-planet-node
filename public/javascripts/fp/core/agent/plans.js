@@ -39,11 +39,6 @@ var Plans = Plans || {};
             var result = this.criticalPathToPoint(agent, world, x, y, tx, ty);
             if (!_.isUndefined(result)) {
                 var distance = result.length;
-                if (shortestDistance == -1 ||  distance < shortestDistance) {
-                    shortestDistance = distance;
-                    shortistTrail = result;
-                    point = ep;
-                }
                 paths.push({ distance: distance, trail: result, point: ep}) ;
             }
         }

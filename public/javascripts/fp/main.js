@@ -82,16 +82,7 @@ $LAB
         , 'fp/modules/default/resources/tbl.js'
         , 'fp/modules/default/resources/cos.js'
        , 'fp/modules/default/resources/resource_types.js'
-    , 'fp/modules/tests/pp/predator-prey-module.js' , 'fp/modules/tests/pp/worlds/pp-worlds.js' , 'fp/modules/tests/pp/agents/pp-agent-types.js'
-    , 'fp/modules/tests/gol/game-of-life-module.js'
-    , 'fp/modules/tests/ca/ca-module.js'
-    , 'fp/modules/tests/cities/cities-module.js'
-    , 'fp/modules/tests/netlogo/netlogo-module.js'
-    , 'fp/modules/trials/wv/wv-module.js'
-    , 'fp/modules/trials/mpm/mpm-module.js'
-    , 'fp/modules/trials/techo/techo-module.js'
-    , 'fp/modules/trials/whittlesea/ws-module.js'
-    , 'fp/modules/trials/rmit/rmit-module.js'
+
     ])
     .wait(function() {
         FiercePlanet.GoogleMapUtils.initMaps();
@@ -220,7 +211,7 @@ $LAB
                     , 'fp/modules/game2/game2-module.js'
                 ]).wait(function() {
 //                $('#moduleEditor').show();
-                        WorldVisionModule.init();
+                        Game2Module.init();
                         $('#content-pane').show();
                         FiercePlanet.Game.loadGame();
                     })

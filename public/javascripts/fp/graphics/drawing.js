@@ -1256,35 +1256,12 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         var canvas = $(canvasName)[0];
         var ctx = canvas.getContext('2d');
 
-
         ctx.save();
         ctx.translate(FiercePlanet.Orientation.halfWorldWidth, FiercePlanet.Orientation.halfWorldHeight);
         ctx.rotate(FiercePlanet.Orientation.rotationAngle);
 
-        var wx = agent.wanderX;
-        var wy = agent.wanderY;
-        var __ret = this.getDrawingPosition(agent, Lifecycle.waveCounter);
-        var xPos = __ret.intX;
-        var yPos = __ret.intY;
-
-        var x = xPos * FiercePlanet.Orientation.cellWidth + wx + FiercePlanet.Orientation.cellWidth / 2;
-        var y = yPos * FiercePlanet.Orientation.cellHeight + wy + FiercePlanet.Orientation.cellHeight / 4;
-
-        if ((Universe.settings.isometricView || Lifecycle.currentWorld.isometricView)) {
-            var newOrigin = FiercePlanet.Isometric.doIsometricOffset(xPos, yPos);
-            x = newOrigin.x + wx + FiercePlanet.Orientation.cellWidth / 2;
-            y = newOrigin.y + wy + FiercePlanet.Orientation.cellHeight / 4;
-        }
-
-        // Rotation logic here - TODO: Refactor out
-        x = x - (FiercePlanet.Orientation.worldWidth) / 2;
-        y = y - (FiercePlanet.Orientation.worldHeight) / 2;
-
-        var direction = this.getAgentDirection(agent);
-        var newColor = "f00";
-
-        if (agent.culture.drawExpired)
-            agent.culture.drawExpired(ctx, agent, x, y, FiercePlanet.Orientation.pieceWidth, FiercePlanet.Orientation.pieceHeight, newColor, Lifecycle.waveCounter, direction);
+        agent.color = one.color('#f00');
+        FiercePlanet.Drawing.drawAgent(ctx, agent);
 
         ctx.restore();
     };

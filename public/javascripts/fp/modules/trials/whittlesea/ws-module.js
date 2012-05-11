@@ -185,7 +185,6 @@ WhittleseaResources.doSetup = function() {
                     this.currentWaterQuality = waterQuality;
                     this.children = 0;
 
-                    culture.drawExpired = function(){};
 //                    culture.updateFunction = function(agent, world) {};
                     this.randomiseAgents = true;
                     this.cultures = [culture];
@@ -427,7 +426,6 @@ WhittleseaResources.doSetup = function() {
                         world.addResourceRandomly(ResourceTypes.SCHOOL_RESOURCE_TYPE);
                     }
 
-                    culture.drawExpired = function(){};
                     this.randomiseAgents = true;
                     this.cultures = [culture];
                     this.waves = undefined;

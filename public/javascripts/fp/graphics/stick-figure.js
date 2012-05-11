@@ -33,7 +33,8 @@ FiercePlanet.StickFigure = function(x, _y, _figureWidth, _figureHeight) {
     var startOfHipY = startOfBodyY + bodyLength;
 
     var defaultAngle = Math.PI / 4;
-    var fShoulderAngle = defaultAngle,
+    var fNeckAngle = defaultAngle,
+        fShoulderAngle = defaultAngle,
             fElbowAngle = defaultAngle,
             bShoulderAngle = defaultAngle,
             bElbowAngle = defaultAngle,
@@ -147,6 +148,20 @@ FiercePlanet.StickFigure = function(x, _y, _figureWidth, _figureHeight) {
 
     // Stick figure actions
     this.explode = function(frame, direction) {
+        fShoulderAngle = Math.PI * (14 / 12);
+        fElbowAngle = Math.PI * (14 / 12);
+        bShoulderAngle = Math.PI * (22 / 12);
+        bElbowAngle = Math.PI * (22 / 12);
+
+        fHipAngle = Math.PI * (10 / 12);
+        fKneeAngle = Math.PI * (10 / 12);
+        bHipAngle = Math.PI * (2 / 12);
+        bKneeAngle = Math.PI * (2 / 12);
+        this.generateCoordinates();
+    };
+
+    // Stick figure actions
+    this.expire = function(frame, direction) {
         fShoulderAngle = Math.PI * (14 / 12);
         fElbowAngle = Math.PI * (14 / 12);
         bShoulderAngle = Math.PI * (22 / 12);

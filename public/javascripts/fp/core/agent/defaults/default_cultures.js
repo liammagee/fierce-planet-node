@@ -41,6 +41,7 @@ _.extend(DefaultCultures.Stickman, {
         // Define agent elements here
         var frames = 3;
         var speed = agent.speed;
+        var health = agent.health;
         var countdown = agent.countdownToMove;
         var frame = Math.floor((countdown / (speed + 1)) * frames);
 
@@ -94,48 +95,38 @@ _.extend(DefaultCultures.Stickman, {
 
 
         var sf = new FiercePlanet.StickFigure(x, y, pieceWidth, pieceHeight);
-        if (speed > 12)
-            sf.defaultAction = sf.walk;
-        else
-            sf.defaultAction = sf.run;
+        if (health <= 0) {
+            // Draw an explosion here
+            var explosionX = x;
+            var explosionY = y + pieceWidth / 4;
+
+            var radgrad = ctx.createRadialGradient(explosionX, explosionY, 0, explosionX, explosionY, pieceWidth / 3);
+            radgrad.addColorStop(0, 'rgba(255, 168, 81,1)');
+            radgrad.addColorStop(0.8, '#FFF354');
+            radgrad.addColorStop(1, 'rgba(255, 168, 81,0)');
+            ctx.fillStyle = radgrad;
+            ctx.fillRect(x - pieceWidth / 2, y - 6, pieceWidth, pieceHeight + 12);
+
+            sf.defaultAction = sf.expire;
+        }
+        else {
+            if (speed > 12)
+                sf.defaultAction = sf.walk;
+            else
+                sf.defaultAction = sf.run;
+        }
         sf.defaultAction(frame, direction);
         sf.drawFigure(ctx);
 
 
         // Now draw the figure
         ctx.lineWidth = 1.5;
-        ctx.strokeStyle = agent.color;
         ctx.lineCap = "round";
+        ctx.strokeStyle = agent.color;
         ctx.stroke();
         ctx.fillStyle = agent.color;
         ctx.fill();
     }),
-
-    drawExpired: (function (ctx, agent, x, y, pieceWidth, pieceHeight, newColor, counter, direction) {
-        // Draw an explosion here
-        var explosionX = x;
-        var explosionY = y + pieceWidth / 2;
-
-        var radgrad = ctx.createRadialGradient(explosionX, explosionY, 0, explosionX, explosionY, pieceWidth / 2);
-        radgrad.addColorStop(0, 'rgba(255, 168, 81,1)');
-        radgrad.addColorStop(0.8, '#FFF354');
-        radgrad.addColorStop(1, 'rgba(255, 168, 81,0)');
-        ctx.fillStyle = radgrad;
-        ctx.fillRect(x - pieceWidth / 2, y, pieceWidth, pieceHeight);
-
-        var sf = new FiercePlanet.StickFigure(x, y, pieceWidth, pieceHeight);
-        sf.explode();
-        sf.drawFigure(ctx);
-        // Now draw the figure
-        ctx.lineWidth = 1.5;
-        ctx.strokeStyle = "#" + newColor;
-//                ctx.strokeStyle = "#000";
-        ctx.lineCap = "round";
-        ctx.stroke();
-        ctx.fillStyle = "#" + newColor;
-//                ctx.fillStyle = "#000";
-        ctx.fill();
-    })
 
 });
 
@@ -148,7 +139,7 @@ _.extend(DefaultCultures.MovingStickman, {
     ]
     , desires: [
         Desires.ExploreSpace
-        , Desires.Flee
+//        , Desires.Flee
 //        , Desires.ImproveHealth
     ]
     , capabilities: [
