@@ -25,7 +25,7 @@ var Lifecycle = Lifecycle || {};
     // Game play variables
     this.waveOverride = 0, this.maxWaveMoves = 0, this.maxWorldMoves = 0;
     // Game interval variables
-    this.resourceRecoveryCycle = 5, this.interval = 40, this.agentTimerId = 0, this.inPlay = false;
+    this.resourceRecoveryCycle = 5, this.interval = 20, this.agentTimerId = 0, this.inPlay = false;
     // World state variables
     this.currentWorld = null, this.currentCampaignID = 'Default', this.currentWorldNumber = 1, this.currentWorldPreset = true, this.existingCurrentWorld = null;
     // Wave state variables
@@ -133,10 +133,8 @@ var Lifecycle = Lifecycle || {};
 
                 // TODO: should be in-lined?
                 if (agent.health <= 0 && !Universe.settings.godMode) {
-                    nullifiedAgents.push(i);
                     Lifecycle.currentWorld.addExpiredAgent(agent, Lifecycle.worldCounter);
                     agent.die(Lifecycle.currentWorld);
-//                    nullifiedAgents.push(i);
 
                     // TODO: needs to be moved
                     if (ModuleManager.currentModule.id = 'Default')
@@ -149,14 +147,6 @@ var Lifecycle = Lifecycle || {};
         }
 
         Lifecycle.currentWorld.recoverResources();
-        // Check whether we have too many
-        for (var i = nullifiedAgents.length - 1; i >= 0; i-= 1) {
-            var nullIndex = nullifiedAgents[i];
-            var nullifiedAgent = Lifecycle.currentWorld.currentAgents[nullIndex];
-            Lifecycle.currentWorld.currentAgents.splice(nullIndex, 1);
-            // Remove the agent from the map
-            Lifecycle.currentWorld.removeAgentFromCell(agent);
-        }
 
         // Deal with terminal conditions
         if (! Lifecycle.currentWorld.playIndefinitely) {

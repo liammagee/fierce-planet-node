@@ -43,8 +43,8 @@ _.extend(DefaultCultures.Stickman, {
         var speed = agent.speed;
         var health = agent.health;
         var countdown = agent.countdownToMove;
-        var frame = Math.floor((countdown / (speed + 1)) * frames);
-
+//        var frame = Math.floor((countdown / (speed + 1)) * frames);
+        var frame = Math.floor((countdown / 5) % frames);
 
         // Category Health
         var yHealthOffset = -5;
@@ -87,7 +87,6 @@ _.extend(DefaultCultures.Stickman, {
          ctx.lineTo(x - pieceWidth / 4 + barLength, y - 5);
          ctx.closePath();
          ctx.lineWidth = 3;
-         //                ctx.strokeStyle = "#" + newColor;
          ctx.strokeStyle = "#f00";
          ctx.lineCap = "round";
          ctx.stroke();
@@ -95,29 +94,34 @@ _.extend(DefaultCultures.Stickman, {
 
 
         var sf = new FiercePlanet.StickFigure(x, y, pieceWidth, pieceHeight);
-        if (health <= 0) {
-            // Draw an explosion here
-            var explosionX = x;
-            var explosionY = y + pieceWidth / 4;
-
-            var radgrad = ctx.createRadialGradient(explosionX, explosionY, 0, explosionX, explosionY, pieceWidth / 3);
-            radgrad.addColorStop(0, 'rgba(255, 168, 81,1)');
-            radgrad.addColorStop(0.8, '#FFF354');
-            radgrad.addColorStop(1, 'rgba(255, 168, 81,0)');
-            ctx.fillStyle = radgrad;
-            ctx.fillRect(x - pieceWidth / 2, y - 6, pieceWidth, pieceHeight + 12);
-
-            sf.defaultAction = sf.expire;
+        if (!_.isUndefined(agent.culture.customStickFunction)) {
+            sf.defaultAction = eval(agent.culture.customStickFunction);
         }
         else {
-            if (speed > 12)
-                sf.defaultAction = sf.walk;
-            else
-                sf.defaultAction = sf.run;
+            if (health <= 0) {
+                // Draw an explosion here
+                var explosionX = x;
+                var explosionY = y + pieceWidth / 8;
+
+                var radgrad = ctx.createRadialGradient(explosionX, explosionY, 0, explosionX, explosionY, pieceWidth / 3);
+                radgrad.addColorStop(0, 'rgba(255, 168, 81,1)');
+                radgrad.addColorStop(0.8, '#FFF354');
+                radgrad.addColorStop(1, 'rgba(255, 168, 81,0)');
+                ctx.fillStyle = radgrad;
+                ctx.fillRect(x - pieceWidth / 2, y - (pieceWidth / 4), pieceWidth, pieceHeight + (pieceWidth / 4));
+
+                sf.defaultAction = sf.expire;
+            }
+            else {
+                if (speed > 12)
+                    sf.defaultAction = sf.walk;
+                else
+                    sf.defaultAction = sf.run;
+            }
         }
+//        console.log(sf.headAngle)
         sf.defaultAction(frame, direction);
         sf.drawFigure(ctx);
-
 
         // Now draw the figure
         ctx.lineWidth = 1.5;
@@ -126,7 +130,7 @@ _.extend(DefaultCultures.Stickman, {
         ctx.stroke();
         ctx.fillStyle = agent.color;
         ctx.fill();
-    }),
+    })
 
 });
 
@@ -139,7 +143,7 @@ _.extend(DefaultCultures.MovingStickman, {
     ]
     , desires: [
         Desires.ExploreSpace
-//        , Desires.Flee
+        , Desires.Flee
 //        , Desires.ImproveHealth
     ]
     , capabilities: [

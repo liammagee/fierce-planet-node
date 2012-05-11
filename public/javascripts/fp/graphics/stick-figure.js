@@ -18,74 +18,75 @@ var FiercePlanet = FiercePlanet || {};
  * @param id
  */
 FiercePlanet.StickFigure = function(x, _y, _figureWidth, _figureHeight) {
-    var x = x, y = _y, figureWidth = _figureWidth, figureHeight = _figureHeight;
-    var wholeBodyLength = (figureHeight * 1);
-    var headRadius = (wholeBodyLength / 8) + 0.5 | 0;
-    var bodyLength = (wholeBodyLength / 3) + 0.5 | 0;
-    var shoulderPoint = (bodyLength / 3) + 0.5 | 0;
-    var shoulderToElbowLength = (wholeBodyLength / 8) + 0.5 | 0;
-    var elbowToHandLength = (wholeBodyLength / 6) + 0.5 | 0;
-    var hipToKneeLength = (wholeBodyLength / 6) + 0.5 | 0;
-    var kneeToFootLength = (wholeBodyLength / 6) + 0.5 | 0;
-    var startOfHeadY = y - headRadius;
-    var startOfBodyY = y + headRadius;
-    var startOfShoulderY = startOfBodyY + shoulderPoint;
-    var startOfHipY = startOfBodyY + bodyLength;
+    this.x = x, this.y = _y, this.figureWidth = _figureWidth, this.figureHeight = _figureHeight;
+    this.wholeBodyLength = (this.figureHeight * 1);
+    this.headRadius = (this.wholeBodyLength / 8) + 0.5 | 0;
+    this.bodyLength = (this.wholeBodyLength / 3) + 0.5 | 0;
+    this.shoulderPoint = (this.bodyLength / 3) + 0.5 | 0;
+    this.shoulderToElbowLength = (this.wholeBodyLength / 8) + 0.5 | 0;
+    this.elbowToHandLength = (this.wholeBodyLength / 6) + 0.5 | 0;
+    this.hipToKneeLength = (this.wholeBodyLength / 6) + 0.5 | 0;
+    this.kneeToFootLength = (this.wholeBodyLength / 4) + 0.5 | 0;
+    this.startOfHeadY = this.y - this.headRadius;
+    this.startOfBodyY = this.y + this.headRadius;
+    this.startOfShoulderY = this.startOfBodyY + this.shoulderPoint;
+    this.startOfHipY = this.startOfBodyY + this.bodyLength;
 
-    var defaultAngle = Math.PI / 4;
-    var fNeckAngle = defaultAngle,
-        fShoulderAngle = defaultAngle,
-            fElbowAngle = defaultAngle,
-            bShoulderAngle = defaultAngle,
-            bElbowAngle = defaultAngle,
-            fHipAngle = defaultAngle,
-            fKneeAngle = defaultAngle,
-            bHipAngle = defaultAngle,
-            bKneeAngle = defaultAngle;
-    var fElbowX, fElbowY,
-        bElbowX, bElbowY,
-        fHandX, fHandY,
-        bHandX, bHandY,
-        fKneeX, fKneeY,
-        bKneeX, bKneeY,
-        fFootX, fFootY,
-        bFootX, bFootY;
+    this.defaultAngle = Math.PI / 4;
+    this.headAngle = Math.PI / 2,
+        this.fShoulderAngle = this.defaultAngle,
+        this.fElbowAngle = this.defaultAngle,
+        this.bShoulderAngle = this.defaultAngle,
+        this.bElbowAngle = this.defaultAngle,
+        this.fHipAngle = this.defaultAngle,
+        this.fKneeAngle = this.defaultAngle,
+        this.bHipAngle = this.defaultAngle,
+        this.bKneeAngle = this.defaultAngle;
+    this.headX, this.headY,
+        this.fElbowX, this.fElbowY,
+        this.bElbowX, this.bElbowY,
+        this.fHandX, this.fHandY,
+        this.bHandX, this.bHandY,
+        this.fKneeX, this.fKneeY,
+        this.bKneeX, this.bKneeY,
+        this.fFootX, this.fFootY,
+        this.bFootX, this.bFootY;
 
-    // Stick figure actions
+        // Stick figure actions
     this.run = function(frame, direction) {
         switch (frame) {
             case 0:
-                fShoulderAngle = Math.PI * (12 / 12);
-                fElbowAngle = Math.PI * (6 / 12);
-                bShoulderAngle = Math.PI * (4 / 12);
-                bElbowAngle = Math.PI * (20 / 12);
+                this.fShoulderAngle = Math.PI * (12 / 12);
+                this.fElbowAngle = Math.PI * (6 / 12);
+                this.bShoulderAngle = Math.PI * (4 / 12);
+                this.bElbowAngle = Math.PI * (20 / 12);
 
-                fHipAngle = Math.PI * (9 / 12);
-                fKneeAngle = Math.PI * (9 / 12);
-                bHipAngle = Math.PI * (1 / 12);
-                bKneeAngle = Math.PI * (7 / 12);
+                this.fHipAngle = Math.PI * (9 / 12);
+                this.fKneeAngle = Math.PI * (9 / 12);
+                this.bHipAngle = Math.PI * (1 / 12);
+                this.bKneeAngle = Math.PI * (7 / 12);
                 break;
             case 1:
-                fShoulderAngle = Math.PI * (9 / 12);
-                fElbowAngle = Math.PI * (3 / 12);
-                bShoulderAngle = Math.PI * (5 / 12);
-                bElbowAngle = Math.PI * (21 / 12);
+                this.fShoulderAngle = Math.PI * (9 / 12);
+                this.fElbowAngle = Math.PI * (3 / 12);
+                this.bShoulderAngle = Math.PI * (5 / 12);
+                this.bElbowAngle = Math.PI * (21 / 12);
 
-                fHipAngle = Math.PI * (10 / 12);
-                fKneeAngle = Math.PI * (15 / 12);
-                bHipAngle = Math.PI * (3 / 12);
-                bKneeAngle = Math.PI * (4 / 12);
+                this.fHipAngle = Math.PI * (10 / 12);
+                this.fKneeAngle = Math.PI * (15 / 12);
+                this.bHipAngle = Math.PI * (3 / 12);
+                this.bKneeAngle = Math.PI * (4 / 12);
                 break;
             case 2:
-                fShoulderAngle = Math.PI * (6 / 12);
-                fElbowAngle = Math.PI * (0 / 12);
-                bShoulderAngle = Math.PI * (9 / 12);
-                bElbowAngle = Math.PI * (2 / 12);
+                this.fShoulderAngle = Math.PI * (6 / 12);
+                this.fElbowAngle = Math.PI * (0 / 12);
+                this.bShoulderAngle = Math.PI * (9 / 12);
+                this.bElbowAngle = Math.PI * (2 / 12);
 
-                fHipAngle = Math.PI * (5 / 12);
-                fKneeAngle = Math.PI * (13 / 12);
-                bHipAngle = Math.PI * (6 / 12);
-                bKneeAngle = Math.PI * (7 / 12);
+                this.fHipAngle = Math.PI * (5 / 12);
+                this.fKneeAngle = Math.PI * (13 / 12);
+                this.bHipAngle = Math.PI * (6 / 12);
+                this.bKneeAngle = Math.PI * (7 / 12);
                 break;
         }
         if (direction == 1) {
@@ -107,37 +108,37 @@ FiercePlanet.StickFigure = function(x, _y, _figureWidth, _figureHeight) {
     this.walk = function(frame, direction) {
         switch (frame) {
             case 0:
-                fShoulderAngle = Math.PI * (9 / 12);
-                fElbowAngle = Math.PI * (8 / 12);
-                bShoulderAngle = Math.PI * (4 / 12);
-                bElbowAngle = Math.PI * (4 / 12);
+                this.fShoulderAngle = Math.PI * (9 / 12);
+                this.fElbowAngle = Math.PI * (8 / 12);
+                this.bShoulderAngle = Math.PI * (4 / 12);
+                this.bElbowAngle = Math.PI * (4 / 12);
 
-                fHipAngle = Math.PI * (8 / 12);
-                fKneeAngle = Math.PI * (9 / 12);
-                bHipAngle = Math.PI * (4 / 12);
-                bKneeAngle = Math.PI * (4 / 12);
+                this.fHipAngle = Math.PI * (8 / 12);
+                this.fKneeAngle = Math.PI * (9 / 12);
+                this.bHipAngle = Math.PI * (4 / 12);
+                this.bKneeAngle = Math.PI * (4 / 12);
                 break;
             case 1:
-                fShoulderAngle = Math.PI * (7 / 12);
-                fElbowAngle = Math.PI * (6 / 12);
-                bShoulderAngle = Math.PI * (6 / 12);
-                bElbowAngle = Math.PI * (5 / 12);
+                this.fShoulderAngle = Math.PI * (7 / 12);
+                this.fElbowAngle = Math.PI * (6 / 12);
+                this.bShoulderAngle = Math.PI * (6 / 12);
+                this.bElbowAngle = Math.PI * (5 / 12);
 
-                fHipAngle = Math.PI * (7 / 12);
-                fKneeAngle = Math.PI * (8 / 12);
-                bHipAngle = Math.PI * (5 / 12);
-                bKneeAngle = Math.PI * (6 / 12);
+                this.fHipAngle = Math.PI * (7 / 12);
+                this.fKneeAngle = Math.PI * (8 / 12);
+                this.bHipAngle = Math.PI * (5 / 12);
+                this.bKneeAngle = Math.PI * (6 / 12);
                 break;
             case 2:
-                fShoulderAngle = Math.PI * (5 / 12);
-                fElbowAngle = Math.PI * (4 / 12);
-                bShoulderAngle = Math.PI * (7 / 12);
-                bElbowAngle = Math.PI * (7 / 12);
+                this.fShoulderAngle = Math.PI * (5 / 12);
+                this.fElbowAngle = Math.PI * (4 / 12);
+                this.bShoulderAngle = Math.PI * (7 / 12);
+                this.bElbowAngle = Math.PI * (7 / 12);
 
-                fHipAngle = Math.PI * (5 / 12);
-                fKneeAngle = Math.PI * (6 / 12);
-                bHipAngle = Math.PI * (7 / 12);
-                bKneeAngle = Math.PI * (8 / 12);
+                this.fHipAngle = Math.PI * (5 / 12);
+                this.fKneeAngle = Math.PI * (6 / 12);
+                this.bHipAngle = Math.PI * (7 / 12);
+                this.bKneeAngle = Math.PI * (8 / 12);
                 break;
         }
         if (direction == 1) {
@@ -148,81 +149,86 @@ FiercePlanet.StickFigure = function(x, _y, _figureWidth, _figureHeight) {
 
     // Stick figure actions
     this.explode = function(frame, direction) {
-        fShoulderAngle = Math.PI * (14 / 12);
-        fElbowAngle = Math.PI * (14 / 12);
-        bShoulderAngle = Math.PI * (22 / 12);
-        bElbowAngle = Math.PI * (22 / 12);
+        this.fShoulderAngle = Math.PI * (14 / 12);
+        this.fElbowAngle = Math.PI * (14 / 12);
+        this.bShoulderAngle = Math.PI * (22 / 12);
+        this.bElbowAngle = Math.PI * (22 / 12);
 
-        fHipAngle = Math.PI * (10 / 12);
-        fKneeAngle = Math.PI * (10 / 12);
-        bHipAngle = Math.PI * (2 / 12);
-        bKneeAngle = Math.PI * (2 / 12);
+        this.fHipAngle = Math.PI * (10 / 12);
+        this.fKneeAngle = Math.PI * (10 / 12);
+        this.bHipAngle = Math.PI * (2 / 12);
+        this.bKneeAngle = Math.PI * (2 / 12);
         this.generateCoordinates();
     };
 
     // Stick figure actions
     this.expire = function(frame, direction) {
-        fShoulderAngle = Math.PI * (14 / 12);
-        fElbowAngle = Math.PI * (14 / 12);
-        bShoulderAngle = Math.PI * (22 / 12);
-        bElbowAngle = Math.PI * (22 / 12);
+        this.fShoulderAngle = Math.PI * (14 / 12);
+        this.fElbowAngle = Math.PI * (14 / 12);
+        this.bShoulderAngle = Math.PI * (22 / 12);
+        this.bElbowAngle = Math.PI * (22 / 12);
 
-        fHipAngle = Math.PI * (10 / 12);
-        fKneeAngle = Math.PI * (10 / 12);
-        bHipAngle = Math.PI * (2 / 12);
-        bKneeAngle = Math.PI * (2 / 12);
+        this.fHipAngle = Math.PI * (10 / 12);
+        this.fKneeAngle = Math.PI * (10 / 12);
+        this.bHipAngle = Math.PI * (2 / 12);
+        this.bKneeAngle = Math.PI * (2 / 12);
         this.generateCoordinates();
     };
 
     this.flipHorizontalDirection = function() {
-        fShoulderAngle = (Math.PI / 2) + ((Math.PI / 2) - fShoulderAngle);
-        fElbowAngle = (Math.PI / 2) + ((Math.PI / 2) - fElbowAngle);
-        bShoulderAngle = (Math.PI / 2) + ((Math.PI / 2) - bShoulderAngle);
-        bElbowAngle = (Math.PI / 2) + ((Math.PI / 2) - bElbowAngle);
+        this.headAngle = (Math.PI / 2) + ((Math.PI / 2) - this.headAngle);
 
-        fHipAngle = (Math.PI / 2) + ((Math.PI / 2) - fHipAngle);
-        fKneeAngle = (Math.PI / 2) + ((Math.PI / 2) - fKneeAngle);
-        bHipAngle = (Math.PI / 2) + ((Math.PI / 2) - bHipAngle);
-        bKneeAngle = (Math.PI / 2) + ((Math.PI / 2) - bKneeAngle);
+        this.fShoulderAngle = (Math.PI / 2) + ((Math.PI / 2) - this.fShoulderAngle);
+        this.fElbowAngle = (Math.PI / 2) + ((Math.PI / 2) - this.fElbowAngle);
+        this.bShoulderAngle = (Math.PI / 2) + ((Math.PI / 2) - this.bShoulderAngle);
+        this.bElbowAngle = (Math.PI / 2) + ((Math.PI / 2) - this.bElbowAngle);
+
+        this.fHipAngle = (Math.PI / 2) + ((Math.PI / 2) - this.fHipAngle);
+        this.fKneeAngle = (Math.PI / 2) + ((Math.PI / 2) - this.fKneeAngle);
+        this.bHipAngle = (Math.PI / 2) + ((Math.PI / 2) - this.bHipAngle);
+        this.bKneeAngle = (Math.PI / 2) + ((Math.PI / 2) - this.bKneeAngle);
     };
 
     this.flipVerticalDirection = function() {
-        y = y + figureHeight;
-        wholeBodyLength = (figureHeight * 1);
-        headRadius = (wholeBodyLength / 8) + 0.5 | 0;
-        bodyLength = -bodyLength;
-        shoulderPoint = -shoulderPoint;
-        shoulderToElbowLength = -shoulderToElbowLength;
-        elbowToHandLength = -elbowToHandLength;
-        hipToKneeLength = -hipToKneeLength;
-        kneeToFootLength = -kneeToFootLength;
-        startOfHeadY = y + headRadius;
-        startOfBodyY = y - headRadius;
-        startOfShoulderY = startOfBodyY + shoulderPoint;
-        startOfHipY = startOfBodyY + bodyLength;
+        this.y = this.y + this.figureHeight;
+        this.wholeBodyLength = (this.figureHeight * 1);
+        this.headRadius = (this.wholeBodyLength / 8) + 0.5 | 0;
+        this.bodyLength = -this.bodyLength;
+        this.shoulderPoint = -this.shoulderPoint;
+        this.shoulderToElbowLength = -this.shoulderToElbowLength;
+        this.elbowToHandLength = -this.elbowToHandLength;
+        this.hipToKneeLength = -this.hipToKneeLength;
+        this.kneeToFootLength = -this.kneeToFootLength;
+        this.startOfHeadY = this.y + this.headRadius;
+        this.startOfBodyY = this.y - this.headRadius;
+        this.startOfShoulderY = this.startOfBodyY + this.shoulderPoint;
+        this.startOfHipY = this.startOfBodyY + this.bodyLength;
 
     };
 
     this.generateCoordinates = function() {
-        fElbowX = (x + Math.cos(fShoulderAngle) * shoulderToElbowLength);
-        fElbowY = (startOfShoulderY + Math.sin(fShoulderAngle) * shoulderToElbowLength);
-        fHandX = (fElbowX + Math.cos(fElbowAngle) * elbowToHandLength);
-        fHandY = (fElbowY + Math.sin(fElbowAngle) * elbowToHandLength);
+        this.headX = (this.x + Math.cos(this.headAngle) * this.headRadius);
+        this.headY = (this.startOfHeadY + Math.sin(this.headAngle) * this.headRadius);
 
-        bElbowX = (x + Math.cos(bShoulderAngle) * shoulderToElbowLength);
-        bElbowY = (startOfShoulderY + Math.sin(bShoulderAngle) * shoulderToElbowLength);
-        bHandX = (bElbowX + Math.cos(bElbowAngle) * elbowToHandLength);
-        bHandY = (fElbowY + Math.sin(bElbowAngle) * elbowToHandLength);
+        this.fElbowX = (this.x + Math.cos(this.fShoulderAngle) * this.shoulderToElbowLength);
+        this.fElbowY = (this.startOfShoulderY + Math.sin(this.fShoulderAngle) * this.shoulderToElbowLength);
+        this.fHandX = (this.fElbowX + Math.cos(this.fElbowAngle) * this.elbowToHandLength);
+        this.fHandY = (this.fElbowY + Math.sin(this.fElbowAngle) * this.elbowToHandLength);
 
-        fKneeX = (x + Math.cos(fHipAngle) * hipToKneeLength);
-        fKneeY = (startOfHipY + Math.sin(fHipAngle) * hipToKneeLength);
-        fFootX = (fKneeX + Math.cos(fKneeAngle) * kneeToFootLength);
-        fFootY = (fKneeY + Math.sin(fKneeAngle) * kneeToFootLength);
+        this.bElbowX = (this.x + Math.cos(this.bShoulderAngle) * this.shoulderToElbowLength);
+        this.bElbowY = (this.startOfShoulderY + Math.sin(this.bShoulderAngle) * this.shoulderToElbowLength);
+        this.bHandX = (this.bElbowX + Math.cos(this.bElbowAngle) * this.elbowToHandLength);
+        this.bHandY = (this.fElbowY + Math.sin(this.bElbowAngle) * this.elbowToHandLength);
 
-        bKneeX = (x + Math.cos(bHipAngle) * hipToKneeLength);
-        bKneeY = (startOfHipY + Math.sin(bHipAngle) * hipToKneeLength);
-        bFootX = (bKneeX + Math.cos(bKneeAngle) * kneeToFootLength);
-        bFootY = (bKneeY + Math.sin(bKneeAngle) * kneeToFootLength);
+        this.fKneeX = (this.x + Math.cos(this.fHipAngle) * this.hipToKneeLength);
+        this.fKneeY = (this.startOfHipY + Math.sin(this.fHipAngle) * this.hipToKneeLength);
+        this.fFootX = (this.fKneeX + Math.cos(this.fKneeAngle) * this.kneeToFootLength);
+        this.fFootY = (this.fKneeY + Math.sin(this.fKneeAngle) * this.kneeToFootLength);
+
+        this.bKneeX = (this.x + Math.cos(this.bHipAngle) * this.hipToKneeLength);
+        this.bKneeY = (this.startOfHipY + Math.sin(this.bHipAngle) * this.hipToKneeLength);
+        this.bFootX = (this.bKneeX + Math.cos(this.bKneeAngle) * this.kneeToFootLength);
+        this.bFootY = (this.bKneeY + Math.sin(this.bKneeAngle) * this.kneeToFootLength);
     };
 
     this.drawFigure = function(context) {
@@ -230,35 +236,35 @@ FiercePlanet.StickFigure = function(x, _y, _figureWidth, _figureHeight) {
         context.beginPath();
 
         // Head
-        context.arc(x, y, headRadius, 0, Math.PI * 2, false);
+        context.arc(this.headX, this.headY, this.headRadius, 0, Math.PI * 2, false);
 
         // Body
-        context.moveTo(x, startOfBodyY);
-        context.lineTo(x, startOfBodyY + bodyLength);
+        context.moveTo(this.x, this.startOfBodyY);
+        context.lineTo(this.x, this.startOfBodyY + this.bodyLength);
 
         // Front arm
-        context.moveTo(x, startOfShoulderY);
-        context.lineTo(fElbowX, fElbowY);
-        context.moveTo(fElbowX, fElbowY);
-        context.lineTo(fHandX, fHandY);
+        context.moveTo(this.x, this.startOfShoulderY);
+        context.lineTo(this.fElbowX, this.fElbowY);
+        context.moveTo(this.fElbowX, this.fElbowY);
+        context.lineTo(this.fHandX, this.fHandY);
 
         // Back arm
-        context.moveTo(x, startOfShoulderY);
-        context.lineTo(bElbowX, bElbowY);
-        context.moveTo(bElbowX, bElbowY);
-        context.lineTo(bHandX, bHandY);
+        context.moveTo(this.x, this.startOfShoulderY);
+        context.lineTo(this.bElbowX, this.bElbowY);
+        context.moveTo(this.bElbowX, this.bElbowY);
+        context.lineTo(this.bHandX, this.bHandY);
 
         // Front leg
-        context.moveTo(x, startOfHipY);
-        context.lineTo(fKneeX, fKneeY);
-        context.moveTo(fKneeX, fKneeY);
-        context.lineTo(fFootX, fFootY);
+        context.moveTo(this.x, this.startOfHipY);
+        context.lineTo(this.fKneeX, this.fKneeY);
+        context.moveTo(this.fKneeX, this.fKneeY);
+        context.lineTo(this.fFootX, this.fFootY);
 
         // Back leg
-        context.moveTo(x, startOfHipY);
-        context.lineTo(bKneeX, bKneeY);
-        context.moveTo(bKneeX, bKneeY);
-        context.lineTo(bFootX, bFootY);
+        context.moveTo(this.x, this.startOfHipY);
+        context.lineTo(this.bKneeX, this.bKneeY);
+        context.moveTo(this.bKneeX, this.bKneeY);
+        context.lineTo(this.bFootX, this.bFootY);
 
         context.closePath();
     };

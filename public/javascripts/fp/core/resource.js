@@ -101,10 +101,11 @@ function Resource(type, x, y) {
                 if (agent.health < 100) {
                     adjustment = this.perAgentYield * this.upgradeWorld * resourceEffect;
                     agent.adjustGeneralHealth(adjustment);
-                    if (adjustSpeedToYield && Universe.settings.agentsCanAdjustSpeed)
-                        agent.speed = (this.perAgentYield);
-                    // This lowers the impact of resources on agents' speed - but need delay for 'followers' to get resources of their own.
-//                    agent.setSpeed(Math.floor(Math.pow(this.perAgentYield, 0.5)));
+                    if (adjustSpeedToYield && Universe.settings.agentsCanAdjustSpeed) {
+                        // This lowers the impact of resources on agents' speed - but need delay for 'followers' to get resources of their own.
+                        agent.speed = (Math.floor(Math.pow(this.perAgentYield, 0.5)));
+//                        agent.speed = (this.perAgentYield);
+                    }
                     this.totalYield -= this.perAgentYield;
                 }
             }
@@ -114,10 +115,11 @@ function Resource(type, x, y) {
                     adjustment = rawAdjustment * resourceEffect;
                     agent.adjustHealthForResource(adjustment, this);
                     if (adjustSpeedToYield && Universe.settings.agentsCanAdjustSpeed) {
-                        agent.speed = (this.perAgentYield);
+                        // This lowers the impact of resources on agents' speed - but need delay for 'followers' to get resources of their own.
+                        agent.speed += this.perAgentYield;
+//                        agent.speed = (Math.floor(Math.pow(this.perAgentYield, 0.5)));
+//                        agent.speed = (this.perAgentYield);
                     }
-                    // This lowers the impact of resources on agents' speed - but need delay for 'followers' to get resources of their own.
-//                    agent.setSpeed(Math.floor(Math.pow(this.perAgentYield, 0.5)));
 
                     if (Universe.settings.resourcesDiminishAtFixedRate) {
                         // Yields decreases reflect upgrade and actual yield to the agent - VERY HARD

@@ -55,13 +55,58 @@ var Game2Module = Game2Module || {};
 
             // Add multiple cultures here
             var zombieCulture = _.clone(DefaultCultures.MovingStickman);
+            zombieCulture.name = 'Zombie Stickman';
             zombieCulture.healthCategories = ModuleManager.currentModule.resourceSet.categories;
             var trollCulture = _.clone(DefaultCultures.MovingStickman);
             trollCulture.initialSpeed = 50;
             trollCulture.healthCategories = ModuleManager.currentModule.resourceSet.categories;
 
+            FiercePlanet.StickFigure.zombieWalk = function(frame, direction) {
+                this.headAngle = Math.PI * 3 / 4;
+                switch (frame) {
+                    case 0:
+                        this.fShoulderAngle = Math.PI * (0 / 12);
+                        this.fElbowAngle = Math.PI * (0 / 12);
+                        this.bShoulderAngle = Math.PI * (0 / 12);
+                        this.bElbowAngle = Math.PI * (0 / 12);
+
+                        this.fHipAngle = Math.PI * (8 / 12);
+                        this.fKneeAngle = Math.PI * (9 / 12);
+                        this.bHipAngle = Math.PI * (4 / 12);
+                        this.bKneeAngle = Math.PI * (4 / 12);
+                        break;
+                    case 1:
+                        this.fShoulderAngle = Math.PI * (0 / 12);
+                        this.fElbowAngle = Math.PI * (0 / 12);
+                        this.bShoulderAngle = Math.PI * (0 / 12);
+                        this.bElbowAngle = Math.PI * (0 / 12);
+
+                        this.fHipAngle = Math.PI * (7 / 12);
+                        this.fKneeAngle = Math.PI * (8 / 12);
+                        this.bHipAngle = Math.PI * (5 / 12);
+                        this.bKneeAngle = Math.PI * (5 / 12);
+                        break;
+                    case 2:
+                        this.fShoulderAngle = Math.PI * (0 / 12);
+                        this.fElbowAngle = Math.PI * (0 / 12);
+                        this.bShoulderAngle = Math.PI * (0 / 12);
+                        this.bElbowAngle = Math.PI * (0 / 12);
+
+                        this.fHipAngle = Math.PI * (5 / 12);
+                        this.fKneeAngle = Math.PI * (7 / 12);
+                        this.bHipAngle = Math.PI * (7 / 12);
+                        this.bKneeAngle = Math.PI * (8 / 12);
+                        break;
+                }
+                if (direction == 1) {
+                    this.flipHorizontalDirection();
+                }
+                this.generateCoordinates();
+            }
+            zombieCulture.customStickFunction = 'FiercePlanet.StickFigure.zombieWalk';
+
             var wave1 = new Wave();
-            wave1.agents = this.generateAgents(zombieCulture, 4);
+            wave1.agents = this.generateAgents(zombieCulture, 6);
             wave1.agents = wave1.agents.concat(this.generateAgents(trollCulture, 4));
             wave1.agents = _.shuffle(wave1.agents);
 
