@@ -25,7 +25,7 @@ var Lifecycle = Lifecycle || {};
     // Game play variables
     this.waveOverride = 0, this.maxWaveMoves = 0, this.maxWorldMoves = 0;
     // Game interval variables
-    this.resourceRecoveryCycle = 5, this.interval = 20, this.agentTimerId = 0, this.inPlay = false;
+    this.resourceRecoveryCycle = 5, this.interval = 40, this.agentTimerId = 0, this.inPlay = false;
     // World state variables
     this.currentWorld = null, this.currentCampaignID = 'Default', this.currentWorldNumber = 1, this.currentWorldPreset = true, this.existingCurrentWorld = null;
     // Wave state variables

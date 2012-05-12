@@ -370,6 +370,12 @@ app.post('/profile/update', function(req, res){
     }
 });
 
+app.get('/figure', function(req, res){
+    res.render('figure', {
+        title: 'Fierce Planet',
+        locals: {}
+    });
+});
 
 
 // Run express

@@ -216,6 +216,16 @@ $LAB
                         FiercePlanet.Game.loadGame();
                     })
             }
+            else if (m == 'td') {
+                $LAB.setOptions({BasePath:'/javascripts/'}).script([
+                    , 'fp/modules/td/td-module.js'
+                ]).wait(function() {
+//                $('#moduleEditor').show();
+                        TowerDefenceModule.init();
+                        $('#content-pane').show();
+                        FiercePlanet.Game.loadGame();
+                    })
+            }
             else if (m == 'default' || m == 'fp') {
                 DefaultModule.init();
                 $('#content-pane').show();

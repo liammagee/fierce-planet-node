@@ -57,8 +57,8 @@ var Game2Module = Game2Module || {};
             var zombieCulture = _.clone(DefaultCultures.MovingStickman);
             zombieCulture.name = 'Zombie Stickman';
             zombieCulture.healthCategories = ModuleManager.currentModule.resourceSet.categories;
+            zombieCulture.initialSpeed = zombieCulture.initialSpeed * 2;
             var trollCulture = _.clone(DefaultCultures.MovingStickman);
-            trollCulture.initialSpeed = 50;
             trollCulture.healthCategories = ModuleManager.currentModule.resourceSet.categories;
 
             FiercePlanet.StickFigure.zombieWalk = function(frame, direction) {
@@ -106,8 +106,8 @@ var Game2Module = Game2Module || {};
             zombieCulture.customStickFunction = 'FiercePlanet.StickFigure.zombieWalk';
 
             var wave1 = new Wave();
-            wave1.agents = this.generateAgents(zombieCulture, 6);
-            wave1.agents = wave1.agents.concat(this.generateAgents(trollCulture, 4));
+            wave1.agents = this.generateAgents(zombieCulture, 36);
+            wave1.agents = wave1.agents.concat(this.generateAgents(trollCulture, 24));
             wave1.agents = _.shuffle(wave1.agents);
 
             this.waves = [wave1];

@@ -113,7 +113,7 @@ _.extend(DefaultCultures.Stickman, {
                 sf.defaultAction = sf.expire;
             }
             else {
-                if (speed > 12)
+                if (speed > 20)
                     sf.defaultAction = sf.walk;
                 else
                     sf.defaultAction = sf.run;
@@ -128,8 +128,8 @@ _.extend(DefaultCultures.Stickman, {
         ctx.lineCap = "round";
         ctx.strokeStyle = agent.color;
         ctx.stroke();
-        ctx.fillStyle = agent.color;
-        ctx.fill();
+//        ctx.fillStyle = agent.color;
+//        ctx.fill();
     })
 
 });

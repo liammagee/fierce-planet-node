@@ -1244,6 +1244,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         try {
             eval(agent.culture.drawFunction)(ctx, agent, x, y, FiercePlanet.Orientation.pieceWidth, FiercePlanet.Orientation.pieceHeight, newColor, Lifecycle.waveCounter, direction);
         } catch(e) {
+            console.log(e)
             eval(DefaultCultures.CITIZEN_AGENT_TYPE.drawFunction)(ctx, agent, x, y, FiercePlanet.Orientation.pieceWidth, FiercePlanet.Orientation.pieceHeight, newColor, Lifecycle.waveCounter, direction);
         }
     };

@@ -27,6 +27,7 @@ FiercePlanet.StickFigure = function(x, _y, _figureWidth, _figureHeight) {
     this.elbowToHandLength = (this.wholeBodyLength / 6) + 0.5 | 0;
     this.hipToKneeLength = (this.wholeBodyLength / 6) + 0.5 | 0;
     this.kneeToFootLength = (this.wholeBodyLength / 4) + 0.5 | 0;
+    this.footLength = (this.wholeBodyLength / 12) + 0.5 | 0;
     this.startOfHeadY = this.y - this.headRadius;
     this.startOfBodyY = this.y + this.headRadius;
     this.startOfShoulderY = this.startOfBodyY + this.shoulderPoint;
@@ -42,15 +43,21 @@ FiercePlanet.StickFigure = function(x, _y, _figureWidth, _figureHeight) {
         this.fKneeAngle = this.defaultAngle,
         this.bHipAngle = this.defaultAngle,
         this.bKneeAngle = this.defaultAngle;
+        this.fFootAngle = 0;
+        this.bFootAngle = 0;
     this.headX, this.headY,
         this.fElbowX, this.fElbowY,
         this.bElbowX, this.bElbowY,
         this.fHandX, this.fHandY,
         this.bHandX, this.bHandY,
+        this.fFingerX, this.fFingerY,
+        this.bFingerX, this.bFingerY,
         this.fKneeX, this.fKneeY,
         this.bKneeX, this.bKneeY,
         this.fFootX, this.fFootY,
-        this.bFootX, this.bFootY;
+        this.bFootX, this.bFootY,
+        this.fToeX, this.fToeY,
+        this.bToeX, this.bToeY;
 
         // Stick figure actions
     this.run = function(frame, direction) {
@@ -115,8 +122,10 @@ FiercePlanet.StickFigure = function(x, _y, _figureWidth, _figureHeight) {
 
                 this.fHipAngle = Math.PI * (8 / 12);
                 this.fKneeAngle = Math.PI * (9 / 12);
+                this.fFootAngle = Math.PI * (3 / 12);
                 this.bHipAngle = Math.PI * (4 / 12);
                 this.bKneeAngle = Math.PI * (4 / 12);
+                this.bFootAngle = Math.PI * (-2 / 12);
                 break;
             case 1:
                 this.fShoulderAngle = Math.PI * (7 / 12);
@@ -126,8 +135,10 @@ FiercePlanet.StickFigure = function(x, _y, _figureWidth, _figureHeight) {
 
                 this.fHipAngle = Math.PI * (7 / 12);
                 this.fKneeAngle = Math.PI * (8 / 12);
+                this.fFootAngle = Math.PI * (2 / 12);
                 this.bHipAngle = Math.PI * (5 / 12);
                 this.bKneeAngle = Math.PI * (6 / 12);
+                this.bFootAngle = Math.PI * (0 / 12);
                 break;
             case 2:
                 this.fShoulderAngle = Math.PI * (5 / 12);
@@ -137,8 +148,10 @@ FiercePlanet.StickFigure = function(x, _y, _figureWidth, _figureHeight) {
 
                 this.fHipAngle = Math.PI * (5 / 12);
                 this.fKneeAngle = Math.PI * (6 / 12);
+                this.fFootAngle = Math.PI * (0 / 12);
                 this.bHipAngle = Math.PI * (7 / 12);
                 this.bKneeAngle = Math.PI * (8 / 12);
+                this.bFootAngle = Math.PI * (2 / 12);
                 break;
         }
         if (direction == 1) {
@@ -185,8 +198,10 @@ FiercePlanet.StickFigure = function(x, _y, _figureWidth, _figureHeight) {
 
         this.fHipAngle = (Math.PI / 2) + ((Math.PI / 2) - this.fHipAngle);
         this.fKneeAngle = (Math.PI / 2) + ((Math.PI / 2) - this.fKneeAngle);
+        this.fFootAngle = (Math.PI / 2) + ((Math.PI / 2) - this.fFootAngle);
         this.bHipAngle = (Math.PI / 2) + ((Math.PI / 2) - this.bHipAngle);
         this.bKneeAngle = (Math.PI / 2) + ((Math.PI / 2) - this.bKneeAngle);
+        this.bFootAngle = (Math.PI / 2) + ((Math.PI / 2) - this.bFootAngle);
     };
 
     this.flipVerticalDirection = function() {
@@ -224,11 +239,15 @@ FiercePlanet.StickFigure = function(x, _y, _figureWidth, _figureHeight) {
         this.fKneeY = (this.startOfHipY + Math.sin(this.fHipAngle) * this.hipToKneeLength);
         this.fFootX = (this.fKneeX + Math.cos(this.fKneeAngle) * this.kneeToFootLength);
         this.fFootY = (this.fKneeY + Math.sin(this.fKneeAngle) * this.kneeToFootLength);
+        this.fToeX = (this.fFootX + Math.cos(this.fFootAngle) * this.footLength);
+        this.fToeY = (this.fFootY + Math.sin(this.fFootAngle) * this.footLength);
 
         this.bKneeX = (this.x + Math.cos(this.bHipAngle) * this.hipToKneeLength);
         this.bKneeY = (this.startOfHipY + Math.sin(this.bHipAngle) * this.hipToKneeLength);
         this.bFootX = (this.bKneeX + Math.cos(this.bKneeAngle) * this.kneeToFootLength);
         this.bFootY = (this.bKneeY + Math.sin(this.bKneeAngle) * this.kneeToFootLength);
+        this.bToeX = (this.bFootX + Math.cos(this.bFootAngle) * this.footLength);
+        this.bToeY = (this.bFootY + Math.sin(this.bFootAngle) * this.footLength);
     };
 
     this.drawFigure = function(context) {
@@ -259,12 +278,16 @@ FiercePlanet.StickFigure = function(x, _y, _figureWidth, _figureHeight) {
         context.lineTo(this.fKneeX, this.fKneeY);
         context.moveTo(this.fKneeX, this.fKneeY);
         context.lineTo(this.fFootX, this.fFootY);
+        context.moveTo(this.fFootX, this.fFootY);
+        context.lineTo(this.fToeX, this.fToeY);
 
         // Back leg
         context.moveTo(this.x, this.startOfHipY);
         context.lineTo(this.bKneeX, this.bKneeY);
         context.moveTo(this.bKneeX, this.bKneeY);
         context.lineTo(this.bFootX, this.bFootY);
+        context.moveTo(this.bFootX, this.bFootY);
+        context.lineTo(this.bToeX, this.bToeY);
 
         context.closePath();
     };

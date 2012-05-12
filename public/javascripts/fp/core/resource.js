@@ -103,7 +103,9 @@ function Resource(type, x, y) {
                     agent.adjustGeneralHealth(adjustment);
                     if (adjustSpeedToYield && Universe.settings.agentsCanAdjustSpeed) {
                         // This lowers the impact of resources on agents' speed - but need delay for 'followers' to get resources of their own.
-                        agent.speed = (Math.floor(Math.pow(this.perAgentYield, 0.5)));
+                        agent.speed = agent.speed;
+//                        agent.speed = (agent.speed * (1 + (this.perAgentYield / 100)));
+//                        agent.speed = (Math.floor(Math.pow(this.perAgentYield, 0.5)));
 //                        agent.speed = (this.perAgentYield);
                     }
                     this.totalYield -= this.perAgentYield;
@@ -116,7 +118,8 @@ function Resource(type, x, y) {
                     agent.adjustHealthForResource(adjustment, this);
                     if (adjustSpeedToYield && Universe.settings.agentsCanAdjustSpeed) {
                         // This lowers the impact of resources on agents' speed - but need delay for 'followers' to get resources of their own.
-                        agent.speed += this.perAgentYield;
+                        agent.speed = agent.speed;
+//                        agent.speed = (agent.speed * (1 + (this.perAgentYield / 100)));
 //                        agent.speed = (Math.floor(Math.pow(this.perAgentYield, 0.5)));
 //                        agent.speed = (this.perAgentYield);
                     }
