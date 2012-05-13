@@ -23,6 +23,7 @@ var Game2Module = Game2Module || {};
         this.world1.initialAgentNumber = 1;
         this.world1.waveNumber = 1;
         this.world1.expiryLimit = 20;
+        this.world1.initialResourceStore = 200;
         this.world1.name = ("World 1: Welcome to Fierce Planet!");
         this.world1.introduction = (
             "<p>The citizens of Fierce Planet are in danger of extinction. Their cities have been destroyed &mdash; there is a shortage of food and water, law and order has broken down, and disease is rampant.</p>" +
@@ -125,6 +126,11 @@ var Game2Module = Game2Module || {};
         this.worlds = [
             this.world1
         ];
+
+        if (typeof google !== "undefined" && typeof google.maps !== "undefined") {
+            this.world1.mapOptions = ({mapTypeId: google.maps.MapTypeId.SATELLITE, center: new google.maps.LatLng(-30.0305, -51.2270), zoom: 18, tilt: 45}); // Porto Allegre: -30.031137, -51.232837
+
+        }
     }
 
     this.initGame2Worlds();

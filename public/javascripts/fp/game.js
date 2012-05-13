@@ -427,7 +427,7 @@ FiercePlanet.Game = FiercePlanet.Game || {};
         else if (Lifecycle.interval < 100)
             Lifecycle.interval += 10;
         //        FiercePlanet.GeneralUI.notify("Now playing at: " + Math.round(1000 / Lifecycle.interval) + " frames per second.");
-        if (FiercePlanet.Game.inPlay)
+//        if (FiercePlanet.Game.inPlay)
             Lifecycle._startAgents();
     };
 
@@ -441,7 +441,7 @@ FiercePlanet.Game = FiercePlanet.Game || {};
         else if (Lifecycle.interval > 1)
             Lifecycle.interval -= 1;
         //        FiercePlanet.GeneralUI.notify("Now playing at: " + Math.round(1000 / Lifecycle.interval) + " frames per second.");
-        if (FiercePlanet.Game.inPlay)
+//        if (FiercePlanet.Game.inPlay)
             Lifecycle._startAgents();
     };
 

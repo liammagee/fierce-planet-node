@@ -37,7 +37,7 @@ _.extend(DefaultCultures.Square, {
 
 DefaultCultures.Stickman = new Culture("Stickman", "000");
 _.extend(DefaultCultures.Stickman, {
-    drawFunction: (function(ctx, agent, x, y, pieceWidth, pieceHeight, newColor, counter, direction) {
+    drawFunction: (function(ctx, agent, x, y, width, height, newColor, counter, direction) {
         // Define agent elements here
         var frames = 3;
         var speed = agent.speed;
@@ -51,7 +51,7 @@ _.extend(DefaultCultures.Stickman, {
         for (var j in agent.culture.healthCategories) {
             var rc = agent.culture.healthCategories[j];
             var h = agent.getHealthForResourceCategory(rc);
-            var barLength = Math.floor((h / agent.culture.initialHealth) * pieceWidth / 2);
+            var barLength = Math.floor((h / agent.culture.initialHealth) * width / 2);
 
             ctx.lineWidth = 3;
             ctx.lineCap = "round";
@@ -69,8 +69,8 @@ _.extend(DefaultCultures.Stickman, {
 
             // Draw health line next
             ctx.beginPath();
-            ctx.moveTo(x - pieceWidth / 4, y + yHealthOffset);
-            ctx.lineTo(x - pieceWidth / 4 + barLength, y + yHealthOffset);
+            ctx.moveTo(x - width / 4, y + yHealthOffset);
+            ctx.lineTo(x - width / 4 + barLength, y + yHealthOffset);
             ctx.closePath();
 
             ctx.strokeStyle = rc.color;
@@ -93,7 +93,7 @@ _.extend(DefaultCultures.Stickman, {
          */
 
 
-        var sf = new FiercePlanet.StickFigure(x, y, pieceWidth, pieceHeight);
+        var sf = new FiercePlanet.StickFigure(x, y, width, height);
         if (!_.isUndefined(agent.culture.customStickFunction)) {
             sf.defaultAction = eval(agent.culture.customStickFunction);
         }
@@ -101,14 +101,14 @@ _.extend(DefaultCultures.Stickman, {
             if (health <= 0) {
                 // Draw an explosion here
                 var explosionX = x;
-                var explosionY = y + pieceWidth / 8;
+                var explosionY = y + width / 8;
 
-                var radgrad = ctx.createRadialGradient(explosionX, explosionY, 0, explosionX, explosionY, pieceWidth / 3);
+                var radgrad = ctx.createRadialGradient(explosionX, explosionY, 0, explosionX, explosionY, width / 3);
                 radgrad.addColorStop(0, 'rgba(255, 168, 81,1)');
                 radgrad.addColorStop(0.8, '#FFF354');
                 radgrad.addColorStop(1, 'rgba(255, 168, 81,0)');
                 ctx.fillStyle = radgrad;
-                ctx.fillRect(x - pieceWidth / 2, y - (pieceWidth / 4), pieceWidth, pieceHeight + (pieceWidth / 4));
+                ctx.fillRect(x - width / 2, y - (width / 4), width, height + (width / 4));
 
                 sf.defaultAction = sf.expire;
             }

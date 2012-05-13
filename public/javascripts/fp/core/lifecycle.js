@@ -38,7 +38,9 @@ var Lifecycle = Lifecycle || {};
      * Core logic loop: processes agents.
      */
     this.processAgents = function() {
-      var recordableChangeMade = false;
+//                    var start = new Date();
+
+        var recordableChangeMade = false;
         // Invoke pre process callback
 		if (Lifecycle.preProcessCallback)
         	Lifecycle.preProcessCallback();
@@ -106,31 +108,6 @@ var Lifecycle = Lifecycle || {};
                     agent.die(Lifecycle.currentWorld);
                 }
 
-                // Reset countdown
-                agent.resetCountdownToMove();
-
-
-                // Adjust speed
-                if (!Lifecycle.currentWorld.noSpeedChange && Universe.settings.agentsCanAdjustSpeed)
-                    agent.adjustSpeed();
-
-                // Adjust wander
-                if (!Lifecycle.currentWorld.noWander && Universe.settings.agentsCanAdjustWander) {
-                    // Make sure agents don't wander over boxes in 3D view
-                    if (Universe.settings.showResourcesAsBoxes && Universe.settings.isometricView) {
-                        agent.adjustWander(FiercePlanet.Orientation.cellWidth, 0);
-                    }
-                    else {
-                        agent.adjustWander(FiercePlanet.Orientation.cellWidth, FiercePlanet.Orientation.pieceWidth);
-                    }
-                }
-
-                if (agent.age > Lifecycle.maxWaveMoves)
-                    Lifecycle.maxWaveMoves = agent.age;
-
-                // Exercises all of the agent's capabilities
-                agent.update(Lifecycle.currentWorld);
-
                 // TODO: should be in-lined?
                 if (agent.health <= 0 && !Universe.settings.godMode) {
                     Lifecycle.currentWorld.addExpiredAgent(agent, Lifecycle.worldCounter);
@@ -139,8 +116,35 @@ var Lifecycle = Lifecycle || {};
                     // TODO: needs to be moved
                     if (ModuleManager.currentModule.id = 'Default')
 //                    if (agent.culture == DefaultCultures.CITIZEN_AGENT_TYPE)
-						if (typeof(FiercePlanet) !== "undefined")
-                        	FiercePlanet.Game.currentProfile.currentWorldExpired++;
+                        if (typeof(FiercePlanet) !== "undefined")
+                            FiercePlanet.Game.currentProfile.currentWorldExpired++;
+                }
+
+                if (agent.alive) {
+                    // Reset countdown
+                    agent.resetCountdownToMove();
+
+
+                    // Adjust speed
+                    if (!Lifecycle.currentWorld.noSpeedChange && Universe.settings.agentsCanAdjustSpeed)
+                        agent.adjustSpeed();
+
+                    // Adjust wander
+                    if (!Lifecycle.currentWorld.noWander && Universe.settings.agentsCanAdjustWander) {
+                        // Make sure agents don't wander over boxes in 3D view
+                        if (Universe.settings.showResourcesAsBoxes && Universe.settings.isometricView) {
+                            agent.adjustWander(FiercePlanet.Orientation.cellWidth, 0);
+                        }
+                        else {
+                            agent.adjustWander(FiercePlanet.Orientation.cellWidth, FiercePlanet.Orientation.pieceWidth);
+                        }
+                    }
+
+                    if (agent.age > Lifecycle.maxWaveMoves)
+                        Lifecycle.maxWaveMoves = agent.age;
+
+                    // Exercises all of the agent's capabilities
+                    agent.update(Lifecycle.currentWorld);
                 }
             }
             agent.incrementCountdownToMove();
@@ -175,6 +179,8 @@ var Lifecycle = Lifecycle || {};
         // Invoke pre process callback
 		if (Lifecycle.postProcessCallback)
         	Lifecycle.postProcessCallback();
+//                    var stop = new Date();
+//                    console.log(stop - start)
     };
 
 

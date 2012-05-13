@@ -166,7 +166,7 @@ var Basic = Basic || new Campaign();
         this.world3.initialAgentNumber = 1;
         this.world3.waveNumber = 10;
         this.world3.expiryLimit = 10;
-        this.world3.initialResourceStore =150 ;
+        this.world3.initialResourceStore = 150;
         this.world3.name = ("World 3: Waves of Uncertainty");
         this.world3.introduction = (
                 "<p>The rebuilding of Fierce Planet is proceeding well... but how can you plan for a random act of nature??!!! </p>"

@@ -519,10 +519,13 @@ function Agent(culture, x, y) {
      */
     this.destroy = function(world) {
         var thisIndex = -1, agent = this;
-        world.currentAgents.forEach(function(a, index) {
-            if (a === agent)
-                thisIndex = index;
-        });
+        for (var i = 0; i < world.currentAgents.length; i++) {
+            var a = world.currentAgents[i];
+            if (a == agent) {
+                thisIndex = i;
+                break;
+            }
+        }
         if (thisIndex > -1) {
             world.currentAgents.splice(thisIndex, 1);
             world.removeAgentFromCell(agent);
