@@ -69,12 +69,12 @@ TechoResources.doSetup = function() {
 
     this.initTechoWorlds = function () {
 
-        this.wasteInSurabaya  = new World();
-        _.extend(this.wasteInSurabaya,
+        this.housingInArica  = new World();
+        _.extend(this.housingInArica,
             {
                 id: 1,
-                name: "Waste in Surabaya",
-                introduction: 
+                name: "Housing in Arica",
+                introduction:
                     "<p>This model explores waste management in Surabaya.</p>" +
                     "<p>Using the default settings, residents of the area shown pollute available fresh water with waste.</p>" +
                     "<p>This causes pathogenic bacteria (such as E. coli) to proliferate, impacting upon the health of residents.</p>" +
@@ -105,10 +105,8 @@ TechoResources.doSetup = function() {
                 noWander: false,
                 noSpeedChange: true,
                 allowResourcesOnPath: true,
+                //Arica
                 mapOptions: ({
-//                    zoom: 6,
-//                    center: new google.maps.LatLng(49.265984,-123.127491),
-//                    mapTypeId: google.maps.MapTypeId.ROADMAP
                 mapTypeId: google.maps.MapTypeId.HYBRID,
                 center: new google.maps.LatLng(-18.4770, -70.2877),
                 zoom: 15,
@@ -116,37 +114,46 @@ TechoResources.doSetup = function() {
                 }),
                 parameters:
                     "<p>Initial agents</p>" +
-                        "0 <div id='initialAgentsSlider' /> 200" +
                         "<input type='hidden' id='initialAgents' class='world-parameters' name='InitialAgents' value='100'/>" +
-                        "<p>Rate of personal waste emission</p><p><input class='world-parameters' name='RateOfWasteEmission' value='250'/> </p>" +
-                        "<p>No. of waste disposal units</p><p><input class='world-parameters' name='NumWasteDisposalUnits' value='10'/> </p>" +
-                        "<p>Proximity to waste disposal unit</p><p><input class='world-parameters' name='ProximityToDisposalUnit' value='1'/> </p>" +
-                        "<p>Natural rate of water improvement</p><p><input class='world-parameters' name='NaturalRateOfImprovement' value='1'/> </p>" +
-                        "<p>Health cost of infection</p><p><input class='world-parameters' name='HealthCostOfInfection' value='1'/> </p>" +
-//                        "<p>Water consumed</p><p><input class='world-parameters' name='WaterConsumed' value='1000'/> </p>" +
-                        "<p>Quality of water</p><p><input class='world-parameters' name='WaterQuality' value='100'/> </p>" +
-                        "<p>Reproduction probability</p><p><input class='world-parameters' name='ReproductionProbability' value='0.5'/> </p>" +
 
-                        "",
+                        "<p>Rate of personal waste emission</p>" +
+                        "<input type='hidden' id='rateOfWasteEmission' class='world-parameters' name='RateOfWasteEmission' value='250'/>" +
+
+                        "<p>No. of waste disposal units</p>" +
+                        "<input type='hidden' id='numWasteDisposalUnits' class='world-parameters' name='NumWasteDisposalUnits' value='10'/>" +
+
+                        "<p>Proximity to waste disposal unit</p>" +
+                        "<input type='hidden' id='proximityToDisposalUnit' class='world-parameters' name='ProximityToDisposalUnit' value='1'/>" +
+
+                        "<p>Natural rate of water improvement</p>" +
+                        "<input type='hidden' id='naturalRateOfImprovement' class='world-parameters' name='NaturalRateOfImprovement' value='1'/>" +
+
+                        "<p>Health cost of infection</p>" +
+                        "<input type='hidden' id='healthCostOfInfection' class='world-parameters' name='HealthCostOfInfection' value='1'/>" +
+//                        "<p>Water consumed</p><p><input class='world-parameters' name='WaterConsumed' value='1000'/> </p>" +
+
+                    "<p>Quality of water</p>" +
+                    "<input type='hidden' id='waterQuality' class='world-parameters' name='WaterQuality' value='100'/>" +
+
+                    "<p>Reproduction probability</p>" +
+                    "<input type='hidden' id='reproductionProbability' class='world-parameters' name='ReproductionProbability' value='0.5'/>" +
+
+                    "",
                 conclusion: "Well done.",
                 setup: function() {
-                    var trafficLayer = new google.maps.TrafficLayer();
-                    trafficLayer.setMap(FiercePlanet.Game.googleMap);
-                    var weatherLayer = new google.maps.weather.WeatherLayer({
-                        temperatureUnits: google.maps.weather.TemperatureUnit.FAHRENHEIT
-                    });
-                    weatherLayer.setMap(FiercePlanet.Game.googleMap);
-
-                    var cloudLayer = new google.maps.weather.CloudLayer();
-                    cloudLayer.setMap(FiercePlanet.Game.googleMap);
                 },
                 setupParameters: function() {
-                    $( "#initialAgentsSlider" ).slider({
-                        value: 100, min: 0, max: 200, step: 1,
-                        slide: function( event, ui ) { $("#initialAgents").val( ui.value ); }
-                    });
-                    FiercePlanet.Graph.openDialog();
-                    $("#world-graph").show();
+                    FiercePlanet.Slider.createSlider("initialAgents", 0, 200, 5, 100);
+                    FiercePlanet.Slider.createSlider("rateOfWasteEmission", 0, 500, 5, 250);
+                    FiercePlanet.Slider.createSlider("numWasteDisposalUnits", 0, 50, 1, 10);
+                    FiercePlanet.Slider.createSlider("proximityToDisposalUnit", 0, 10, 1, 1);
+                    FiercePlanet.Slider.createSlider("naturalRateOfImprovement", 0, 10, 1, 1);
+                    FiercePlanet.Slider.createSlider("healthCostOfInfection", 0, 5, 1, 1);
+                    FiercePlanet.Slider.createSlider("waterQuality", 0, 200, 10, 100);
+                    FiercePlanet.Slider.createSlider("reproductionProbability", 0, 1, 0.05, 0.5);
+
+//                    FiercePlanet.Graph.openDialog();
+//                    $("#world-graph").show();
                     FiercePlanet.Graph.setupData(
                         {label: 'Water', color: '#f00', maxValue: 100}
                         , {label: 'Health', color: '#0f0', maxValue: 100}
@@ -221,7 +228,7 @@ TechoResources.doSetup = function() {
                     var moveCapability = Capabilities.MoveRandomlyCapability, nullifiedAgents = [];
                     var died = 0;
 
-                        // Adjust water quality
+                    // Adjust water quality
                     var totalWaste = world.currentAgents.length * rateOfWasteEmission / 10000;
                     var totalWasteDisposed = 0;
                     world.currentAgents.forEach(function(agent) {
@@ -263,7 +270,7 @@ TechoResources.doSetup = function() {
                             // Naturally aging
                             agent.adjustGeneralHealth(-1);
                         }
-                        agent.color = one.color(agent.color).red(agent.health / 100).hex();
+                        agent.color = one.color(agent.color).red(agent.health / 100);
                     });
                     // Die
                     world.currentAgents.forEach(function(agent) {
@@ -278,14 +285,13 @@ TechoResources.doSetup = function() {
                                 var r = Math.random();
                                 // Diminishing likelihood of children
                                 if (r < Math.pow(reproductionProbability,  agent.childCount + 1)) {
-                                    console.log(totalInfected, world.currentAgents.length, world.children, Lifecycle.waveCounter)
-//                                    var child = agent.spawn();
-//                                    child.infected = false;
-//                                    child.generalHealth = 100;
-//                                    child.color = '#f00';
-//                                    child.gender = (Math.random() < .5 ? 'm' : 'f');
-//                                    child.childCount = 0;
-//                                    world.children ++;
+                                    var child = agent.spawn();
+                                    child.infected = false;
+                                    child.generalHealth = 100;
+                                    child.color = '#f00';
+                                    child.gender = (Math.random() < .5 ? 'm' : 'f');
+                                    child.childCount = 0;
+                                    world.children ++;
                                 }
                             }
                         });
@@ -300,250 +306,20 @@ TechoResources.doSetup = function() {
                         totalInfected = _.reduce(infected, function(memo, num){ return memo + num; }, 0);
                     var ageAtDeath = _.map(this.expiredAgents, function(agent) { return agent.diedAt - agent.bornAt; }),
                         totalAgeAtDeath = _.reduce(health, function(memo, num){ return memo + num; }, 0);
-//                    console.log(totalInfected, world.currentAgents.length, world.children, Lifecycle.waveCounter)
+                    console.log(totalInfected, world.currentAgents.length, world.children, Lifecycle.waveCounter)
                     FiercePlanet.Graph.plotData(world.currentWaterQuality, totalHealth / initialAgents, totalInfected * 100 / initialAgents);
 //                    if (world.currentAgents.length <= 0)
 //                        Lifecycle._stopAgents();
                 }
             })
 
-        this.pegirianVillage  = new World();
-        _.extend(this.pegirianVillage,
-            {
-                id: 2,
-                name: "Pegirian Village",
-                introduction:
-                    "<p>This model examines impacts of waste collection on households in the Pegirian Village.</p>" +
-                    "<p>If not enough waste is collected, the total amount of waste and pollution increases.</p>" +
-                    "<p>In addition, having enough resources in the environment, in a very abstract sense, improves the efficiency of waste collection.</p>" +
-                "<p>There are a number of parameters that control how this simulation works:" +
-                    "<ul>" +
-                    "<li><em>No. of households: </em> Number of households to 'seed' the simulation</li>" +
-                    "<li><em>Ave. persons per household: </em> Average number of people per household</li>" +
-                    "<li><em>No. of waste collectors: </em> How many waste collectors work in the area. </li>" +
-                    "<li><em>Waste removed per collector: </em> Maximum daily waste removed by each collector. </li>" +
-                    "<li><em>Daily waste emissions: </em> How much waste is produced per person per day.</li>" +
-                    "<li><em>% Composted: </em> What percentage of waste is composted.</li>" +
-                    "<li><em>% Recycled: </em> What percentage of waste is recycled.</li>" +
-                    "<li><em>Number of resources: </em> How many resources (economic, ecological, political, cultural) to 'seed' in the area.</li>" +
-                    "</ul>" +
-                    "</p>" +
-                    ""
-                ,
-                isPresetWorld: true,
-                interval: 100,
-                cellsAcross: 60,
-                cellsDown: 60,
-                dontClearCanvas: true,
-                scrollingImageVisible: false,
-                initialResourceStore: 1000,
-                playIndefinitely: true,
-                noWander: false,
-                noSpeedChange: true,
-                allowResourcesOnPath: true,
-                mapOptions: ({
-                    mapTypeId: google.maps.MapTypeId.HYBRID,
-                    center: new google.maps.LatLng(
-                        -7.228373, 112.755032),
-                    zoom: 18,
-                    tilt: 0
-                }),
-                parameters:
-                        "<p>Number of households</p>" +
-                            "0 <div id='numberOfHouseholdsSlider' /> 3000" +
-                            "<input type='hidden' id='numberOfHouseholds' class='world-parameters' name='NumberOfHouseholds' value='1500'/>" +
-                        "<p>Ave. Persons/households</p><p><input class='world-parameters' name='AvePersonPerHousehold' value='4'/> </p>" +
-                        "<p>No. of waste collectors</p>" +
-                            "0 <div id='numberOfWasteCollectorsSlider' /> 200" +
-                            "<input type='hidden' id='numberOfWasteCollectors' class='world-parameters' name='NumberOfWasteCollectors' value='40'/>" +
-
-                        "<p>Waste removed per collector (ltrs)</p><p><input class='world-parameters' name='WasteRemovedPerCollector' value='200'/> </p>" +
-//                        "<p>Waste collector cost</p><p><input class='world-parameters' name='WasteCollectionCost' value='3000'/> </p>" +
-                        "<p>Daily waste emission (lts/cap/day)</p><p><input class='world-parameters' name='DailyWasteEmission' value='2.95'/> </p>" +
-
-                        "<p>% Composted</p><p><input class='world-parameters' name='PercentageComposted' value='10'/> </p>" +
-                        "<p>% Recycled</p><p><input class='world-parameters' name='PercentageRecyled' value='10'/> </p>" +
-
-                        "<p>Number of resources</p><p><input class='world-parameters' name='NumberOfResources' value='40'/> </p>" +
-
-                        "",
-                conclusion: "Well done.",
-                setup: function() {
-                },
-                setupParameters: function() {
-                    $( "#numberOfHouseholdsSlider" ).slider({
-                        value: 1500, min: 0, max: 3000, step: 1,
-                        slide: function( event, ui ) { $("#numberOfHouseholds").val( ui.value ); }
-                    });
-                    $( "#numberOfWasteCollectorsSlider" ).slider({
-                        value: 40, min: 0, max: 200, step: 1,
-                        slide: function( event, ui ) { $("#numberOfWasteCollectors").val( ui.value ); }
-                    });
-                    FiercePlanet.Graph.openDialog();
-                    $("#world-graph").show();
-                    FiercePlanet.Graph.setupData(
-                        {label: 'Sustainability Index', color: '#f00', maxValue: 1}
-                        , {label: 'Pollution level', color: '#0f0', maxValue: 100}
-                    );
-                },
-                handleParameters: function () {
-                    var world = this;
-                    var numberOfHouseholds = parseInt(FiercePlanet.Parameters.NumberOfHouseholds)
-                        , aveRersonPerHouseholdwaterQuality = parseInt(FiercePlanet.Parameters.AvePersonPerHousehold)
-                        , numberOfWasteCollectors = parseInt(FiercePlanet.Parameters.NumberOfWasteCollectors)
-                        , wasteRemovedPerCollector = parseFloat(FiercePlanet.Parameters.WasteRemovedPerCollector)
-                        , wasteCollectionCost = parseInt(FiercePlanet.Parameters.WasteCollectionCost)
-                        , dailyWasteEmission = parseFloat(FiercePlanet.Parameters.DailyWasteEmission)
-                        , percentageComposted = parseFloat(FiercePlanet.Parameters.PercentageComposted)
-                        , percentageRecycled = parseFloat(FiercePlanet.Parameters.PercentageRecyled)
-                        , numberOfResources = parseFloat(FiercePlanet.Parameters.NumberOfResources)
-
-                    /// Set up agents
-                    var culture = _.clone(DefaultCultures.Stickman);
-                    culture.waveNumber = numberOfWasteCollectors;
-                    culture.initialSpeed = 5;
-                    culture.moveCost = 0;
-//                    culture.healthCategories = ModuleManager.currentModule.resourceSet.categories;
-                    world.cells.forEach(function(cell) {
-                        cell.resourcesAllowed = true;
-                    })
-                    culture.initFunction = function(agent, world) {
-                        agent.infected = false;
-                        agent.generalHealth = 100;
-                        agent.color = '#f00';
-                        agent.age = Math.floor(Math.random() * 100);
-                        agent.gender = (Math.random() < .5 ? 'm' : 'f');
-                        agent.childCount = 0;
-                    };
-
-                    world.totalResidents = 0;
-                    for (var i = 0; i < numberOfHouseholds; i++) {
-                        var rx = Math.floor(Math.random() * world.cellsAcross), ry = Math.floor(Math.random() * world.cellsDown);
-                        var cell = world.getCell(rx, ry);
-                        if (cell.isHousehold) {
-                            i--;
-                            continue;
-                        }
-                        else {
-                            cell.isHousehold = true;
-                            var rooftopRed = Math.floor(Math.random() * 100) + 100;
-                            cell.terrain = new Terrain(one.color('rgba( ' + rooftopRed + ', 76, 86, 0.5)'));
-                            cell.householdSize = jStat.normal.sample(aveRersonPerHouseholdwaterQuality, 0.15);
-                            world.totalResidents += cell.householdSize;
-                        }
-                    }
-                    for (var i = 0; i < numberOfResources; i++) {
-                        world.addResourceRandomly(ResourceTypes.STOCKMARKET_RESOURCE_TYPE);
-                        world.addResourceRandomly(ResourceTypes.WASTE_RESOURCE_TYPE);
-                        world.addResourceRandomly(ResourceTypes.DEMOCRACY_RESOURCE_TYPE);
-                        world.addResourceRandomly(ResourceTypes.SCHOOL_RESOURCE_TYPE);
-                    }
-
-                    this.randomiseAgents = true;
-                    this.cultures = [culture];
-                    this.waves = undefined;
-                    this.initialiseWaves(1);
-                    FiercePlanet.Drawing.drawPath();
-                },
-                tickFunction: function () {
-                    var world = this;
-                    var counter = 0;
-
-                    var numberOfHouseholds = parseInt(FiercePlanet.Parameters.NumberOfHouseholds)
-                        , aveRersonPerHouseholdwaterQuality = parseInt(FiercePlanet.Parameters.AvePersonPerHousehold)
-                        , dailyWasteEmission = parseFloat(FiercePlanet.Parameters.DailyWasteEmission)
-                        , numberOfWasteCollectors = parseInt(FiercePlanet.Parameters.NumberOfWasteCollectors)
-                        , wasteRemovedPerCollector = parseFloat(FiercePlanet.Parameters.WasteRemovedPerCollector)
-                        , wasteCollectionCost = parseInt(FiercePlanet.Parameters.WasteCollectionCost)
-                        , percentageComposted = parseFloat(FiercePlanet.Parameters.PercentageComposted)
-                        , percentageRecycled = parseFloat(FiercePlanet.Parameters.PercentageRecyled)
-                        , numberOfResources = parseFloat(FiercePlanet.Parameters.NumberOfResources)
-
-                    var moveCapability = Capabilities.MoveRandomlyCapability, nullifiedAgents = [];
-
-                    // Count overall resources
-                    var sustainabilityIndex = 0;
-                    var pol = 0, cul = 0, eco = 0, elo = 0;
-                    world.cells.forEach(function(cell) {
-                        if (cell.resources.length > 0) {
-                            var resource = cell.resources[0];
-                            if (resource.category.code == 'cul') {
-                                cul++;
-                            }
-                            else if (resource.category.code == 'pol') {
-                                pol++;
-                            }
-                            else if (resource.category.code == 'eco') {
-                                eco++;
-                            }
-                            else if (resource.category.code == 'elo') {
-                                elo++;
-                            }
-                        }
-                    })
-                    // Normalise index around a value of 50
-                    sustainabilityIndex = (pol * 25 + cul * 25 + eco * 25 + elo * 25) / world.totalResidents;
-
-                    // Generate waste
-                    world.cells.forEach(function(cell) {
-                        if (cell.isHousehold) {
-                            var numPersons = cell.householdSize;
-                            var householdWaste = numPersons * dailyWasteEmission;
-                            cell.wasteToBeCollected = householdWaste * (1 - (percentageComposted / 100) - (percentageRecycled / 100) );
-                        }
-                    })
-
-                    // Move agents
-                    world.currentAgents.forEach(function(agent) {
-                        if (Lifecycle.waveCounter >= agent.delay && agent.countdownToMove % agent.speed == 0)
-                            moveCapability.exercise(agent, world);
-                        var cellsAtDistince = world.getCellsAtDistance(agent.x, agent.y, 3, Distance.MINKOWSKI_DISTANCE, true);
-                        var wasteCollected = 0;
-                        var wasteCollectible = wasteRemovedPerCollector * sustainabilityIndex;
-                        _.shuffle(cellsAtDistince).forEach(function(cell) {
-                            if (cell.isHousehold) {
-                                if (wasteCollected + cell.wasteToBeCollected < wasteCollectible) {
-                                    wasteCollected += cell.wasteToBeCollected;
-                                    cell.wasteToBeCollected = 0;
-                                }
-                            }
-})
-                    });
-                    var totalWasteRemaining = 0;
-                    world.cells.forEach(function(cell) {
-                        if (cell.isHousehold) {
-                            totalWasteRemaining += cell.wasteToBeCollected;
-                            var l = cell.terrain.color.green();
-                            var adjustment = - cell.wasteToBeCollected / 100;
-                            if (cell.wasteToBeCollected > 100)
-                                adjustment = -0.1;
-                            else if (cell.wasteToBeCollected == 0)
-                                adjustment = 0.1;
-                            if (l + adjustment < 0)
-                                l = 0;
-                            else if (l + adjustment > 1)
-                                l = 1;
-                            else
-                                l += adjustment;
-                            cell.terrain.color = cell.terrain.color.green(l);
-                        }
-                    })
-
-                    FiercePlanet.Drawing.clearCanvas('#baseCanvas');
-                    FiercePlanet.Drawing.clearCanvas('#resourceCanvas');
-                    FiercePlanet.Drawing.drawPath();
-
-//                    console.log(sustainabilityIndex, world.totalResidents, totalWasteRemaining)
-                    FiercePlanet.Graph.plotData(sustainabilityIndex * 100, totalWasteRemaining / 200);
-                }
-            })
 
         // Prepare as a module
         this.id = "Techo";
         this.name = "Techo";
         this.position = 1;
         this.worlds = [
-            this.wasteInSurabaya, this.pegirianVillage
+            this.housingInArica
         ];
     }
 

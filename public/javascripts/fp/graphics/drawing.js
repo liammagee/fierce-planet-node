@@ -30,7 +30,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         this.clearCanvas('#agentCanvas');
 
         // Draw basic elements
-        if (Lifecycle.currentWorld.backgroundTerrain) {
+        if (!_.isUndefined(Lifecycle.currentWorld.backgroundTerrain) && Lifecycle.currentWorld.backgroundTerrain != null) {
             this.drawBackgroundTerrain();
             this.drawPath();
         }
@@ -56,7 +56,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
     //    this.clearCanvas('#noticeCanvas');
         this.clearCanvas('#agentCanvas');
 
-        if (!_.isUndefined(Lifecycle.currentWorld.backgroundTerrain)) {
+        if (!_.isUndefined(Lifecycle.currentWorld.backgroundTerrain) && Lifecycle.currentWorld.backgroundTerrain != null) {
             this.drawBackgroundTerrain();
             this.drawPath();
         }
@@ -467,11 +467,12 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
     this.drawResourceAndAgents = function(altCanvasName, altResources) {
         var canvasName = altCanvasName || '#resourceCanvas';
 
-        var resources = Lifecycle.currentWorld.resources;
-        var agents = Lifecycle.currentWorld.getCurrentAgents();
+        var world = Lifecycle.currentWorld,
+            resources = world.resources,
+            agents = world.getCurrentAgents();
         var start = Date.now();
 
-        if (_.isUndefined(Lifecycle.currentWorld.dontClearCanvas) || !Lifecycle.currentWorld.dontClearCanvas)
+        if (_.isUndefined(world.dontClearCanvas) || ! world.dontClearCanvas)
             this.clearCanvas(canvasName);
         var len = FiercePlanet.Orientation.cellsAcross;
 
@@ -483,7 +484,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         ctx.rotate(FiercePlanet.Orientation.rotationAngle);
 
         // Handle this special case by merging/sorting resources and agents, so top-most entities are not rendered with overlap
-        if ((Universe.settings.isometricView || Lifecycle.currentWorld.isometricView) && resources.length > 0) {
+        if ((Universe.settings.isometricView || world.isometricView) && resources.length > 0) {
             var entities = _.union(resources, agents)
                 .sort(function(a, b) {
                     return (((a.y * len) - a.x > (b.y * len) - b.x) ? 1 : ((a.y * len) - a.x < (b.y * len) - b.x) ? -1 : 0);
@@ -496,14 +497,10 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
                 }
                 else {
                     var x = entity.x, y = entity.y;
-                    for (var j = 0; j < resources.length; j++) {
-                        var resource = resources[j];
-                        var rx = resource.x;
-                        var ry = resource.y;
-                        if (Math.abs(rx - x) <= 1 && Math.abs(ry - y) <= 1) {
-                            FiercePlanet.Drawing.drawResourceAgentInteraction(ctx, resource, entity);
-                        }
-                    }
+                    var neighbouringResources = world.getNeighbouringResources(x, y);
+                    neighbouringResources.forEach(function(resource) {
+                        FiercePlanet.Drawing.drawResourceAgentInteraction(ctx, resource, entity);
+                    });
                     FiercePlanet.Drawing.drawAgent(ctx, entity);
                 }
             }
@@ -514,13 +511,10 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
             })
             agents.forEach(function(agent) {
                 var x = agent.x, y = agent.y;
-                for (var j = 0; j < resources.length; j++) {
-                    var resource = resources[j];
-                    var rx = resource.x, ry = resource.y;
-                    if (Math.abs(rx - x) <= 1 && Math.abs(ry - y) <= 1) {
-                        FiercePlanet.Drawing.drawResourceAgentInteraction(ctx, resource, agent);
-                    }
-                }
+                var neighbouringResources = world.getNeighbouringResources(x, y);
+                neighbouringResources.forEach(function(resource) {
+                    FiercePlanet.Drawing.drawResourceAgentInteraction(ctx, resource, agent);
+                });
                 FiercePlanet.Drawing.drawAgent(ctx, agent);
             })
 
@@ -902,8 +896,14 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
 
         var s = (resource.totalYield / resource.initialTotalYield) * 100;
         var c = resource.color;
-        ctx.strokeStyle = c;
-        ctx.lineWidth = 2;
+        c = one.color(c);
+        var a = one.color(c).alpha(s / 100);
+        var grad = ctx.createLinearGradient(x, y, x, ay);
+        grad.addColorStop(0.5, a.cssa());
+        grad.addColorStop(0, c.cssa());
+        ctx.strokeStyle = grad;
+        ctx.lineCap = 'round';
+        ctx.lineWidth = 3;
         ctx.beginPath();
         ctx.moveTo(x, y);
         ctx.lineTo(ax, ay);
@@ -911,9 +911,9 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
 
         ctx.stroke();
 
-        ctx.strokeStyle = "#666";
-        ctx.lineWidth = 1;
-        ctx.stroke();
+//        ctx.strokeStyle = "#666";
+//        ctx.lineWidth = 1;
+//        ctx.stroke();
 
     };
 
@@ -1564,7 +1564,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
                 'width': FiercePlanet.Orientation.worldWidth + 'px',
                 'height': FiercePlanet.Orientation.worldHeight + 'px',
                 'top': '1%',
-                'left': '1%',
+                'left': '1%'
             }, 1000);
         }
         else {
