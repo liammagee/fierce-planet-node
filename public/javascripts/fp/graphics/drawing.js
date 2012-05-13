@@ -56,7 +56,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
     //    this.clearCanvas('#noticeCanvas');
         this.clearCanvas('#agentCanvas');
 
-        if (Lifecycle.currentWorld.backgroundTerrain) {
+        if (!_.isUndefined(Lifecycle.currentWorld.backgroundTerrain)) {
             this.drawBackgroundTerrain();
             this.drawPath();
         }

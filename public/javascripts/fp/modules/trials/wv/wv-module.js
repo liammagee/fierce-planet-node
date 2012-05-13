@@ -269,7 +269,7 @@ WorldVisionResources.doSetup = function() {
                             // Naturally aging
                             agent.adjustGeneralHealth(-1);
                         }
-                        agent.color = one.color(agent.color).red(agent.health / 100).hex();
+                        agent.color = one.color(agent.color).red(agent.health / 100);
                     });
                     // Die
                     world.currentAgents.forEach(function(agent) {

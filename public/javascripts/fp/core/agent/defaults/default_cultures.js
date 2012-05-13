@@ -10,7 +10,7 @@
 
 var DefaultCultures = DefaultCultures || {};
 
-DefaultCultures.Circular = new Culture("Circular", "000");
+DefaultCultures.Circular = new Culture("Circular", one.color("#000"));
 _.extend(DefaultCultures.Circular, {
     drawFunction: (function(ctx, agent, x, y, pieceWidth, pieceHeight, newColor, counter, direction) {
         var radius = (pieceWidth / 4);
@@ -26,7 +26,7 @@ _.extend(DefaultCultures.Circular, {
     })
 });
 
-DefaultCultures.Square = new Culture("Square", "000");
+DefaultCultures.Square = new Culture("Square", one.color("#000"));
 _.extend(DefaultCultures.Square, {
     drawFunction: (function(ctx, agent, x, y, pieceWidth, pieceHeight, newColor, counter, direction) {
 
@@ -35,7 +35,7 @@ _.extend(DefaultCultures.Square, {
     })
 });
 
-DefaultCultures.Stickman = new Culture("Stickman", "000");
+DefaultCultures.Stickman = new Culture("Stickman", one.color("#000"));
 _.extend(DefaultCultures.Stickman, {
     drawFunction: (function(ctx, agent, x, y, width, height, newColor, counter, direction) {
         // Define agent elements here
@@ -126,7 +126,7 @@ _.extend(DefaultCultures.Stickman, {
         // Now draw the figure
         ctx.lineWidth = 1.5;
         ctx.lineCap = "round";
-        ctx.strokeStyle = agent.color;
+        ctx.strokeStyle = agent.color.hex();
         ctx.stroke();
 //        ctx.fillStyle = agent.color;
 //        ctx.fill();

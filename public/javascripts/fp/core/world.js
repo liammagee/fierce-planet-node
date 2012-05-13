@@ -54,7 +54,8 @@ function World() {
      * @param y
      */
     this.areAgentsAllowed = function(x, y) {
-        return this.getCell(x, y).agentsAllowed;
+        var world = this;
+        return world.getCell(x, y).agentsAllowed;
     };
 
     /**

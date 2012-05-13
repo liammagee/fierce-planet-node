@@ -89,6 +89,32 @@ var Lifecycle = Lifecycle || {};
         // Process agents
         var options = {"withNoRepeat": true, "withNoCollision": false};
         for (var i = 0; i < agents.length; i++) {
+            var agent = agents[i];
+
+            var speed = agent.speed;
+            var countDown = (agent.countdownToMove) % speed;
+            if (countDown == 0) {
+                if (Lifecycle.currentWorld.isExitPoint(agent.x, agent.y)) {
+                    if (Lifecycle.processSavedCallback)
+                        Lifecycle.processSavedCallback();
+                    Lifecycle.currentWorld.addSavedAgent(agent, Lifecycle.worldCounter);
+                    agent.die(Lifecycle.currentWorld);
+                }
+                else if (agent.health <= 0 && !Universe.settings.godMode) {
+                    Lifecycle.currentWorld.addExpiredAgent(agent, Lifecycle.worldCounter);
+                    agent.die(Lifecycle.currentWorld);
+
+                    if (ModuleManager.currentModule.id = 'Default')
+                        if (typeof(FiercePlanet) !== "undefined")
+                            FiercePlanet.Game.currentProfile.currentWorldExpired++;
+                }
+            }
+        }
+
+        // Process agents
+        var options = {"withNoRepeat": true, "withNoCollision": false};
+        agents = Lifecycle.currentWorld.currentAgents;
+        for (var i = 0; i < agents.length; i++) {
             agentCount++;
             var agent = agents[i];
             if (Lifecycle.waveCounter < agent.delay)
@@ -101,6 +127,7 @@ var Lifecycle = Lifecycle || {};
                 recordableChangeMade = true;
 
                 // TODO: move this logic elsewhere
+                /*
                 if (Lifecycle.currentWorld.isExitPoint(agent.x, agent.y)) {
                     if (Lifecycle.processSavedCallback)
                         Lifecycle.processSavedCallback();
@@ -119,6 +146,7 @@ var Lifecycle = Lifecycle || {};
                         if (typeof(FiercePlanet) !== "undefined")
                             FiercePlanet.Game.currentProfile.currentWorldExpired++;
                 }
+                */
 
                 if (agent.alive) {
                     // Reset countdown

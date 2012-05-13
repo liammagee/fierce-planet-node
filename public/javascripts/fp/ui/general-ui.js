@@ -80,18 +80,15 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
      * @param e
      */
     this.getWorldCoordinates = function(e) {
-        var x;
-        var y;
-        if (e.offsetX || e.offsetX == 0) { // IE9, Chrome, Safari
+        var x, y;
+        if (!_.isUndefined(e.offsetX) && !_.isUndefined(e.offsetX)) { // IE9, Chrome, Safari
             x = e.offsetX;
             y = e.offsetY;
         }
-        /*
-        else if (e.layerX || e.layerX == 0) { // Firefox, Opera
-            x = e.layerX;
-            y = e.layerY;
+        else {
+            x = e.clientX - $(e.target).offset().left;
+            y = e.clientY - $(e.target).offset().top;
         }
-        */
         return {x:x, y:y};
     };
 

@@ -217,7 +217,7 @@ Beliefs.BeliefsBasedOnOtherAgentsBeliefs = {};
             var agents = world.getAgentsAtCell(position.x, position.y);
             if (agents && agents.length > 0) {
                 agents.forEach(function(otherAgent) {
-                    if (otherAgent.id != agent.id && otherAgent.age > 0 && otherAgent.alive)
+                    if (otherAgent.id != agent.id && otherAgent.age > 0 && otherAgent.alive && ! Lifecycle.currentWorld.isExitPoint(otherAgent.x, otherAgent.y))
                         neighbouringAgents.push(otherAgent);
                 });
             }
