@@ -1038,6 +1038,10 @@ function World() {
         );
     };
 
+    this.getNeighbouringCells = function(x, y) {
+        return this.getCellsAtDistance(x, y, 1, Distance.CHEBYSHEV_DISTANCE, true);
+    };
+
     this.getNeighbouringResources = function(x, y) {
         return this.getResourcesAtDistance(x, y, 1, Distance.CHEBYSHEV_DISTANCE, true);
     };

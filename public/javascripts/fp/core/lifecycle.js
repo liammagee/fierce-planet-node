@@ -63,6 +63,7 @@ var Lifecycle = Lifecycle || {};
         Lifecycle.universeCounter++;
 
         // Do any world-specific computation here
+        FiercePlanet.Parameters.processParameters();
         if (Lifecycle.currentWorld.tickFunction)
             Lifecycle.currentWorld.tickFunction();
 

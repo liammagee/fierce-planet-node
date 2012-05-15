@@ -140,7 +140,6 @@ function Resource(type, x, y) {
     };
 
     // Kind properties
-    console.log(type)
     this.category = type.category;
     this.color = type.category.color;
     this.kind = type;

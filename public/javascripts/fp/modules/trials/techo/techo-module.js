@@ -104,20 +104,36 @@ TechoResources.doSetup = function() {
                 playIndefinitely: true,
                 noWander: false,
                 noSpeedChange: true,
-                allowResourcesOnPath: true,
+                allowResourcesOnPath: false,
+                drawAllCells: true,
                 //Arica
                 mapOptions: ({
                 mapTypeId: google.maps.MapTypeId.HYBRID,
-                center: new google.maps.LatLng(-18.4770, -70.2877),
-                zoom: 15,
+                center: new google.maps.LatLng(-18.458277, -70.281976
+                ),
+//                rotate: 45,
+                zoom: 19,
                 tilt: 0
                 }),
                 parameters:
-                    "<p>Initial agents</p>" +
+                    "<p>Initial citizens</p>" +
                         "<input type='hidden' id='initialAgents' class='world-parameters' name='InitialAgents' value='100'/>" +
 
-                        "<p>Rate of personal waste emission</p>" +
-                        "<input type='hidden' id='rateOfWasteEmission' class='world-parameters' name='RateOfWasteEmission' value='250'/>" +
+                        "<p>Development blocks</p>" +
+                        "<input type='hidden' id='developmentBlocks' class='world-parameters' name='DevelopmentBlocks' value='100'/>" +
+
+                        "<p>Average housing quality (<em>more is better</em> - see <a href='http://en.wikipedia.org/wiki/Housing_quality_and_health_outcomes_in_the_United_States'>Wikipedia</a> for more)</p>" +
+                        "<input type='hidden' id='aveHousingQuality' class='world-parameters' name='AveHousingQuality' value='50'/>" +
+
+                        "<p>Standard deviation of housing quality (more means <em>less</em> equality)</p>" +
+                        "<input type='hidden' id='stdDevHousingQuality' class='world-parameters' name='StdDevHousingQuality' value='15'/>" +
+
+                        "<p>Threshold for improvement of neighbours</p>" +
+                        "<input type='hidden' id='thresholdToImproveNeighbours' class='world-parameters' name='ThresholdToImproveNeighbours' value='10'/>" +
+
+                        "<p>Transparency of overlay</p>" +
+                        "<input type='hidden' id='transparency' class='world-parameters' name='Transparency' value='5'/>" +
+                        /*
 
                         "<p>No. of waste disposal units</p>" +
                         "<input type='hidden' id='numWasteDisposalUnits' class='world-parameters' name='NumWasteDisposalUnits' value='10'/>" +
@@ -137,58 +153,77 @@ TechoResources.doSetup = function() {
 
                     "<p>Reproduction probability</p>" +
                     "<input type='hidden' id='reproductionProbability' class='world-parameters' name='ReproductionProbability' value='0.5'/>" +
-
+*/
                     "",
                 conclusion: "Well done.",
                 setup: function() {
                 },
                 setupParameters: function() {
                     FiercePlanet.Slider.createSlider("initialAgents", 0, 200, 5, 100);
-                    FiercePlanet.Slider.createSlider("rateOfWasteEmission", 0, 500, 5, 250);
-                    FiercePlanet.Slider.createSlider("numWasteDisposalUnits", 0, 50, 1, 10);
-                    FiercePlanet.Slider.createSlider("proximityToDisposalUnit", 0, 10, 1, 1);
-                    FiercePlanet.Slider.createSlider("naturalRateOfImprovement", 0, 10, 1, 1);
-                    FiercePlanet.Slider.createSlider("healthCostOfInfection", 0, 5, 1, 1);
-                    FiercePlanet.Slider.createSlider("waterQuality", 0, 200, 10, 100);
-                    FiercePlanet.Slider.createSlider("reproductionProbability", 0, 1, 0.05, 0.5);
+                    FiercePlanet.Slider.createSlider("developmentBlocks", 0, 400, 10, 100);
+                    FiercePlanet.Slider.createSlider("aveHousingQuality", 0, 100, 1, 50);
+                    FiercePlanet.Slider.createSlider("stdDevHousingQuality", 0, 40, 1, 15);
+                    FiercePlanet.Slider.createSlider("transparency", 0, 10, 1, 5);
+                    FiercePlanet.Slider.createSlider("thresholdToImproveNeighbours", 0, 20, 1, 10);
+//                    FiercePlanet.Slider.createSlider("proximityToDisposalUnit", 0, 10, 1, 1);
+//                    FiercePlanet.Slider.createSlider("naturalRateOfImprovement", 0, 10, 1, 1);
+//                    FiercePlanet.Slider.createSlider("healthCostOfInfection", 0, 5, 1, 1);
+//                    FiercePlanet.Slider.createSlider("waterQuality", 0, 200, 10, 100);
+//                    FiercePlanet.Slider.createSlider("reproductionProbability", 0, 1, 0.05, 0.5);
 
 //                    FiercePlanet.Graph.openDialog();
 //                    $("#world-graph").show();
                     FiercePlanet.Graph.setupData(
-                        {label: 'Water', color: '#f00', maxValue: 100}
-                        , {label: 'Health', color: '#0f0', maxValue: 100}
-                        , {label: 'Mortality', color: '#00f', maxValue: 100}
+                        {label: 'Health', color: '#0f0', maxValue: 100}
+                        , {label: 'Housing Quality', color: '#f00', maxValue: 100}
                     );
                 },
                 handleParameters: function () {
                     var world = this;
                     var initialAgents = parseInt(FiercePlanet.Parameters.InitialAgents)
-                        , rateOfWasteEmission = parseInt(FiercePlanet.Parameters.RateOfWasteEmission)
-                        , numWasteDisposalUnits = parseInt(FiercePlanet.Parameters.NumWasteDisposalUnits)
-                        , proximityToDisposalUnit = parseInt(FiercePlanet.Parameters.ProximityToDisposalUnit)
-                        , waterConsumed = parseInt(FiercePlanet.Parameters.WaterConsumed)
-                        , waterQuality = parseInt(FiercePlanet.Parameters.WaterQuality)
-                        , naturalRateOfImprovement = parseInt(FiercePlanet.Parameters.NaturalRateOfImprovement)
-                        , infectionProbability = parseFloat(FiercePlanet.Parameters.InfectionProbability)
-                        , healthCostOfInfection = parseInt(FiercePlanet.Parameters.HealthCostOfInfection)
-                        , reproductionProbability = parseFloat(FiercePlanet.Parameters.ReproductionProbability)
+                        , aveHousingQuality = parseInt(FiercePlanet.Parameters.AveHousingQuality)
+                        , stdDevHousingQuality = parseInt(FiercePlanet.Parameters.StdDevHousingQuality)
+                        , transparency = (parseInt(FiercePlanet.Parameters.Transparency)  / 10)
+                        , developmentBlocks = (parseInt(FiercePlanet.Parameters.DevelopmentBlocks))
+                        , thresholdToImproveNeighbours = (parseInt(FiercePlanet.Parameters.ThresholdToImproveNeighbours))
+//                        , waterConsumed = parseInt(FiercePlanet.Parameters.WaterConsumed)
+//                        , waterQuality = parseInt(FiercePlanet.Parameters.WaterQuality)
+//                        , naturalRateOfImprovement = parseInt(FiercePlanet.Parameters.NaturalRateOfImprovement)
+//                        , infectionProbability = parseFloat(FiercePlanet.Parameters.InfectionProbability)
+//                        , healthCostOfInfection = parseInt(FiercePlanet.Parameters.HealthCostOfInfection)
+//                        , reproductionProbability = parseFloat(FiercePlanet.Parameters.ReproductionProbability)
 
                     /// Set up agents
+                    var len = world.cells.length,
+                        removedCells = [];
+                    for (var i = 0; i < developmentBlocks; i++) {
+                        var cellNo = Math.floor(Math.random() * len);
+                        var cell = world.cells[cellNo];
+                        if (!cell.agentsAllowed) {
+                            i--;
+                            continue;
+                        }
+                        else {
+                            cell.agentsAllowed = false;
+                            cell.terrain = new Terrain(one.color('#000').alpha(1));
+                        }
+                    }
+                    world.generatePath();
+
                     var culture = _.clone(DefaultCultures.Stickman);
                     culture.waveNumber = initialAgents;
                     culture.initialSpeed = 5;
                     culture.moveCost = 0;
                     culture.healthCategories = ModuleManager.currentModule.resourceSet.categories;
+                    var poorCondition = one.color('#7F3300').alpha(1 - transparency);
                     world.cells.forEach(function(cell) {
-                        if (cell.y > 23 && cell.y < 33) {
-                            cell.terrain = new Terrain(one.color('#00a').alpha(.6));
-                            cell.waterQuality = waterQuality;
-                            cell.resourcesAllowed = false;
-                            cell.agentsAllowed = false;
+                        if (cell.agentsAllowed) {
+                            var quality = jStat.normal.sample(aveHousingQuality, stdDevHousingQuality);
+                            cell.quality = quality;
+                            cell.terrain = new Terrain(poorCondition.lightness(cell.quality / 100, true));
                         }
-                        else
-                            cell.resourcesAllowed = true;
                     })
+                    /*
                     culture.initFunction = function(agent, world) {
                         agent.infected = false;
                         agent.generalHealth = 100;
@@ -198,11 +233,9 @@ TechoResources.doSetup = function() {
                         agent.childCount = 0;
                     };
 
-                    for (var i = 0; i < numWasteDisposalUnits; i++) {
-                        world.addResourceRandomly(ResourceTypes.WASTE_RESOURCE_TYPE);
-                    }
                     this.currentWaterQuality = waterQuality;
                     this.children = 0;
+                    */
 
 //                    culture.updateFunction = function(agent, world) {};
                     this.randomiseAgents = true;
@@ -216,45 +249,74 @@ TechoResources.doSetup = function() {
                     var counter = 0;
 
                     var initialAgents = parseInt(FiercePlanet.Parameters.InitialAgents)
-                        , rateOfWasteEmission = parseInt(FiercePlanet.Parameters.RateOfWasteEmission)
-                        , numWasteDisposalUnits = parseInt(FiercePlanet.Parameters.NumWasteDisposalUnits)
-                        , proximityToDisposalUnit = parseInt(FiercePlanet.Parameters.ProximityToDisposalUnit)
-                        , waterQuality = parseInt(FiercePlanet.Parameters.WaterQuality)
-                        , naturalRateOfImprovement = parseInt(FiercePlanet.Parameters.NaturalRateOfImprovement)
-                        , infectionProbability = parseFloat(FiercePlanet.Parameters.InfectionProbability)
-                        , healthCostOfInfection = parseInt(FiercePlanet.Parameters.HealthCostOfInfection)
-                        , reproductionProbability = parseInt(FiercePlanet.Parameters.ReproductionProbability)
-
+                        , aveHousingQuality = parseInt(FiercePlanet.Parameters.AveHousingQuality)
+                        , stdDevHousingQuality = parseInt(FiercePlanet.Parameters.StdDevHousingQuality)
+                        , transparency = (parseInt(FiercePlanet.Parameters.Transparency)  / 10)
+                        , thresholdToImproveNeighbours = (parseInt(FiercePlanet.Parameters.ThresholdToImproveNeighbours))
+//                        , rateOfWasteEmission = parseInt(FiercePlanet.Parameters.RateOfWasteEmission)
+//                        , numWasteDisposalUnits = parseInt(FiercePlanet.Parameters.NumWasteDisposalUnits)
+//                        , proximityToDisposalUnit = parseInt(FiercePlanet.Parameters.ProximityToDisposalUnit)
+//                        , waterQuality = parseInt(FiercePlanet.Parameters.WaterQuality)
+//                        , naturalRateOfImprovement = parseInt(FiercePlanet.Parameters.NaturalRateOfImprovement)
+//                        , infectionProbability = parseFloat(FiercePlanet.Parameters.InfectionProbability)
+//                        , healthCostOfInfection = parseInt(FiercePlanet.Parameters.HealthCostOfInfection)
+//                        , reproductionProbability = parseInt(FiercePlanet.Parameters.ReproductionProbability)
                     var moveCapability = Capabilities.MoveRandomlyCapability, nullifiedAgents = [];
                     var died = 0;
 
-                    // Adjust water quality
-                    var totalWaste = world.currentAgents.length * rateOfWasteEmission / 10000;
-                    var totalWasteDisposed = 0;
-                    world.currentAgents.forEach(function(agent) {
-                        var resources = world.getResourcesAtDistance(agent.x, agent.y, proximityToDisposalUnit, 0, true);
-                        if (resources.length > 0)
-                            totalWasteDisposed += rateOfWasteEmission / 10000;
-                    });
-                    var currentWaterQuality = world.currentWaterQuality;
-                    currentWaterQuality -= (totalWaste - totalWasteDisposed);
-                    currentWaterQuality += naturalRateOfImprovement;
-                    currentWaterQuality = (currentWaterQuality > 100 ? 100 : (currentWaterQuality < 0 ? 0 : currentWaterQuality));
-                    this.currentWaterQuality = currentWaterQuality;
-
-                    // Change the water quality
                     world.cells.forEach(function(cell) {
-                        if (cell.y > 23 && cell.y < 33) {
-                            cell.terrain.color = cell.terrain.color.blue(currentWaterQuality / 100);
-                        }
+                        var x = cell.x, y = cell.y;
+                        var quality = cell.quality;
+                        var neighbours = world.getNeighbouringResources(x, y);
+                        neighbours.forEach(function(neighbour) {
+                            if (neighbour.totalYield > neighbour.perAgentYield) {
+                                neighbour.totalYield -= neighbour.perAgentYield;
+                                cell.quality += neighbour.perAgentYield;
+                            }
+                        });
                     })
 
+                    world.cells.forEach(function(cell) {
+                        if (cell.agentsAllowed) {
+                            var x = cell.x, y = cell.y;
+                            var quality = cell.quality;
+                            var neighbours = world.getNeighbouringCells(x, y),
+                                neighbourTotal = 0,
+                                cumQuality = 0,
+                                aveQuality;
+                            neighbours.forEach(function(neighbour) {
+                                if (neighbour.agentsAllowed) {
+                                    cumQuality += neighbour.quality;
+                                    neighbourTotal++;
+                                }
+                            });
+                            aveQuality = cumQuality / neighbourTotal;
+                            if ((aveQuality - quality) > thresholdToImproveNeighbours) {
+                                cell.newQuality = cell.quality + 1;
+                            }
+                        }
+                    })
+                    world.cells.forEach(function(cell) {
+                        if (cell.agentsAllowed) {
+                            if (!_.isUndefined(cell.newQuality)) {
+                                cell.quality = cell.newQuality;
+                            }
+                        }
+                    })
+                    var poorCondition = one.color('#7F3300').alpha(1 - transparency);
+                    world.cells.forEach(function(cell) {
+                        if (cell.agentsAllowed) {
+                            var quality = (cell.quality > 100 ) ? 100 : cell.quality;
+                            cell.terrain = new Terrain(poorCondition.lightness(quality / 100, true));
+                        }
+                    })
                     // Move agents
                     world.currentAgents.forEach(function(agent) {
                         if (Lifecycle.waveCounter >= agent.delay && agent.countdownToMove % agent.speed == 0)
                             moveCapability.exercise(agent, world);
                     });
                     // Adjust health
+                    /*
                     world.currentAgents.forEach(function(agent) {
                         var r = Math.random() * 100;
                         if (r > world.currentWaterQuality)    {
@@ -272,6 +334,7 @@ TechoResources.doSetup = function() {
                         }
                         agent.color = one.color(agent.color).red(agent.health / 100);
                     });
+                    */
                     // Die
                     world.currentAgents.forEach(function(agent) {
                         if (agent.health < 0)
@@ -279,6 +342,7 @@ TechoResources.doSetup = function() {
                     });
 
                     // Reproduce
+                    /*
                     if (world.currentAgents.length < 400) {
                         world.currentAgents.forEach(function(agent) {
                             if (agent.gender == 'f' && agent.age >= 15 && agent.age <= 45) {
@@ -296,20 +360,21 @@ TechoResources.doSetup = function() {
                             }
                         });
                     }
+                    */
                     FiercePlanet.Drawing.clearCanvas('#baseCanvas');
                     FiercePlanet.Drawing.clearCanvas('#resourceCanvas');
                     FiercePlanet.Drawing.drawPath();
 
                     var health = _.map(this.currentAgents, function(agent) { return agent.health ; }),
-                        totalHealth = _.reduce(health, function(memo, num){ return memo + num; }, 0);
-                    var infected = _.map(this.currentAgents, function(agent) { return (agent.infected ? 1 : 0); }),
-                        totalInfected = _.reduce(infected, function(memo, num){ return memo + num; }, 0);
-                    var ageAtDeath = _.map(this.expiredAgents, function(agent) { return agent.diedAt - agent.bornAt; }),
-                        totalAgeAtDeath = _.reduce(health, function(memo, num){ return memo + num; }, 0);
-                    console.log(totalInfected, world.currentAgents.length, world.children, Lifecycle.waveCounter)
-                    FiercePlanet.Graph.plotData(world.currentWaterQuality, totalHealth / initialAgents, totalInfected * 100 / initialAgents);
-//                    if (world.currentAgents.length <= 0)
-//                        Lifecycle._stopAgents();
+                        totalHealth = _.reduce(health, function(memo, num){ return memo + num; }, 0),
+                        aveHealth = totalHealth / initialAgents;
+                    var housingQuality = _.map(this.pathway, function(pathCell) { return (world.getCell(pathCell[0], pathCell[1]).quality); }),
+                        totalHousingQuality = _.reduce(housingQuality, function(memo, num){ return memo + num; }, 0),
+                        aveHousingQuality = totalHousingQuality / this.pathway.length;
+//                    var ageAtDeath = _.map(this.expiredAgents, function(agent) { return agent.diedAt - agent.bornAt; }),
+//                        totalAgeAtDeath = _.reduce(health, function(memo, num){ return memo + num; }, 0);
+                    console.log(aveHealth, aveHousingQuality    )
+                    FiercePlanet.Graph.plotData(aveHealth, aveHousingQuality);
                 }
             })
 

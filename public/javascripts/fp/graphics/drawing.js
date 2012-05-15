@@ -92,7 +92,10 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         var canvasName = altCanvasName || '#baseCanvas';
         var canvas = $(canvasName)[0];
         var ctx = canvas.getContext('2d');
-        var pathCells = Lifecycle.currentWorld.pathway;
+        var world = Lifecycle.currentWorld;
+        var pathCells = ( (!_.isUndefined(world.drawAllCells) && world.drawAllCells) ?
+            _.map(world.cells, function(cell) {return [cell.x, cell.y]}) :
+            world.pathway);
 
         // Rotation logic here - TODO: Refactor out
         var midTilePosX = FiercePlanet.Orientation.halfWorldWidth;
