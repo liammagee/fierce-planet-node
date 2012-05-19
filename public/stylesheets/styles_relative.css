@@ -881,8 +881,8 @@ li.over {
 /*.tabs-bottom .ui-tabs-nav li { margin-top: -2px !important; margin-bottom: 1px !important; border-top: none; border-bottom-width: 1px; }*/
 /*.ui-tabs-selected { margin-top: -3px !important; }*/
 #graph-area {
-    height:65%;
-    width:90%;
+    height:72%;
+    width:96%;
 }
 #world-graph {
     /*position:absolute;*/
@@ -897,11 +897,15 @@ li.over {
 
 
 #console {
+    position: relative;
     height: 65%;
     font-size:150%;
+    /*padding: 1em;*/
 }
 
 .jqconsole {
+    padding-left: 1em;
+    padding-right: 1em;
     color: #000;
     height: 88%;
     /*width: 96%;*/

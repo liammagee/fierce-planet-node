@@ -29,12 +29,14 @@ FiercePlanet.Console = FiercePlanet.Console || {};
     };
 
     this.registerEvents = function() {
+        /*
         $('textarea').blur(function() {
             FiercePlanet.Console.minimise();
         });
         $('textarea').focus(function() {
             FiercePlanet.Console.maximise();
         });
+        */
     }
 }).apply(FiercePlanet.Console);
 
@@ -45,6 +47,7 @@ $(function() {
                'Type \'help\' to review a list of commands.\n'
       ;
   window.jqconsole = $('#console').jqconsole(header, 'Ask me: ');
+
   //window.jqconsole = $('#notifications').jqconsole(header, 'JS> ');
 
   jqconsole.zone = {};
@@ -573,5 +576,10 @@ $(function() {
 
   // Initiate the first prompt.
   handler();
+
+
+    // Send focus back to the new world dialog if it's open
+    if (FiercePlanet.Dialogs.newWorldDialog.dialog( "isOpen" ))
+        $('#btn-play').focus();
 });
 

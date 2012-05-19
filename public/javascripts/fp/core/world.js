@@ -811,7 +811,7 @@ function World() {
                 for (var j = 0, len = cultures.length; j < len; j++) {
                     var culture = cultures[j];
                     if (culture.generateEachWave && this.generateWaveAgentsAutomatically) {
-                        var thisWaveNumber = (culture.waveNumber ? culture.waveNumber : Lifecycle.currentWorld.initialAgentNumber);
+                        var thisWaveNumber = (culture.waveNumber ? culture.waveNumber : this.initialAgentNumber);
                         if (this.distributeAgentsNormally) {
                             var s = this.distributeAgentsSigma;
                             if (s == undefined)
@@ -821,7 +821,7 @@ function World() {
                         if (this.incrementAgentsEachWave)
                             thisWaveNumber += (this.incrementAgentsEachWave * i);
                         var agents = this.generateAgents(culture, thisWaveNumber);
-                        wave.agents = agents;
+                        wave.agents = _.union(wave.agents, agents);
                     }
                 }
                 this.waves.push(wave);

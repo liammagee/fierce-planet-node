@@ -103,6 +103,19 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
             this.newWorldDialog.dialog( "close" );
             Lifecycle.startWorld();
         }
+        /*
+        buttons: {
+         "Play": function() {
+         // Animation effect
+         // For spinning, try: http://www.zachstronaut.com/posts/2009/08/07/jquery-animate-css-rotate-scale.html
+
+        FiercePlanet.Dialogs.doPlay();
+    },
+        "Cancel": function() {
+        $( this ).dialog( "close" );
+    }
+},
+    */
         this.newWorldDialog = $('#new-world-dialog')
 //            .html('New World')
             .dialog({
@@ -112,31 +125,63 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
                 autoOpen: false,
                 modal: true,
                 title: 'New World',
-                buttons: {
-                    "Play": function() {
-                        // Animation effect
-                        // For spinning, try: http://www.zachstronaut.com/posts/2009/08/07/jquery-animate-css-rotate-scale.html
+                buttons: [
+    {
+        id: 'btn-play',
+        text: 'Play',
+        click: function() {
+            // Animation effect
+            // For spinning, try: http://www.zachstronaut.com/posts/2009/08/07/jquery-animate-css-rotate-scale.html
 
-                        if (! ModuleManager.currentModule.persistSetupScreen && ! Lifecycle.currentWorld.persistSetupScreen)          {
-                            $(this).dialog( "close" );
-                        }
-                        else {
-//                            $(this).dialog( "option", "modal", false);
-                            $(this).dialog( "option", "position", [dialogX + FiercePlanet.Orientation.worldWidth, dialogY] );
-                        }
+            /*
+             if (! ModuleManager.currentModule.persistSetupScreen && ! Lifecycle.currentWorld.persistSetupScreen)          {
+             $(this).dialog( "close" );
+             }
+             else {
+             //                            $(this).dialog( "option", "modal", false);
+             $(this).dialog( "option", "position", [dialogX + FiercePlanet.Orientation.worldWidth, dialogY] );
+             }
+             */
 
-//                        Lifecycle._initialiseGame();
-                        Lifecycle.startWorld();
-
-                    },
-                    "Cancel": function() {
-                        $( this ).dialog( "close" );
-                    }
-                },
+            /*
+             $(this).dialog( "close" );
+             //                        Lifecycle._initialiseGame();
+             Lifecycle.startWorld();
+             */
+            FiercePlanet.Dialogs.doPlay();
+    }
+    }
+    , {
+        id: 'btn-cancel',
+        text: 'Cancel',
+        click: function() {
+            $( this ).dialog( "close" );
+        }
+    }
+                ]
+                ,
                   open: function(){
-                    $("#new-world-tabs").tabs();
+
+                      $("#new-world-tabs").tabs();
+                      jqconsole.Disable();
+                      $('#btn-play').focus();
+
+
+                      /*
+                      $(document).keypress(function(event) {
+                          if (event.keyCode == '13') {
+                              FiercePlanet.Dialogs.doPlay();
+                              event.preventDefault();
+                          }
+                      });
+                      */
                   }
             });
+        this.doPlay = function() {
+            FiercePlanet.Dialogs.newWorldDialog.dialog( "close" );
+//            jqconsole.Enable();
+            Lifecycle.startWorld();
+        }
 
         this.completeWorldDialog = $('<div></div>')
             .html('World Complete!')

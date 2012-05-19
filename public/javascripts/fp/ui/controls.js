@@ -155,6 +155,7 @@ FiercePlanet.Controls = FiercePlanet.Controls || {};
 
 
 
+
         // Finally, focus on the console. Good idea?
 //        jqconsole.Focus();
     };

@@ -11,7 +11,7 @@ $LAB
 //    .wait(function() {
 //    })
 
-    // Load JQuery UI
+    // Load JQuery UI & Plug-ins
     .script([
         'jquery-ui-1.8.16.custom/js/jquery-ui-1.8.16.custom.min.js'
         , 'jquery.mousewheel.3.0.2/jquery.mousewheel.js'
@@ -19,25 +19,21 @@ $LAB
         , 'jquery/jquery.zoom.js'
     ])
 
-    // Load JQuery Plug-ins
-//   .script("jquery.mousewheel.3.0.2/jquery.mousewheel.js")
-//   .script("jquery-animate-css-rotate-scale.js")
-//   .script("jquery/jquery.zoom.js")
-   .script(
-        "underscore/underscore-min.js")
-
-    // Load other plugins
-   .script("one-color/one-color-all.js")
+    // Load other libraries
+    .script("underscore/underscore-min.js")
+    .script("one-color/one-color-all.js")
    .script("spin.js/spin.min.js")
    .script("sylvester/sylvester.js")
    .script("flot-0.7/flot/jquery.flot.min.js")
-   //.script("jstat-1.0.0/js/jstat-0.1.0.min.js")
-   .script("jstat-1.0.0/js/jstat.js")
+//   .script("jstat-1.0.0/js/jstat.js")
+   .script("jstat-2.0/jstat.js")
    .script("jpicker-1.1.6/jpicker-1.1.6.js")
-   .script("jq-console/demo/jqconsole-min.js")
-   // .script("/socket.io/socket.io.js")
+   .script("jq-console/jqconsole-2.7.min.js")
    .script("CodeMirror-2.2/lib/codemirror.js")
    .script("CodeMirror-2.2/mode/javascript/javascript.js")
+    // TODO: consider later
+//   .script("jq-console/demo/jqconsole-min.js")
+    // .script("/socket.io/socket.io.js")
 //    .wait()
 
         // Load FiercePlanet other plugins
@@ -252,11 +248,13 @@ $LAB
             Lifecycle.currentWorldNumber = localStorage.currentWorldNumber = world;
         }
     })
+
+// TODO: Enable or remove Paper.js
 //        .script("paperjs-0.22/lib/paper.js")
-    .wait(function() {
+//    .wait(function() {
         //        var canvas = document.getElementById('scrollingCanvas');
 //        paper.setup();
 //        paper.install(window);
-    })
+//    })
 //    .script({src: "fp/graphics/effects/overlay.js"})
 //    .script({src: "fp/graphics/effects/overlay-js.js"})

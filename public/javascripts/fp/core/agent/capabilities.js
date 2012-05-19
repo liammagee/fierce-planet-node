@@ -168,13 +168,12 @@ Capabilities.MoveRandomlyCapability = new Capability();
     this.name = 'MoveRandomlyCapability';
     this.cost = 0;
     this.exercise = function(agent, world) {
-        var positions = world.getMooreNeighbourhood(agent.x, agent.y, false),
-            index = Math.floor(Math.random() * positions.length),
-            position = positions[index],
-            cell = world.getCell(position.x, position.y);
+        var positions = world.getCellsAtDistance(agent.x, agent.y, 1, Distance.CHEBYSHEV_DISTANCE, true),
+            moveablePositions = _.chain(positions).map(function(cell) {if (cell.agentsAllowed) return cell; }).compact().value();
+        var index = Math.floor(Math.random() * moveablePositions.length),
+            cell = moveablePositions[index];
 
-        if (cell.agentsAllowed)
-            agent.moveTo(position.x, position.y);
+        agent.moveTo(cell.x, cell.y);
     };
 }).apply(Capabilities.MoveRandomlyCapability);
 

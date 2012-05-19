@@ -118,6 +118,7 @@ FiercePlanet.Game = FiercePlanet.Game || {};
 
         // Draw the game
         Lifecycle.newWorld();
+        $('#btn-play').focus();
     };
 
 
