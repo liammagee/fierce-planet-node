@@ -140,7 +140,7 @@ TechoResources.doSetup = function() {
                         "<p>Development blocks</p>" +
                         "<input type='hidden' id='developmentBlocks' class='world-parameters' name='DevelopmentBlocks' value='100'/>" +
 
-                        "<p>Average housing quality (<em>more is better</em> - see <a href='http://en.wikipedia.org/wiki/Housing_quality_and_health_outcomes_in_the_United_States'>Wikipedia</a> for more)</p>" +
+                        "<p>Average housing quality (<em>more is better</em> - see <a href='http://en.wikipedia.org/wiki/Housing_quality_and_health_outcomes_in_the_United_States' target='_blank'>Wikipedia</a> for more)</p>" +
                         "<input type='hidden' id='aveHousingQuality' class='world-parameters' name='AveHousingQuality' value='50'/>" +
 
                         "<p>Standard deviation of housing quality (more means <em>less</em> equality)</p>" +
@@ -156,7 +156,7 @@ TechoResources.doSetup = function() {
                         "<input type='hidden' id='importanceOfMovingToBetterHousing' class='world-parameters' name='ImportanceOfMovingToBetterHousing' value='1'/>" +
 
                         "<p>Should residents die out when health reaches zero?</p>" +
-                        "<input type='checkbox' id='residentsDieOut' class='world-parameters' name='ResidentsDieOut' checked='checked'/>" +
+                        "<input type='checkbox' id='residentsDieOut' class='world-parameters' name='ResidentsDieOut' />" +
                     "",
                 conclusion: "Well done.",
                 setup: function() {
@@ -180,7 +180,7 @@ TechoResources.doSetup = function() {
                 handleParameters: function () {
                     var world = this;
                     var initialAgents = parseInt(FiercePlanet.Parameters.InitialAgents)
-                        , initialWorkers = parseInt(FiercePlanet.Parameters.Workers)
+                        , initialWorkers = parseInt(FiercePlanet.Parameters.InitialWorkers)
                         , aveHousingQuality = parseInt(FiercePlanet.Parameters.AveHousingQuality)
                         , stdDevHousingQuality = parseInt(FiercePlanet.Parameters.StdDevHousingQuality)
                         , transparency = (parseInt(FiercePlanet.Parameters.Transparency)  / 10)
@@ -189,6 +189,8 @@ TechoResources.doSetup = function() {
                         , importanceOfEqualResourceTypes = (parseInt(FiercePlanet.Parameters.ImportanceOfEqualResourceTypes))
                         , importanceOfMovingToBetterHousing = (parseInt(FiercePlanet.Parameters.ImportanceOfMovingToBetterHousing))
                         , residentsDieOut = ((FiercePlanet.Parameters.ResidentsDieOut))
+
+                    Universe.settings.godMode = !residentsDieOut;
 
                     /// Set up agents
                     var len = world.cells.length,
@@ -277,6 +279,8 @@ TechoResources.doSetup = function() {
                         , importanceOfEqualResourceTypes = (parseInt(FiercePlanet.Parameters.ImportanceOfEqualResourceTypes))
                         , importanceOfMovingToBetterHousing = (parseInt(FiercePlanet.Parameters.ImportanceOfMovingToBetterHousing))
                         , residentsDieOut = ((FiercePlanet.Parameters.ResidentsDieOut))
+
+                    Universe.settings.godMode = !residentsDieOut;
 
                     var moveCapability = Capabilities.MoveRandomlyCapability, nullifiedAgents = [];
                     var moveToBetterHousing = new Capability();
@@ -406,6 +410,7 @@ TechoResources.doSetup = function() {
                     world.cells.forEach(function(cell) {
                         if (cell.agentsAllowed) {
                             var x = cell.x, y = cell.y;
+                            cell.newQuality = cell.quality;
                             var quality = cell.quality;
                             var neighbours = world.getNeighbouringCells(x, y),
                                 qualities = _.chain(neighbours).map(function(neighbour) { if (neighbour.agentsAllowed) return neighbour.quality}).compact().sortBy(function(e) {return e}).value(),
@@ -446,8 +451,9 @@ TechoResources.doSetup = function() {
                     })
                     world.cells.forEach(function(cell) {
                         if (cell.agentsAllowed) {
-                            if (!_.isUndefined(cell.newQuality) && cell.newQuality <= 100) {
+                            if (!_.isUndefined(cell.newQuality) && cell.newQuality <= 100 && cell.quality != cell.newQuality) {
                                 cell.quality = cell.newQuality;
+                                cell.newQuality = cell.quality;
                             }
                         }
                     })
@@ -472,12 +478,12 @@ TechoResources.doSetup = function() {
                     });
 
                     // Die
-                    if (residentsDieOut) {
-                        world.currentAgents.forEach(function(agent) {
-                            if (agent.health < 0)
-                                agent.die(world);
-                        });
-                    }
+//                    if (residentsDieOut) {
+//                        world.currentAgents.forEach(function(agent) {
+//                            if (agent.health < 0)
+//                                agent.die(world);
+//                        });
+//                    }
 
                     // Reproduce
                     /*
