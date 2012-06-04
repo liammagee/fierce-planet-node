@@ -17,7 +17,8 @@ var Lifecycle = Lifecycle || {};
 
 
 (function() {
-    this.worldDelay = 3000, this.waveDelay = 200;
+    this.debug = false, this.lastTime = 0;
+    this.worldDelay = 1500, this.waveDelay = 200;
     // Delay variables
     this.worldDelayCounter = 0, this.waveDelayCounter = 0;
     // Counter variables
@@ -25,7 +26,7 @@ var Lifecycle = Lifecycle || {};
     // Game play variables
     this.waveOverride = 0, this.maxWaveMoves = 0, this.maxWorldMoves = 0;
     // Game interval variables
-    this.resourceRecoveryCycle = 5, this.interval = 40, this.agentTimerId = 0, this.inPlay = false;
+    this.resourceRecoveryCycle = 5, this.interval = 10, this.agentTimerId = 0, this.inPlay = false;
     // World state variables
     this.currentWorld = null, this.currentCampaignID = 'Default', this.currentWorldNumber = 1, this.currentWorldPreset = true, this.existingCurrentWorld = null;
     // Wave state variables
@@ -38,7 +39,7 @@ var Lifecycle = Lifecycle || {};
      * Core logic loop: processes agents.
      */
     this.processAgents = function() {
-//                    var start = new Date();
+        var start = new Date();
 
         var recordableChangeMade = false;
         // Invoke pre process callback
@@ -63,11 +64,10 @@ var Lifecycle = Lifecycle || {};
         Lifecycle.universeCounter++;
 
         // Do any world-specific computation here
-        FiercePlanet.Parameters.processParameters();
+         FiercePlanet.Parameters.processParameters();
         if (Lifecycle.currentWorld.tickFunction)
             Lifecycle.currentWorld.tickFunction();
 
-//        var agents = Lifecycle.currentWorld.getCurrentAgents(),
         var agents = Lifecycle.currentWorld.currentAgents,
             nullifiedAgents = [], agentCount = 0;
 
@@ -85,10 +85,6 @@ var Lifecycle = Lifecycle || {};
                 agent.reviseBeliefs(Lifecycle.currentWorld);
         }
 
-
-
-        // Process agents
-        var options = {"withNoRepeat": true, "withNoCollision": false};
         for (var i = 0; i < agents.length; i++) {
             var agent = agents[i];
 
@@ -113,8 +109,6 @@ var Lifecycle = Lifecycle || {};
         }
 
         // Process agents
-        var options = {"withNoRepeat": true, "withNoCollision": false};
-        agents = Lifecycle.currentWorld.currentAgents;
         for (var i = 0; i < agents.length; i++) {
             agentCount++;
             var agent = agents[i];
@@ -123,12 +117,12 @@ var Lifecycle = Lifecycle || {};
 
             var speed = agent.speed;
             var countDown = (agent.countdownToMove) % speed;
+//            console.log(speed, countDown)
 
             if (countDown == 0) {
                 recordableChangeMade = true;
 
                 // TODO: move this logic elsewhere
-                /*
                 if (Lifecycle.currentWorld.isExitPoint(agent.x, agent.y)) {
                     if (Lifecycle.processSavedCallback)
                         Lifecycle.processSavedCallback();
@@ -147,12 +141,10 @@ var Lifecycle = Lifecycle || {};
                         if (typeof(FiercePlanet) !== "undefined")
                             FiercePlanet.Game.currentProfile.currentWorldExpired++;
                 }
-                */
 
                 if (agent.alive) {
                     // Reset countdown
                     agent.resetCountdownToMove();
-
 
                     // Adjust speed
                     if (!Lifecycle.currentWorld.noSpeedChange && Universe.settings.agentsCanAdjustSpeed)
@@ -208,8 +200,13 @@ var Lifecycle = Lifecycle || {};
         // Invoke pre process callback
 		if (Lifecycle.postProcessCallback)
         	Lifecycle.postProcessCallback();
-//                    var stop = new Date();
-//                    console.log(stop - start)
+
+        var stop = new Date();
+        if (Lifecycle.debug) {
+            console.log(stop - start)
+            console.log(stop - this.lastTime)
+        }
+        this.lastTime = stop;
     };
 
 
@@ -308,6 +305,9 @@ var Lifecycle = Lifecycle || {};
 
 		if (this.currentWorld.waves[this.currentWaveNumber]) {
 			Lifecycle.currentWorld.currentAgents = this.currentWorld.waves[this.currentWaveNumber].agents;
+            Lifecycle.currentWorld.currentAgents.forEach(function(agent) {
+                agent.speed = agent.culture.initialSpeed;
+            });
 			
 		}
 

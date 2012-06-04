@@ -475,8 +475,8 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
             agents = world.getCurrentAgents();
         var start = Date.now();
 
-        if (_.isUndefined(world.dontClearCanvas) || ! world.dontClearCanvas)
-            this.clearCanvas(canvasName);
+//        if (_.isUndefined(world.dontClearCanvas) || ! world.dontClearCanvas)
+//            this.clearCanvas(canvasName);
         var len = FiercePlanet.Orientation.cellsAcross;
 
         // Inlined version
@@ -488,6 +488,8 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
 
         // Handle this special case by merging/sorting resources and agents, so top-most entities are not rendered with overlap
         if ((Universe.settings.isometricView || world.isometricView) && resources.length > 0) {
+//            this.clearCanvas(canvasName);
+            this.clearAgentsInline(ctx);
             var entities = _.union(resources, agents)
                 .sort(function(a, b) {
                     return (((a.y * len) - a.x > (b.y * len) - b.x) ? 1 : ((a.y * len) - a.x < (b.y * len) - b.x) ? -1 : 0);
@@ -509,6 +511,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
             }
         }
         else {
+            this.clearAgentsInline(ctx);
             resources.forEach(function(resource) {
                 FiercePlanet.Drawing.drawJustResource(ctx, resource);
             })
@@ -519,6 +522,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
                     FiercePlanet.Drawing.drawResourceAgentInteraction(ctx, resource, agent);
                 });
                 FiercePlanet.Drawing.drawAgent(ctx, agent);
+
             })
 
         }
@@ -967,16 +971,16 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
     /**
      * Clear all active agents
      */
-    this.clearAgents = function() {
-        this.clearAgentGroup(Lifecycle.currentWorld.currentAgents);
+    this.clearAgents = function(ctx) {
+        this.clearAgentGroup(ctx, Lifecycle.currentWorld.currentAgents);
     };
     
     /**
      * Clear the agent group
      */
-    this.clearAgentGroup = function(agents) {
-        var canvas = $('#agentCanvas')[0];
-        var ctx = canvas.getContext('2d');
+    this.clearAgentGroup = function(ctx, agents) {
+//        var canvas = $('#agentCanvas')[0];
+//        var ctx = canvas.getContext('2d');
 
         // Rotation logic here - TODO: Refactor out
         var midTilePosX = (FiercePlanet.Orientation.worldWidth) / 2;
@@ -1020,6 +1024,38 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         }
         ctx.restore();
     };
+
+    this.clearAgentsInline = function(ctx) {
+        // Get co-ordinates
+
+        if (Lifecycle.waveCounter > 0) {
+            var agents = Lifecycle.currentWorld.currentAgents;
+            for (var i = 0; i < agents.length; i += 1) {
+                var agent = agents[i];
+                var wx = agent.wanderX;
+                var wy = agent.wanderY;
+                var __ret = this.getDrawingPosition(agent, Lifecycle.waveCounter - 1);
+                var xPos = __ret.intX;
+                var yPos = __ret.intY;
+                var x = xPos * FiercePlanet.Orientation.cellWidth + wx + 1;
+                var y = yPos * FiercePlanet.Orientation.cellHeight + wy + 1;
+                if ((Universe.settings.isometricView || Lifecycle.currentWorld.isometricView)) {
+                    var newOrigin = FiercePlanet.Isometric.doIsometricOffset(xPos, yPos);
+                    x = newOrigin.x + wx + 1;// - FiercePlanet.Orientation.cellWidth / 2;
+                    y = newOrigin.y + wy + 1;// - FiercePlanet.Orientation.cellHeight / 2;
+                }
+
+                // Rotation logic here - TODO: Refactor out
+                x = x - (FiercePlanet.Orientation.worldWidth) / 2;
+                y = y - (FiercePlanet.Orientation.worldHeight) / 2;
+
+                ctx.clearRect(x, y - 17, FiercePlanet.Orientation.cellWidth + wx + 1, FiercePlanet.Orientation.cellHeight + wy + 1 + 17);
+
+            }
+        }
+    };
+
+
     
     
     /**
@@ -1243,6 +1279,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         var newColor = this.diluteColour(redH, greenH, blueH, c);
         */
         var newColor = agent.color || 'fff';
+
 
         try {
             eval(agent.culture.drawFunction)(ctx, agent, x, y, FiercePlanet.Orientation.pieceWidth, FiercePlanet.Orientation.pieceHeight, newColor, Lifecycle.waveCounter, direction);
@@ -1689,6 +1726,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
             '-ms-transform': 'rotate(' + mapRotate + 'rad) skewX(' + mapPerspective + 'rad) skewY( ' + mapPerspective + 'rad)'
         });
     };
+
 
     /**
      * Tries to draw all of the canvases as a consolidated thumbnail

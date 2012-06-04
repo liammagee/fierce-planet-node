@@ -43,8 +43,9 @@ _.extend(DefaultCultures.Stickman, {
         var speed = agent.speed;
         var health = agent.health;
         var countdown = agent.countdownToMove;
+        var frame = Math.floor((countdown / (speed + 1)) * frames);
+//        var frame = Math.floor((countdown / 5) % frames);
 //        var frame = Math.floor((countdown / (speed + 1)) * frames);
-        var frame = Math.floor((countdown / 5) % frames);
 
         // Category Health
         var yHealthOffset = -5;
@@ -113,7 +114,7 @@ _.extend(DefaultCultures.Stickman, {
                 sf.defaultAction = sf.expire;
             }
             else {
-                if (speed > 20)
+                if (speed > CultureDefaults.DEFAULT_RUN_SPEED)
                     sf.defaultAction = sf.walk;
                 else
                     sf.defaultAction = sf.run;

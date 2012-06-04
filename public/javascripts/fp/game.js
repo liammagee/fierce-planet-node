@@ -138,16 +138,18 @@ FiercePlanet.Game = FiercePlanet.Game || {};
         Lifecycle.processSavedCallback = function () {
             FiercePlanet.Game.currentProfile.processSavedAgent(Lifecycle.currentWaveNumber);
         }
+
+
         Lifecycle.postProcessCallback = function () {
 
             // Draw scores
-            FiercePlanet.Drawing.drawScore();
-            FiercePlanet.Drawing.drawResourcesInStore();
-            FiercePlanet.Drawing.drawSaved();
-            FiercePlanet.Drawing.drawExpired();
+//            FiercePlanet.Drawing.drawScore();
+//            FiercePlanet.Drawing.drawResourcesInStore();
+//            FiercePlanet.Drawing.drawSaved();
+//            FiercePlanet.Drawing.drawExpired();
 
             // Check whether we have too many
-            FiercePlanet.Drawing.clearCanvas('#agentCanvas');
+//            FiercePlanet.Drawing.clearCanvas('#agentCanvas');
             for (var i = 0; i < Lifecycle.currentWorld.expiredAgents.length; i++) {
                 var deadAgent = Lifecycle.currentWorld.expiredAgents[i];
                 if (deadAgent.diedAt > Lifecycle.worldCounter - 20)
@@ -156,6 +158,7 @@ FiercePlanet.Game = FiercePlanet.Game || {};
 
 
 //            if (Lifecycle.currentWorld.getCurrentAgents().length > 0) {
+//            if (Lifecycle.currentWorld)
                 FiercePlanet.Drawing.drawResourceAndAgents();
 //            }
 
@@ -423,6 +426,21 @@ FiercePlanet.Game = FiercePlanet.Game || {};
      * Slows down the rate of processing agents
      */
     this.slowDown = function () {
+        var cultures = this.cultures || ModuleManager.currentModule.allCultures();
+        for (var j = 0, len = cultures.length; j < len; j++) {
+            var culture = cultures[j];
+            if (culture.initialSpeed < 1000)
+                culture.initialSpeed = Math.floor(culture.initialSpeed * 2);
+        }
+        var agents = Lifecycle.currentWorld.currentAgents;
+        agents.forEach(function(agent) {
+            if (agent.speed < 1000) {
+//                agent.culture.speed = Math.floor(agent.culture.speed * 2);
+                agent.countdownToMove = Math.floor(agent.countdownToMove * 2);
+                agent.speed = Math.floor(agent.speed * 2);
+            }
+        })
+        /*
         if (Lifecycle.interval < 10)
             Lifecycle.interval += 1;
         else if (Lifecycle.interval < 100)
@@ -430,6 +448,7 @@ FiercePlanet.Game = FiercePlanet.Game || {};
         //        FiercePlanet.GeneralUI.notify("Now playing at: " + Math.round(1000 / Lifecycle.interval) + " frames per second.");
 //        if (FiercePlanet.Game.inPlay)
             Lifecycle._startAgents();
+            */
     };
 
 
@@ -437,6 +456,21 @@ FiercePlanet.Game = FiercePlanet.Game || {};
      * Speeds up the rate of processing agents
      */
     this.speedUp = function () {
+        var cultures = this.cultures || ModuleManager.currentModule.allCultures();
+        for (var j = 0, len = cultures.length; j < len; j++) {
+            var culture = cultures[j];
+            if (culture.initialSpeed > 0)
+                culture.initialSpeed = Math.floor(culture.initialSpeed / 2);
+        }
+        var agents = Lifecycle.currentWorld.currentAgents;
+        agents.forEach(function(agent) {
+            if (agent.speed > 0) {
+//                agent.culture.speed = Math.floor(agent.culture.speed / 2);
+                agent.countdownToMove = Math.floor(agent.countdownToMove / 2);
+                agent.speed = Math.floor(agent.speed / 2);
+            }
+        })
+        /*
         if (Lifecycle.interval > 10)
             Lifecycle.interval -= 10;
         else if (Lifecycle.interval > 1)
@@ -444,6 +478,7 @@ FiercePlanet.Game = FiercePlanet.Game || {};
         //        FiercePlanet.GeneralUI.notify("Now playing at: " + Math.round(1000 / Lifecycle.interval) + " frames per second.");
 //        if (FiercePlanet.Game.inPlay)
             Lifecycle._startAgents();
+            */
     };
 
 
