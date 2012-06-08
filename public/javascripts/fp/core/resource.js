@@ -93,6 +93,7 @@ function Resource(type, x, y) {
     this.calculateEffect = function(world) {
 
     };
+
     this.provideYield = function(agent, resourceEffect, adjustSpeedToYield) {
         if (this.totalYield > this.perAgentYield) {
             var adjustment = 0;

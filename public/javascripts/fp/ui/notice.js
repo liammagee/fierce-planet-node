@@ -10,7 +10,7 @@ var NoticeDimensions = {};
 /** @constant The default width of notices */
 NoticeDimensions.WAVE_NOTICE_WIDTH = 200;
 /** @constant The default height of notices */
-NoticeDimensions.WAVE_NOTICE_HEIGHT = 150;
+NoticeDimensions.WAVE_NOTICE_HEIGHT = 500;
 /**
  * Builds an inline notice.
  *

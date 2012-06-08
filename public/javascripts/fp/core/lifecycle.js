@@ -173,6 +173,7 @@ var Lifecycle = Lifecycle || {};
 
         Lifecycle.currentWorld.recoverResources();
 
+
         // Deal with terminal conditions
         if (! Lifecycle.currentWorld.playIndefinitely) {
             if (Lifecycle.currentWorld.expiredAgents.length >= Lifecycle.currentWorld.expiryLimit && (! Universe.settings.noGameOver )) {
@@ -197,9 +198,10 @@ var Lifecycle = Lifecycle || {};
             }
         }
 
+
         // Invoke pre process callback
-		if (Lifecycle.postProcessCallback)
-        	Lifecycle.postProcessCallback();
+        if (Lifecycle.postProcessCallback)
+            Lifecycle.postProcessCallback();
 
         var stop = new Date();
         if (Lifecycle.debug) {

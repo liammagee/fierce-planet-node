@@ -1087,7 +1087,7 @@ function World() {
     // Rendering options
     this.isometricView = false;
     // Agent options
-    this.noWander = false, this.noSpeedChange = false;
+    this.noWander = false, this.noSpeedChange = false, this.noSpeedChangeOnResources = false;
     // Generation options
     this.randomiseAgents = false;
     this.placeAgentsOnAllCells = false;

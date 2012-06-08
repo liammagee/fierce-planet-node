@@ -327,11 +327,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
      */
     this.drawNotice = function(notice) {
         if (FiercePlanet.Game.currentNotice != null) {
-            this.clearCanvas('#noticeCanvas');
-            var canvas = $('#noticeCanvas')[0];
-            var ctx = canvas.getContext('2d');
-    
-    
+
             // Get parameters of the notice
             var text = FiercePlanet.Game.currentNotice.text;
             var start = FiercePlanet.Game.currentNotice.start;
@@ -339,32 +335,79 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
             var strengthOfNotice = (duration - (Lifecycle.worldCounter - start)) / duration;
             var startingTransparency = 0.1;
             var alpha = Math.pow(strengthOfNotice - startingTransparency, 0.5);
-    
-    
+
+
             // Notice dimensions
             var x = FiercePlanet.Game.currentNotice.x;
             var y = FiercePlanet.Game.currentNotice.y;
             var width = FiercePlanet.Game.currentNotice.width;
             var height = FiercePlanet.Game.currentNotice.height;
-    
+
             // Styles
             var foregroundColor = this.insertAlpha(FiercePlanet.Game.currentNotice.foregroundColor, alpha);
             var backgroundColor = this.insertAlpha(FiercePlanet.Game.currentNotice.backgroundColor, alpha);
             var lineWidth = FiercePlanet.Game.currentNotice.lineWidth;
             var font = FiercePlanet.Game.currentNotice.font;
-    
-    
-            // Draw the notice
-            ctx.font = font;
-            ctx.lineWidth = lineWidth;
-    
-            var roundedEdge = 10;
-            ctx.clearRect(x - 1, y - 1, width + 2, height + 2);
-    
+
+
+
             // Don't draw any more, if the notice is expired
-            if (start > Lifecycle.worldCounter || start + duration < Lifecycle.worldCounter)
-                return;
-    
+            if (start > Lifecycle.worldCounter || start + duration < Lifecycle.worldCounter) {
+                if (!_.isUndefined(this.noticeDialog)) {
+                    this.noticeDialog.dialog('close');
+                    this.noticeDialog = undefined;
+                }
+            }
+            else {
+                if (_.isUndefined(this.noticeDialog)) {
+                    this.noticeDialog = $('<div></div>')
+                        .html(text)
+                        .dialog({
+                            autoOpen: false,
+                            modal: false,
+                            title: 'Fierce Planet Notice!',
+                            buttons: {
+                                "Close": function() {
+                                    $( this ).dialog( "close" );
+                                    Lifecycle._startAgents();
+                                }
+                            }
+
+                        });
+                    this.noticeDialog.dialog('open');
+                }
+            }
+
+            /*
+            this.noticeDialog = $('<div></div>')
+                .html(text)
+                .dialog({
+                    autoOpen: true,
+                    modal: false,
+                    title: 'Fierce Planet Notice!',
+                    buttons: {
+                        "Continue": function() {
+                            $( this ).dialog( "close" );
+                            Lifecycle._startAgents();
+                        }
+                    }
+
+                });
+                */
+
+
+
+            // Direct drawing to Canvas version
+            /*
+             // Draw the notice
+             ctx.font = font;
+             ctx.lineWidth = lineWidth;
+
+             var roundedEdge = 10;
+             ctx.clearRect(x - 1, y - 1, width + 2, height + 2);
+             this.clearCanvas('#noticeCanvas');
+            var canvas = $('#noticeCanvas')[0];
+            var ctx = canvas.getContext('2d');
             ctx.beginPath();
             ctx.moveTo(x + roundedEdge, y);
             ctx.lineTo(x + width - roundedEdge, y);
@@ -388,6 +431,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
             for (var i = 0; i < lines.length; i++) {
                 ctx.fillText(lines[i], x + 10, y + (20 * (i + 1)));
             }
+            */
         }
     };
     
@@ -528,6 +572,24 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         }
 
 //        console.log(Date.now() - start)
+
+        ctx.restore();
+    };
+
+    this.clearTheseAgents = function(agents) {
+        var canvasName = '#resourceCanvas';
+
+        var world = Lifecycle.currentWorld;
+        var len = FiercePlanet.Orientation.cellsAcross;
+
+        // Inlined version
+        var canvas = $(canvasName)[0];
+        var ctx = canvas.getContext('2d');
+        ctx.save();
+        ctx.translate(FiercePlanet.Orientation.halfWorldWidth, FiercePlanet.Orientation.halfWorldHeight);
+        ctx.rotate(FiercePlanet.Orientation.rotationAngle);
+
+        this.clearAgentsInline(ctx, agents);
 
         ctx.restore();
     };
@@ -902,21 +964,31 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         ay = ay - (FiercePlanet.Orientation.worldHeight) / 2;
 
         var s = (resource.totalYield / resource.initialTotalYield) * 100;
-        var c = resource.color;
-        c = one.color(c);
-        var a = one.color(c).alpha(s / 100);
-        var grad = ctx.createLinearGradient(x, y, x, ay);
+        var c = one.color(resource.color);
+//        var alpha = resource.perAgentYield / 100;
+        var h = agent.getHealthForResourceCategory(resource.category);
+        var a = one.color(resource.color).alpha(h / 100);
+        var alpha = one.color(resource.color).alpha(0);
+//        var grad = ctx.createLinearGradient(x, y, x, ay);
+        var width = FiercePlanet.Orientation.cellWidth / 5, height = FiercePlanet.Orientation.cellHeight;
+        var grad = ctx.createRadialGradient(ax, ay, 0, ax, ay, width);
+        grad.addColorStop(1, alpha.cssa());
         grad.addColorStop(0.5, a.cssa());
         grad.addColorStop(0, c.cssa());
-        ctx.strokeStyle = grad;
-        ctx.lineCap = 'round';
-        ctx.lineWidth = 3;
+//        ctx.strokeStyle = grad;
+        ctx.fillStyle = grad;
+//        ctx.fillRect(x - width / 2, y - (width / 4), width, height + (width / 4));
+
         ctx.beginPath();
-        ctx.moveTo(x, y);
-        ctx.lineTo(ax, ay);
+        ctx.arc(ax, ay, width, 0, Math.PI * 2, true);
         ctx.closePath();
 
-        ctx.stroke();
+//        ctx.beginPath();
+//        ctx.moveTo(x, y);
+//        ctx.lineTo(ax, ay);
+//        ctx.closePath();
+
+        ctx.fill();
 
 //        ctx.strokeStyle = "#666";
 //        ctx.lineWidth = 1;
@@ -1025,11 +1097,11 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         ctx.restore();
     };
 
-    this.clearAgentsInline = function(ctx) {
+    this.clearAgentsInline = function(ctx, agents) {
         // Get co-ordinates
 
         if (Lifecycle.waveCounter > 0) {
-            var agents = Lifecycle.currentWorld.currentAgents;
+            var agents = agents || Lifecycle.currentWorld.currentAgents;
             for (var i = 0; i < agents.length; i += 1) {
                 var agent = agents[i];
                 var wx = agent.wanderX;

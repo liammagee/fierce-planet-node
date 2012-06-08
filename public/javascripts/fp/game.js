@@ -156,6 +156,8 @@ FiercePlanet.Game = FiercePlanet.Game || {};
                     FiercePlanet.Drawing.drawExpiredAgent(deadAgent);
             }
 
+            FiercePlanet.Drawing.clearTheseAgents(Lifecycle.currentWorld.savedAgents);
+
 
 //            if (Lifecycle.currentWorld.getCurrentAgents().length > 0) {
 //            if (Lifecycle.currentWorld)
