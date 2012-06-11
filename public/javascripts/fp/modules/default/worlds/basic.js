@@ -68,8 +68,8 @@ var Basic = Basic || new Campaign();
         this.world1.waveNumber = 10;
         this.world1.expiryLimit = 20;
         this.world1.name = ("World 1: Welcome to Fierce Planet!");
-        this.world1.noSpeedChange = true;
-        this.world1.noWander = true;
+//        this.world1.noSpeedChange = true;
+//        this.world1.noWander = true;
 //        this.world1.dontClearCanvas = true;
         this.world1.introduction = (
                 "<p>The citizens of Fierce Planet are in danger of extinction. Their cities have been destroyed &mdash; there is a shortage of food and water, law and order has broken down, and disease is rampant.</p>" +

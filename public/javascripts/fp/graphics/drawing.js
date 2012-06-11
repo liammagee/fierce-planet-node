@@ -199,6 +199,14 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
             if (FiercePlanet.Orientation.zoomWorld > 1)
                 mapOptions['zoom'] = mapOptions['zoom'] + Math.log(FiercePlanet.Orientation.zoomWorld) / Math.log(1.5);
 
+            console.log(mapOptions)
+            if (Universe.settings.isometricView) {
+                mapOptions['tilt'] = 45;
+            }
+            else {
+                mapOptions['tilt'] = 0;
+            }
+
             FiercePlanet.Game.googleMap = FiercePlanet.GoogleMapUtils.createMap(mapOptions, canvasName);
             FiercePlanet.Game.mapOptions = mapOptions;
         }
@@ -1644,20 +1652,64 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
      * Contract canvas
      */
     this.contract = function () {
-        var w = FiercePlanet.Orientation.worldWidth - 200;
-        var h = FiercePlanet.Orientation.worldHeight - 150;
+//        var w = FiercePlanet.Orientation.worldWidth - 200;
+//        var h = FiercePlanet.Orientation.worldHeight - 150;
+        var w = FiercePlanet.Drawing.Dimensions.worldWidth;
+        var h = FiercePlanet.Drawing.Dimensions.worldHeight;
+
+        if (!_.isUndefined(FiercePlanet.Drawing.Dimensions)) {
+
+            $('#world-container, #world-container > *').width(FiercePlanet.Drawing.Dimensions.width);
+            $('#world-container, #world-container > *').height(FiercePlanet.Drawing.Dimensions.height);
+            $('#world-container').css('padding', FiercePlanet.Drawing.Dimensions.padding);
+            $('#gameworld').css('left', FiercePlanet.Drawing.Dimensions.gameworldLeft);
+            $('#gameworld').css('top', FiercePlanet.Drawing.Dimensions.gameworldTop);
+            $('#controls').css('left', FiercePlanet.Drawing.Dimensions.controlsLeft);
+            $('#controls').css('top', FiercePlanet.Drawing.Dimensions.controlsTop);
+        }
+        $('#global-info-panel').show();
+        $('#notifications, .bg').show();
+        Universe.settings.useInlineResourceSwatch = false;
+
         FiercePlanet.Orientation.adjustParameters(w,h);
-        FiercePlanet.Drawing.drawCanvases();
+        FiercePlanet.Drawing.drawGame();
+//        FiercePlanet.Drawing.drawCanvases();
     };
 
     /**
      * Expand canvas
      */
     this.expand = function () {
-        var w = FiercePlanet.Orientation.worldWidth + 200;
-        var h = FiercePlanet.Orientation.worldHeight + 150;
+//        var w = FiercePlanet.Orientation.worldWidth + 200;
+//        var h = FiercePlanet.Orientation.worldHeight + 150;
+        var w = $(window).width();
+        var h = $(window).height();
+
+        FiercePlanet.Drawing.Dimensions = {};
+        FiercePlanet.Drawing.Dimensions.worldWidth = FiercePlanet.Orientation.worldWidth;
+        FiercePlanet.Drawing.Dimensions.worldHeight = FiercePlanet.Orientation.worldHeight;
+        FiercePlanet.Drawing.Dimensions.width = $('#world-container, #world-container > *').width();
+        FiercePlanet.Drawing.Dimensions.height = $('#world-container, #world-container > *').height();
+        FiercePlanet.Drawing.Dimensions.padding = $('#world-container').css('padding');
+        FiercePlanet.Drawing.Dimensions.gameworldLeft = $('#gameworld').css('left');
+        FiercePlanet.Drawing.Dimensions.gameworldTop = $('#gameworld').css('top');
+        FiercePlanet.Drawing.Dimensions.controlsLeft = $('#controls').css('left');
+        FiercePlanet.Drawing.Dimensions.controlsTop = $('#controls').css('top');
+
+        $('#world-container, #world-container > *').width($(window).width());
+        $('#world-container, #world-container > *').height($(window).height());
+        $('#world-container').css('padding', 0);
+        $('#gameworld').css('left', 0);
+        $('#gameworld').css('top', 0);
+        $('#controls').css('left', 0);
+        $('#controls').css('top', '5%');
+
+        $('#global-info-panel').hide();
+        $('#notifications, .bg').hide();
+        Universe.settings.useInlineResourceSwatch = true;
+
         FiercePlanet.Orientation.adjustParameters(w,h);
-        FiercePlanet.Drawing.drawCanvases();
+        FiercePlanet.Drawing.drawGame();
     };
 
     /**
@@ -1670,14 +1722,13 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
             $('#agentCanvas').css({zIndex: 6});
             FiercePlanet.Orientation.mapPerspectiveAngle -= FiercePlanet.Orientation.DEFAULT_MAP_PERSPECTIVE_ANGLE;
             FiercePlanet.Orientation.mapRotationAngle -= FiercePlanet.Orientation.DEFAULT_MAP_ROTATION_ANGLE;
-            $('#3d')[0].innerHTML = 'View 3D';
-//            $('#map_canvas').css({
             $('#map_canvas').animate({
                 'width': FiercePlanet.Orientation.worldWidth + 'px',
                 'height': FiercePlanet.Orientation.worldHeight + 'px',
                 'top': '1%',
                 'left': '1%'
             }, 1000);
+            $('#3d')[0].innerHTML = 'View 3D';
         }
         else {
             Universe.settings.isometricView = true;
@@ -1685,19 +1736,25 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
             $('#agentCanvas').css({zIndex: 5});
             var ratio = FiercePlanet.Orientation.worldHeight / FiercePlanet.Orientation.worldWidth,
                 leftOffsetPercent = (1 / ratio) * 12;
-            FiercePlanet.Orientation.mapPerspectiveAngle += FiercePlanet.Orientation.DEFAULT_MAP_PERSPECTIVE_ANGLE;
-            FiercePlanet.Orientation.mapRotationAngle += FiercePlanet.Orientation.DEFAULT_MAP_ROTATION_ANGLE;
-            $('#3d')[0].innerHTML = 'View 2D';
-//            $('#map_canvas').css({
+             FiercePlanet.Orientation.mapPerspectiveAngle += FiercePlanet.Orientation.DEFAULT_MAP_PERSPECTIVE_ANGLE;
+             FiercePlanet.Orientation.mapRotationAngle += FiercePlanet.Orientation.DEFAULT_MAP_ROTATION_ANGLE;
+//            $('#map_canvas').animate({
+//                'width': FiercePlanet.Orientation.worldHeight + 'px',
+//                'height': FiercePlanet.Orientation.worldHeight + 'px',
+//                'top': '1%',
+//                'left': leftOffsetPercent + '%'
+//            }, 1000);
             $('#map_canvas').animate({
-                'width': FiercePlanet.Orientation.worldHeight + 'px',
-                'height': FiercePlanet.Orientation.worldHeight + 'px',
-                'top': '1%',
-                'left': leftOffsetPercent + '%'
+                'height': Math.floor((ratio + (1 - ratio) / 2) * FiercePlanet.Orientation.worldHeight) + 'px',
+                'top': leftOffsetPercent / 2 + '1%',
+//                'left': leftOffsetPercent + '%'
             }, 1000);
+
+            $('#3d')[0].innerHTML = 'View 2D';
 
         }
         FiercePlanet.Drawing.transformMap();
+        FiercePlanet.Drawing.drawMap();
         FiercePlanet.Drawing.drawCanvases();
     };
 
@@ -1791,12 +1848,12 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
 
         var mapRotate = FiercePlanet.Orientation.mapRotationAngle,
             mapPerspective = FiercePlanet.Orientation.mapPerspectiveAngle;
-        $('#map_canvas').css({
-            '-webkit-transform': 'rotate(' + mapRotate + 'rad) skewX(' + mapPerspective + 'rad) skewY(' + mapPerspective + 'rad)',
-            '-moz-transform': 'rotate(' + mapRotate + 'rad) skewX(' + mapPerspective + 'rad) skewY(' + mapPerspective + 'rad)',
-            '-o-transform': 'rotate(' + mapRotate + 'rad) skewX(' + mapPerspective + 'rad) skewY(' + mapPerspective + 'rad)',
-            '-ms-transform': 'rotate(' + mapRotate + 'rad) skewX(' + mapPerspective + 'rad) skewY( ' + mapPerspective + 'rad)'
-        });
+//        $('#map_canvas').css({
+//            '-webkit-transform': 'rotate(' + mapRotate + 'rad) skewX(' + mapPerspective + 'rad) skewY(' + mapPerspective + 'rad)',
+//            '-moz-transform': 'rotate(' + mapRotate + 'rad) skewX(' + mapPerspective + 'rad) skewY(' + mapPerspective + 'rad)',
+//            '-o-transform': 'rotate(' + mapRotate + 'rad) skewX(' + mapPerspective + 'rad) skewY(' + mapPerspective + 'rad)',
+//            '-ms-transform': 'rotate(' + mapRotate + 'rad) skewX(' + mapPerspective + 'rad) skewY( ' + mapPerspective + 'rad)'
+//        });
     };
 
 

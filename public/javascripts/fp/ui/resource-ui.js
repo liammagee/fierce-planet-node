@@ -163,7 +163,7 @@ FiercePlanet.ResourceUI = FiercePlanet.ResourceUI || {};
                 width: width,
                 height: height,
                 autoOpen: false,
-                modal: true
+//                modal: true
             });
         $('#inline-swatch div[class="title"]').remove();
         var links = $('#inline-swatch .swatch-draggable'), el = null;
