@@ -199,7 +199,6 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
             if (FiercePlanet.Orientation.zoomWorld > 1)
                 mapOptions['zoom'] = mapOptions['zoom'] + Math.log(FiercePlanet.Orientation.zoomWorld) / Math.log(1.5);
 
-            console.log(mapOptions)
             if (Universe.settings.isometricView) {
                 mapOptions['tilt'] = 45;
             }
@@ -539,9 +538,8 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         ctx.rotate(FiercePlanet.Orientation.rotationAngle);
 
         // Handle this special case by merging/sorting resources and agents, so top-most entities are not rendered with overlap
+        this.clearAgentsInline(ctx);
         if ((Universe.settings.isometricView || world.isometricView) && resources.length > 0) {
-//            this.clearCanvas(canvasName);
-            this.clearAgentsInline(ctx);
             var entities = _.union(resources, agents)
                 .sort(function(a, b) {
                     return (((a.y * len) - a.x > (b.y * len) - b.x) ? 1 : ((a.y * len) - a.x < (b.y * len) - b.x) ? -1 : 0);
@@ -563,7 +561,6 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
             }
         }
         else {
-            this.clearAgentsInline(ctx);
             resources.forEach(function(resource) {
                 FiercePlanet.Drawing.drawJustResource(ctx, resource);
             })
@@ -598,6 +595,24 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         ctx.rotate(FiercePlanet.Orientation.rotationAngle);
 
         this.clearAgentsInline(ctx, agents);
+
+        ctx.restore();
+    };
+
+    this.clearThisAgent = function(agent) {
+        var canvasName = '#resourceCanvas';
+
+        var world = Lifecycle.currentWorld;
+        var len = FiercePlanet.Orientation.cellsAcross;
+
+        // Inlined version
+        var canvas = $(canvasName)[0];
+        var ctx = canvas.getContext('2d');
+        ctx.save();
+        ctx.translate(FiercePlanet.Orientation.halfWorldWidth, FiercePlanet.Orientation.halfWorldHeight);
+        ctx.rotate(FiercePlanet.Orientation.rotationAngle);
+
+        this.clearAgentInline(ctx, agent);
 
         ctx.restore();
     };
@@ -1108,10 +1123,12 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
     this.clearAgentsInline = function(ctx, agents) {
         // Get co-ordinates
 
-        if (Lifecycle.waveCounter > 0) {
+        if (Lifecycle.worldCounter > 0) {
             var agents = agents || Lifecycle.currentWorld.currentAgents;
             for (var i = 0; i < agents.length; i += 1) {
                 var agent = agents[i];
+                FiercePlanet.Drawing.clearAgentInline(ctx, agent);
+                /*
                 var wx = agent.wanderX;
                 var wy = agent.wanderY;
                 var __ret = this.getDrawingPosition(agent, Lifecycle.waveCounter - 1);
@@ -1123,15 +1140,40 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
                     var newOrigin = FiercePlanet.Isometric.doIsometricOffset(xPos, yPos);
                     x = newOrigin.x + wx + 1;// - FiercePlanet.Orientation.cellWidth / 2;
                     y = newOrigin.y + wy + 1;// - FiercePlanet.Orientation.cellHeight / 2;
-                }
+                    }
 
                 // Rotation logic here - TODO: Refactor out
                 x = x - (FiercePlanet.Orientation.worldWidth) / 2;
                 y = y - (FiercePlanet.Orientation.worldHeight) / 2;
 
                 ctx.clearRect(x, y - 17, FiercePlanet.Orientation.cellWidth + wx + 1, FiercePlanet.Orientation.cellHeight + wy + 1 + 17);
-
+                */
             }
+        }
+    };
+
+    this.clearAgentInline = function(ctx, agent) {
+        // Get co-ordinates
+
+        if (Lifecycle.worldCounter > 0) {
+            var wx = agent.wanderX;
+            var wy = agent.wanderY;
+            var __ret = this.getDrawingPosition(agent, Lifecycle.waveCounter - 1);
+            var xPos = __ret.intX;
+            var yPos = __ret.intY;
+            var x = xPos * FiercePlanet.Orientation.cellWidth + wx + 1;
+            var y = yPos * FiercePlanet.Orientation.cellHeight + wy + 1;
+            if ((Universe.settings.isometricView || Lifecycle.currentWorld.isometricView)) {
+                var newOrigin = FiercePlanet.Isometric.doIsometricOffset(xPos, yPos);
+                x = newOrigin.x + wx + 1;// - FiercePlanet.Orientation.cellWidth / 2;
+                y = newOrigin.y + wy + 1;// - FiercePlanet.Orientation.cellHeight / 2;
+            }
+
+            // Rotation logic here - TODO: Refactor out
+            x = x - (FiercePlanet.Orientation.worldWidth) / 2;
+            y = y - (FiercePlanet.Orientation.worldHeight) / 2;
+
+            ctx.clearRect(x, y - 17, FiercePlanet.Orientation.cellWidth + wx + 1, FiercePlanet.Orientation.cellHeight + wy + 1 + 17);
         }
     };
 
@@ -1373,7 +1415,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
      * Draw agents on the agent canvas
      */
     this.drawExpiredAgent = function(agent, altCanvasName) {
-        var canvasName = altCanvasName || '#agentCanvas';
+        var canvasName = altCanvasName || '#resourceCanvas';
         var canvas = $(canvasName)[0];
         var ctx = canvas.getContext('2d');
 
@@ -1519,8 +1561,98 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         this.drawExpired();
         this.drawResourcesInStore();
     };
-    
-    
+
+
+    /**
+     * Tries to draw all of the canvases as a consolidated thumbnail
+     * TODO: needs to be posted back to the server
+     */
+    this.drawThumbnail = function() {
+        var imageCanvas = $('#imageCanvas')[0];
+        var baseCanvas = $('#baseCanvas')[0];
+        var resourceCanvas = $('#resourceCanvas')[0];
+        var scrollingCanvas = $('#scrollingCanvas')[0];
+        var noticeCanvas = $('#noticeCanvas')[0];
+        var agentCanvas = $('#agentCanvas')[0];
+        imageCanvas.getContext('2d').drawImage(baseCanvas, 0, 0);
+        imageCanvas.getContext('2d').drawImage(resourceCanvas, 0, 0);
+        imageCanvas.getContext('2d').drawImage(scrollingCanvas, 0, 0);
+        imageCanvas.getContext('2d').drawImage(noticeCanvas, 0, 0);
+        imageCanvas.getContext('2d').drawImage(agentCanvas, 0, 0);
+        var imageData = imageCanvas.toDataURL();
+        $.post('/worlds/' + Lifecycle.currentWorld.id + '/save_thumbnail',
+            {thumbnail: imageData},
+            function(data) {
+                alert('data posted')
+            }
+        );
+    };
+
+
+    /**
+     *  Process mouse moves
+     */
+    this.drawGuideCell = function(e) {
+        var x = e.pageX - FiercePlanet.Dialogs.calculateWorldLeft();
+        var y = e.pageY - FiercePlanet.Dialogs.calculateWorldTop();
+
+        // var __ret = FiercePlanet.GeneralUI.getCurrentPosition(e);
+        var __ret = FiercePlanet.GeneralUI.getCurrentPositionByCoordinates(x, y);
+        var xPos = __ret.posX;
+        var yPos = __ret.posY;
+        this.clearGuide();
+
+        if (xPos < 0 || xPos >= FiercePlanet.Orientation.cellsAcross || yPos < 0 || yPos >= FiercePlanet.Orientation.cellsDown)
+            return;
+
+        if (Lifecycle.currentWorld.getCell(xPos, yPos).agentsAllowed && !Universe.settings.allowResourcesOnPath)
+            return;
+//        if (! Lifecycle.currentWorld.getCell(xPos, yPos).resourcesAllowed)
+//            return;
+
+        var scrollingCanvas = $('#guideCanvas')[0];
+        var ctx = scrollingCanvas.getContext('2d');
+
+        ctx.save();
+        ctx.translate(FiercePlanet.Orientation.halfWorldWidth, FiercePlanet.Orientation.halfWorldHeight);
+        ctx.rotate(FiercePlanet.Orientation.rotationAngle);
+
+        x = xPos * FiercePlanet.Orientation.cellWidth;
+        y = yPos * FiercePlanet.Orientation.cellHeight;
+
+        if ((Universe.settings.isometricView || Lifecycle.currentWorld.isometricView)) {
+            var newOrigin = FiercePlanet.Isometric.doIsometricOffset(xPos, yPos);
+            var originXp = newOrigin.x + FiercePlanet.Orientation.cellWidth / 2;
+            var originYp = newOrigin.y + FiercePlanet.Orientation.cellHeight;
+            originXp = originXp - (FiercePlanet.Orientation.worldWidth) / 2;
+            originYp = originYp - (FiercePlanet.Orientation.worldHeight) / 2;
+            FiercePlanet.Isometric.draw3DTile(ctx, [originXp, originYp], FiercePlanet.Orientation.cellHeight);
+
+            ctx.lineWidth = 4;
+            ctx.strokeStyle = '#f00'; //pathColor;
+            ctx.stroke();
+        }
+        else {
+            // Rotation logic here - TODO: Refactor out
+            x = x - FiercePlanet.Orientation.halfWorldWidth;
+            y = y - FiercePlanet.Orientation.halfWorldHeight;
+            ctx.lineWidth = 4;
+            ctx.strokeStyle = '#f00'; //pathColor;
+            ctx.strokeRect(x, y, FiercePlanet.Orientation.cellWidth, FiercePlanet.Orientation.cellHeight);
+        }
+
+        ctx.restore();
+    };
+
+
+    /**
+     *  Process mouse moves
+     */
+    this.clearGuide = function(e) {
+        FiercePlanet.Drawing.clearCanvas('#guideCanvas');
+    };
+
+
     /**
      * Pan around the current world
      *
@@ -1696,16 +1828,17 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         FiercePlanet.Drawing.Dimensions.controlsLeft = $('#controls').css('left');
         FiercePlanet.Drawing.Dimensions.controlsTop = $('#controls').css('top');
 
-        $('#world-container, #world-container > *').width($(window).width());
-        $('#world-container, #world-container > *').height($(window).height());
-        $('#world-container').css('padding', 0);
+        $('#global-info-panel').hide();
+        $('.bg').hide();
+            $('#world-container').css('padding', 0);
         $('#gameworld').css('left', 0);
         $('#gameworld').css('top', 0);
         $('#controls').css('left', 0);
         $('#controls').css('top', '5%');
+        $('#world-container, #world-container > *').width($(window).width());
+        $('#world-container, #world-container > *').height($(window).height());
 
-        $('#global-info-panel').hide();
-        $('#notifications, .bg').hide();
+//        $('#notifications').hide();
         Universe.settings.useInlineResourceSwatch = true;
 
         FiercePlanet.Orientation.adjustParameters(w,h);
@@ -1738,17 +1871,17 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
                 leftOffsetPercent = (1 / ratio) * 12;
              FiercePlanet.Orientation.mapPerspectiveAngle += FiercePlanet.Orientation.DEFAULT_MAP_PERSPECTIVE_ANGLE;
              FiercePlanet.Orientation.mapRotationAngle += FiercePlanet.Orientation.DEFAULT_MAP_ROTATION_ANGLE;
-//            $('#map_canvas').animate({
-//                'width': FiercePlanet.Orientation.worldHeight + 'px',
-//                'height': FiercePlanet.Orientation.worldHeight + 'px',
-//                'top': '1%',
-//                'left': leftOffsetPercent + '%'
-//            }, 1000);
             $('#map_canvas').animate({
-                'height': Math.floor((ratio + (1 - ratio) / 2) * FiercePlanet.Orientation.worldHeight) + 'px',
-                'top': leftOffsetPercent / 2 + '1%',
-//                'left': leftOffsetPercent + '%'
+                'width': FiercePlanet.Orientation.worldHeight + 'px',
+                'height': FiercePlanet.Orientation.worldHeight + 'px',
+                'top': '1%',
+                'left': leftOffsetPercent + '%'
             }, 1000);
+//            $('#map_canvas').animate({
+//                'height': Math.floor((ratio + (1 - ratio) / 2) * FiercePlanet.Orientation.worldHeight) + 'px',
+//                'top': leftOffsetPercent / 2 + '1%',
+////                'left': leftOffsetPercent + '%'
+//            }, 1000);
 
             $('#3d')[0].innerHTML = 'View 2D';
 
@@ -1848,102 +1981,12 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
 
         var mapRotate = FiercePlanet.Orientation.mapRotationAngle,
             mapPerspective = FiercePlanet.Orientation.mapPerspectiveAngle;
-//        $('#map_canvas').css({
-//            '-webkit-transform': 'rotate(' + mapRotate + 'rad) skewX(' + mapPerspective + 'rad) skewY(' + mapPerspective + 'rad)',
-//            '-moz-transform': 'rotate(' + mapRotate + 'rad) skewX(' + mapPerspective + 'rad) skewY(' + mapPerspective + 'rad)',
-//            '-o-transform': 'rotate(' + mapRotate + 'rad) skewX(' + mapPerspective + 'rad) skewY(' + mapPerspective + 'rad)',
-//            '-ms-transform': 'rotate(' + mapRotate + 'rad) skewX(' + mapPerspective + 'rad) skewY( ' + mapPerspective + 'rad)'
-//        });
-    };
-
-
-    /**
-     * Tries to draw all of the canvases as a consolidated thumbnail
-     * TODO: needs to be posted back to the server
-     */
-    this.drawThumbnail = function() {
-        var imageCanvas = $('#imageCanvas')[0];
-        var baseCanvas = $('#baseCanvas')[0];
-        var resourceCanvas = $('#resourceCanvas')[0];
-        var scrollingCanvas = $('#scrollingCanvas')[0];
-        var noticeCanvas = $('#noticeCanvas')[0];
-        var agentCanvas = $('#agentCanvas')[0];
-        imageCanvas.getContext('2d').drawImage(baseCanvas, 0, 0);
-        imageCanvas.getContext('2d').drawImage(resourceCanvas, 0, 0);
-        imageCanvas.getContext('2d').drawImage(scrollingCanvas, 0, 0);
-        imageCanvas.getContext('2d').drawImage(noticeCanvas, 0, 0);
-        imageCanvas.getContext('2d').drawImage(agentCanvas, 0, 0);
-        var imageData = imageCanvas.toDataURL();
-        $.post('/worlds/' + Lifecycle.currentWorld.id + '/save_thumbnail',
-        {thumbnail: imageData},
-                function(data) {
-                    alert('data posted')
-                }
-                );
-    };
-
-
-    /**
-     *  Process mouse moves
-     */
-    this.drawGuideCell = function(e) {
-		var x = e.pageX - FiercePlanet.Dialogs.calculateWorldLeft();
-		var y = e.pageY - FiercePlanet.Dialogs.calculateWorldTop();
-
-        // var __ret = FiercePlanet.GeneralUI.getCurrentPosition(e);
-        var __ret = FiercePlanet.GeneralUI.getCurrentPositionByCoordinates(x, y);
-        var xPos = __ret.posX;
-        var yPos = __ret.posY;
-        this.clearGuide();
-
-        if (xPos < 0 || xPos >= FiercePlanet.Orientation.cellsAcross || yPos < 0 || yPos >= FiercePlanet.Orientation.cellsDown)
-            return;
-
-        if (Lifecycle.currentWorld.getCell(xPos, yPos).agentsAllowed && !Universe.settings.allowResourcesOnPath)
-            return;
-//        if (! Lifecycle.currentWorld.getCell(xPos, yPos).resourcesAllowed)
-//            return;
-
-        var scrollingCanvas = $('#guideCanvas')[0];
-        var ctx = scrollingCanvas.getContext('2d');
-
-        ctx.save();
-        ctx.translate(FiercePlanet.Orientation.halfWorldWidth, FiercePlanet.Orientation.halfWorldHeight);
-        ctx.rotate(FiercePlanet.Orientation.rotationAngle);
-
-        x = xPos * FiercePlanet.Orientation.cellWidth;
-        y = yPos * FiercePlanet.Orientation.cellHeight;
-
-        if ((Universe.settings.isometricView || Lifecycle.currentWorld.isometricView)) {
-            var newOrigin = FiercePlanet.Isometric.doIsometricOffset(xPos, yPos);
-            var originXp = newOrigin.x + FiercePlanet.Orientation.cellWidth / 2;
-            var originYp = newOrigin.y + FiercePlanet.Orientation.cellHeight;
-            originXp = originXp - (FiercePlanet.Orientation.worldWidth) / 2;
-            originYp = originYp - (FiercePlanet.Orientation.worldHeight) / 2;
-            FiercePlanet.Isometric.draw3DTile(ctx, [originXp, originYp], FiercePlanet.Orientation.cellHeight);
-
-            ctx.lineWidth = 4;
-            ctx.strokeStyle = '#f00'; //pathColor;
-            ctx.stroke();
-        }
-        else {
-            // Rotation logic here - TODO: Refactor out
-            x = x - FiercePlanet.Orientation.halfWorldWidth;
-            y = y - FiercePlanet.Orientation.halfWorldHeight;
-            ctx.lineWidth = 4;
-            ctx.strokeStyle = '#f00'; //pathColor;
-            ctx.strokeRect(x, y, FiercePlanet.Orientation.cellWidth, FiercePlanet.Orientation.cellHeight);
-        }
-
-        ctx.restore();
-    };
-
-
-    /**
-     *  Process mouse moves
-     */
-    this.clearGuide = function(e) {
-        FiercePlanet.Drawing.clearCanvas('#guideCanvas');
+        $('#map_canvas').css({
+            '-webkit-transform': 'rotate(' + mapRotate + 'rad) skewX(' + mapPerspective + 'rad) skewY(' + mapPerspective + 'rad)',
+            '-moz-transform': 'rotate(' + mapRotate + 'rad) skewX(' + mapPerspective + 'rad) skewY(' + mapPerspective + 'rad)',
+            '-o-transform': 'rotate(' + mapRotate + 'rad) skewX(' + mapPerspective + 'rad) skewY(' + mapPerspective + 'rad)',
+            '-ms-transform': 'rotate(' + mapRotate + 'rad) skewX(' + mapPerspective + 'rad) skewY( ' + mapPerspective + 'rad)'
+        });
     };
 
 }).apply(FiercePlanet.Drawing);

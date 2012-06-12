@@ -47,6 +47,7 @@ $(function() {
                'Type \'help\' to review a list of commands.\n'
       ;
   window.jqconsole = $('#console').jqconsole(header, 'Ask me: ');
+//  window.jqconsole = $('#console').jqconsole('', 'Ask me: ');
 
   //window.jqconsole = $('#notifications').jqconsole(header, 'JS> ');
 

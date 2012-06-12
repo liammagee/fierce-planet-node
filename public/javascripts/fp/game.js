@@ -68,6 +68,7 @@ FiercePlanet.Game = FiercePlanet.Game || {};
             FiercePlanet.Drawing.drawCanvases();
         });
 
+
         // Set world width and height
         FiercePlanet.Orientation.initialiseParameters($('#world-container').width(), $('#world-container').height());
 
@@ -152,8 +153,12 @@ FiercePlanet.Game = FiercePlanet.Game || {};
 //            FiercePlanet.Drawing.clearCanvas('#agentCanvas');
             for (var i = 0; i < Lifecycle.currentWorld.expiredAgents.length; i++) {
                 var deadAgent = Lifecycle.currentWorld.expiredAgents[i];
-                if (deadAgent.diedAt > Lifecycle.worldCounter - 20)
+                if (deadAgent.diedAt > Lifecycle.worldCounter - 20) {
                     FiercePlanet.Drawing.drawExpiredAgent(deadAgent);
+                }
+                else {
+                    FiercePlanet.Drawing.clearThisAgent(deadAgent);
+                }
             }
 
             FiercePlanet.Drawing.clearTheseAgents(Lifecycle.currentWorld.savedAgents);
@@ -237,6 +242,15 @@ FiercePlanet.Game = FiercePlanet.Game || {};
                 FiercePlanet.Game._startAudio();
             if (Universe.settings.animateWorldAtStart)
                 FiercePlanet.Drawing.animateWorld();
+
+            if (!_.isUndefined(FiercePlanet.Game.googleMap)) {
+                FiercePlanet.GoogleMapUtils.getMapLocationInfo( function(results, status) {
+                    if (status == google.maps.GeocoderStatus.OK) {
+                        Lifecycle.currentWorld.location = results[0].formatted_address;
+                        Log.info('Welcome to ' + Lifecycle.currentWorld.location + '.')
+                    }
+                });
+            }
 
             // Start a new world
             if (Universe.settings.firstPerson) {

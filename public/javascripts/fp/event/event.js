@@ -136,10 +136,13 @@ FiercePlanet.Event = FiercePlanet.Event || {};
                 var resourceCategoryCode = resourceCategory.code;
                 var categoryCount = Lifecycle.currentWorld.getResourceCategoryCount(resourceCategoryCode);
                 if (categoryCount == 1) {
+                    Log.info("Well done! You've added your first " + resourceCategoryName + " resource!");
+                    /*
                     FiercePlanet.Game.currentNotice = new Notice("Well done! You've added your first " + resourceCategoryName + " resource!");
                     FiercePlanet.Game.currentNotice.height = 80;
                     FiercePlanet.Game.currentNotice.foregroundColor = 'rgba(0, 0, 0)';
                     FiercePlanet.Game.currentNotice.backgroundColor = resourceCategoryColor;
+                    */
                 }
             }
         });

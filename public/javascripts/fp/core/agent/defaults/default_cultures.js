@@ -100,18 +100,21 @@ _.extend(DefaultCultures.Stickman, {
         }
         else {
             if (health <= 0) {
-                // Draw an explosion here
-                var explosionX = x;
-                var explosionY = y + width / 8;
+                console.log('got here ', agent)
+//                if (agent.diedAt > Lifecycle.worldCounter - 200) {
+                    // Draw an explosion here
+                    var explosionX = x;
+                    var explosionY = y + width / 8;
 
-                var radgrad = ctx.createRadialGradient(explosionX, explosionY, 0, explosionX, explosionY, width / 3);
-                radgrad.addColorStop(0, 'rgba(255, 168, 81,1)');
-                radgrad.addColorStop(0.8, '#FFF354');
-                radgrad.addColorStop(1, 'rgba(255, 168, 81,0)');
-                ctx.fillStyle = radgrad;
-                ctx.fillRect(x - width / 2, y - (width / 4), width, height + (width / 4));
+                    var radgrad = ctx.createRadialGradient(explosionX, explosionY, 0, explosionX, explosionY, width / 3);
+                    radgrad.addColorStop(0, 'rgba(255, 168, 81,1)');
+                    radgrad.addColorStop(0.8, '#FFF354');
+                    radgrad.addColorStop(1, 'rgba(255, 168, 81,0)');
+                    ctx.fillStyle = radgrad;
+                    ctx.fillRect(x - width / 2, y - (width / 4), width, height + (width / 4));
 
-                sf.defaultAction = sf.expire;
+                    sf.defaultAction = sf.expire;
+//                }
             }
             else {
                 if (speed > CultureDefaults.DEFAULT_RUN_SPEED)
@@ -125,7 +128,7 @@ _.extend(DefaultCultures.Stickman, {
         sf.drawFigure(ctx);
 
         // Now draw the figure
-        ctx.lineWidth = 1.5;
+        ctx.lineWidth = 1;
         ctx.lineCap = "round";
         ctx.strokeStyle = agent.color.hex();
         ctx.stroke();

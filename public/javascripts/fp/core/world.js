@@ -372,6 +372,7 @@ function World() {
      */
     this.addSavedAgent = function(agent, time) {
         agent.alive = false;
+        agent.savedAt = time;
         agent.diedAt = time;
         this.savedAgents.push(agent);
 

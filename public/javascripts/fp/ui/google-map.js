@@ -493,6 +493,27 @@ FiercePlanet.GoogleMapUtils = FiercePlanet.GoogleMapUtils || {};
     }
 
 
+
+    /**
+     * Simple method for coercing a value to a floored integer
+     * @param value
+     */
+    this.getMapLocationInfo = function(callback) {
+        if (typeof(google) == 'undefined' || typeof(google.maps) == 'undefined')
+            return;
+
+        var locationInfo = '';
+
+        if (!_.isUndefined(FiercePlanet.Game.googleMap)) {
+            var latlng = FiercePlanet.Game.googleMap.center;
+            var geoencoder = new google.maps.Geocoder();
+            geoencoder.geocode({'latLng': latlng}, callback);
+        }
+
+        console.log(locationInfo)
+        return locationInfo;
+    };
+
 }).apply(FiercePlanet.GoogleMapUtils);
 
 

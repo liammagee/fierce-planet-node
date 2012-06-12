@@ -899,7 +899,7 @@ li.over {
 #console {
     position: relative;
     height: 65%;
-    font-size:150%;
+    font-size:160%;
     /*padding: 1em;*/
 }
 
@@ -975,15 +975,15 @@ li.over {
 }
 #console .code {
     color: #FF0000;
-    text-indent: 20px;
+    text-indent: 24px;
 }
 #console .sys:before {
-    content: 'FP says:';
-
+    content: 'Fierce-Planet says: ';
+    color: #FF0000;
 }
 #console .sys {
-    color: #FF9019;
-    font-style: italic;
+    color: #1F62C1;
+    /*font-style: italic;*/
 }
 
 pre {

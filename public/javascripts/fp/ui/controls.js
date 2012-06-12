@@ -76,6 +76,15 @@ FiercePlanet.Controls = FiercePlanet.Controls || {};
         $('#story-board').click(FiercePlanet.Storyboard.showStoryboard);
         $('#high-scores').click(FiercePlanet.ProfileUI.showHighScores);
 
+        console.log($('#world-information-link'))
+        $('#world-information-link').click(function() {
+            var info = (_.isUndefined(Lifecycle.currentWorld.information) ? Lifecycle.currentWorld.introduction : Lifecycle.currentWorld.information)
+                worldInformation = '';
+            if (!_.isUndefined(Lifecycle.currentWorld.location))
+                worldInformation += '<h3>Location</h3><div>' + Lifecycle.currentWorld.location + '</div>';
+            worldInformation += '<h3>Information</h3><div>' + info + '</div>';
+            $('#world-information').html(worldInformation);
+        });
 
         // World editor functions
         try {

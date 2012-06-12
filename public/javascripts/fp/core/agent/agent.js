@@ -517,6 +517,13 @@ function Agent(culture, x, y) {
     /**
      * Destroys the agent, removing it from world and cell references
      */
+    this.save = function(world) {
+        this.destroy(world);
+    };
+
+    /**
+     * Destroys the agent, removing it from world and cell references
+     */
     this.destroy = function(world) {
         var thisIndex = -1, agent = this;
         for (var i = 0; i < world.currentAgents.length; i++) {
@@ -567,7 +574,7 @@ function Agent(culture, x, y) {
     this.capabilities = [];
 
     // Current age of the agent
-    this.age = 0, this.bornAt = 0, this.diedAt = 0, this.alive = true;
+    this.age = 0, this.bornAt = 0, this.diedAt = 0, this.savedAt = 0, this.alive = true;
 
     // CHARACTERISTICS
 
