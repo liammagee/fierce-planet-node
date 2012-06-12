@@ -100,7 +100,6 @@ _.extend(DefaultCultures.Stickman, {
         }
         else {
             if (health <= 0) {
-                console.log('got here ', agent)
 //                if (agent.diedAt > Lifecycle.worldCounter - 200) {
                     // Draw an explosion here
                     var explosionX = x;
@@ -128,7 +127,7 @@ _.extend(DefaultCultures.Stickman, {
         sf.drawFigure(ctx);
 
         // Now draw the figure
-        ctx.lineWidth = 1;
+        ctx.lineWidth = 2;
         ctx.lineCap = "round";
         ctx.strokeStyle = agent.color.hex();
         ctx.stroke();
