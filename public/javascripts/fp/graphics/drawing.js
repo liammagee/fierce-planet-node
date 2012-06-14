@@ -111,19 +111,28 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
 
                 var xPos = pathTile[0];
                 var yPos = pathTile[1];
-                var x = xPos * FiercePlanet.Orientation.cellWidth;
-                var y = yPos * FiercePlanet.Orientation.cellHeight;
+                // INLINED SCALE
+                var x = xPos * FiercePlanet.Orientation.cellWidth * FiercePlanet.Orientation.zoomWorld;
+                var y = yPos * FiercePlanet.Orientation.cellHeight * FiercePlanet.Orientation.zoomWorld;
+//                var x = xPos * FiercePlanet.Orientation.cellWidth;
+//                var y = yPos * FiercePlanet.Orientation.cellHeight;
 
                 var terrain = Lifecycle.currentWorld.getCell(xPos, yPos).terrain;
                 var pathColor = terrain ? terrain.color.cssa() : "#000";
 
                 if ((Universe.settings.isometricView || Lifecycle.currentWorld.isometricView)) {
                     var newOrigin = FiercePlanet.Isometric.doIsometricOffset(xPos, yPos);
+                    // INLINED SCALE
                     var originXp = newOrigin.x + FiercePlanet.Orientation.cellWidth / 2;
                     var originYp = newOrigin.y + FiercePlanet.Orientation.cellHeight;
-                    originXp = originXp - (FiercePlanet.Orientation.worldWidth) / 2;
-                    originYp = originYp - (FiercePlanet.Orientation.worldHeight) / 2;
-                    FiercePlanet.Isometric.draw3DTile(ctx, [originXp, originYp], FiercePlanet.Orientation.cellHeight);
+                    originXp = (originXp - FiercePlanet.Orientation.halfWorldWidth) * FiercePlanet.Orientation.zoomWorld;
+                    originYp = (originYp - FiercePlanet.Orientation.halfWorldHeight) * FiercePlanet.Orientation.zoomWorld;
+                    FiercePlanet.Isometric.draw3DTile(ctx, [originXp, originYp], FiercePlanet.Orientation.cellHeight * FiercePlanet.Orientation.zoomWorld);
+//                    var originXp = newOrigin.x + FiercePlanet.Orientation.cellWidth / 2;
+//                    var originYp = newOrigin.y + FiercePlanet.Orientation.cellHeight;
+//                    originXp = originXp - (FiercePlanet.Orientation.worldWidth) / 2;
+//                    originYp = originYp - (FiercePlanet.Orientation.worldHeight) / 2;
+//                    FiercePlanet.Isometric.draw3DTile(ctx, [originXp, originYp], FiercePlanet.Orientation.cellHeight);
                     if (!Universe.settings.hidePath) {
                         ctx.fillStyle = pathColor;
                         ctx.fill();
@@ -135,9 +144,11 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
                     }
                 }
                 else {
-                    // Rotation logic here - TODO: Refactor out
-                    x = x - FiercePlanet.Orientation.halfWorldWidth;
-                    y = y - FiercePlanet.Orientation.halfWorldHeight;
+                    // INLINED SCALE
+                    x = x - FiercePlanet.Orientation.halfWorldWidth * FiercePlanet.Orientation.zoomWorld;
+                    y = y - FiercePlanet.Orientation.halfWorldHeight * FiercePlanet.Orientation.zoomWorld;
+//                    x = x - FiercePlanet.Orientation.halfWorldWidth;
+//                    y = y - FiercePlanet.Orientation.halfWorldHeight;
 
                     if (!Universe.settings.hidePath) {
 //                        if (yPos == 0 || !Lifecycle.currentWorld.areAgentsAllowed(xPos, yPos - 1)) {
@@ -156,7 +167,10 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
                         else {
                             ctx.fillStyle = pathColor;
                         }
-                        ctx.fillRect(x, y, FiercePlanet.Orientation.cellWidth, FiercePlanet.Orientation.cellHeight);
+
+                        // INLINED SCALE
+                        ctx.fillRect(x, y, FiercePlanet.Orientation.cellWidth * FiercePlanet.Orientation.zoomWorld, FiercePlanet.Orientation.cellHeight * FiercePlanet.Orientation.zoomWorld);
+//                        ctx.fillRect(x, y, FiercePlanet.Orientation.cellWidth, FiercePlanet.Orientation.cellHeight);
                     }
                     if (!Universe.settings.hidePathBorder) {
 //                        ctx.border = "2px #eee solid";
@@ -240,9 +254,11 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
                 x = newOrigin.x + FiercePlanet.Orientation.cellWidth / 2;
                 y = newOrigin.y + FiercePlanet.Orientation.cellHeight / 2;
             }
-            // Rotation logic here - TODO: Refactor out
-            x = x - (FiercePlanet.Orientation.worldWidth) / 2;
-            y = y - (FiercePlanet.Orientation.worldHeight) / 2;
+            // INLINE SCALE
+            x = (x - FiercePlanet.Orientation.halfWorldWidth) * FiercePlanet.Orientation.zoomWorld;
+            y = (y - FiercePlanet.Orientation.halfWorldHeight) * FiercePlanet.Orientation.zoomWorld;
+//            x = (x - (FiercePlanet.Orientation.worldWidth) / 2) * FiercePlanet.Orientation.zoomWorld;
+//            y = (y - (FiercePlanet.Orientation.worldHeight) / 2) * FiercePlanet.Orientation.zoomWorld;
             var radius = (FiercePlanet.Orientation.pieceHeight / 2);
 
             // Draw circle
@@ -296,9 +312,11 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
                 x = newOrigin.x + FiercePlanet.Orientation.cellWidth / 2;
                 y = newOrigin.y + FiercePlanet.Orientation.cellHeight / 2;
             }
-            // Rotation logic here - TODO: Refactor out
-            x = x - (FiercePlanet.Orientation.worldWidth) / 2;
-            y = y - (FiercePlanet.Orientation.worldHeight) / 2;
+            // INLINE SCALE
+            x = (x - FiercePlanet.Orientation.halfWorldWidth) * FiercePlanet.Orientation.zoomWorld;
+            y = (y - FiercePlanet.Orientation.halfWorldHeight) * FiercePlanet.Orientation.zoomWorld;
+//            x = (x - (FiercePlanet.Orientation.worldWidth) / 2) * FiercePlanet.Orientation.zoomWorld;
+//            y = (y - (FiercePlanet.Orientation.worldHeight) / 2) * FiercePlanet.Orientation.zoomWorld;
 
             var radius = (FiercePlanet.Orientation.pieceHeight / 2);
 
@@ -581,42 +599,6 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         ctx.restore();
     };
 
-    this.clearTheseAgents = function(agents) {
-        var canvasName = '#resourceCanvas';
-
-        var world = Lifecycle.currentWorld;
-        var len = FiercePlanet.Orientation.cellsAcross;
-
-        // Inlined version
-        var canvas = $(canvasName)[0];
-        var ctx = canvas.getContext('2d');
-        ctx.save();
-        ctx.translate(FiercePlanet.Orientation.halfWorldWidth, FiercePlanet.Orientation.halfWorldHeight);
-        ctx.rotate(FiercePlanet.Orientation.rotationAngle);
-
-        this.clearAgentsInline(ctx, agents);
-
-        ctx.restore();
-    };
-
-    this.clearThisAgent = function(agent) {
-        var canvasName = '#resourceCanvas';
-
-        var world = Lifecycle.currentWorld;
-        var len = FiercePlanet.Orientation.cellsAcross;
-
-        // Inlined version
-        var canvas = $(canvasName)[0];
-        var ctx = canvas.getContext('2d');
-        ctx.save();
-        ctx.translate(FiercePlanet.Orientation.halfWorldWidth, FiercePlanet.Orientation.halfWorldHeight);
-        ctx.rotate(FiercePlanet.Orientation.rotationAngle);
-
-        this.clearAgentInline(ctx, agent);
-
-        ctx.restore();
-    };
-
 
     /**
      * Draw all of the resources
@@ -653,9 +635,11 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
 
             // Create a gradient to fill the cell from the bottom up
             var yOffset = (((FiercePlanet.Orientation.cellHeight) * (1.0 - (s / 100))) / 1.2) | 0;
-            var rgx =  - FiercePlanet.Orientation.halfWorldWidth + x;
-            var rgys = - FiercePlanet.Orientation.halfWorldHeight + y + yOffset;
-            var rgye = - FiercePlanet.Orientation.halfWorldHeight + y + FiercePlanet.Orientation.cellHeight;
+            // INLINE SCALE
+            yOffset = yOffset * FiercePlanet.Orientation.zoomWorld;
+            var rgx =  - FiercePlanet.Orientation.halfWorldWidth * FiercePlanet.Orientation.zoomWorld + x * FiercePlanet.Orientation.zoomWorld;
+            var rgys = - FiercePlanet.Orientation.halfWorldHeight * FiercePlanet.Orientation.zoomWorld + y * FiercePlanet.Orientation.zoomWorld + yOffset;
+            var rgye = - FiercePlanet.Orientation.halfWorldHeight * FiercePlanet.Orientation.zoomWorld + y * FiercePlanet.Orientation.zoomWorld + FiercePlanet.Orientation.cellHeight * FiercePlanet.Orientation.zoomWorld;
             var resourceGradient = ctx.createLinearGradient(rgx, rgys, rgx, rgye);
             resourceGradient.addColorStop(0, "#fff");
             resourceGradient.addColorStop(0.5, c);
@@ -667,12 +651,14 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
                 var originXp = newOrigin.x + FiercePlanet.Orientation.cellWidth / 2;
                 var originYp = newOrigin.y + FiercePlanet.Orientation.cellHeight;
 
-                // Rotation logic here - TODO: Refactor out
-                originXp = originXp - (FiercePlanet.Orientation.halfWorldWidth);
-                originYp = originYp - (FiercePlanet.Orientation.halfWorldHeight);
+                // INLINED SCALE
+                originXp = (originXp - FiercePlanet.Orientation.halfWorldWidth) * FiercePlanet.Orientation.zoomWorld;
+                originYp = (originYp - FiercePlanet.Orientation.halfWorldHeight) * FiercePlanet.Orientation.zoomWorld;
+//                originXp = originXp - (FiercePlanet.Orientation.halfWorldWidth);
+//                originYp = originYp - (FiercePlanet.Orientation.halfWorldHeight);
 
                 ctx.fillStyle = "#fff";
-                FiercePlanet.Isometric.draw3DTile(ctx, [originXp, originYp], FiercePlanet.Orientation.cellHeight);
+                FiercePlanet.Isometric.draw3DTile(ctx, [originXp, originYp], FiercePlanet.Orientation.cellHeight * FiercePlanet.Orientation.zoomWorld);
                 ctx.fill();
 
                 var boxHeight = 0;
@@ -708,19 +694,21 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
             }
             else {
 
-                // Rotation logic here - TODO: Refactor out
-                x = x - (FiercePlanet.Orientation.worldWidth) / 2;
-                y = y - (FiercePlanet.Orientation.worldHeight) / 2;
+                // INLINED SCALE
+                x = (x - FiercePlanet.Orientation.halfWorldWidth) * FiercePlanet.Orientation.zoomWorld;
+                y = (y - FiercePlanet.Orientation.halfWorldHeight) * FiercePlanet.Orientation.zoomWorld;
+//                    x = x - FiercePlanet.Orientation.halfWorldWidth;
+//                    y = y - FiercePlanet.Orientation.halfWorldHeight;
 
 
                 // Clear and fill the resource tile with a white background
-                ctx.clearRect(x, y, FiercePlanet.Orientation.cellWidth, FiercePlanet.Orientation.cellHeight);
+                ctx.clearRect(x, y, FiercePlanet.Orientation.cellWidth * FiercePlanet.Orientation.zoomWorld, FiercePlanet.Orientation.cellHeight * FiercePlanet.Orientation.zoomWorld);
                 ctx.fillStyle = "#fff";
-                ctx.fillRect(x, y, FiercePlanet.Orientation.cellWidth, FiercePlanet.Orientation.cellHeight);
+                ctx.fillRect(x, y, FiercePlanet.Orientation.cellWidth * FiercePlanet.Orientation.zoomWorld, FiercePlanet.Orientation.cellHeight * FiercePlanet.Orientation.zoomWorld);
 
                 ctx.fillStyle = resourceGradient;
                 ctx.strokeStyle = "#333";
-                ctx.fillRect(x, y + yOffset, FiercePlanet.Orientation.cellWidth, (FiercePlanet.Orientation.cellHeight - yOffset));
+                ctx.fillRect(x, y + yOffset, FiercePlanet.Orientation.cellWidth * FiercePlanet.Orientation.zoomWorld, (FiercePlanet.Orientation.cellHeight) * FiercePlanet.Orientation.zoomWorld - yOffset);
 
                 ctx.lineWidth = 4 / FiercePlanet.Orientation.zoomWorld;
                 ctx.strokeStyle = newColor;
@@ -729,7 +717,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
                 // Draw resource-specific representation here
                 if (resource.kind.image) {
                     try {
-                        ctx.drawImage(resource.kind.actualImage, x + 4, y + 4, FiercePlanet.Orientation.cellWidth - 8, FiercePlanet.Orientation.cellHeight - 8);
+                        ctx.drawImage(resource.kind.actualImage, x + 4, y + 4, (FiercePlanet.Orientation.cellWidth * FiercePlanet.Orientation.zoomWorld - 8), (FiercePlanet.Orientation.cellHeight * FiercePlanet.Orientation.zoomWorld - 8));
                     }
                     catch (e) {}
                 }
@@ -763,9 +751,11 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
 
         // Create a gradient to fill the cell from the bottom up
         var yOffset = (((FiercePlanet.Orientation.cellHeight) * (1.0 - (s / 100))) / 1.2) | 0;
-        var rgx =  - FiercePlanet.Orientation.halfWorldWidth + x;
-        var rgys = - FiercePlanet.Orientation.halfWorldHeight + y + yOffset;
-        var rgye = - FiercePlanet.Orientation.halfWorldHeight + y + FiercePlanet.Orientation.cellHeight;
+        // INLINE SCALE
+        yOffset = yOffset * FiercePlanet.Orientation.zoomWorld;
+        var rgx =  - FiercePlanet.Orientation.halfWorldWidth * FiercePlanet.Orientation.zoomWorld + x * FiercePlanet.Orientation.zoomWorld;
+        var rgys = - FiercePlanet.Orientation.halfWorldHeight * FiercePlanet.Orientation.zoomWorld + y * FiercePlanet.Orientation.zoomWorld + yOffset;
+        var rgye = - FiercePlanet.Orientation.halfWorldHeight * FiercePlanet.Orientation.zoomWorld + y * FiercePlanet.Orientation.zoomWorld + FiercePlanet.Orientation.cellHeight * FiercePlanet.Orientation.zoomWorld;
         var resourceGradient = ctx.createLinearGradient(rgx, rgys, rgx, rgye);
         resourceGradient.addColorStop(0, "#fff");
         resourceGradient.addColorStop(0.5, c);
@@ -777,12 +767,14 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
             var originXp = newOrigin.x + FiercePlanet.Orientation.cellWidth / 2;
             var originYp = newOrigin.y + FiercePlanet.Orientation.cellHeight;
 
-            // Rotation logic here - TODO: Refactor out
-            originXp = originXp - (FiercePlanet.Orientation.worldWidth) / 2;
-            originYp = originYp - (FiercePlanet.Orientation.worldHeight) / 2;
+            // INLINED SCALE
+            originXp = (originXp - FiercePlanet.Orientation.halfWorldWidth) * FiercePlanet.Orientation.zoomWorld;
+            originYp = (originYp - FiercePlanet.Orientation.halfWorldHeight) * FiercePlanet.Orientation.zoomWorld;
+////                originXp = originXp - (FiercePlanet.Orientation.halfWorldWidth);
+////                originYp = originYp - (FiercePlanet.Orientation.halfWorldHeight);
 
             ctx.fillStyle = "#fff";
-            FiercePlanet.Isometric.draw3DTile(ctx, [originXp, originYp], FiercePlanet.Orientation.cellHeight);
+            FiercePlanet.Isometric.draw3DTile(ctx, [originXp, originYp], FiercePlanet.Orientation.cellHeight * FiercePlanet.Orientation.zoomWorld);
             ctx.fill();
 
             var boxHeight = 0;
@@ -818,19 +810,21 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         }
         else {
 
-            // Rotation logic here - TODO: Refactor out
-            x = x - (FiercePlanet.Orientation.worldWidth) / 2;
-            y = y - (FiercePlanet.Orientation.worldHeight) / 2;
+            // INLINED SCALE
+            x = (x - FiercePlanet.Orientation.halfWorldWidth) * FiercePlanet.Orientation.zoomWorld;
+            y = (y - FiercePlanet.Orientation.halfWorldHeight) * FiercePlanet.Orientation.zoomWorld;
+//                    x = x - FiercePlanet.Orientation.halfWorldWidth;
+//                    y = y - FiercePlanet.Orientation.halfWorldHeight;
 
 
             // Clear and fill the resource tile with a white background
-            ctx.clearRect(x, y, FiercePlanet.Orientation.cellWidth, FiercePlanet.Orientation.cellHeight);
+            ctx.clearRect(x, y, FiercePlanet.Orientation.cellWidth * FiercePlanet.Orientation.zoomWorld, FiercePlanet.Orientation.cellHeight * FiercePlanet.Orientation.zoomWorld);
             ctx.fillStyle = "#fff";
-            ctx.fillRect(x, y, FiercePlanet.Orientation.cellWidth, FiercePlanet.Orientation.cellHeight);
+            ctx.fillRect(x, y, FiercePlanet.Orientation.cellWidth * FiercePlanet.Orientation.zoomWorld, FiercePlanet.Orientation.cellHeight * FiercePlanet.Orientation.zoomWorld);
 
             ctx.fillStyle = resourceGradient;
             ctx.strokeStyle = "#333";
-            ctx.fillRect(x, y + yOffset, FiercePlanet.Orientation.cellWidth, (FiercePlanet.Orientation.cellHeight - yOffset));
+            ctx.fillRect(x, y + yOffset, FiercePlanet.Orientation.cellWidth * FiercePlanet.Orientation.zoomWorld, (FiercePlanet.Orientation.cellHeight) * FiercePlanet.Orientation.zoomWorld - yOffset);
 
             ctx.lineWidth = 4;
             ctx.strokeStyle = newColor;
@@ -840,7 +834,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
 //                var resImage = new Image();
 //                resImage.src = resource.kind.image;
 //                ctx.drawImage(resImage, x + 4, y + 4, FiercePlanet.Orientation.cellWidth - 8, FiercePlanet.Orientation.cellHeight - 8);
-                ctx.drawImage(resource.kind.actualImage, x + 4, y + 4, FiercePlanet.Orientation.cellWidth - 8, FiercePlanet.Orientation.cellHeight - 8);
+                ctx.drawImage(resource.kind.actualImage, x + 4, y + 4, (FiercePlanet.Orientation.cellWidth * FiercePlanet.Orientation.zoomWorld - 8), (FiercePlanet.Orientation.cellHeight * FiercePlanet.Orientation.zoomWorld - 8));
             }
         }
         ctx.restore();
@@ -862,9 +856,11 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
 
         // Create a gradient to fill the cell from the bottom up
         var yOffset = (((FiercePlanet.Orientation.cellHeight) * (1.0 - (s / 100))) / 1.2) | 0;
-        var rgx =  - FiercePlanet.Orientation.halfWorldWidth + x;
-        var rgys = - FiercePlanet.Orientation.halfWorldHeight + y + yOffset;
-        var rgye = - FiercePlanet.Orientation.halfWorldHeight + y + FiercePlanet.Orientation.cellHeight;
+        // INLINE SCALE
+        yOffset = yOffset * FiercePlanet.Orientation.zoomWorld;
+        var rgx =  - FiercePlanet.Orientation.halfWorldWidth * FiercePlanet.Orientation.zoomWorld + x * FiercePlanet.Orientation.zoomWorld;
+        var rgys = - FiercePlanet.Orientation.halfWorldHeight * FiercePlanet.Orientation.zoomWorld + y * FiercePlanet.Orientation.zoomWorld + yOffset;
+        var rgye = - FiercePlanet.Orientation.halfWorldHeight * FiercePlanet.Orientation.zoomWorld + y * FiercePlanet.Orientation.zoomWorld + FiercePlanet.Orientation.cellHeight * FiercePlanet.Orientation.zoomWorld;
         var resourceGradient = ctx.createLinearGradient(rgx, rgys, rgx, rgye);
         resourceGradient.addColorStop(0, "#fff");
         resourceGradient.addColorStop(0.5, c);
@@ -876,12 +872,14 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
             var originXp = newOrigin.x + FiercePlanet.Orientation.cellWidth / 2;
             var originYp = newOrigin.y + FiercePlanet.Orientation.cellHeight;
 
-            // Rotation logic here - TODO: Refactor out
-            originXp = originXp - (FiercePlanet.Orientation.worldWidth) / 2;
-            originYp = originYp - (FiercePlanet.Orientation.worldHeight) / 2;
+            // INLINED SCALE
+            originXp = (originXp - FiercePlanet.Orientation.halfWorldWidth) * FiercePlanet.Orientation.zoomWorld;
+            originYp = (originYp - FiercePlanet.Orientation.halfWorldHeight) * FiercePlanet.Orientation.zoomWorld;
+//            originXp = originXp - (FiercePlanet.Orientation.worldWidth) / 2;
+//            originYp = originYp - (FiercePlanet.Orientation.worldHeight) / 2;
 
             ctx.fillStyle = "#fff";
-            FiercePlanet.Isometric.draw3DTile(ctx, [originXp, originYp], FiercePlanet.Orientation.cellHeight);
+            FiercePlanet.Isometric.draw3DTile(ctx, [originXp, originYp], FiercePlanet.Orientation.cellHeight * FiercePlanet.Orientation.zoomWorld);
             ctx.fill();
 
             var boxHeight = 0;
@@ -920,19 +918,21 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         }
         else {
 
-            // Rotation logic here - TODO: Refactor out
-            x = x - (FiercePlanet.Orientation.worldWidth) / 2;
-            y = y - (FiercePlanet.Orientation.worldHeight) / 2;
+            // INLINED SCALE
+            x = (x - FiercePlanet.Orientation.halfWorldWidth) * FiercePlanet.Orientation.zoomWorld;
+            y = (y - FiercePlanet.Orientation.halfWorldHeight) * FiercePlanet.Orientation.zoomWorld;
+//                    x = x - FiercePlanet.Orientation.halfWorldWidth;
+//                    y = y - FiercePlanet.Orientation.halfWorldHeight;
 
 
             // Clear and fill the resource tile with a white background
-            ctx.clearRect(x, y, FiercePlanet.Orientation.cellWidth, FiercePlanet.Orientation.cellHeight);
+            ctx.clearRect(x, y, FiercePlanet.Orientation.cellWidth * FiercePlanet.Orientation.zoomWorld, FiercePlanet.Orientation.cellHeight * FiercePlanet.Orientation.zoomWorld);
             ctx.fillStyle = "#fff";
-            ctx.fillRect(x, y, FiercePlanet.Orientation.cellWidth, FiercePlanet.Orientation.cellHeight);
+            ctx.fillRect(x, y, FiercePlanet.Orientation.cellWidth * FiercePlanet.Orientation.zoomWorld, FiercePlanet.Orientation.cellHeight * FiercePlanet.Orientation.zoomWorld);
 
             ctx.fillStyle = resourceGradient;
             ctx.strokeStyle = "#333";
-            ctx.fillRect(x, y + yOffset, FiercePlanet.Orientation.cellWidth, (FiercePlanet.Orientation.cellHeight - yOffset));
+            ctx.fillRect(x, y + yOffset, FiercePlanet.Orientation.cellWidth * FiercePlanet.Orientation.zoomWorld, (FiercePlanet.Orientation.cellHeight) * FiercePlanet.Orientation.zoomWorld - yOffset);
 
             ctx.lineWidth = 4;
             ctx.strokeStyle = newColor;
@@ -943,7 +943,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
 //                resImage.src = resource.kind.image;
 //                ctx.drawImage(resImage, x + 4, y + 4, FiercePlanet.Orientation.cellWidth - 8, FiercePlanet.Orientation.cellHeight - 8);
                 try {
-                ctx.drawImage(resource.kind.actualImage, x + 4, y + 4, FiercePlanet.Orientation.cellWidth - 8, FiercePlanet.Orientation.cellHeight - 8);
+                    ctx.drawImage(resource.kind.actualImage, x + 4, y + 4, (FiercePlanet.Orientation.cellWidth * FiercePlanet.Orientation.zoomWorld - 8), (FiercePlanet.Orientation.cellHeight * FiercePlanet.Orientation.zoomWorld - 8));
                 }
                 catch (e){}
             }
@@ -981,10 +981,13 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
             ax = newAOrigin.x + wx + FiercePlanet.Orientation.cellWidth / 2;
             ay = newAOrigin.y + wy + FiercePlanet.Orientation.cellHeight / 4;
         }
-        x = x - (FiercePlanet.Orientation.worldWidth) / 2;
-        y = y - (FiercePlanet.Orientation.worldHeight) / 2;
-        ax = ax - (FiercePlanet.Orientation.worldWidth) / 2;
-        ay = ay - (FiercePlanet.Orientation.worldHeight) / 2;
+        // INLINED SCALE
+        x = (x - FiercePlanet.Orientation.halfWorldWidth) * FiercePlanet.Orientation.zoomWorld;
+        y = (y - FiercePlanet.Orientation.halfWorldHeight) * FiercePlanet.Orientation.zoomWorld;
+//                    x = x - FiercePlanet.Orientation.halfWorldWidth;
+//                    y = y - FiercePlanet.Orientation.halfWorldHeight;
+        ax = (ax - FiercePlanet.Orientation.halfWorldWidth) * FiercePlanet.Orientation.zoomWorld;
+        ay = (ay - FiercePlanet.Orientation.halfWorldHeight) * FiercePlanet.Orientation.zoomWorld;
 
         var s = (resource.totalYield / resource.initialTotalYield) * 100;
         var c = one.color(resource.color);
@@ -993,7 +996,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         var a = one.color(resource.color).alpha(h / 100);
         var alpha = one.color(resource.color).alpha(0);
 //        var grad = ctx.createLinearGradient(x, y, x, ay);
-        var width = FiercePlanet.Orientation.cellWidth / 5, height = FiercePlanet.Orientation.cellHeight;
+        var width = (FiercePlanet.Orientation.cellWidth / 5) * FiercePlanet.Orientation.zoomWorld, height = FiercePlanet.Orientation.cellHeight * FiercePlanet.Orientation.zoomWorld;
         var grad = ctx.createRadialGradient(ax, ay, 0, ax, ay, width);
         grad.addColorStop(1, alpha.cssa());
         grad.addColorStop(0.5, a.cssa());
@@ -1019,7 +1022,260 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
 
     };
 
-    
+    /**
+     * Dilutes (whitens) the colour of an element, given its strength (some value between 0 and 100)
+     * @param rStrength
+     * @param gStrength
+     * @param bStrength
+     * @param colour
+     */
+    this.diluteColour = function(rStrength, gStrength, bStrength, colour) {
+        colour = colour || 'fff';
+        var charOffset = (colour.length == 3 ? 1 : 2);
+        var multiplier = (charOffset == 1 ? 1 : 16);
+        var dilutionBase = 10;
+        var maxValue = Math.pow(16, charOffset);
+        var r = parseInt(colour.slice(0, 1 * charOffset), 16);
+        var g = parseInt(colour.slice(1 * charOffset, 2 * charOffset), 16);
+        var b = parseInt(colour.slice(2 * charOffset, 3 * charOffset), 16);
+
+        var ro = Math.floor((100 - rStrength) / 100 * (maxValue - r));
+        var go = Math.floor((100 - gStrength) / 100 * (maxValue - g));
+        var bo = Math.floor((100 - bStrength) / 100 * (maxValue - b));
+        var rOffset = (r + ro < maxValue ? r + ro : maxValue - 1).toString(16);
+        var gOffset = (g + go < maxValue ? g + go : maxValue - 1).toString(16);
+        var bOffset = (b + bo < maxValue ? b + bo : maxValue - 1).toString(16);
+        rOffset = (rOffset.length < charOffset ? rOffset + "0" : rOffset);
+        gOffset = (gOffset.length < charOffset ? gOffset + "0" : gOffset);
+        bOffset = (bOffset.length < charOffset ? bOffset + "0" : bOffset);
+        var newColor = '#' + rOffset + gOffset + bOffset;
+        return one.color(newColor).hex();
+    };
+
+    /**
+     * Returns the direction for a given agent - '0' for horizontal, '1' for vertical
+     * @param agent
+     */
+    this.getAgentDirection = function(agent) {
+        var lastX = agent.lastMemory.x;
+        var lastY = agent.lastMemory.y;
+        var x = agent.x;
+        var y = agent.y;
+        if (lastX < x) {
+            return 0;
+        }
+        else {
+            return 1;
+        }
+    };
+
+
+    /**
+     * Retrieves the drawing position for an agent
+     *
+     * @param agent
+     * @param counter
+     */
+    this.getDrawingPosition = function(agent, counter) {
+        var lastX = agent.lastMemory.x;
+        var lastY = agent.lastMemory.y;
+        var x = agent.x;
+        var y = agent.y;
+        var wx = agent.wanderX;
+        var wy = agent.wanderY;
+        var speed = agent.speed;
+        var delay = agent.delay;
+        var countdown = agent.countdownToMove;
+        var incrementTest = (speed - (counter - agent.delay) % speed) / speed;
+        var increment = (speed - countdown) / speed;
+
+        var offsetX = (x - lastX) * (increment);
+        var offsetY = (y - lastY) * (increment);
+        var intX = (x - offsetX);
+        var intY = (y - offsetY);
+
+        if (Lifecycle.currentWorld.allowOffscreenCycling) {
+            var halfWay = (increment < 0.5);
+            if (x == FiercePlanet.Orientation.cellsAcross - 1 && lastX == 0) {
+                if (halfWay) {
+                    offsetX = (x - FiercePlanet.Orientation.cellsAcross) * (increment);
+                    intX = (x - offsetX);
+                }
+                else {
+                    offsetX = 1 - increment;
+                    intX = offsetX;
+                }
+            }
+            else if (x == 0 && lastX == FiercePlanet.Orientation.cellsAcross - 1) {
+                if (halfWay) {
+                    offsetX = increment;
+                    intX = (0 - offsetX);
+                }
+                else {
+                    offsetX = (FiercePlanet.Orientation.cellsAcross - lastX) * (increment);
+                    intX = (FiercePlanet.Orientation.cellsAcross - offsetX);
+                }
+            }
+            else if (y == FiercePlanet.Orientation.cellsDown - 1 && lastY == 0) {
+                if (halfWay) {
+                    offsetY = (y - FiercePlanet.Orientation.cellsDown) * (increment);
+                    intY = (y - offsetY);
+                }
+                else {
+                    offsetY = 1 - increment;
+                    intY = offsetY;
+                }
+            }
+            else if (y == 0 && lastY == FiercePlanet.Orientation.cellsDown - 1) {
+                if (halfWay) {
+                    offsetY = increment;
+                    intY = (0 - offsetY);
+                }
+                else {
+                    offsetY = (FiercePlanet.Orientation.cellsDown - lastY) * (increment);
+                    intY = (FiercePlanet.Orientation.cellsDown - offsetY);
+                }
+            }
+        }
+        return {intX:intX, intY:intY};
+    };
+
+    /**
+     * Draw agents on the agent canvas
+     */
+    this.drawAgents = function(altCanvasName, altAgents) {
+        var canvasName = altCanvasName || '#agentCanvas';
+        var canvas = $(canvasName)[0];
+        var ctx = canvas.getContext('2d');
+
+
+        // Rotation logic here - TODO: Refactor out
+        var midTilePosX = (FiercePlanet.Orientation.worldWidth) / 2;
+        var midTilePosY = (FiercePlanet.Orientation.worldHeight) / 2;
+
+        ctx.save();
+        ctx.translate(midTilePosX, midTilePosY);
+        ctx.rotate(FiercePlanet.Orientation.rotationAngle);
+
+        var agents = altAgents || Lifecycle.currentWorld.currentAgents;
+        for (var i = 0; i < agents.length; i += 1) {
+            var agent = agents[i];
+
+            // Don't process agents we want to block
+            /*
+             if (! Universe.settings.rivalsVisible && agent.agentType.name == AgentTypes.RIVAL_AGENT_TYPE.name)
+             continue;
+             if (! Universe.settings.predatorsVisible && agent.agentType.name == AgentTypes.PREDATOR_AGENT_TYPE.name)
+             continue;
+             */
+
+            // Get co-ordinates
+            var wx = agent.wanderX;
+            var wy = agent.wanderY;
+            var __ret = this.getDrawingPosition(agent, Lifecycle.waveCounter);
+            var xPos = __ret.intX;
+            var yPos = __ret.intY;
+
+            var x = xPos * FiercePlanet.Orientation.cellWidth + wx + FiercePlanet.Orientation.cellWidth / 2;
+            var y = yPos * FiercePlanet.Orientation.cellHeight + wy + FiercePlanet.Orientation.cellHeight / 4;
+
+            if ((Universe.settings.isometricView || Lifecycle.currentWorld.isometricView)) {
+                var newOrigin = FiercePlanet.Isometric.doIsometricOffset(xPos, yPos);
+                x = newOrigin.x + wx + FiercePlanet.Orientation.cellWidth / 2;
+                y = newOrigin.y + wy + FiercePlanet.Orientation.cellHeight / 4;
+            }
+
+            // INLINED SCALE
+            x = (x - FiercePlanet.Orientation.halfWorldWidth) * FiercePlanet.Orientation.zoomWorld;
+            y = (y - FiercePlanet.Orientation.halfWorldHeight) * FiercePlanet.Orientation.zoomWorld;
+//                    x = x - FiercePlanet.Orientation.halfWorldWidth;
+//                    y = y - FiercePlanet.Orientation.halfWorldHeight;
+
+            var direction = this.getAgentDirection(agent);
+
+
+            var blueH = agent.healthCategoryStats[ModuleManager.currentModule.resourceSet.categories[0].code];
+            var greenH = agent.healthCategoryStats[ModuleManager.currentModule.resourceSet.categories[1].code];
+            var redH = agent.healthCategoryStats[ModuleManager.currentModule.resourceSet.categories[2].code];
+            var c = agent.color.toString();
+            var newColor = this.diluteColour(redH, greenH, blueH, c);
+
+            try {
+                eval(agent.culture.drawFunction)(ctx, agent, x, y, FiercePlanet.Orientation.pieceWidth, FiercePlanet.Orientation.pieceHeight, newColor, Lifecycle.waveCounter, direction);
+            } catch(e) {
+                eval(DefaultCultures.CITIZEN_AGENT_TYPE.drawFunction)(ctx, agent, x, y, FiercePlanet.Orientation.pieceWidth, FiercePlanet.Orientation.pieceHeight, newColor, Lifecycle.waveCounter, direction);
+            }
+
+        }
+
+        ctx.restore();
+    };
+
+    /**
+     * Draw agents on the agent canvas
+     */
+    this.drawAgent = function(ctx, agent) {
+
+        // Get co-ordinates
+        var wx = agent.wanderX;
+        var wy = agent.wanderY;
+        var __ret = this.getDrawingPosition(agent, Lifecycle.waveCounter);
+        var xPos = __ret.intX;
+        var yPos = __ret.intY;
+
+        var x = xPos * FiercePlanet.Orientation.cellWidth + wx + FiercePlanet.Orientation.cellWidth / 2;
+        var y = yPos * FiercePlanet.Orientation.cellHeight + wy + FiercePlanet.Orientation.cellHeight / 4;
+
+        if ((Universe.settings.isometricView || Lifecycle.currentWorld.isometricView)) {
+            var newOrigin = FiercePlanet.Isometric.doIsometricOffset(xPos, yPos);
+            x = newOrigin.x + wx + FiercePlanet.Orientation.cellWidth / 2;
+            y = newOrigin.y + wy + FiercePlanet.Orientation.cellHeight / 4;
+        }
+
+        // INLINED SCALE
+        x = (x - FiercePlanet.Orientation.halfWorldWidth) * FiercePlanet.Orientation.zoomWorld;
+        y = (y - FiercePlanet.Orientation.halfWorldHeight) * FiercePlanet.Orientation.zoomWorld;
+//                    x = x - FiercePlanet.Orientation.halfWorldWidth;
+//                    y = y - FiercePlanet.Orientation.halfWorldHeight;
+
+        var direction = this.getAgentDirection(agent);
+        /*
+         var blueH = agent.healthCategoryStats[ModuleManager.currentModule.resourceSet.categories[0].code];
+         var greenH = agent.healthCategoryStats[ModuleManager.currentModule.resourceSet.categories[1].code];
+         var redH = agent.healthCategoryStats[ModuleManager.currentModule.resourceSet.categories[2].code];
+         var c = agent.color.toString();
+         var newColor = this.diluteColour(redH, greenH, blueH, c);
+         */
+        var newColor = agent.color || 'fff';
+
+
+        try {
+            eval(agent.culture.drawFunction)(ctx, agent, x, y, FiercePlanet.Orientation.pieceWidth * FiercePlanet.Orientation.zoomWorld, FiercePlanet.Orientation.pieceHeight * FiercePlanet.Orientation.zoomWorld, newColor, Lifecycle.waveCounter, direction);
+        } catch(e) {
+            console.log(e)
+            eval(DefaultCultures.CITIZEN_AGENT_TYPE.drawFunction)(ctx, agent, x, y, FiercePlanet.Orientation.pieceWidth * FiercePlanet.Orientation.zoomWorld, FiercePlanet.Orientation.pieceHeight * FiercePlanet.Orientation.zoomWorld, newColor, Lifecycle.waveCounter, direction);
+        }
+    };
+
+    /**
+     * Draw agents on the agent canvas
+     */
+    this.drawExpiredAgent = function(agent, altCanvasName) {
+        var canvasName = altCanvasName || '#resourceCanvas';
+        var canvas = $(canvasName)[0];
+        var ctx = canvas.getContext('2d');
+
+        ctx.save();
+        ctx.translate(FiercePlanet.Orientation.halfWorldWidth, FiercePlanet.Orientation.halfWorldHeight);
+        ctx.rotate(FiercePlanet.Orientation.rotationAngle);
+
+        agent.color = one.color('#f00');
+        FiercePlanet.Drawing.drawAgent(ctx, agent);
+
+        ctx.restore();
+    };
+
+
     /**
      * Clears an individual resource
      * @param resource
@@ -1042,9 +1298,11 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
             ctx.save();
             ctx.translate(midTilePosX, midTilePosY);
             ctx.rotate(FiercePlanet.Orientation.rotationAngle);
-            // Rotation logic here - TODO: Refactor out
-            x = x - (FiercePlanet.Orientation.worldWidth) / 2;
-            y = y - (FiercePlanet.Orientation.worldHeight) / 2;
+            // INLINED SCALE
+            x = (x - FiercePlanet.Orientation.halfWorldWidth) * FiercePlanet.Orientation.zoomWorld;
+            y = (y - FiercePlanet.Orientation.halfWorldHeight) * FiercePlanet.Orientation.zoomWorld;
+//                    x = x - FiercePlanet.Orientation.halfWorldWidth;
+//                    y = y - FiercePlanet.Orientation.halfWorldHeight;
             ctx.clearRect(x, y, FiercePlanet.Orientation.cellWidth, FiercePlanet.Orientation.cellHeight);
             ctx.restore();
         }
@@ -1062,7 +1320,43 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         var h = canvas.height;
         ctx.clearRect(-w, -h, 3 * w, 3 * h);
     };
-    
+
+    this.clearTheseAgents = function(agents) {
+        var canvasName = '#resourceCanvas';
+
+        var world = Lifecycle.currentWorld;
+        var len = FiercePlanet.Orientation.cellsAcross;
+
+        // Inlined version
+        var canvas = $(canvasName)[0];
+        var ctx = canvas.getContext('2d');
+        ctx.save();
+        ctx.translate(FiercePlanet.Orientation.halfWorldWidth, FiercePlanet.Orientation.halfWorldHeight);
+        ctx.rotate(FiercePlanet.Orientation.rotationAngle);
+
+        this.clearAgentsInline(ctx, agents);
+
+        ctx.restore();
+    };
+
+    this.clearThisAgent = function(agent) {
+        var canvasName = '#resourceCanvas';
+
+        var world = Lifecycle.currentWorld;
+        var len = FiercePlanet.Orientation.cellsAcross;
+
+        // Inlined version
+        var canvas = $(canvasName)[0];
+        var ctx = canvas.getContext('2d');
+        ctx.save();
+        ctx.translate(FiercePlanet.Orientation.halfWorldWidth, FiercePlanet.Orientation.halfWorldHeight);
+        ctx.rotate(FiercePlanet.Orientation.rotationAngle);
+
+        this.clearAgentInline(ctx, agent);
+
+        ctx.restore();
+    };
+
     /**
      * Clear all active agents
      */
@@ -1169,9 +1463,11 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
                 y = newOrigin.y + wy + 1;// - FiercePlanet.Orientation.cellHeight / 2;
             }
 
-            // Rotation logic here - TODO: Refactor out
-            x = x - (FiercePlanet.Orientation.worldWidth) / 2;
-            y = y - (FiercePlanet.Orientation.worldHeight) / 2;
+            // INLINED SCALE
+            x = (x - FiercePlanet.Orientation.halfWorldWidth) * FiercePlanet.Orientation.zoomWorld;
+            y = (y - FiercePlanet.Orientation.halfWorldHeight) * FiercePlanet.Orientation.zoomWorld;
+//                    x = x - FiercePlanet.Orientation.halfWorldWidth;
+//                    y = y - FiercePlanet.Orientation.halfWorldHeight;
 
             ctx.clearRect(x, y - 17, FiercePlanet.Orientation.cellWidth + wx + 1, FiercePlanet.Orientation.cellHeight + wy + 1 + 17);
         }
@@ -1179,256 +1475,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
 
 
     
-    
-    /**
-     * Dilutes (whitens) the colour of an element, given its strength (some value between 0 and 100)
-     * @param rStrength
-     * @param gStrength
-     * @param bStrength
-     * @param colour
-     */
-    this.diluteColour = function(rStrength, gStrength, bStrength, colour) {
-        colour = colour || 'fff';
-        var charOffset = (colour.length == 3 ? 1 : 2);
-        var multiplier = (charOffset == 1 ? 1 : 16);
-        var dilutionBase = 10;
-        var maxValue = Math.pow(16, charOffset);
-        var r = parseInt(colour.slice(0, 1 * charOffset), 16);
-        var g = parseInt(colour.slice(1 * charOffset, 2 * charOffset), 16);
-        var b = parseInt(colour.slice(2 * charOffset, 3 * charOffset), 16);
-    
-        var ro = Math.floor((100 - rStrength) / 100 * (maxValue - r));
-        var go = Math.floor((100 - gStrength) / 100 * (maxValue - g));
-        var bo = Math.floor((100 - bStrength) / 100 * (maxValue - b));
-        var rOffset = (r + ro < maxValue ? r + ro : maxValue - 1).toString(16);
-        var gOffset = (g + go < maxValue ? g + go : maxValue - 1).toString(16);
-        var bOffset = (b + bo < maxValue ? b + bo : maxValue - 1).toString(16);
-        rOffset = (rOffset.length < charOffset ? rOffset + "0" : rOffset);
-        gOffset = (gOffset.length < charOffset ? gOffset + "0" : gOffset);
-        bOffset = (bOffset.length < charOffset ? bOffset + "0" : bOffset);
-        var newColor = '#' + rOffset + gOffset + bOffset;
-        return one.color(newColor).hex();
-    };
-    
-    /**
-     * Returns the direction for a given agent - '0' for horizontal, '1' for vertical
-     * @param agent
-     */
-    this.getAgentDirection = function(agent) {
-        var lastX = agent.lastMemory.x;
-        var lastY = agent.lastMemory.y;
-        var x = agent.x;
-        var y = agent.y;
-        if (lastX < x) {
-            return 0;
-        }
-        else {
-            return 1;
-        }
-    };
-    
-    
-    /**
-     * Retrieves the drawing position for an agent
-     *
-     * @param agent
-     * @param counter
-     */
-    this.getDrawingPosition = function(agent, counter) {
-        var lastX = agent.lastMemory.x;
-        var lastY = agent.lastMemory.y;
-        var x = agent.x;
-        var y = agent.y;
-        var wx = agent.wanderX;
-        var wy = agent.wanderY;
-        var speed = agent.speed;
-        var delay = agent.delay;
-        var countdown = agent.countdownToMove;
-        var incrementTest = (speed - (counter - agent.delay) % speed) / speed;
-        var increment = (speed - countdown) / speed;
-    
-        var offsetX = (x - lastX) * (increment);
-        var offsetY = (y - lastY) * (increment);
-        var intX = (x - offsetX);
-        var intY = (y - offsetY);
 
-        if (Lifecycle.currentWorld.allowOffscreenCycling) {
-            var halfWay = (increment < 0.5);
-            if (x == FiercePlanet.Orientation.cellsAcross - 1 && lastX == 0) {
-                if (halfWay) {
-                    offsetX = (x - FiercePlanet.Orientation.cellsAcross) * (increment);
-                    intX = (x - offsetX);
-                }
-                else {
-                    offsetX = 1 - increment;
-                    intX = offsetX;
-                }
-            }
-            else if (x == 0 && lastX == FiercePlanet.Orientation.cellsAcross - 1) {
-                if (halfWay) {
-                    offsetX = increment;
-                    intX = (0 - offsetX);
-                }
-                else {
-                    offsetX = (FiercePlanet.Orientation.cellsAcross - lastX) * (increment);
-                    intX = (FiercePlanet.Orientation.cellsAcross - offsetX);
-                }
-            }
-            else if (y == FiercePlanet.Orientation.cellsDown - 1 && lastY == 0) {
-                if (halfWay) {
-                    offsetY = (y - FiercePlanet.Orientation.cellsDown) * (increment);
-                    intY = (y - offsetY);
-                }
-                else {
-                    offsetY = 1 - increment;
-                    intY = offsetY;
-                }
-            }
-            else if (y == 0 && lastY == FiercePlanet.Orientation.cellsDown - 1) {
-                if (halfWay) {
-                    offsetY = increment;
-                    intY = (0 - offsetY);
-                }
-                else {
-                    offsetY = (FiercePlanet.Orientation.cellsDown - lastY) * (increment);
-                    intY = (FiercePlanet.Orientation.cellsDown - offsetY);
-                }
-            }
-        }
-        return {intX:intX, intY:intY};
-    };
-    
-    /**
-     * Draw agents on the agent canvas
-     */
-    this.drawAgents = function(altCanvasName, altAgents) {
-        var canvasName = altCanvasName || '#agentCanvas';
-        var canvas = $(canvasName)[0];
-        var ctx = canvas.getContext('2d');
-
-
-        // Rotation logic here - TODO: Refactor out
-        var midTilePosX = (FiercePlanet.Orientation.worldWidth) / 2;
-        var midTilePosY = (FiercePlanet.Orientation.worldHeight) / 2;
-
-        ctx.save();
-        ctx.translate(midTilePosX, midTilePosY);
-        ctx.rotate(FiercePlanet.Orientation.rotationAngle);
-
-        var agents = altAgents || Lifecycle.currentWorld.currentAgents;
-        for (var i = 0; i < agents.length; i += 1) {
-            var agent = agents[i];
-    
-            // Don't process agents we want to block
-            /*
-            if (! Universe.settings.rivalsVisible && agent.agentType.name == AgentTypes.RIVAL_AGENT_TYPE.name)
-                continue;
-            if (! Universe.settings.predatorsVisible && agent.agentType.name == AgentTypes.PREDATOR_AGENT_TYPE.name)
-                continue;
-                */
-    
-            // Get co-ordinates
-            var wx = agent.wanderX;
-            var wy = agent.wanderY;
-            var __ret = this.getDrawingPosition(agent, Lifecycle.waveCounter);
-            var xPos = __ret.intX;
-            var yPos = __ret.intY;
-
-            var x = xPos * FiercePlanet.Orientation.cellWidth + wx + FiercePlanet.Orientation.cellWidth / 2;
-            var y = yPos * FiercePlanet.Orientation.cellHeight + wy + FiercePlanet.Orientation.cellHeight / 4;
-
-            if ((Universe.settings.isometricView || Lifecycle.currentWorld.isometricView)) {
-                var newOrigin = FiercePlanet.Isometric.doIsometricOffset(xPos, yPos);
-                x = newOrigin.x + wx + FiercePlanet.Orientation.cellWidth / 2;
-                y = newOrigin.y + wy + FiercePlanet.Orientation.cellHeight / 4;
-            }
-            
-            // Rotation logic here - TODO: Refactor out
-            x = x - (FiercePlanet.Orientation.worldWidth) / 2;
-            y = y - (FiercePlanet.Orientation.worldHeight) / 2;
-
-            var direction = this.getAgentDirection(agent);
-
-    
-            var blueH = agent.healthCategoryStats[ModuleManager.currentModule.resourceSet.categories[0].code];
-            var greenH = agent.healthCategoryStats[ModuleManager.currentModule.resourceSet.categories[1].code];
-            var redH = agent.healthCategoryStats[ModuleManager.currentModule.resourceSet.categories[2].code];
-            var c = agent.color.toString();
-            var newColor = this.diluteColour(redH, greenH, blueH, c);
-
-            try {
-                eval(agent.culture.drawFunction)(ctx, agent, x, y, FiercePlanet.Orientation.pieceWidth, FiercePlanet.Orientation.pieceHeight, newColor, Lifecycle.waveCounter, direction);
-            } catch(e) {
-                eval(DefaultCultures.CITIZEN_AGENT_TYPE.drawFunction)(ctx, agent, x, y, FiercePlanet.Orientation.pieceWidth, FiercePlanet.Orientation.pieceHeight, newColor, Lifecycle.waveCounter, direction);
-            }
-    
-        }
-
-        ctx.restore();
-    };
-
-    /**
-     * Draw agents on the agent canvas
-     */
-    this.drawAgent = function(ctx, agent) {
-
-        // Get co-ordinates
-        var wx = agent.wanderX;
-        var wy = agent.wanderY;
-        var __ret = this.getDrawingPosition(agent, Lifecycle.waveCounter);
-        var xPos = __ret.intX;
-        var yPos = __ret.intY;
-
-        var x = xPos * FiercePlanet.Orientation.cellWidth + wx + FiercePlanet.Orientation.cellWidth / 2;
-        var y = yPos * FiercePlanet.Orientation.cellHeight + wy + FiercePlanet.Orientation.cellHeight / 4;
-
-        if ((Universe.settings.isometricView || Lifecycle.currentWorld.isometricView)) {
-            var newOrigin = FiercePlanet.Isometric.doIsometricOffset(xPos, yPos);
-            x = newOrigin.x + wx + FiercePlanet.Orientation.cellWidth / 2;
-            y = newOrigin.y + wy + FiercePlanet.Orientation.cellHeight / 4;
-        }
-
-        // Rotation logic here - TODO: Refactor out
-        x = x - (FiercePlanet.Orientation.worldWidth) / 2;
-        y = y - (FiercePlanet.Orientation.worldHeight) / 2;
-
-        var direction = this.getAgentDirection(agent);
-        /*
-        var blueH = agent.healthCategoryStats[ModuleManager.currentModule.resourceSet.categories[0].code];
-        var greenH = agent.healthCategoryStats[ModuleManager.currentModule.resourceSet.categories[1].code];
-        var redH = agent.healthCategoryStats[ModuleManager.currentModule.resourceSet.categories[2].code];
-        var c = agent.color.toString();
-        var newColor = this.diluteColour(redH, greenH, blueH, c);
-        */
-        var newColor = agent.color || 'fff';
-
-
-        try {
-            eval(agent.culture.drawFunction)(ctx, agent, x, y, FiercePlanet.Orientation.pieceWidth, FiercePlanet.Orientation.pieceHeight, newColor, Lifecycle.waveCounter, direction);
-        } catch(e) {
-            console.log(e)
-            eval(DefaultCultures.CITIZEN_AGENT_TYPE.drawFunction)(ctx, agent, x, y, FiercePlanet.Orientation.pieceWidth, FiercePlanet.Orientation.pieceHeight, newColor, Lifecycle.waveCounter, direction);
-        }
-    };
-
-    /**
-     * Draw agents on the agent canvas
-     */
-    this.drawExpiredAgent = function(agent, altCanvasName) {
-        var canvasName = altCanvasName || '#resourceCanvas';
-        var canvas = $(canvasName)[0];
-        var ctx = canvas.getContext('2d');
-
-        ctx.save();
-        ctx.translate(FiercePlanet.Orientation.halfWorldWidth, FiercePlanet.Orientation.halfWorldHeight);
-        ctx.rotate(FiercePlanet.Orientation.rotationAngle);
-
-        agent.color = one.color('#f00');
-        FiercePlanet.Drawing.drawAgent(ctx, agent);
-
-        ctx.restore();
-    };
-    
     /**
      * Draw the scrolling layer
      */
@@ -1662,16 +1709,19 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
     this.panByDrag = function(offsetX, offsetY) {
     //    var canvases = $('canvas');
         var canvases = $('.scrollable-canvas');
+        offsetX *= FiercePlanet.Orientation.zoomWorld;
+        offsetY *= FiercePlanet.Orientation.zoomWorld;
         for (var i = 0; i < canvases.length; i++) {
             var canvas = canvases[i];
             var ctx = canvas.getContext('2d');
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.translate(offsetX, offsetY);
         }
-        FiercePlanet.Orientation.offsetY += offsetY * FiercePlanet.Orientation.zoomWorld;
-        FiercePlanet.Orientation.offsetX += offsetX * FiercePlanet.Orientation.zoomWorld;
+        FiercePlanet.Orientation.offsetY += offsetY //* FiercePlanet.Orientation.zoomWorld;
+        FiercePlanet.Orientation.offsetX += offsetX //* FiercePlanet.Orientation.zoomWorld;
         if (FiercePlanet.Game.googleMap) {
-            FiercePlanet.Game.googleMap.panBy(- offsetX * FiercePlanet.Orientation.zoomWorld, - offsetY * FiercePlanet.Orientation.zoomWorld);
+//            FiercePlanet.Game.googleMap.panBy(- offsetX * FiercePlanet.Orientation.zoomWorld, - offsetY * FiercePlanet.Orientation.zoomWorld);
+            FiercePlanet.Game.googleMap.panBy(- offsetX, - offsetY);
         }
         this.drawCanvases();
     };
@@ -1710,8 +1760,10 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
      */
     this.zoom = function(direction) {
         var canvases = $('.scrollable-canvas');
-        var existingZoom = FiercePlanet.Orientation.zoomWorld;
+        var existingZoom = FiercePlanet.Orientation.zoomWorld, tmpZoom = existingZoom;
         var zoomChanged = false;
+        // INLINED SCALE
+        /*
         for (var i = 0; i < canvases.length; i++) {
             var canvas = canvases[i];
             var ctx = canvas.getContext('2d');
@@ -1733,31 +1785,39 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
             }
             ctx.translate(- FiercePlanet.Orientation.halfWorldWidth, - FiercePlanet.Orientation.halfWorldHeight);
         }
+        */
         switch (direction) {
             case -1:
                 if (FiercePlanet.Orientation.zoomWorld > 0.1) {
-                    FiercePlanet.Orientation.zoomWorld *= 1 / FiercePlanet.Orientation.zoomMagnificationFactor;
+                    tmpZoom = FiercePlanet.Orientation.zoomWorld * (1 / FiercePlanet.Orientation.zoomMagnificationFactor);
                 }
                 break;
             case 0:
-                FiercePlanet.Orientation.zoomWorld = 1;
+                tmpZoom = 1;
                 break;
             case 1:
                 if (FiercePlanet.Orientation.zoomWorld < 10) {
-                    FiercePlanet.Orientation.zoomWorld *= FiercePlanet.Orientation.zoomMagnificationFactor;
+                    tmpZoom = FiercePlanet.Orientation.zoomWorld * FiercePlanet.Orientation.zoomMagnificationFactor;
                 }
                 break;
         }
         if (FiercePlanet.Game.googleMap) {
             var gZoom = FiercePlanet.Game.googleMap.getZoom();
-            var newZoom = FiercePlanet.Orientation.zoomWorld;
+            var newZoom = tmpZoom;
             var normalisedExistingZoom = Math.log(existingZoom) / Math.log(FiercePlanet.Orientation.zoomMagnificationFactor);
             var normalisedNewZoom = Math.log(newZoom) / Math.log(FiercePlanet.Orientation.zoomMagnificationFactor);
             var gZoomChange = normalisedNewZoom - normalisedExistingZoom;
-            var newGZoom = ((gZoom + gZoomChange) < 1 ? 1 : ((gZoom + gZoomChange) > 20 ? 20 : gZoom + gZoomChange));
+            var newGZoom = ((gZoom + gZoomChange) < 1 ? gZoom : ((gZoom + gZoomChange) > 21 ? gZoom : gZoom + gZoomChange));
+
+            // If we can't change the google map, don't change the underlying zoom level
+            console.log(newGZoom, gZoom)
+            if (newGZoom == gZoom)
+                tmpZoom = FiercePlanet.Orientation.zoomWorld;
+
             FiercePlanet.Game.googleMap.setZoom(newGZoom);
     
         }
+        FiercePlanet.Orientation.zoomWorld = tmpZoom;
         this.drawCanvases();
     };
     

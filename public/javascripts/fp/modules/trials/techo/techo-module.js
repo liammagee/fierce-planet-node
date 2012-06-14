@@ -74,8 +74,8 @@ TechoResources.doSetup = function() {
 
     this.initTechoWorlds = function () {
 
-        this.housingInArica  = new World();
-        _.extend(this.housingInArica,
+        this.fishermansBend  = new World();
+        _.extend(this.fishermansBend,
             {
                 id: 1,
                 name: "Housing in Arica",
@@ -534,7 +534,7 @@ TechoResources.doSetup = function() {
         this.name = "Techo";
         this.position = 1;
         this.worlds = [
-            this.housingInArica
+            this.fishermansBend
         ];
     }
 
