@@ -399,9 +399,17 @@ body {
     #world-name {
         font-size:18px;
     }
+    /*#user-links {*/
+        /*position:absolute;*/
+        /*width:100%; top:1%;*/
+        /*text-align:left;*/
+        /*color:#8FB0E0;*/
+        /*font-size:80%;*/
+        /*z-index: 1;*/
+    /*}*/
     #about {
         position:absolute;
-        width:30%; top:1%;
+        width:30%; top:2%;
         text-align:left;
         color:#8FB0E0;
         font-size:80%;
@@ -409,7 +417,7 @@ body {
     }
     #highscore{
         position:relative;
-        width:70%;top: 1%;
+        width:70%;top: 2%;
         float:right;
         text-align:right;
         font-size:80%;

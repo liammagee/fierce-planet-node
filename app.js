@@ -6,17 +6,11 @@
 
 
 var express = require('express')
-//    , everyauth = require('everyauth')
+    , everyauth = require('everyauth')
     , conf = require('./conf')
     , MongoStore = require('connect-mongodb');
-//    , MongoStore = require('connect-mongo');
 
-//var jsdom = require('jsdom').jsdom
-//  , myWindow = jsdom().createWindow()
-//  , $ = require('jquery')
-//  , jq = require('jquery').create()
-//  , jQuery = require('jquery').create(myWindow)
-//  ;
+
 
 
 
@@ -28,9 +22,7 @@ var FPProvider = require('./FPProviderDB').FPProvider;
 var fpProvider;
 
 app.configure('development', function() {
-//    fpProvider = new FPProvider('mongodb://127.0.0.1:27017/test?auto_reconnect=true', function(error, res) {
     fpProvider = new FPProvider('test', '127.0.0.1', '27017', function(error, res) {
-//    fpProvider = new FPProvider('app708577', 'staff.mongohq.com', '10089', 'heroku', 'password', function(error, res) {
 	    if( error ) console.log(error);
 	    else if (res) {
 	    }
@@ -45,7 +37,6 @@ app.configure('production', function() {
 	    }
 	}, 'heroku', 'password');
 });
-/*
 
 // Everyauth config
 everyauth.debug = true;
@@ -191,6 +182,7 @@ everyauth
 
     .loginSuccessRedirect('/')
     .registerSuccessRedirect('/');
+/*
  */
 
 
@@ -222,7 +214,7 @@ app.configure(function(){
 //        secret: 'topsecret',
 //        store: new store({ db: app.set('m_database'), host: uri.host })
 //    }));
-//    app.use(everyauth.middleware());
+    app.use(everyauth.middleware());
 //    app.use(mongooseAuth.middleware());
 
         // IMPORTANT!!!!!!! Do not add app.router, to your middleware chain
@@ -250,7 +242,7 @@ app.configure('production', function(){
 //var everyone = require("now").initialize(app);
 
 // Everyauth stuff
-//everyauth.helpExpress(app);
+everyauth.helpExpress(app);
 
 // Routes
 app.get('/', function(req, res){
