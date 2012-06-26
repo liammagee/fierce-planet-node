@@ -1,0 +1,36 @@
+!!!
+html
+  head
+    meta(http-equiv='X-UA-Compatible', content='IE=Edge')
+    title= typeof(title) !== 'undefined' ? title : "Fierce Planet"
+    //link(rel='stylesheet', href='/stylesheets/styles_relative.css')
+    link(rel='stylesheet', href='/stylesheets/custom/jquery-ui-1.8.14.custom.css')
+
+    script(src='/javascripts/LABjs-2.0.3/LAB.js')
+    script(src='/javascripts/fp/figure.js')
+
+  body
+    #gameworld(z-index='1')
+      #world-container(z-index='1')
+        canvas.scrollable-canvas#resourceCanvas(z-index='6')
+        div
+          input(type='radio', name='action', value='run', checked='checked')
+          span Run
+          input(type='radio', name='action', value='walk')
+          span Walk
+          input(type='radio', name='action', value='expire')
+          span Expire
+          input(type='radio', name='action', value='explode')
+          span Explode
+          input(type='radio', name='action', value='stand')
+          span Stand
+        div
+          input(type='checkbox', name='reverse')
+          span Reverse direction
+          input(type='checkbox', name='exaggerated')
+          span Exaggerate figure
+        div
+          input(type='button', value='step', id='step')
+          input(type='button', value='play', id='play')
+        #display()
+    #console(style='display: none')

@@ -13,7 +13,6 @@ var express = require('express')
 
 
 
-
 var app = module.exports = express.createServer();
 
 
@@ -22,6 +21,7 @@ var FPProvider = require('./FPProviderDB').FPProvider;
 var fpProvider;
 
 app.configure('development', function() {
+    conf = require('./conf-local')
     fpProvider = new FPProvider('test', '127.0.0.1', '27017', function(error, res) {
 	    if( error ) console.log(error);
 	    else if (res) {
@@ -94,15 +94,27 @@ everyauth
     })
     .redirectPath('/');
 everyauth.google
-//  .myHostname('http://cold-autumn-453.heroku.com/')
   .myHostname('http://www.fierce-planet.com/')
   .appId(conf.google.clientId)
   .appSecret(conf.google.clientSecret)
-  .scope('https://www.google.com/m8/feeds/')
-  .findOrCreateUser( function (sess, accessToken, extra, googleUser) {
-    googleUser.refreshToken = extra.refresh_token;
-    googleUser.expiresIn = extra.expires_in;
-    return usersByGoogleId[googleUser.id] || (usersByGoogleId[googleUser.id] = addUser('google', googleUser));
+//  .scope('https://www.google.com/m8/feeds/')
+    .scope('https://www.googleapis.com/auth/userinfo.profile') // What you want access to
+    .handleAuthCallbackError( function (req, res) {
+        // If a user denies your app, Google will redirect the user to
+        // /auth/google/callback?error=access_denied
+        // This configurable route handler defines how you want to respond to
+        // that.
+        // If you do not configure this, everyauth renders a default fallback
+        // view notifying the user that their authentication failed and why.
+    })
+    .findOrCreateUser( function (sess, accessToken, extra, googleUser) {
+        // find or create user logic goes here
+        // Return a user or Promise that promises a user
+        // Promises are created via
+        //     var promise = this.Promise();
+        googleUser.refreshToken = extra.refresh_token;
+        googleUser.expiresIn = extra.expires_in;
+        return usersByGoogleId[googleUser.id] || (usersByGoogleId[googleUser.id] = addUser('google', googleUser));
   })
   .redirectPath('/');
 everyauth
@@ -252,14 +264,6 @@ app.get('/', function(req, res){
     });
 });
 
-app.get('/mobile', function(req, res){
-    res.render('index', {
-        title: 'Fierce Planet',
-        layout: 'mobile',
-        locals: {}
-    });
-});
-
 app.get('/worlds/gallery', function(req, res){
   fpProvider.findAll(function(error, worlds){
       res.render('worlds/gallery.jade', { locals: {
@@ -365,6 +369,7 @@ app.post('/profile/update', function(req, res){
 app.get('/figure', function(req, res){
     res.render('figure', {
         title: 'Fierce Planet',
+        layout: false,
         locals: {}
     });
 });
@@ -376,7 +381,6 @@ app.listen(port);
 
 
 // Socket IO stuff
-/*
 var sio = require('socket.io');
 var io = sio.listen(app);
 var nicknames = {};
@@ -405,16 +409,16 @@ io.configure('production', function(){
 });
 
 // For development
-//io.configure('development', function(){
-//  io.set('transports', [
-//    'websocket'
-//  , 'flashsocket'
-//  , 'htmlfile'
-//  , 'xhr-polling'
-//  , 'jsonp-polling'
-//  ]);
-//    io.set("polling duration", 10);
-//});
+io.configure('development', function(){
+  io.set('transports', [
+    'websocket'
+  , 'flashsocket'
+  , 'htmlfile'
+  , 'xhr-polling'
+  , 'jsonp-polling'
+  ]);
+    io.set("polling duration", 10);
+});
 
 
 
@@ -454,6 +458,5 @@ io.sockets.on('connection', function (socket) {
   });
 });
 
-*/
 console.log("Express server listening on port %d in %s mode");
 //console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);

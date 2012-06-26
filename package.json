@@ -1,24 +1,28 @@
 {
-    "name": "FiercePlanet"
-  , "description": "Fierce Planet is a simple game for learning about sustainability"
-  , "version": "0.1.8"
-  , "repository": {
+  "name": "FiercePlanet",
+  "description": "Fierce Planet is a simple game for learning about sustainability",
+  "version": "0.1.8-1",
+  "repository": {
     "type": "git",
     "url": "git://github.com/doclm/fierce-planet.git"
+  },
+  "author": "Liam Magee <liam.magee@gmail.com> (http://blog.fierce-planet.com/)",
+  "private": true,
+  "engines": {
+    "node": "0.6.x",
+    "npm": "1.0.x"
+  },
+  "dependencies": {
+    "express": ">= 2.5.6",
+    "stylus": ">= 0.27.1",
+    "jade": ">= 0.26.1",
+    "socket.io": ">= 0.9.6",
+    "everyauth": ">= 0.2.32",
+    "mongodb": ">= 0.9.7",
+    "connect-mongodb": ">= 1.1.4"
+  },
+  "subdomain": "fp",
+  "scripts": {
+    "start": "app.js"
   }
-  , "author": "Liam Magee <liam.magee@gmail.com> (http://blog.fierce-planet.com/)"
-  , "private": true
-  ,  "engines": {
-        "node": "0.6.x",
-        "npm":  "1.0.x"
-    }
-    , "dependencies": {
-      "express": ">= 2.5.6"
-    , "stylus": ">= 0.27.1"
-    , "jade": ">= 0.26.1"
-    , "socket.io": ">= 0.9.6"
-    , "everyauth": ">= 0.2.32"
-    , "mongodb": ">= 0.9.7"
-    , "connect-mongodb": ">= 1.1.4"
-}
 }

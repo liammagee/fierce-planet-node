@@ -52,7 +52,7 @@ $(function() {
   //window.jqconsole = $('#notifications').jqconsole(header, 'JS> ');
 
   jqconsole.zone = {};
-  jqconsole.zone.fp = true;
+//  jqconsole.zone.fp = true;
   jqconsole.JSMode = false;
 
   // Abort prompt on Ctrl+Z.
@@ -67,7 +67,7 @@ $(function() {
   jqconsole.RegisterShortcut('`', function() {
       $('#console').css({height: 30});
       jqconsole.Reset();
-    handler();
+    fiercePlanetConsoleHandler();
   });
 
   jqconsole.RegisterMatching('{', '}', 'brace');
@@ -101,7 +101,7 @@ $(function() {
       jqconsole.Write(jqconsole.zone.name, 'quote');
       jqconsole.Write(' zone.\n');
       jqconsole.zone = {};
-      handler();
+      fiercePlanetConsoleHandler();
   }
 
   var showConsoleTutorial = function() {
@@ -135,8 +135,8 @@ $(function() {
       }
   }
 
-  var handler = function(command) {
-//      jqconsole.SetPromptText('hello')
+  var fiercePlanetConsoleHandler = function(command) {
+      console.log(command)
     if (command) {
       if (command == 'zone') {
           showCurrentZone();
@@ -225,7 +225,7 @@ $(function() {
       }
     }
 
-    jqconsole.Prompt(true, handler, function(command) {
+    jqconsole.Prompt(true, fiercePlanetConsoleHandler, function(command) {
       // Continue line if can't compile the command.
         return /\\$/.test(command);
         /*
@@ -576,11 +576,11 @@ $(function() {
     }
 
   // Initiate the first prompt.
-  handler();
+  fiercePlanetConsoleHandler();
 
 
     // Send focus back to the new world dialog if it's open
-    if (FiercePlanet.Dialogs.newWorldDialog.dialog( "isOpen" ))
+    if (FiercePlanet.Dialogs.newWorldDialog != null && FiercePlanet.Dialogs.newWorldDialog.dialog( "isOpen" ))
         $('#btn-play').focus();
 });
 

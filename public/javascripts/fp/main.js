@@ -8,8 +8,6 @@ $LAB
 
     // Load JQuery
    .script('jquery/jquery-1.7.1.min.js')
-//    .wait(function() {
-//    })
 
     // Load JQuery UI & Plug-ins
     .script([
@@ -20,25 +18,24 @@ $LAB
     ])
 
     // Load other libraries
-    .script("underscore/underscore-min.js")
-    .script("one-color/one-color-all.js")
-   .script("spin.js/spin.min.js")
-   .script("sylvester/sylvester.js")
-   .script("flot-0.7/flot/jquery.flot.min.js")
-//   .script("jstat-1.0.0/js/jstat.js")
-   .script("jstat-2.0/jstat.js")
-   .script("jpicker-1.1.6/jpicker-1.1.6.js")
-   .script("jq-console/jqconsole-2.7.min.js")
-   .script("CodeMirror-2.2/lib/codemirror.js")
-   .script("CodeMirror-2.2/mode/javascript/javascript.js")
-    // TODO: consider later
-//   .script("jq-console/demo/jqconsole-min.js")
-    // .script("/socket.io/socket.io.js")
-//    .wait()
+    .script([
+      'CodeMirror-2.2/lib/codemirror.js'
+    , 'CodeMirror-2.2/mode/javascript/javascript.js'
+    , 'flot-0.7/flot/jquery.flot.min.js'
+    , 'jpicker-1.1.6/jpicker-1.1.6.js'
+    , 'jq-console/jqconsole-2.7.min.js'
+    , 'jstat-2.0/jstat.js'
+    , 'one-color/one-color-all.js'
+    , 'socket.io/socket.io.js'
+    , 'spin.js/spin.min.js'
+    , 'sylvester/sylvester.js'
+    , 'underscore/underscore-min.js'
+    ])
 
         // Load FiercePlanet other plugins
    .script([
-        'fp/core/universe.js', 'fp/core/catastrophe.js'
+        'fp/core/universe.js'
+    , 'fp/core/catastrophe.js'
        , 'fp/core/agent/agent.js' , 'fp/core/agent/culture.js' , 'fp/core/agent/beliefs.js' , 'fp/core/agent/desires.js' , 'fp/core/agent/capabilities.js' , 'fp/core/agent/characteristics.js' , 'fp/core/agent/plans.js'
     , 'fp/core/campaign.js', 'fp/core/cell.js', 'fp/core/world.js', 'fp/core/wave.js', 'fp/core/resource.js', 'fp/core/species.js', 'fp/core/terrain.js', 'fp/core/tile.js'
     , 'fp/core/module-manager.js' , 'fp/core/module.js', 'fp/core/lifecycle.js', 'fp/core/statistics.js'
@@ -66,6 +63,7 @@ $LAB
     , 'fp/ui/google-map.js'
 
        , 'fp/utils/fp-utils.js', 'fp/utils/log.js', 'fp/utils/recording.js', 'fp/utils/url-params.js'
+      , 'fp/utils/comms.js'
        , 'fp/game.js'
    ])
 //    .wait(function() {
@@ -249,12 +247,3 @@ $LAB
         }
     })
 
-// TODO: Enable or remove Paper.js
-//        .script("paperjs-0.22/lib/paper.js")
-//    .wait(function() {
-        //        var canvas = document.getElementById('scrollingCanvas');
-//        paper.setup();
-//        paper.install(window);
-//    })
-//    .script({src: "fp/graphics/effects/overlay.js"})
-//    .script({src: "fp/graphics/effects/overlay-js.js"})

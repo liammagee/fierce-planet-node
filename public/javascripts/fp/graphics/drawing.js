@@ -1176,20 +1176,18 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
             var xPos = __ret.intX;
             var yPos = __ret.intY;
 
-            var x = xPos * FiercePlanet.Orientation.cellWidth + wx + FiercePlanet.Orientation.cellWidth / 2;
-            var y = yPos * FiercePlanet.Orientation.cellHeight + wy + FiercePlanet.Orientation.cellHeight / 4;
+            var x = xPos * FiercePlanet.Orientation.cellWidth + wx;
+            var y = yPos * FiercePlanet.Orientation.cellHeight + wy;
 
             if ((Universe.settings.isometricView || Lifecycle.currentWorld.isometricView)) {
                 var newOrigin = FiercePlanet.Isometric.doIsometricOffset(xPos, yPos);
-                x = newOrigin.x + wx + FiercePlanet.Orientation.cellWidth / 2;
-                y = newOrigin.y + wy + FiercePlanet.Orientation.cellHeight / 4;
+                x = newOrigin.x + wx;
+                y = newOrigin.y + wy;
             }
 
             // INLINED SCALE
             x = (x - FiercePlanet.Orientation.halfWorldWidth) * FiercePlanet.Orientation.zoomWorld;
             y = (y - FiercePlanet.Orientation.halfWorldHeight) * FiercePlanet.Orientation.zoomWorld;
-//                    x = x - FiercePlanet.Orientation.halfWorldWidth;
-//                    y = y - FiercePlanet.Orientation.halfWorldHeight;
 
             var direction = this.getAgentDirection(agent);
 
@@ -1223,12 +1221,12 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         var xPos = __ret.intX;
         var yPos = __ret.intY;
 
-        var x = xPos * FiercePlanet.Orientation.cellWidth + wx + FiercePlanet.Orientation.cellWidth / 2;
-        var y = yPos * FiercePlanet.Orientation.cellHeight + wy + FiercePlanet.Orientation.cellHeight / 4;
+        var x = xPos * FiercePlanet.Orientation.cellWidth + wx + (FiercePlanet.Orientation.cellWidth / 2 - FiercePlanet.Orientation.pieceWidth / 2);
+        var y = yPos * FiercePlanet.Orientation.cellHeight + wy + (FiercePlanet.Orientation.cellHeight / 4);
 
         if ((Universe.settings.isometricView || Lifecycle.currentWorld.isometricView)) {
             var newOrigin = FiercePlanet.Isometric.doIsometricOffset(xPos, yPos);
-            x = newOrigin.x + wx + FiercePlanet.Orientation.cellWidth / 2;
+            x = newOrigin.x + wx + (FiercePlanet.Orientation.cellWidth / 2 - FiercePlanet.Orientation.pieceWidth / 2);
             y = newOrigin.y + wy + FiercePlanet.Orientation.cellHeight / 4;
         }
 
@@ -1247,7 +1245,6 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
          var newColor = this.diluteColour(redH, greenH, blueH, c);
          */
         var newColor = agent.color || 'fff';
-
 
         try {
             eval(agent.culture.drawFunction)(ctx, agent, x, y, FiercePlanet.Orientation.pieceWidth * FiercePlanet.Orientation.zoomWorld, FiercePlanet.Orientation.pieceHeight * FiercePlanet.Orientation.zoomWorld, newColor, Lifecycle.waveCounter, direction);

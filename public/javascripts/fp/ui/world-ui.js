@@ -22,7 +22,8 @@ FiercePlanet.WorldUI = FiercePlanet.WorldUI || {};
      * Show world editor
      */
     this.listWorlds = function() {
-        Lifecycle.pauseGame();
+        Lifecycle._stopAgents();
+//        Lifecycle.pauseGame();
         $('#world-list-tabs').tabs();
         $('#new-world').click(FiercePlanet.WorldUI.newWorld);
         FiercePlanet.WorldUI.ajaxListWorlds();
@@ -32,7 +33,8 @@ FiercePlanet.WorldUI = FiercePlanet.WorldUI || {};
      * Prepare to create a new world
      */
     this.newWorld = function() {
-        Lifecycle.pauseGame();
+        Lifecycle._stopAgents();
+//        Lifecycle.pauseGame();
         FiercePlanet.Dialogs.worldEditorDialog.dialog('close');
 
         // Create new world
@@ -147,8 +149,11 @@ FiercePlanet.WorldUI = FiercePlanet.WorldUI || {};
      */
     this.constructWorld = function(json) {
         if (json) {
-            var tmpWorld = FiercePlanet.Utils.makeFromJSONObject(json, World.prototype);
-            tmpWorld.resources = [];
+            var tmpWorld = FiercePlanet.Utils.makeFromJSONObject(json, new World());
+            if (_.isUndefined(tmpWorld.cells))
+                tmpWorld.cells = [];
+            if (_.isUndefined(tmpWorld.resources))
+                tmpWorld.resources = [];
             /*
             tmpWorld.resources = tmpWorld.resources || [];
             for (var i in tmpWorld.resources) {

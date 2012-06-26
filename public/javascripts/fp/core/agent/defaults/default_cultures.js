@@ -39,7 +39,7 @@ DefaultCultures.Stickman = new Culture("Stickman", one.color("#000"));
 _.extend(DefaultCultures.Stickman, {
     drawFunction: (function(ctx, agent, x, y, width, height, newColor, counter, direction) {
         // Define agent elements here
-        var frames = 3;
+        var frames = 4;
         var speed = agent.speed;
         var health = agent.health;
         var countdown = agent.countdownToMove;
@@ -70,8 +70,8 @@ _.extend(DefaultCultures.Stickman, {
 
             // Draw health line next
             ctx.beginPath();
-            ctx.moveTo(x - width / 4, y + yHealthOffset);
-            ctx.lineTo(x - width / 4 + barLength, y + yHealthOffset);
+            ctx.moveTo(x + width / 4, y + yHealthOffset);
+            ctx.lineTo(x + width / 4 + barLength, y + yHealthOffset);
             ctx.closePath();
 
             ctx.strokeStyle = rc.color;
@@ -94,7 +94,21 @@ _.extend(DefaultCultures.Stickman, {
          */
 
 
-        var sf = new FiercePlanet.StickFigure(x, y, width, height);
+        switch (frame) {
+            case 0:
+                y = y - 1;
+                break;
+            case 1:
+                y = y - 2;
+                break;
+            case 2:
+                y = y - 1;
+                break;
+            case 3:
+                break;
+        }
+
+        var sf = new FiercePlanet.StickFigure(x, y, width, height, true);
         if (!_.isUndefined(agent.culture.customStickFunction)) {
             sf.defaultAction = eval(agent.culture.customStickFunction);
         }
@@ -102,7 +116,7 @@ _.extend(DefaultCultures.Stickman, {
             if (health <= 0) {
 //                if (agent.diedAt > Lifecycle.worldCounter - 200) {
                     // Draw an explosion here
-                    var explosionX = x;
+                    var explosionX = x + width / 2;
                     var explosionY = y + width / 8;
 
                     var radgrad = ctx.createRadialGradient(explosionX, explosionY, 0, explosionX, explosionY, width / 3);
@@ -110,7 +124,7 @@ _.extend(DefaultCultures.Stickman, {
                     radgrad.addColorStop(0.8, '#FFF354');
                     radgrad.addColorStop(1, 'rgba(255, 168, 81,0)');
                     ctx.fillStyle = radgrad;
-                    ctx.fillRect(x - width / 2, y - (width / 4), width, height + (width / 4));
+                    ctx.fillRect(x, y - (width / 4), width, height + (width / 4));
 
                     sf.defaultAction = sf.expire;
 //                }
@@ -127,7 +141,7 @@ _.extend(DefaultCultures.Stickman, {
         sf.drawFigure(ctx);
 
         // Now draw the figure
-        ctx.lineWidth = 2;
+        ctx.lineWidth = 1.5;
         ctx.lineCap = "round";
         ctx.strokeStyle = agent.color.hex();
         ctx.stroke();

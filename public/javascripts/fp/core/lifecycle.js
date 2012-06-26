@@ -417,7 +417,8 @@ var Lifecycle = Lifecycle || {};
         Lifecycle.currentWave = 1;
         Lifecycle.currentWaveNumber = 0;
 
-        this.currentWorld.initWorld();
+        if (!_.isUndefined(Lifecycle.currentWorld.initWorld))
+            Lifecycle.currentWorld.initWorld();
 
 
 		if (this.postInitialiseGameCallback)
