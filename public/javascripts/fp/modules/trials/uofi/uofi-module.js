@@ -226,7 +226,7 @@ UofIResources.doSetup = function() {
                     // Change the water quality
                     world.cells.forEach(function(cell) {
                         if (cell.y > 23 && cell.y < 33) {
-                            cell.terrain.color = cell.terrain.color.blue(currentWaterQuality / 100);
+                            cell.terrain.color = one.color(cell.terrain.color).blue(currentWaterQuality / 100).cssa();
                         }
                     })
 
@@ -512,7 +512,7 @@ UofIResources.doSetup = function() {
                                 l = 1;
                             else
                                 l += adjustment;
-                            cell.terrain.color = cell.terrain.color.green(l);
+                            cell.terrain.color = one.color(cell.terrain.color).green(l).cssa();
                         }
                     })
 

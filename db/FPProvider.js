@@ -1,10 +1,10 @@
 var levelCounter = 1;
 
-Universe = require('./public/javascripts/fp/core/universe.js').Universe;
+Universe = require('./../public/javascripts/fp/core/universe.js').Universe;
 Level = require('./public/javascripts/fp/core/level.js').Level;
 require('public/javascripts/fp/core/agent/agent.js');
-require('./public/javascripts/fp/core/resource.js');
-require('./public/javascripts/fp/core/tile.js');
+require('./../public/javascripts/fp/core/resource.js');
+require('./../public/javascripts/fp/core/tile.js');
 
 
 var level = new Level();

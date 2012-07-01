@@ -1,0 +1,12 @@
+node_modules
+.git
+.idea
+.monitor
+fp.iml
+fp.ipr
+fp.iws
+fp.sublime-project
+*.xlsx
+*.zip
+public/images/mobile
+public/images/intridea-authbuttons/eps

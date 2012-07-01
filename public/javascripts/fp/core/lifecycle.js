@@ -282,6 +282,7 @@ var Lifecycle = Lifecycle || {};
 			this.preStartWorldCallback();
 
         FiercePlanet.Parameters.processParameters();
+
         if (this.currentWorld && this.currentWorld.handleParameters)
             this.currentWorld.handleParameters();
 
@@ -290,7 +291,10 @@ var Lifecycle = Lifecycle || {};
 		
         Lifecycle.newWave();
 
-		if (this.postStartWorldCallback)
+        if (this.currentWorld && this.currentWorld.postStartWorldCallback)
+            this.currentWorld.postStartWorldCallback();
+
+        if (this.postStartWorldCallback)
 			this.postStartWorldCallback();
     };
 

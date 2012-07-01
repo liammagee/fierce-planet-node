@@ -136,7 +136,6 @@ $(function() {
   }
 
   var fiercePlanetConsoleHandler = function(command) {
-      console.log(command)
     if (command) {
       if (command == 'zone') {
           showCurrentZone();

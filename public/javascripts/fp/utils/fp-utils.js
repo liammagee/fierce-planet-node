@@ -258,7 +258,7 @@ FiercePlanet.Utils = FiercePlanet.Utils || {};
      * Makes a world from a JSON object
      */
     this.makeFromJSONObject = function(obj, prototype) {
-        var obj = {};
+//        var obj = {};
         for (var key in prototype) {
             if (typeof(prototype[key]) == "function") {
                 obj[key] = prototype[key];

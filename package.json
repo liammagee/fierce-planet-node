@@ -1,7 +1,7 @@
 {
   "name": "FiercePlanet",
   "description": "Fierce Planet is a simple game for learning about sustainability",
-  "version": "0.1.8-2",
+  "version": "0.1.8-4",
   "repository": {
     "type": "git",
     "url": "git://github.com/doclm/fierce-planet.git"
@@ -19,7 +19,11 @@
     "socket.io": ">= 0.9.6",
     "everyauth": ">= 0.2.32",
     "mongodb": ">= 0.9.7",
-    "connect-mongodb": ">= 1.1.4"
+    "connect-mongodb": ">= 1.1.4",
+    "natural": ">= 0.0.12",
+    "underscore": ">= 1.3.3",
+    "onecolor": ">= 2.2.4",
+    "onecolor": ">= 2.2.4"
   },
   "subdomain": "fp",
   "scripts": {

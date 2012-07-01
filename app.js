@@ -17,7 +17,7 @@ var app = module.exports = express.createServer();
 
 
 // MongoDB stuff
-var FPProvider = require('./FPProviderDB').FPProvider;
+var FPProvider = require('./db/FPProviderDB').FPProvider;
 var fpProvider;
 
 app.configure('development', function() {
@@ -227,16 +227,22 @@ app.configure(function(){
 //        store: new store({ db: app.set('m_database'), host: uri.host })
 //    }));
     app.use(everyauth.middleware());
-//    app.use(mongooseAuth.middleware());
 
         // IMPORTANT!!!!!!! Do not add app.router, to your middleware chain
         // explicitly, or you will run into problems accessing `req.user`
         // i.e., do not use app.use(app.router). Let express do this for you
         // automatically for you upon your first app.get or app.post.
+
+    // LM: In spite of this admonition, app does not load without this call
     app.use(app.router);
 
   // use express logger
 //  app.use(express.logger({ format: '\x1b[1m:method\x1b[0m \x1b[33m:url\x1b[0m :response-time ms' }));
+
+
+    // Try compression in Express 3.0
+//    app.use(express.compress());
+
   app.use(express.static(__dirname + '/public'));
 });
 

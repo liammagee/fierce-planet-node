@@ -1,12 +1,12 @@
 var worldCounter = 1;
 
-Universe = require('./public/javascripts/fp/core/universe.js').Universe;
-World = require('./public/javascripts/fp/core/world.js').World;
-require('./public/javascripts/fp/core/agent/agent.js');
-require('./public/javascripts/fp/core/resource.js');
-require('./public/javascripts/fp/core/tile.js');
+Universe = require('./../public/javascripts/fp/core/universe.js').Universe;
+World = require('./../public/javascripts/fp/core/world.js').World;
+require('./../public/javascripts/fp/core/agent/agent.js');
+require('./../public/javascripts/fp/core/resource.js');
+require('./../public/javascripts/fp/core/tile.js');
 
-var Profile = require('./public/javascripts/fp/profile/profile.js').Profile;
+var Profile = require('./../public/javascripts/fp/profile/profile.js').Profile;
 
 
 

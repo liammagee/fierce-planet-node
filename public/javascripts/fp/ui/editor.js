@@ -24,41 +24,43 @@ FiercePlanet.Editor = FiercePlanet.Editor || {};
      */
     this.showDesignFeaturesDialog = function(e) {
         $("#make-tile").click(function(e) {
+//            Lifecycle.currentWorld.getCell(FiercePlanet.Game.currentX, FiercePlanet.Game.currentY).agentsAllowed = true;
             Lifecycle.currentWorld.forbidAgentOnCell(FiercePlanet.Game.currentX, FiercePlanet.Game.currentY);
+            Lifecycle.currentWorld.generatePath();
             FiercePlanet.Dialogs.designFeaturesDialog.dialog('close');
-            FiercePlanet.Drawing.drawGame();
+            FiercePlanet.Drawing.drawCanvases();
         });
 
         $("#add-exit-point").click(function(e) {
             Lifecycle.currentWorld.addExitPoint(FiercePlanet.Game.currentX, FiercePlanet.Game.currentY);
             FiercePlanet.Dialogs.designFeaturesDialog.dialog('close');
-            FiercePlanet.Drawing.drawGame();
+            FiercePlanet.Drawing.drawCanvases();
         });
 
         $("#add-entry-point").click(function(e) {
             Lifecycle.currentWorld.removeEntryPoint(0, 0);
             Lifecycle.currentWorld.addEntryPoint(FiercePlanet.Game.currentX, FiercePlanet.Game.currentY);
             FiercePlanet.Dialogs.designFeaturesDialog.dialog('close');
-            FiercePlanet.Drawing.drawGame();
+            FiercePlanet.Drawing.drawCanvases();
         });
 
 
         $("#remove-entry-point").click(function(e) {
             Lifecycle.currentWorld.removeEntryPoint(FiercePlanet.Game.currentX, FiercePlanet.Game.currentY);
             FiercePlanet.Dialogs.designFeaturesDialog.dialog('close');
-            FiercePlanet.Drawing.drawGame();
+            FiercePlanet.Drawing.drawCanvases();
         });
 
         $("#remove-exit-point").click(function(e) {
             Lifecycle.currentWorld.removeExitPoint(FiercePlanet.Game.currentX, FiercePlanet.Game.currentY);
             FiercePlanet.Dialogs.designFeaturesDialog.dialog('close');
-            FiercePlanet.Drawing.drawGame();
+            FiercePlanet.Drawing.drawCanvases();
         });
 
         $("#remove-resource").click(function(e) {
             Lifecycle.currentWorld.removeResourceByPosition(FiercePlanet.Game.currentX, FiercePlanet.Game.currentY);
             FiercePlanet.Dialogs.designFeaturesDialog.dialog('close');
-            FiercePlanet.Drawing.drawGame();
+            FiercePlanet.Drawing.drawCanvases();
         });
 
 
@@ -73,7 +75,6 @@ FiercePlanet.Editor = FiercePlanet.Editor || {};
         // Set up dialogs
         $('#delete-upgrade').hide();
 //    $('#swatch').hide();
-        $('#world-editor').show();
 
 
         var canvas = FiercePlanet.GeneralUI.getTopMostCanvas();
@@ -91,11 +92,8 @@ FiercePlanet.Editor = FiercePlanet.Editor || {};
         FiercePlanet.Game.inDesignMode = true;
         Universe.settings.isometricView = false;
 
-        // Minimise console
-        FiercePlanet.Console.minimise();
-
-        // Initialise the game
-        Lifecycle._initialiseGame();
+//        $('#model-tabs').tabs('add', $('#world-editor'), 'Editor')
+        $('#world-editor').show();
     };
 
     /**
@@ -128,13 +126,22 @@ FiercePlanet.Editor = FiercePlanet.Editor || {};
                 if (agentsAllowed) {
                     var cell = Lifecycle.currentWorld.getCell(currentPoint.posX, currentPoint.posY);
                     cell.agentsAllowed = false;
-                    FiercePlanet.Drawing.drawCanvases();
                 }
             }
             else {
                 var cell = Lifecycle.currentWorld.getCell(currentPoint.posX, currentPoint.posY);
                 cell.agentsAllowed = true;
             }
+            Lifecycle.currentWorld.generatePath();
+            Lifecycle.currentWorld.cells.forEach(function(cell) {
+                if (cell.agentsAllowed) {
+                    cell.terrain = new Terrain(one.color('#aaa').alpha(0.8).cssa());
+                }
+                else {
+                    cell.terrain = Terrain.DEFAULT_TERRAIN;
+                }
+            })
+
             FiercePlanet.Drawing.drawCanvases();
         }
         return false;

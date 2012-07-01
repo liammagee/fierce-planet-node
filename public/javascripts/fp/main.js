@@ -11,7 +11,44 @@ $LAB
 
     // Load JQuery UI & Plug-ins
     .script([
+    /*
+        'jquery-ui-1.9.0-beta.1/ui/minified/jquery-ui.min.js'
+        , 'jquery-ui-1.9.0-beta.1/ui/minified/jquery.ui.accordion.min.js'
+    , 'jquery-ui-1.9.0-beta.1/ui/minified/jquery.ui.autocomplete.min.js'
+    , 'jquery-ui-1.9.0-beta.1/ui/minified/jquery.ui.button.min.js'
+    , 'jquery-ui-1.9.0-beta.1/ui/minified/jquery.ui.core.min.js'
+    , 'jquery-ui-1.9.0-beta.1/ui/minified/jquery.ui.datepicker.min.js'
+    , 'jquery-ui-1.9.0-beta.1/ui/minified/jquery.ui.dialog.min.js'
+    , 'jquery-ui-1.9.0-beta.1/ui/minified/jquery.ui.draggable.min.js'
+    , 'jquery-ui-1.9.0-beta.1/ui/minified/jquery.ui.effect-blind.min.js'
+    , 'jquery-ui-1.9.0-beta.1/ui/minified/jquery.ui.effect-bounce.min.js'
+    , 'jquery-ui-1.9.0-beta.1/ui/minified/jquery.ui.effect-clip.min.js'
+    , 'jquery-ui-1.9.0-beta.1/ui/minified/jquery.ui.effect-drop.min.js'
+    , 'jquery-ui-1.9.0-beta.1/ui/minified/jquery.ui.effect-explode.min.js'
+    , 'jquery-ui-1.9.0-beta.1/ui/minified/jquery.ui.effect-fade.min.js'
+    , 'jquery-ui-1.9.0-beta.1/ui/minified/jquery.ui.effect-fold.min.js'
+    , 'jquery-ui-1.9.0-beta.1/ui/minified/jquery.ui.effect-highlight.min.js'
+    , 'jquery-ui-1.9.0-beta.1/ui/minified/jquery.ui.effect-pulsate.min.js'
+    , 'jquery-ui-1.9.0-beta.1/ui/minified/jquery.ui.effect-scale.min.js'
+    , 'jquery-ui-1.9.0-beta.1/ui/minified/jquery.ui.effect-shake.min.js'
+    , 'jquery-ui-1.9.0-beta.1/ui/minified/jquery.ui.effect-slide.min.js'
+    , 'jquery-ui-1.9.0-beta.1/ui/minified/jquery.ui.effect-transfer.min.js'
+    , 'jquery-ui-1.9.0-beta.1/ui/minified/jquery.ui.effect.min.js'
+    , 'jquery-ui-1.9.0-beta.1/ui/minified/jquery.ui.menu.min.js'
+    , 'jquery-ui-1.9.0-beta.1/ui/minified/jquery.ui.mouse.min.js'
+    , 'jquery-ui-1.9.0-beta.1/ui/minified/jquery.ui.position.min.js'
+    , 'jquery-ui-1.9.0-beta.1/ui/minified/jquery.ui.progressbar.min.js'
+    , 'jquery-ui-1.9.0-beta.1/ui/minified/jquery.ui.resizable.min.js'
+    , 'jquery-ui-1.9.0-beta.1/ui/minified/jquery.ui.selectable.min.js'
+    , 'jquery-ui-1.9.0-beta.1/ui/minified/jquery.ui.slider.min.js'
+    , 'jquery-ui-1.9.0-beta.1/ui/minified/jquery.ui.sortable.min.js'
+    , 'jquery-ui-1.9.0-beta.1/ui/minified/jquery.ui.spinner.min.js'
+    , 'jquery-ui-1.9.0-beta.1/ui/minified/jquery.ui.tabs.min.js'
+    , 'jquery-ui-1.9.0-beta.1/ui/minified/jquery.ui.tooltip.min.js'
+    , 'jquery-ui-1.9.0-beta.1/ui/minified/jquery.ui.widget.min.js'
+    */
         'jquery-ui-1.8.16.custom/js/jquery-ui-1.8.16.custom.min.js'
+        , 'jquery.balloon/jquery.balloon.js'
         , 'jquery.mousewheel.3.0.2/jquery.mousewheel.js'
         , 'jquery/jquery-animate-css-rotate-scale.js'
         , 'jquery/jquery.zoom.js'
@@ -34,6 +71,9 @@ $LAB
 
         // Load FiercePlanet other plugins
    .script([
+        'fp/fp.min.js'
+//    , 'fp/utils/comms.js'
+    /*
         'fp/core/universe.js'
     , 'fp/core/catastrophe.js'
        , 'fp/core/agent/agent.js' , 'fp/core/agent/culture.js' , 'fp/core/agent/beliefs.js' , 'fp/core/agent/desires.js' , 'fp/core/agent/capabilities.js' , 'fp/core/agent/characteristics.js' , 'fp/core/agent/plans.js'
@@ -63,24 +103,18 @@ $LAB
     , 'fp/ui/google-map.js'
 
        , 'fp/utils/fp-utils.js', 'fp/utils/log.js', 'fp/utils/recording.js', 'fp/utils/url-params.js'
-      , 'fp/utils/comms.js'
-       , 'fp/game.js'
+     , 'fp/game.js'
+     , 'fp/utils/comms.js'
+    */
    ])
-//    .wait(function() {
-//    })
 
     .script([
-    , 'fp/core/agent/defaults/default_cultures.js'
-
-    ])
-    .script([
-        'fp/modules/default/default-module.js'
-        , 'fp/modules/default/worlds/basic.js'
-        , 'fp/modules/default/worlds/additional.js'
-        , 'fp/modules/default/resources/tbl.js'
-        , 'fp/modules/default/resources/cos.js'
-       , 'fp/modules/default/resources/resource_types.js'
-
+     , 'fp/modules/default/default-module.js'
+     , 'fp/modules/default/resources/tbl.js'
+     , 'fp/modules/default/resources/cos.js'
+     , 'fp/modules/default/resources/resource_types.js'
+     , 'fp/modules/default/worlds/basic.js'
+     , 'fp/modules/default/worlds/additional.js'
     ])
     .wait(function() {
         FiercePlanet.GoogleMapUtils.initMaps();

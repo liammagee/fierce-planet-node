@@ -3,6 +3,7 @@
 if (typeof(global) != "undefined") {
 
     _ = require('underscore');
+    one = {}, one.color = require('onecolor');
 
     var FiercePlanet = {};
 //    ModuleManager = require('./public/javascripts/fp/core/module-manager.js').ModuleManager;
@@ -42,8 +43,8 @@ if (typeof(global) != "undefined") {
     ResourceTypes = require('./../public/javascripts/fp/modules/default/resources/resource_types.js').ResourceTypes;
     TBL = require('./../public/javascripts/fp/modules/default/resources/tbl.js').TBL;
 
-    TestWorlds = require('./../public/javascripts/fp/modules/test/test-module.js').TestWorlds;
-    TestModule = require('./../public/javascripts/fp/modules/test/test-module.js').TestModule;
+    TestWorlds = require('./../public/javascripts/fp/modules/tests/test/test-module.js').TestWorlds;
+    TestModule = require('./../public/javascripts/fp/modules/tests/test/test-module.js').TestModule;
 //jstat = require('./../public/javascripts/jstat-1.0.0/js/jstat-1.0.0.js').jstat;
 //NormalDistribution = require('./../public/javascripts/jstat-1.0.0/js/jstat-1.0.0.js').NormalDistribution;
     jStat = require('./../public/javascripts/jstat-1.0.0/js/jstat.js').jStat;

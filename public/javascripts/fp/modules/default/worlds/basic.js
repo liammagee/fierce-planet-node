@@ -81,7 +81,7 @@ var Basic = Basic || new Campaign();
         //"<p>The citizens of Fierce Planet are under threat. They are migrating in ever increasing numbers, seeking a promised land of peace and prosperity.</p>" +
         //"<p>Help them by placing resources beside their path - before they expire!</p> "
         // this.world1.tip = new Notice("Drag or click the resources on the right (->), then add them to the map.", FiercePlanet.Orientation.worldWidth - FiercePlanet.Game.WAVE_NOTICE_WIDTH, FiercePlanet.Orientation.halfWorldHeight);
-        this.world1.tip = new Notice("Drag or click the resources on the right (->), then add them to the map.");
+//        this.world1.tip = new Notice("Drag or click the resources on the right (->), then add them to the map.");
         this.world1.soundSrc = ("http://db.tt/iFLVJKi");
 
         this.world1.setup = function() {
@@ -102,6 +102,28 @@ var Basic = Basic || new Campaign();
             // Add predators and rivals
 //            this.worldAgents = ([new Agent(AgentTypes.PREDATOR_AGENT_TYPE, 0, 9)]);
 //            this.waveAgents = ([new Agent(AgentTypes.RIVAL_AGENT_TYPE, 10, 1)]);
+        };
+
+        this.world1.postStartWorldCallback = function() {
+            // Add hooks here for tutorial
+            FiercePlanet.Game.pauseGame();
+
+            var initialTip = 'Start by clicking on a resource.';
+//            $('#swatch').attr('title', initialTip);
+//            $('#swatch').balloon({
+//                contents: initialTip,
+//                position: "top left"
+//            });
+            $('#swatch').showBalloon({
+                contents: initialTip,
+                position: "left"
+            });
+            /*
+            FiercePlanet.Drawing.drawTooltip('Click on a resource ->', function() {
+                FiercePlanet.Game.playGame();
+            } );
+            */
+
         };
 
 

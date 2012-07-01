@@ -101,8 +101,11 @@ FiercePlanet.Comms = FiercePlanet.Comms || {};
 
 
     this.message = function(from, msg) {
-        if (jqconsole.zone.chat)
-            jqconsole.Write(from + ': ' + msg + '\n');
+        try {
+            if (jqconsole.zone.chat)
+                jqconsole.Write(from + ': ' + msg + '\n');
+        }
+        catch (e) {}
     }
 
 }).apply(FiercePlanet.Comms);

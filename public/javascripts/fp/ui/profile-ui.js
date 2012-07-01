@@ -79,12 +79,18 @@ FiercePlanet.ProfileUI = FiercePlanet.ProfileUI || {};
      * Stores relevant profile data in local storage
      */
     this.storeProfileData = function() {
-        localStorage.currentWorldNumber = Lifecycle.currentWorldNumber;
-        if (Lifecycle.currentCampaignID)
-            localStorage.currentCampaignID = Lifecycle.currentCampaignID;
-        if (Lifecycle.currentWorld)
-            localStorage.currentWorldPreset = Lifecycle.currentWorld.isPresetWorld;
-        localStorage.currentProfile = JSON.stringify(FiercePlanet.Game.currentProfile);
+        try {
+            localStorage.currentWorldNumber = Lifecycle.currentWorldNumber;
+            if (Lifecycle.currentCampaignID)
+                localStorage.currentCampaignID = Lifecycle.currentCampaignID;
+            if (Lifecycle.currentWorld)
+                localStorage.currentWorldPreset = Lifecycle.currentWorld.isPresetWorld;
+            //localStorage.currentProfile = JSON.stringify(FiercePlanet.Game.currentProfile);
+        }
+        catch (e) {
+            // An 'QUOTA_EXCEEDED_ERR' is thrown on iPad (iOS 5)
+            // See http://stackoverflow.com/questions/9077101/iphone-localstorage-quota-exceeded-err-issue
+        }
     };
 
 

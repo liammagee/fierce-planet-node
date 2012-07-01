@@ -60,7 +60,7 @@ FiercePlanet.WorldUI = FiercePlanet.WorldUI || {};
      * Shows the world properties dialog
      */
     this.showWorldProperties = function() {
-        Lifecycle.pauseGame();
+        FiercePlanet.Game.pauseGame();
         FiercePlanet.WorldUI.prepareWorldPropertiesForm();
         FiercePlanet.Dialogs.editPropertiesDialog.dialog('open');
     };
@@ -115,27 +115,44 @@ FiercePlanet.WorldUI = FiercePlanet.WorldUI || {};
         // Cf. http://stackoverflow.com/questions/1184624/serialize-form-to-json-with-jquery
         var a = $("#world-properties").serializeArray();
         a.forEach(function(item) {
-            world[item.name] = item.value || '';
+            var val = item.value;
+            if (isNaN(val)) {
+                world[item.name] = item.value || '';
+            }
+            else {
+                world[item.name] = parseFloat(item.value);
+            }
         });
 
         // If the world has been saved already, and the dimensions have changed, we need to start again
         if (Lifecycle.currentWorld._id && (world.cellsAcross != ca || world.cellsDown != cd)) {
             if (confirm("The world dimensions have changed, and the current maze will be deleted. Should we proceed?")) {
-                // Redo world dimensions
-                world.forbidAgentsOnAllCells();
             }
             else {
                 // Reset dimensions
                 world.cellsAcross = ca;
                 world.cellsDown = cd;
+
+                // Initialise the game
+                if (!_.isUndefined(Lifecycle.currentWorld.initWorld))
+                    Lifecycle.currentWorld.initWorld();
             }
         }
         else if (! Lifecycle.currentWorld._id) {
-            // Redo world dimensions
+            // Initialise the game
+            if (!_.isUndefined(Lifecycle.currentWorld.initWorld))
+                Lifecycle.currentWorld.initWorld();
             world.forbidAgentsOnAllCells();
         }
 
         // Save the world
+        // Redo world dimensions
+        FiercePlanet.Orientation.cellsAcross = Lifecycle.currentWorld.cellsAcross;
+        FiercePlanet.Orientation.cellsDown = Lifecycle.currentWorld.cellsDown;
+        FiercePlanet.Orientation.cellWidth = Math.round(FiercePlanet.Orientation.worldWidth / FiercePlanet.Orientation.cellsAcross);
+        FiercePlanet.Orientation.cellHeight = Math.round(FiercePlanet.Orientation.worldHeight / FiercePlanet.Orientation.cellsDown);
+        FiercePlanet.Orientation.pieceWidth = Math.round(FiercePlanet.Orientation.cellWidth * 0.5);
+        FiercePlanet.Orientation.pieceHeight = Math.round(FiercePlanet.Orientation.cellHeight * 0.5);
         $.post('/worlds/save', { world: JSON.stringify(world) }, function(response) {
             if (response._id && ! Lifecycle.currentWorld._id)
                 Lifecycle.currentWorld._id = response._id
@@ -162,8 +179,6 @@ FiercePlanet.WorldUI = FiercePlanet.WorldUI || {};
             }
             */
 
-//                    var worldTimerId = setInterval("FiercePlanet.WorldUI.saveWorld()", 5000);
-
             // Set the current world number and preset value
             Lifecycle.currentWorldNumber = tmpWorld.id;
             Lifecycle.currentWorldPreset = false;
@@ -171,6 +186,8 @@ FiercePlanet.WorldUI = FiercePlanet.WorldUI || {};
 
             // Prepare the world properties form
             FiercePlanet.WorldUI.prepareWorldPropertiesForm();
+
+            FiercePlanet.Drawing.drawGame();
         }
     };
 
@@ -228,19 +245,28 @@ FiercePlanet.WorldUI = FiercePlanet.WorldUI || {};
         // Retrieve world object from server
         $.get('/worlds/' + worldID, function(tmpWorld) {
             if (tmpWorld) {
-                FiercePlanet.Utils.makeFromJSONObject(tmpWorld, World.prototype);
+                FiercePlanet.Utils.makeFromJSONObject(tmpWorld, new World());
                 for (var i = 0, l = tmpWorld.resources.length; i < l; i++) {
-                    FiercePlanet.Utils.makeFromJSONObject(tmpWorld.resources[i], Resource.prototype);
+                    FiercePlanet.Utils.makeFromJSONObject(tmpWorld.resources[i], new Resource());
                 }
                 tmpWorld.worldResources = tmpWorld.resources;
 
                 Lifecycle.currentWorld = tmpWorld;
                 Lifecycle.currentWorldNumber = tmpWorld.id;
                 Lifecycle.currentWorldPreset = false;
+                Lifecycle.currentWaveNumber = 0;
+
 
                 // Remember this world, along with other data
                 FiercePlanet.ProfileUI.storeProfileData();
                 FiercePlanet.Dialogs.worldGalleryDialog.dialog('close');
+
+//                if (!_.isUndefined(Lifecycle.currentWorld.initWorld))
+//                    Lifecycle.currentWorld.initWorld();
+
+                Lifecycle.currentWorld.initWorld = undefined;
+                Lifecycle.currentWorld.waves = undefined;
+                Lifecycle.currentWorld.initialiseWaves(Lifecycle.currentWorld.waveNumber);
                 Lifecycle.newWorld();
             }
         });
@@ -251,9 +277,9 @@ FiercePlanet.WorldUI = FiercePlanet.WorldUI || {};
      */
     this.makeWorldFromJSON =  function(tmpWorld) {
         // Retrieve world object from server
-        FiercePlanet.Utils.makeFromJSONObject(tmpWorld, World.prototype);
+        FiercePlanet.Utils.makeFromJSONObject(tmpWorld, new World());
         for (var i = 0, l = tmpWorld.resources.length; i < l; i++) {
-            FiercePlanet.Utils.makeFromJSONObject(tmpWorld.resources[i], Resource.prototype);
+            FiercePlanet.Utils.makeFromJSONObject(tmpWorld.resources[i], new Resource());
         }
         tmpWorld.worldResources = tmpWorld.resources;
 

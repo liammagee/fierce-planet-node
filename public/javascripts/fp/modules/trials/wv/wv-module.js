@@ -244,7 +244,7 @@ WorldVisionResources.doSetup = function() {
                     // Change the water quality
                     world.cells.forEach(function(cell) {
                         if (cell.y > 23 && cell.y < 33) {
-                            cell.terrain.color = cell.terrain.color.blue(currentWaterQuality / 100);
+                            cell.terrain.color = one.color(cell.terrain.color).blue(currentWaterQuality / 100).cssa();
                         }
                     })
 
@@ -528,7 +528,7 @@ WorldVisionResources.doSetup = function() {
                     world.cells.forEach(function(cell) {
                         if (cell.isHousehold) {
                             totalWasteRemaining += cell.wasteToBeCollected;
-                            var l = cell.terrain.color.green();
+                            var l = one.color(cell.terrain.color).green();
                             var adjustment = - cell.wasteToBeCollected / 100;
                             if (cell.wasteToBeCollected > 100)
                                 adjustment = -0.1;
@@ -540,7 +540,7 @@ WorldVisionResources.doSetup = function() {
                                 l = 1;
                             else
                                 l += adjustment;
-                            cell.terrain.color = cell.terrain.color.green(l);
+                            cell.terrain.color = one.color(cell.terrain.color).green(l).cssa();
                         }
                     })
 

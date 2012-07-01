@@ -76,7 +76,6 @@ FiercePlanet.Controls = FiercePlanet.Controls || {};
         $('#story-board').click(FiercePlanet.Storyboard.showStoryboard);
         $('#high-scores').click(FiercePlanet.ProfileUI.showHighScores);
 
-        console.log($('#world-information-link'))
         $('#world-information-link').click(function() {
             var info = (_.isUndefined(Lifecycle.currentWorld.information) ? Lifecycle.currentWorld.introduction : Lifecycle.currentWorld.information)
                 worldInformation = '';
@@ -108,7 +107,7 @@ FiercePlanet.Controls = FiercePlanet.Controls || {};
         }
 
 
-		var opts = {
+        var opts = {
 		  lines: 12, // The number of lines to draw
 		  length: 7, // The length of each line
 		  width: 5, // The line thickness
@@ -120,8 +119,8 @@ FiercePlanet.Controls = FiercePlanet.Controls || {};
 		};
 //		var target = document.getElementById('foo');
 		FiercePlanet.Game.spinner = new Spinner(opts); //.spin(target);
-		
-		$('#spinner')
+
+        $('#spinner')
 		    .hide()  // hide it initially
 		    .ajaxStart(function() {
 		        $(this).show();
@@ -162,11 +161,6 @@ FiercePlanet.Controls = FiercePlanet.Controls || {};
         // Make elements movable
         FiercePlanet.Console.registerEvents();
 
-
-
-
-        // Finally, focus on the console. Good idea?
-//        jqconsole.Focus();
     };
 
 }).apply(FiercePlanet.Controls);

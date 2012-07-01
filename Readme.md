@@ -1,10 +1,10 @@
 
-# Fierce Planet
+# Fierce-Planet
       
   A basic tower strategy game designed to teach children (and adults) about sustainability.
   Uses a simple agent framework for modelling citizens surviving in their environment.
   Built on [node](http://nodejs.org) and [Express](http://express.org).
-  Further information is available at the [Fierce Planet blog](http://blog.fierce-planet.org)
+  Further information is available at the [Fierce-Planet blog](http://blog.fierce-planet.org)
   
 ## Installation
 
@@ -50,7 +50,7 @@ The following are the major contributors of Fierce Planet (in no specific order)
 
 ## Node Compatibility
 
-Fierce Planet 0.1.x is compatible with node 0.4.x.
+Fierce Planet 0.1.x is compatible with node 0.6.x.
 
 
 ## Running Tests
@@ -74,6 +74,15 @@ Then run:
     $ node_modules/jasmine-runner/bin/jasmine run
 
 And direct the browser to http://localhost:8124/.
+
+
+## Preparing for deployment
+
+Fierce-Planet uses a *lot* of JavaScript files. Though it hasn't been thoroughly optimised,
+a Jake script :
+
+    $ node_modules/jasmine-runner/bin/jasmine run
+
 
 
 ## License

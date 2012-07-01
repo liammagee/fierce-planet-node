@@ -98,9 +98,11 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
      * @param e
      */
     this.getCurrentPosition = function(e) {
-        var __ret = FiercePlanet.GeneralUI.getWorldCoordinates(e);
-        var x = __ret.x;
-        var y = __ret.y;
+        var x = e.pageX - FiercePlanet.Dialogs.calculateWorldLeft();
+        var y = e.pageY - FiercePlanet.Dialogs.calculateWorldTop();
+//        var __ret = FiercePlanet.GeneralUI.getWorldCoordinates(e);
+//        var x = __ret.x;
+//        var y = __ret.y;
         return FiercePlanet.GeneralUI.getCurrentPositionByCoordinates(x, y);
     };
 
@@ -184,9 +186,14 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
             $('#global-info-panel').draggable({cancel: '#swatch', cursor: "pointer"});
         }
         else {
-            $('#graph-area, #controls').draggable('destroy');
-            $('#gameworld').draggable('destroy');
-            $('#global-info-panel').draggable('destroy');
+            try {
+                // Error will be thrown if these elements are not draggable already, in JQuery-UI 1.9+
+                $('#graph-area, #controls').draggable('destroy');
+                $('#gameworld').draggable('destroy');
+                $('#global-info-panel').draggable('destroy');
+            }
+            catch (e) {
+            }
         }
         $('#gameworld').disableSelection();
         $('.swatch-draggable').css({ zIndex: 1000})

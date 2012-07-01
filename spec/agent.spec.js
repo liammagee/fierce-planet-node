@@ -62,8 +62,8 @@ describe("agent-related classes", function() {
                 it("should be removed from the world agent collection", function() {
                     expect(world.currentAgents.length).toEqual(12);
                 });
-                it("should be removed from the world agent collection", function() {
-                    expect(world.getAgentsAtCell(0, 0)).toNotContain(child);
+                it("should be at the same cell location", function() {
+                    expect(world.getAgentsAtCell(0, 0)).toContain(child);
                 });
                 it("should have the same attributes as the parent", function() {
                     expect(child.parents).toContain(agent);

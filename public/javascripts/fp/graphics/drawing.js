@@ -79,7 +79,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         var canvas = $(canvasName)[0];
         var ctx = canvas.getContext('2d');
         var terrain = Lifecycle.currentWorld.backgroundTerrain;
-        var pathColor = terrain ? terrain.color.cssa() : "#fff";
+        var pathColor = terrain ? terrain.color : "#fff";
 
         ctx.fillStyle = pathColor;
         ctx.fillRect(0, 0, FiercePlanet.Orientation.worldWidth, FiercePlanet.Orientation.worldHeight);
@@ -89,7 +89,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
      * Draws the current world path
      */
     this.drawPath = function(altCanvasName) {
-        var canvasName = altCanvasName || '#baseCanvas';
+        var canvasName = '#baseCanvas';
         var canvas = $(canvasName)[0];
         var ctx = canvas.getContext('2d');
         var world = Lifecycle.currentWorld;
@@ -118,7 +118,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
 //                var y = yPos * FiercePlanet.Orientation.cellHeight;
 
                 var terrain = Lifecycle.currentWorld.getCell(xPos, yPos).terrain;
-                var pathColor = terrain ? terrain.color.cssa() : "#000";
+                var pathColor = terrain ? terrain.color : "#fff";
 
                 if ((Universe.settings.isometricView || Lifecycle.currentWorld.isometricView)) {
                     var newOrigin = FiercePlanet.Isometric.doIsometricOffset(xPos, yPos);
@@ -185,7 +185,8 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         ctx.restore();
 
     };
-    
+
+
     /**
      * Draws the background image, if one exists
      */
@@ -374,8 +375,6 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
             var lineWidth = FiercePlanet.Game.currentNotice.lineWidth;
             var font = FiercePlanet.Game.currentNotice.font;
 
-
-
             // Don't draw any more, if the notice is expired
             if (start > Lifecycle.worldCounter || start + duration < Lifecycle.worldCounter) {
                 if (!_.isUndefined(this.noticeDialog)) {
@@ -459,7 +458,30 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
             */
         }
     };
-    
+
+    /**
+     * Draws the current notice
+     *
+     * @param notice
+     */
+    this.drawTooltip = function(tip, callback) {
+        this.tooltipDialog = $('<div></div>')
+            .html(tip)
+            .dialog({
+                autoOpen: true,
+                modal: false,
+                title: 'Fierce Planet Notice!',
+                buttons: {
+                    "Close": function() {
+                        $( this ).dialog( "close" );
+                        callback();
+                    }
+                }
+
+            });
+    };
+
+
     /**
      * Calculates the text lines for notices displayed on the map
      * @param context
@@ -654,8 +676,6 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
                 // INLINED SCALE
                 originXp = (originXp - FiercePlanet.Orientation.halfWorldWidth) * FiercePlanet.Orientation.zoomWorld;
                 originYp = (originYp - FiercePlanet.Orientation.halfWorldHeight) * FiercePlanet.Orientation.zoomWorld;
-//                originXp = originXp - (FiercePlanet.Orientation.halfWorldWidth);
-//                originYp = originYp - (FiercePlanet.Orientation.halfWorldHeight);
 
                 ctx.fillStyle = "#fff";
                 FiercePlanet.Isometric.draw3DTile(ctx, [originXp, originYp], FiercePlanet.Orientation.cellHeight * FiercePlanet.Orientation.zoomWorld);
@@ -886,10 +906,10 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
             ctx.lineWidth = 1;
             // Use box style - computationally expensive
             if (Universe.settings.showResourcesAsBoxes) {
-                boxHeight = (s / 100) * 20;
+                boxHeight = ((s / 100) * 20) * FiercePlanet.Orientation.zoomWorld;
                 ctx.fillStyle = c;
                 ctx.strokeStyle = "#eee";
-                FiercePlanet.Isometric.box(ctx, originXp, originYp, 0, 0, 0, FiercePlanet.Orientation.cellHeight, boxHeight, FiercePlanet.Orientation.cellHeight);
+                FiercePlanet.Isometric.box(ctx, originXp, originYp, 0, 0, 0, FiercePlanet.Orientation.cellHeight * FiercePlanet.Orientation.zoomWorld, boxHeight, FiercePlanet.Orientation.cellHeight * FiercePlanet.Orientation.zoomWorld);
                 ctx.fill();
                 ctx.stroke();
             }
@@ -1661,16 +1681,18 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         ctx.translate(FiercePlanet.Orientation.halfWorldWidth, FiercePlanet.Orientation.halfWorldHeight);
         ctx.rotate(FiercePlanet.Orientation.rotationAngle);
 
-        x = xPos * FiercePlanet.Orientation.cellWidth;
-        y = yPos * FiercePlanet.Orientation.cellHeight;
+//        x = xPos * FiercePlanet.Orientation.cellWidth;
+//        y = yPos * FiercePlanet.Orientation.cellHeight;
+        x = xPos * FiercePlanet.Orientation.cellWidth * FiercePlanet.Orientation.zoomWorld;
+        y = yPos * FiercePlanet.Orientation.cellHeight * FiercePlanet.Orientation.zoomWorld;
 
         if ((Universe.settings.isometricView || Lifecycle.currentWorld.isometricView)) {
             var newOrigin = FiercePlanet.Isometric.doIsometricOffset(xPos, yPos);
             var originXp = newOrigin.x + FiercePlanet.Orientation.cellWidth / 2;
             var originYp = newOrigin.y + FiercePlanet.Orientation.cellHeight;
-            originXp = originXp - (FiercePlanet.Orientation.worldWidth) / 2;
-            originYp = originYp - (FiercePlanet.Orientation.worldHeight) / 2;
-            FiercePlanet.Isometric.draw3DTile(ctx, [originXp, originYp], FiercePlanet.Orientation.cellHeight);
+            originXp = originXp - (FiercePlanet.Orientation.halfWorldWidth * FiercePlanet.Orientation.zoomWorld);
+            originYp = originYp - (FiercePlanet.Orientation.halfWorldHeight * FiercePlanet.Orientation.zoomWorld);
+            FiercePlanet.Isometric.draw3DTile(ctx, [originXp, originYp], FiercePlanet.Orientation.cellHeight * FiercePlanet.Orientation.zoomWorld);
 
             ctx.lineWidth = 4;
             ctx.strokeStyle = '#f00'; //pathColor;
@@ -1678,11 +1700,11 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         }
         else {
             // Rotation logic here - TODO: Refactor out
-            x = x - FiercePlanet.Orientation.halfWorldWidth;
-            y = y - FiercePlanet.Orientation.halfWorldHeight;
+            x = x - FiercePlanet.Orientation.halfWorldWidth * FiercePlanet.Orientation.zoomWorld;
+            y = y - FiercePlanet.Orientation.halfWorldHeight * FiercePlanet.Orientation.zoomWorld;
             ctx.lineWidth = 4;
             ctx.strokeStyle = '#f00'; //pathColor;
-            ctx.strokeRect(x, y, FiercePlanet.Orientation.cellWidth, FiercePlanet.Orientation.cellHeight);
+            ctx.strokeRect(x, y, FiercePlanet.Orientation.cellWidth * FiercePlanet.Orientation.zoomWorld, FiercePlanet.Orientation.cellHeight * FiercePlanet.Orientation.zoomWorld);
         }
 
         ctx.restore();

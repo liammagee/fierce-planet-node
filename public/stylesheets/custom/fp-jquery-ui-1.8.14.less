@@ -1,3 +1,9 @@
+
+
+//@main-color: #1F62C1;
+@main-color: #1F1F1F;
+
+
 /*
  * jQuery UI CSS Framework 1.8.14
  *
@@ -59,8 +65,8 @@
 .ui-widget { font-family: Verdana,Arial,sans-serif; font-size: 1.1em; }
 .ui-widget .ui-widget { font-size: 1em; }
 .ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button { font-family: Verdana,Arial,sans-serif; font-size: 1em; }
-/*.ui-widget-content { border: 0px solid #aaaaaa; background: #1f62c1 url(images/ui-bg_flat_75_1f62c1_40x100.png) 50% 50% repeat-x; color: #ffffff; }*/
-.ui-widget-content { border: 0px solid #aaaaaa; background: #1f62c1 50% 50% repeat-x; color: #ffffff; }
+/*.ui-widget-content { border: 0px solid #aaaaaa; background: @main-color url(images/ui-bg_flat_75_1f62c1_40x100.png) 50% 50% repeat-x; color: #ffffff; }*/
+.ui-widget-content { border: 0px solid #aaaaaa; background: @main-color 50% 50% repeat-x; color: #ffffff; }
 .ui-widget-content a { color: #ffffff; }
 /*.ui-widget-header { border: 0px solid #aaaaaa; background: #ffffff url(images/ui-bg_highlight-soft_75_cccccc_1x100.png) 50% 50% repeat-x; color: #222222; font-weight: bold; }*/
 .ui-widget-header { border: 0px solid #aaaaaa; background: #ffffff 50% 50% repeat-x; color: #222222; font-weight: bold; }
@@ -294,7 +300,7 @@
 
 /* Overlays */
 /*.ui-widget-overlay { background: #DE1F2A url(images/ui-bg_flat_0_1f62c1_40x100.png) 50% 50% repeat-x; opacity: .30;filter:Alpha(Opacity=30); }*/
-.ui-widget-overlay { background: #1f62c1 50% 50% repeat-x; opacity: .30;filter:Alpha(Opacity=30); }
+.ui-widget-overlay { background: @main-color 50% 50% repeat-x; opacity: .30;filter:Alpha(Opacity=30); }
 /*.ui-widget-shadow { margin: -8px 0 0 -8px; padding: 8px; background: #aaaaaa url(images/ui-bg_flat_0_aaaaaa_40x100.png) 50% 50% repeat-x; opacity: .30;filter:Alpha(Opacity=30); -moz-border-radius: 8px; -khtml-border-radius: 8px; -webkit-border-radius: 8px; border-radius: 8px; }*//**/
 .ui-widget-shadow { margin: -8px 0 0 -8px; padding: 8px; background: #aaaaaa 50% 50% repeat-x; opacity: .30;filter:Alpha(Opacity=30); -moz-border-radius: 8px; -khtml-border-radius: 8px; -webkit-border-radius: 8px; border-radius: 8px; }/*
  * jQuery UI Resizable 1.8.14
@@ -487,14 +493,14 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
  * http://docs.jquery.com/UI/Tabs#theming
  */
 .ui-tabs { position: relative; padding: .2em; border: 0; } /* position: relative prevents IE scroll bug (element with position: relative inside container with overflow: auto appear as "fixed") */
-.ui-tabs .ui-tabs-nav { margin: 0; padding: .2em .2em 0; background: #1f62c1; color: #ffffff; border: 0; }
-.ui-tabs .ui-tabs-nav li { list-style: none; float: left; position: relative; top: 1px; margin: 0 .2em 1px 0; border-bottom: 0 !important; padding: 0; white-space: nowrap; background: #1f62c1; color: #ffffff; border: 0; }
+.ui-tabs .ui-tabs-nav { margin: 0; padding: .2em .2em 0; background: @main-color; color: #ffffff; border: 0; }
+.ui-tabs .ui-tabs-nav li { list-style: none; float: left; position: relative; top: 1px; margin: 0 .2em 1px 0; border-bottom: 0 !important; padding: 0; white-space: nowrap; background: @main-color; color: #ffffff; border: 0; }
 .ui-tabs .ui-tabs-nav li a { float: left; padding: .5em 1em; text-decoration: none; color: #ffffff; }
-.ui-tabs .ui-tabs-nav li.ui-tabs-selected { margin-bottom: 0; padding-bottom: 1px; background: #ffffff; color: #1f62c1 }
-.ui-tabs .ui-tabs-nav li.ui-tabs-selected a, .ui-tabs .ui-tabs-nav li.ui-state-disabled a, .ui-tabs .ui-tabs-nav li.ui-state-processing a { cursor: text; color: #1f62c1; }
+.ui-tabs .ui-tabs-nav li.ui-tabs-selected { margin-bottom: 0; padding-bottom: 1px; background: #ffffff; color: @main-color }
+.ui-tabs .ui-tabs-nav li.ui-tabs-selected a, .ui-tabs .ui-tabs-nav li.ui-state-disabled a, .ui-tabs .ui-tabs-nav li.ui-state-processing a { cursor: text; color: @main-color; }
 .ui-tabs .ui-tabs-nav li a, .ui-tabs.ui-tabs-collapsible .ui-tabs-nav li.ui-tabs-selected a { cursor: pointer; } /* first selector in group seems obsolete, but required to overcome bug in Opera applying cursor: text overall if defined elsewhere... */
-.ui-tabs .ui-tabs-panel { display: block; border-width: 0; padding: 1em 1.4em; background: #ffffff; color: #1f62c1 }
-.ui-tabs .ui-tabs-panel a { color: #1f62c1 }
+.ui-tabs .ui-tabs-panel { display: block; border-width: 0; padding: 1em 1.4em; background: #ffffff; color: @main-color }
+.ui-tabs .ui-tabs-panel a { color: @main-color }
 .ui-tabs .ui-tabs-hide { display: none !important; }
 /*
  * jQuery UI Datepicker 1.8.14
@@ -555,7 +561,7 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
 /* IE6 IFRAME FIX (taken from datepicker 1.5.3 */
 .ui-datepicker-cover {
     display: none; /*sorry for IE5*/
-    display/**/: block; /*sorry for IE5*/
+    display: block; /*sorry for IE5*/
     position: absolute; /*must have*/
     z-index: -1; /*must have*/
     filter: mask(); /*must have*/

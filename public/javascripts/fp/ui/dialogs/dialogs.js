@@ -179,7 +179,6 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
             });
         this.doPlay = function() {
             FiercePlanet.Dialogs.newWorldDialog.dialog( "close" );
-//            jqconsole.Enable();
             Lifecycle.startWorld();
         }
 
@@ -314,9 +313,9 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
 
         this.worldEditorDialog = $('#world-editor-dialog')
             .dialog({
-                                              position: [dialogX, dialogY],
-                                                           width: FiercePlanet.Orientation.worldWidth + 7,
-                                                           height: FiercePlanet.Orientation.worldHeight + 7,
+                position: [dialogX, dialogY],
+                width: FiercePlanet.Orientation.worldWidth + 7,
+                height: FiercePlanet.Orientation.worldHeight + 7,
                 autoOpen: false,
                 modal: true,
                 title: 'World Editor',
@@ -489,7 +488,7 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
                 buttons: {
                     "Save World": function() {
                         FiercePlanet.WorldUI.saveWorld();
-                        //FiercePlanet.Drawing.drawGame();
+                        FiercePlanet.Drawing.drawCanvases();
                         $( this ).dialog( "close" );
                     },
                     "Cancel": function() {
