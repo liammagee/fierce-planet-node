@@ -22,7 +22,7 @@ FiercePlanet.ResourceUI = FiercePlanet.ResourceUI || {};
      * Handle various resource-related interactions
      */
     this.setupResourceInteraction = function () {
-        var topMostCanvas = $('#noticeCanvas');
+        var topMostCanvas = FiercePlanet.GeneralUI.getTopMostCanvas();
             var links = $('.swatch-draggable'), el = null;
             for (var i = 0; i < links.length; i++) {
                 el = links[i];

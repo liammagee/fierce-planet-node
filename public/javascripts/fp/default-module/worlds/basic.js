@@ -106,23 +106,105 @@ var Basic = Basic || new Campaign();
 
         this.world1.postStartWorldCallback = function() {
             // Add hooks here for tutorial
-            FiercePlanet.Game.pauseGame();
+            if (FiercePlanet.Game.tutorialMode) {
+                FiercePlanet.Game.pauseGame();
 
-            var initialTip = 'Start by clicking on a resource.';
-//            $('#swatch').attr('title', initialTip);
-//            $('#swatch').balloon({
-//                contents: initialTip,
-//                position: "top left"
-//            });
-            $('#swatch').showBalloon({
-                contents: initialTip,
-                position: "left"
-            });
-            /*
-            FiercePlanet.Drawing.drawTooltip('Click on a resource ->', function() {
-                FiercePlanet.Game.playGame();
-            } );
-            */
+                var firstResource = $('#farm'), firstBorder = firstResource.css('border');;
+                var topMostCanvas = FiercePlanet.GeneralUI.getTopMostCanvas(), topBorder = topMostCanvas.css('border');;
+                var score = $('#score'), scoreBorder = score.css('border');;
+                var notifications = $('#notifications'), notificationsBorder = notifications.css('border');;
+                var controls = $('#controls'), controlsBorder = controls.css('border');;
+                var play = $('#playAgents');
+                var highlight = {border: 'solid 4px red'};
+                var tipSize = 24;
+                var balloonCss = {
+                    border: 'solid 4px #1F1F1F',
+                    padding: '10px',
+                    fontSize: '120%',
+                    fontWeight: 'bold',
+                    lineHeight: '3',
+                    backgroundColor: 'rgba(31, 98, 193, 1.0)',
+                    color: '#fff'
+                };
+                var autoTimeout = 4000;
+
+
+                firstResource.showBalloon({
+                    contents: '<div>Your goal is to save the citizens of Fierce-Planet by placing resources along their path. </div><div>Start by clicking on a resource.</div>',
+                    tipSize: tipSize,
+                    css: balloonCss,
+                    position: "left"
+                });
+                firstResource.css(highlight);
+                firstResource.one('click', function(e) {
+                    firstResource.css('border', firstBorder);
+                    firstResource.hideBalloon();
+
+                    topMostCanvas.showBalloon({
+                        contents: 'Now click on a free cell on the map.',
+                        tipSize: tipSize,
+                        css: balloonCss,
+                        position: "top"
+                    });
+                    topMostCanvas.css(highlight);
+                });
+
+                topMostCanvas.one('click', function(e) {
+                    topMostCanvas.css('border', topBorder);
+                    topMostCanvas.hideBalloon();
+
+                    score.css(highlight);
+                    score.showBalloon({
+                        contents: 'Your score and other information can be found here.',
+                        tipSize: tipSize,
+                        css: balloonCss,
+                        position: "left"
+                    });
+                    setTimeout(function() {
+                        notifications.css(highlight);
+                        notifications.showBalloon({
+                            contents: 'Advanced features, like commands, graphs and custom parameters, can be viewed and edited here.',
+                            tipSize: tipSize,
+                            css: balloonCss,
+                            position: "top"
+                        })
+
+                        score.hideBalloon();
+                        score.css('border', scoreBorder);
+
+                        setTimeout(function() {
+                            controls.css(highlight);
+                            controls.showBalloon({
+                                contents: 'You can play, change the speed, change levels, and zoom in and out using the controls here.',
+                                tipSize: tipSize,
+                                css: balloonCss,
+                                position: "right"
+                            })
+
+                            notifications.hideBalloon();
+                            notifications.css('border', notificationsBorder);
+                            setTimeout(function() {
+                                controls.hideBalloon();
+                                controls.css('border', controlsBorder);
+
+                                play.showBalloon({
+                                    contents: 'Click "Play" to continue the game!',
+                                    tipSize: tipSize,
+                                    css: balloonCss,
+                                    position: "right"
+                                })
+                                play.one('click', function(e) {
+                                    play.hideBalloon();
+                                });
+                            }, autoTimeout);
+                        }, autoTimeout);
+
+                    }, autoTimeout);
+
+                });
+
+                FiercePlanet.Game.tutorialMode = false;
+            }
 
         };
 

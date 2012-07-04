@@ -1,8 +1,10 @@
+script
+  node_env = '!{app.settings.env}';
+
 script(src='http://maps.googleapis.com/maps/api/js?libraries=geometry,places,weather,traffic&sensor=true')
 script(src='/javascripts/LABjs-2.0.3/LAB.js')
 script(src='/javascripts/fp/main.js')
 
-script(type='text/javascript')
 - if (typeof(serverLevel) !== 'undefined')
   script
     $(document).ready(function() {

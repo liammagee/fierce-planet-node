@@ -536,8 +536,9 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
 
         $('#tutorial').click(function(e) {
             if (confirm("Stop current game and begin the tutorial?")) {
-                Lifecycle.currentWorldNumber = 0;
+                Lifecycle.currentWorldNumber = 1;
                 Lifecycle.currentWorldPreset = true;
+                FiercePlanet.Game.tutorialMode = true;
                 Lifecycle.restartWorld();
             }
         });
