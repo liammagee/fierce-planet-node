@@ -15,7 +15,7 @@ body{color:#000;font-family:Verdana,Arial,Helvetica,sans-serif;font-size:80%;pad
 #scrollingCanvas{position:absolute;z-index:7;width:100%;height:100%;}
 #noticeCanvas{position:absolute;z-index:8;}
 #notifications{position:absolute;top:70%;left:0%;height:28%;width:98%;padding:1%;opacity:0.85;}
-#controls{position:absolute;left:16%;top:26%;width:4%;height:50%;padding:50px 10px 0;z-index:100;background:#1f1f1f;background:-webkit-gradient(linear, 0% 0%, 100% 0%, from(#1f1f1f), to(#203275));background:-moz-linear-gradient(0% 100% 0deg, #1f1f1f, #203275);border-radius:4px;line-height:24px;text-align:center;}
+#controls{position:absolute;left:16%;top:26%;width:4%;height:50%;padding:50px 10px 0;z-index:100;background:#1f62c1;background:-webkit-gradient(linear, 0% 0%, 100% 0%, from(#1f62c1), to(#203275));background:-moz-linear-gradient(0% 100% 0deg, #1f62c1, #203275);border-radius:4px;line-height:24px;text-align:center;}
 #playAgents,#slowDown,#speedUp,#newGame,#re startLevel,#panUp,#panLeft,#panReset,#panRight,#panDown,#zoomOut,#zoomReset,#zoomIn{cursor:pointer;}
 .pausing{position:absolute;background:url(../layout/play.png);background-position:0% 0%;background-size:200% 200%;width:120%;height:20%;left:-10%;top:-10%;}
 .pausing:hover{background-position:-100% 0%;background-size:200% 200%;}
@@ -26,27 +26,27 @@ body{color:#000;font-family:Verdana,Arial,Helvetica,sans-serif;font-size:80%;pad
 #speedUp{position:absolute;background-image:url(../layout/buttons.png);background-position:100% -2%;background-size:250% 800%;width:40%;height:6%;top:10%;left:60%;}
 #newGame{position:absolute;background-image:url(../layout/buttons.png);background-position:10% 13%;background-size:250% 700%;width:40%;height:6%;top:16%;left:10%;}
 #restartLevel{position:absolute;background-image:url(../layout/buttons.png);background-position:100% 13%;background-size:250% 700%;width:40%;height:6%;top:16%;left:60%;}
-#divide1{position:absolute;width:100%;height:2%;top:22%;left:0%;border-bottom:2px solid #1f1f1f;margin-bottom:10px;}
+#divide1{position:absolute;width:100%;height:2%;top:22%;left:0%;border-bottom:2px solid #1f62c1;margin-bottom:10px;}
 #panUp{position:absolute;background-image:url(../layout/buttons.png);background-position:42% 36%;background-size:320% 1000%;width:26%;height:4%;top:25%;left:36%;}
 #panLeft{position:absolute;background-image:url(../layout/buttons.png);background-position:-6% 47%;background-size:320% 1000%;width:26%;height:4%;top:29%;left:10%;}
 #panReset{position:absolute;background-image:url(../layout/buttons.png);background-position:46% 47%;background-size:320% 1000%;width:26%;height:4%;top:29%;left:38%;}
 #panRight{position:absolute;background-image:url(../layout/buttons.png);background-position:102% 47%;background-size:320% 1000%;width:26%;height:4%;top:29%;left:68%;}
 #panDown{position:absolute;background-image:url(../layout/buttons.png);background-position:46% 60%;background-size:320% 1000%;width:26%;height:4%;top:33%;left:38%;}
-#divide2{position:absolute;width:100%;height:2%;top:37%;left:0%;border-bottom:2px solid #1f1f1f;margin-bottom:10px;}
+#divide2{position:absolute;width:100%;height:2%;top:37%;left:0%;border-bottom:2px solid #1f62c1;margin-bottom:10px;}
 #zoomOut{position:absolute;background-image:url(../layout/buttons.png);background-position:5% 79%;background-size:320% 700%;width:28%;height:6%;top:40%;left:10%;}
 #zoomReset{position:absolute;background-image:url(../layout/buttons.png);background-position:50% 79%;background-size:320% 700%;width:28%;height:6%;top:40%;left:40%;}
 #zoomIn{position:absolute;background-image:url(../layout/buttons.png);background-position:95% 79%;background-size:320% 700%;width:28%;height:6%;top:40%;left:68%;}
-#divide3{position:absolute;width:100%;height:2%;top:45%;left:0%;border-bottom:2px solid #1f1f1f;margin-bottom:10px;}
+#divide3{position:absolute;width:100%;height:2%;top:45%;left:0%;border-bottom:2px solid #1f62c1;margin-bottom:10px;}
 #contract{position:absolute;background-image:url(../layout/buttons.png);background-position:3% 90%;background-size:320% 800%;width:28%;height:6%;top:47%;left:8%;}
 #expand{position:absolute;background-image:url(../layout/buttons.png);background-position:50% 90%;background-size:320% 800%;width:28%;height:6%;top:47%;left:38%;}
 #fullscreen{position:absolute;background-image:url(../layout/buttons.png);background-position:95% 90%;background-size:320% 800%;width:28%;height:6%;top:47%;left:67%;}
-#divide4{position:absolute;width:100%;height:2%;top:53%;left:0%;border-bottom:2px solid #1f1f1f;margin-bottom:10px;}
+#divide4{position:absolute;width:100%;height:2%;top:53%;left:0%;border-bottom:2px solid #1f62c1;margin-bottom:10px;}
 #control-links{position:absolute;width:100%;top:55%;left:0%;}
-.divide{position:absolute;width:100%;height:5%;border-bottom:2px solid #1f1f1f;margin-bottom:10px;}
+.divide{position:absolute;width:100%;height:5%;border-bottom:2px solid #1f62c1;margin-bottom:10px;}
 .control-link{margin-top:10px;}
 #global-info-panel{position:absolute;padding-bottom:20px;left:80%;top:12%;width:15%;height:100%;z-index:10;}
 #user-info{clear:both;float:right;position:relative;color:#add8e6;padding:0;text-align:right;}
-#menu{position:absolute;width:400px;height:20px;top:67px;left:270px;text-align:right;color:#1f1f1f;}
+#menu{position:absolute;width:400px;height:20px;top:67px;left:270px;text-align:right;color:#1f62c1;}
 #world-name{font-size:18px;}
 #about{position:absolute;width:30%;top:2%;text-align:left;color:#8FB0E0;font-size:80%;z-index:1;}
 #highscore{position:relative;width:70%;top:2%;float:right;text-align:right;font-size:80%;color:#8FB0E0;}
@@ -68,9 +68,9 @@ body{color:#000;font-family:Verdana,Arial,Helvetica,sans-serif;font-size:80%;pad
 .swatch-category,.inline-swatch-category,.gallery-category{border-radius:4px;margin-top:1%;margin-bottom:2%;min-width:100%;width:100%;}
 .swatch-instance,.inline-swatch-instance,.gallery-instance{width:16%;text-align:center;float:left;padding:2%;}
 .swatch-draggable{z-index:1000;}
-#world-editor{position:absolute;width:487px;margin-top:20px;clear:both;background:#1f1f1f;border-bottom-left-radius:4px;border-bottom-right-radius:4px;padding:4px;vertical-align:middle;}
-#world-editor>div,#world-features>div{float:left;position:relative;width:100px;height:40px;background:#ffffff;color:#1f1f1f;padding:6px;margin:4px;text-align:center;vertical-align:middle;}
-#world-editor a,#world-features a{color:#1f1f1f;}
+#world-editor{position:absolute;width:487px;margin-top:20px;clear:both;background:#1f62c1;border-bottom-left-radius:4px;border-bottom-right-radius:4px;padding:4px;vertical-align:middle;}
+#world-editor>div,#world-features>div{float:left;position:relative;width:100px;height:40px;background:#ffffff;color:#1f62c1;padding:6px;margin:4px;text-align:center;vertical-align:middle;}
+#world-editor a,#world-features a{color:#1f62c1;}
 #gallery-stats{position:absolute;left:240px;width:200px;}
 #gallery-item-panel{position:absolute;left:20px;width:180px;}
 #gallery-items>div{margin-top:4px;float:left;clear:both;}
@@ -91,7 +91,7 @@ ul,li{margin:0px;padding:0px;}
 #info h2{margin-top:0px;}
 .quests{padding:4px;overflow:auto;}
 .thumbnail{margin:2px;padding:2px;float:left;width:96px;height:130px;font-size:0.8em;}
-.doc{border-radius:4px;background:#1f1f1f;padding:1em;border:#fff 1px solid;}
+.doc{border-radius:4px;background:#1f62c1;padding:1em;border:#fff 1px solid;}
 .doc div{margin-top:1em;}
 .doc ul{margin:1em 1em 1em 2em;}
 .doc li{list-style:circle;}
@@ -119,7 +119,7 @@ ul,li{margin:0px;padding:0px;}
 #toolbar li{display:block;float:left;margin:0 2em 0 0;}
 #usersLink{color:inherit;}
 #alt_gameworld{clear:both;position:relative;z-index:1000;}
-#alt_world{position:absolute;left:0px;float:left;padding:7px;border-radius:4px;background:#1f1f1f;display:block;width:480px;height:400px;}
+#alt_world{position:absolute;left:0px;float:left;padding:7px;border-radius:4px;background:#1f62c1;display:block;width:480px;height:400px;}
 #chat-area{color:#eee;background:#22252a;left:0px;font-size:14pt;line-height:150%;}
 #chat{overflow:auto;}
 #chat p{padding:8px;margin:0;}
@@ -150,7 +150,7 @@ ul,li{margin:0px;padding:0px;}
 #console .code:before{content:' ';}
 #console .code{color:#FF0000;text-indent:24px;}
 #console .sys:before{content:'Fierce-Planet says: ';color:#FF0000;}
-#console .sys{color:#1f1f1f;}
+#console .sys{color:#1f62c1;}
 pre{white-space:pre;white-space:pre-wrap;word-wrap:break-word;}
 .tilda{position:fixed;top:0;left:0;width:100%;z-index:1100;}
 .CodeMirror{color:#000;background:#fff;border-top:1px solid black;border-bottom:1px solid black;}
