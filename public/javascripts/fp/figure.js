@@ -72,12 +72,12 @@ $LAB
 
     ])
     .script([
-        'fp/modules/default/default-module.js'
-        , 'fp/modules/default/worlds/basic.js'
-        , 'fp/modules/default/worlds/additional.js'
-        , 'fp/modules/default/resources/tbl.js'
-        , 'fp/modules/default/resources/cos.js'
-       , 'fp/modules/default/resources/resource_types.js'
+    , 'fp/default-module/default-module.js'
+    , 'fp/default-module/resources/tbl.js'
+    , 'fp/default-module/resources/cos.js'
+    , 'fp/default-module/resources/resource_types.js'
+    , 'fp/default-module/worlds/basic.js'
+    , 'fp/default-module/worlds/additional.js'
 
     ])
     .wait(function() {

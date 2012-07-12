@@ -2,7 +2,7 @@ require('./helper.spec.js')
 
 describe("world-related classes", function() {
 
-    var world;
+  var world;
 
   beforeEach(function() {
       Lifecycle.currentWorld = world = ModuleManager.currentModule.getWorld(Lifecycle.currentCampaignID, 0);

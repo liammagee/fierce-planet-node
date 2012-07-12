@@ -6,7 +6,7 @@
  */
 
 
-var TestWorlds = TestWorlds || new Campaign();
+var TestCampaign = TestCampaign || new Campaign();
 var TestModule = TestModule || {};
 
 (function () {
@@ -49,22 +49,22 @@ var TestModule = TestModule || {};
 
 
         // Prepare as a module
-        this.id = "Test";
-        this.name = "Test";
+        this.id = "Test Campaign";
+        this.name = "Test Campaign";
         this.position = 1;
         this.worlds = [ this.testWorld ];
     }
 
     this.init();
 
-}).apply(TestWorlds);
+}).apply(TestCampaign);
 
 (function() {
     this.init = function() {
         var module = new Module();
         module.id = 'Test';
         module.registerSelf();
-        module.registerCampaign(TestWorlds);
+        module.registerCampaign(TestCampaign);
         module.registerResourceSet(TBL);
 
         var culture = DefaultCultures.MovingStickman;
@@ -76,7 +76,7 @@ var TestModule = TestModule || {};
 
         var localStorage = localStorage || {};
         Lifecycle.interval = 100;
-        Lifecycle.currentCampaignID = 'Test';
+        Lifecycle.currentCampaignID = 'Test Campaign';
         Lifecycle.currentWorldNumber = localStorage.currentWorldNumber = 0;
         Lifecycle.currentWorldPreset = true;
         Lifecycle.worldDelay = 3000;

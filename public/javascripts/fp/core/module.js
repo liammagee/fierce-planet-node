@@ -69,7 +69,11 @@ function Module() {
      * Retrieves  a module
      */
     this.getWorld = function(campaignID, world) {
-        return this.getCampaign(campaignID).worlds[world];
+        var campaign = this.getCampaign(campaignID);
+        if (_.isUndefined(campaign))
+            return undefined;
+
+        return campaign.worlds[world];
     };
 
 

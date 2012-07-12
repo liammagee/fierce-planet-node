@@ -388,6 +388,7 @@ app.listen(port);
 
 
 // Socket IO stuff
+
 var sio = require('socket.io');
 var io = sio.listen(app);
 var nicknames = {};
