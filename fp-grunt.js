@@ -117,15 +117,19 @@ module.exports = function(grunt) {
 
         jasmine: {
             all: ['specs/specrunner.html']
+        },
+
+        jasmine_node: {
+            src: 'spec/'
         }
     });
 
     grunt.loadNpmTasks('grunt-less');
-    grunt.loadNpmTasks('grunt-jasmine-task');
+    grunt.loadNpmTasks('grunt-jasmine-node-task');
 
     // Default task.
 //    grunt.registerTask('default', 'lint test config min');
-    grunt.registerTask('default', 'concat less min');
+    grunt.registerTask('default', 'jasmine_node concat less min');
 
 
     // TODO: add support for Jasmine-node

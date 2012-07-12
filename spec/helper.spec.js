@@ -40,11 +40,11 @@ if (typeof(global) != "undefined") {
     Wave = require('./../public/javascripts/fp/core/wave.js').Wave;
     Statistics = require('./../public/javascripts/fp/core/statistics.js').Statistics;
 
-    ResourceTypes = require('./../public/javascripts/fp/modules/default/resources/resource_types.js').ResourceTypes;
-    TBL = require('./../public/javascripts/fp/modules/default/resources/tbl.js').TBL;
+    ResourceTypes = require('./../public/javascripts/fp/default-module/resources/resource_types.js').ResourceTypes;
+    TBL = require('./../public/javascripts/fp/default-module/resources/tbl.js').TBL;
 
-    TestWorlds = require('./../public/javascripts/fp/modules/tests/test/test-module.js').TestWorlds;
-    TestModule = require('./../public/javascripts/fp/modules/tests/test/test-module.js').TestModule;
+    TestWorlds = require('./../public/javascripts/fp-modules/tests/test/test-module.js').TestWorlds;
+    TestModule = require('./../public/javascripts/fp-modules/tests/test/test-module.js').TestModule;
 //jstat = require('./../public/javascripts/jstat-1.0.0/js/jstat-1.0.0.js').jstat;
 //NormalDistribution = require('./../public/javascripts/jstat-1.0.0/js/jstat-1.0.0.js').NormalDistribution;
     jStat = require('./../public/javascripts/jstat-1.0.0/js/jstat.js').jStat;
