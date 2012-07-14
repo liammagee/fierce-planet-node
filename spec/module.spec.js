@@ -3,14 +3,50 @@ require('./helper.spec.js')
 describe("a module", function() {
 
     beforeEach(function() {
-        TestModule.init();
     });
 
+    describe("using the module manager", function() {
+        beforeEach(function() {
+            ModuleManager.clearAllModules();
+        })
+
+        it("should have no modules registered by default", function() {
+            expect(ModuleManager.currentModule).toBeUndefined();
+        })
+
+
+        describe("registering a module", function() {
+
+            var module;
+
+            beforeEach(function() {
+                module = new Module();
+                module.id = 'A new module';
+            })
+
+            it("should be defined", function() {
+                expect(module).toBeDefined();
+                expect(module.id).toEqual('A new module');
+            })
+
+            it("should have undefined or empty campaigns, cultures and resource sets", function() {
+                expect(countOwnProperties(module.campaigns)).toEqual(0);
+                expect(module.cultures.length).toEqual(0);
+                expect(module.resourceSet).toBeUndefined();
+            })
+
+            it("should be able to be registered", function() {
+                module.registerSelf();
+                expect(ModuleManager.currentModule).toEqual(module);
+            })
+        })
+    })
 
     describe("initialisation", function() {
         var module;
 
         beforeEach(function() {
+            TestModule.init();
             module = ModuleManager.currentModule;
         })
 
@@ -68,6 +104,52 @@ describe("a module", function() {
                     expect(campaign.worlds).toBeDefined()
                     expect(campaign.worlds.length).toEqual(1)
                 })
+            })
+        })
+
+        describe("cultures", function() {
+            it("should have one culture", function() {
+                expect(module.cultures.length).toEqual(1);
+                expect(module.cultures[0]).toBeDefined();
+                expect(module.cultures).toEqual(module.allCultures());
+            })
+
+            it("should be possible to add another culture", function() {
+                var altCulture = new Culture();
+                module.registerCulture(altCulture);
+                expect(module.cultures.length).toEqual(2);
+                expect(module.cultures[1]).toEqual(altCulture);
+            })
+        })
+
+        describe("resource sets", function() {
+
+            it("should have a resource set", function() {
+                expect(module.resourceSet).toBeDefined();
+            })
+
+            it("should resolve resource types", function() {
+                var resourceType = module.resolveResourceType('farm');
+                expect(resourceType).toBeDefined();
+                expect(resourceType.name).toEqual('Farm');
+
+                var nonexistentType = module.resolveResourceType('nonExistentRT');
+                expect(nonexistentType).not.toBeDefined();
+            })
+
+            it("should be possible to register a different resource set", function(){
+                var altResourceSet = {
+                    id: 'Alt Resource Set'
+                };
+                module.registerResourceSet(altResourceSet);
+                expect(module.resourceSet).toBeDefined();
+                expect(module.resourceSet).toEqual(altResourceSet);
+            })
+
+            it("should ignore a mock resource set without an ID", function(){
+                var altResourceSet = {};
+                module.registerResourceSet(altResourceSet);
+                expect(module.resourceSet).not.toEqual(altResourceSet);
             })
         })
     });

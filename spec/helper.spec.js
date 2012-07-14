@@ -49,10 +49,24 @@ if (typeof(global) != "undefined") {
 //NormalDistribution = require('./../public/javascripts/jstat-1.0.0/js/jstat-1.0.0.js').NormalDistribution;
     jStat = require('./../public/javascripts/jstat-1.0.0/js/jstat.js').jStat;
 
+
 }
 
 (function() {
-    TestModule.init();
     Universe.settings.agentsCanAdjustWander = false;
     Universe.settings.noGameOver = true;
 })();
+
+
+
+/**
+ * Helper function for determining number of own properties of an object
+ */
+countOwnProperties = function(obj) {
+    var size = 0, key;
+    for (key in obj) {
+        if (obj.hasOwnProperty(i))
+            size++;
+    }
+    return size;
+}

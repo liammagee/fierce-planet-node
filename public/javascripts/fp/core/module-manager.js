@@ -18,6 +18,14 @@ var ModuleManager = ModuleManager || {};
     this.currentModule;
 
     /**
+     * Clears all modules from the manager
+     */
+    this.clearAllModules = function() {
+        _modules = {};
+        this.currentModule = undefined;
+    }
+
+    /**
      * Registers a module
      */
     this.registerModule = function(module) {
@@ -37,21 +45,6 @@ var ModuleManager = ModuleManager || {};
      */
     this.getModule = function(moduleID) {
         return _modules[moduleID];
-    };
-
-    /**
-     * Retrieves  a module
-     */
-    this.allModules = function() {
-        return _modules;
-    };
-
-
-    /**
-     * Retrieves  a module
-     */
-    this.getModuleWorld = function(worldSetID, world) {
-        return this.currentModule.getWorld(moduleID).worlds[world]
     };
 
 

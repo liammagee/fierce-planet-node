@@ -5,6 +5,7 @@ describe("world-related classes", function() {
   var world;
 
   beforeEach(function() {
+      TestModule.init();
       Lifecycle.currentWorld = world = ModuleManager.currentModule.getWorld(Lifecycle.currentCampaignID, 0);
       world.initWorld();
   });

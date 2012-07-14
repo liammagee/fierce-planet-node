@@ -77,6 +77,23 @@ function Module() {
     };
 
 
+
+    /**
+     * Registers a culture
+     */
+    this.registerCulture = function(culture) {
+        this.cultures = this.cultures || [];
+        this.cultures.push(culture);
+    };
+
+    /**
+     * Retrieves  a agent set
+     */
+    this.allCultures = function() {
+        return this.cultures;
+    };
+
+
     /**
      * Registers a resource set (only one is allowed per module)
      */
@@ -97,31 +114,6 @@ function Module() {
         }
         return undefined;
 
-    };
-
-
-    /**
-     * Registers a culture
-     */
-    this.registerCulture = function(culture) {
-        this.cultures = this.cultures || [];
-        this.cultures.push(culture);
-    };
-
-    /**
-     * Retrieves  a agent set
-     */
-    this.allCultures = function() {
-        return this.cultures;
-    };
-
-    this.setHealthCategoriesForAllCultures = function() {
-        if (!_.isUndefined(this.cultures) && !_.isUndefined(this.resourceSet) && !_.isUndefined(this.resourceSet.categories)) {
-            for (var i = 0, l = this.cultures.length; i < l; i++) {
-                this.cultures[i].healthCategories = this.resourceSet.categories;
-            }
-
-        }
     };
 
 

@@ -4,6 +4,8 @@ describe("agent-related classes", function() {
   var culture, agent, world;
 
   beforeEach(function() {
+      TestModule.init();
+
       culture = ModuleManager.currentModule.cultures[0];
       culture.beliefs = [
           Beliefs.BeliefsAboutResources
