@@ -133,7 +133,7 @@ describe("a module", function() {
                 expect(resourceType).toBeDefined();
                 expect(resourceType.name).toEqual('Farm');
 
-                var nonexistentType = module.resolveResourceType('nonExistentRT');
+                var nonexistentType = module.resolveResourceType('nonExistentResourceType');
                 expect(nonexistentType).not.toBeDefined();
             })
 
