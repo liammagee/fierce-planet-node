@@ -196,25 +196,6 @@ function World() {
                 cell.agents.push(agent);
         }
     };
-    this.addResourceToCell = function(resource) {
-        var x = resource.x, y = resource.y;
-        var cell = this.cells[this.indexify(x, y)];
-        if (!_.isUndefined(cell))
-            cell.resources.push(resource);
-    };
-    this.removeResourceFromCell = function(resource) {
-        var x = resource.x, y = resource.y;
-        var cell = this.getCell(x, y);
-        var index = _.indexOf(cell.resources, resource);
-        if (!_.isUndefined(cell))
-            cell.resources.splice(index, 1);
-    };
-    this.removeAllResourcesFromCells = function() {
-        this.cells.forEach(function(cell) { cell.resources = []});
-    };
-    this.getResourcesAtCell = function(x, y) {
-        return this.cells[this.indexify(x, y)].resources;
-    };
     this.addAgentToCell = function(agent) {
         var x = agent.x, y = agent.y;
         var cell = this.cells[this.indexify(x, y)];
@@ -513,11 +494,31 @@ function World() {
     };
 
 
+
     /******************************************/
     /** RESOURCE FUNCTIONS ********************/
     /******************************************/
 
-    this.getResources = function() { return this.resources; };
+
+    this.addResourceToCell = function(resource) {
+        var x = resource.x, y = resource.y;
+        var cell = this.cells[this.indexify(x, y)];
+        if (!_.isUndefined(cell))
+            cell.resources.push(resource);
+    };
+    this.removeResourceFromCell = function(resource) {
+        var x = resource.x, y = resource.y;
+        var cell = this.getCell(x, y);
+        var index = _.indexOf(cell.resources, resource);
+        if (!_.isUndefined(cell))
+            cell.resources.splice(index, 1);
+    };
+    this.removeAllResourcesFromCells = function() {
+        this.cells.forEach(function(cell) { cell.resources = []});
+    };
+    this.getResourcesAtCell = function(x, y) {
+        return this.cells[this.indexify(x, y)].resources;
+    };
 
     /**
      * @param resources
@@ -541,52 +542,36 @@ function World() {
      * @param resources
      */
     this.setResources = function(resources) {
-        this.resources = resources;
+        this.resetResources();
+        var that = this;
+        resources.forEach(function(resource) {
+            that.addResource(resource)
+        })
         this.resourceCategoryCounts = this.resetResourceCategoryCounts();
     };
 
+    /**
+     * Tests whether a cell position is occupied by a resource
+     * @param x
+     * @param y
+     * @return {Boolean}
+     */
     this.isPositionOccupiedByResource = function(x, y) {
         return this.getCell(x, y).resources.length > 0;
     }
 
-    /**
-     *
-     * @param agentType
-     * @param number
-     */
-    this.generateWorldResources = function() {
-        var agents = [];
-        if (this.randomiseResources && this.initialResourceNumber > 0) {
-            // Get pathway length
-            this.worldResources = [];
-            for (var i = 0; i < this.initialResourceNumber; i ++) {
-                // Generate a random tile position
-                var x = Math.floor(Math.random() * this.cellsAcross);
-                var y = Math.floor(Math.random() * this.cellsDown);
-                /*
-                 var catLen = ModuleManager.currentModule.resourceSet.categories.length;
-                 var randomCat = ModuleManager.currentModule.resourceSet.categories[Math.floor(Math.random() * catLen)];
-                 var typeLen = randomCat.types.length;
-                 var rt = randomCat[Math.floor(Math.random() * typeLen)	];
-                 */
-                var rt = ModuleManager.currentModule.resourceSet.types[Math.floor(Math.random() * ModuleManager.currentModule.resourceSet.types.length)];
-                this.worldResources.push(new Resource(rt, x, y));
-            }
-        }
-        this.resetResources();
-    };
-
 
     /**
-     *
+     * Adds a resource to the world
      * @param resource
      */
     this.addResource = function(resource) {
         this.resources.push(resource);
         this.addResourceToCell(resource);
-        this.incrementResourceCategoryCount(resource);
 
-        var resourceCategory = resource.category.code;
+        // Increment the resource category count
+        this.resourceCategoryCounts[resource.category.code] += 1;
+
         this.currentResourceStore -= resource.cost;
         this.currentResourceSpent += resource.cost;
     };
@@ -619,7 +604,9 @@ function World() {
         if (index > -1) {
             this.resources.splice(index, 1);
             this.removeResourceFromCell(resource);
-            this.decrementResourceCategoryCount(resource);
+
+            // Decrement the resource category count
+            this.resourceCategoryCounts[resource.category.code] -= 1;
         }
     };
 
@@ -634,10 +621,50 @@ function World() {
             var resource = this.resources[index];
             this.resources.splice(index, 1);
             this.removeResourceFromCell(resource);
-            this.decrementResourceCategoryCount(resource);
+
+            // Decrement the resource category count
+            this.resourceCategoryCounts[resource.category.code] -= 1;
         }
     };
 
+
+
+    /**
+     * Adds a number of resources to the world-level resources
+     * @param agentType
+     * @param number
+     */
+    this.generateWorldResources = function() {
+        if (this.randomiseResources && this.initialResourceNumber > 0) {
+            // Get pathway length
+            this.worldResources = [];
+            for (var i = 0; i < this.initialResourceNumber; i ++) {
+                // Generate a random tile position
+                var x = Math.floor(Math.random() * this.cellsAcross);
+                var y = Math.floor(Math.random() * this.cellsDown);
+                var types = ModuleManager.currentModule.resourceSet.types;
+                var rt = types[Math.floor(Math.random() * types.length)];
+                this.worldResources.push(new Resource(rt, x, y));
+            }
+        }
+        this.resetResources();
+    };
+
+    /**
+     * Removes world-level resources
+     */
+    this.removeWorldResources = function() {
+        this.worldResources = [];
+        this.resetResources();
+    };
+
+
+    // RESOURCE COUNTS
+
+    /**
+     * Recalculates resource counts
+     * @return {*}
+     */
     this.resetResourceCategoryCounts = function() {
         if (_.isUndefined(ModuleManager.currentModule.resourceSet))
             return;
@@ -649,29 +676,10 @@ function World() {
         this.resources.forEach(function(resource) {
             rcc[resource.category.code] += 1;
         });
+        this.resourceCategoryCounts = rcc;
         return rcc;
     };
-    /**
-     *
-     * @param resource
-     */
-    this.incrementResourceCategoryCount = function(resource) {
-        this.resourceCategoryCounts[resource.category.code] += 1;
-    };
-    /**
-     * Decrements the resource category count
-     * @param resource
-     */
-    this.decrementResourceCategoryCount = function(resource) {
-        this.resourceCategoryCounts[resource.category.code] -= 1;
-    };
 
-    /**
-     * Gets the recource category count collection
-     */
-    this.getResourceCategoryCounts = function() {
-        return this.resourceCategoryCounts;
-    };
     /**
      * Counts the resources of a given resource category
      * @param code
@@ -679,6 +687,7 @@ function World() {
     this.getResourceCategoryCount = function(code) {
         return this.resourceCategoryCounts[code];
     };
+
     /**
      * Gets the proportion of resources with the given resource category code
      * @param code
@@ -798,6 +807,8 @@ function World() {
         return recoveredResources;
     };
 
+
+    // WAVES
 
     /**
      * Initialise waves
@@ -1046,7 +1057,6 @@ function World() {
     this.getNeighbouringResources = function(x, y) {
         return this.getResourcesAtDistance(x, y, 1, Distance.CHEBYSHEV_DISTANCE, true);
     };
-
 
     this.getNeighbouringAgents = function(x, y) {
         return this.getAgentsAtDistance(x, y, 1, Distance.CHEBYSHEV_DISTANCE, true);

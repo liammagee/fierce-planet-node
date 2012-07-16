@@ -239,7 +239,8 @@ var Lifecycle = Lifecycle || {};
         Lifecycle.worldDelayCounter = 0;
         Lifecycle.worldCounter = 0;
     	if (Lifecycle.currentWorld != undefined) {
-            Lifecycle.currentWorld.setResources([]);
+            Lifecycle.currentWorld.resetResources();
+            //Lifecycle.currentWorld.setResources([]);
             if (Lifecycle.currentWorld.teardown)
                 Lifecycle.currentWorld.teardown();
         }

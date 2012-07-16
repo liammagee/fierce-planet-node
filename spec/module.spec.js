@@ -128,10 +128,19 @@ describe("a module", function() {
                 expect(module.resourceSet).toBeDefined();
             })
 
+            it("should have resource categories", function() {
+                expect(module.resourceSet.categories.length).toEqual(3);
+            })
+
+            it("should have resource types", function() {
+                expect(module.resourceSet.types.length).toEqual(15);
+            })
+
             it("should resolve resource types", function() {
                 var resourceType = module.resolveResourceType('farm');
                 expect(resourceType).toBeDefined();
                 expect(resourceType.name).toEqual('Farm');
+                expect(resourceType).toEqual(module.resourceSet.types[0]);
 
                 var nonexistentType = module.resolveResourceType('nonExistentResourceType');
                 expect(nonexistentType).not.toBeDefined();

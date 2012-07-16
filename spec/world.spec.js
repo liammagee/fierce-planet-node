@@ -62,10 +62,14 @@ describe("world-related classes", function() {
     describe("get objects in the environment", function() {
 
         describe("get resources in the environment", function() {
+
             var resource;
+
             beforeEach(function() {
-                world.resources = [];
-                world.removeAllResourcesFromCells();
+                world.cells.forEach(function(cell) {
+                    cell.resourcesAllowed = true;
+                })
+                world.resetResources();
                 resource = new Resource(ModuleManager.currentModule.resourceSet.types[0], 11, 10);
                 world.addResource(resource)
             });
@@ -79,11 +83,35 @@ describe("world-related classes", function() {
                 expect(testResource).toEqual(resource);
             });
 
-            it("remove a resource", function() {
-                world.removeResource(resource);
-                var testResource = world.getResourcesAtCell(11, 10)[0];
-                expect(testResource).toBeUndefined();
+            it("should have show position is occupied by the resource", function() {
+                expect(world.isPositionOccupiedByResource(11, 10)).toBeTruthy();
             });
+
+            it("should have no resources after a reset", function() {
+                world.resetResources();
+                expect(world.resources.length).toEqual(0)
+            })
+
+            it("should have no world-level resources", function() {
+                expect(world.worldResources.length).toEqual(0)
+            })
+
+            it("should correctly set a new array of resources", function() {
+                var newResources = [];
+                world.setResources(newResources)
+                expect(world.resources.length).toEqual(0)
+                newResources = [resource];
+                world.setResources(newResources)
+                expect(world.resources.length).toEqual(1)
+            })
+
+            it("should have the correct category counts", function() {
+                var counts  = world.resourceCategoryCounts,
+                    categories = ModuleManager.currentModule.resourceSet.categories;
+                expect(counts[categories[0].code]).toEqual(1)
+                expect(counts[categories[1].code]).toEqual(0)
+                expect(counts[categories[2].code]).toEqual(0)
+            })
 
             it("should have a resource in the surrounding positions", function() {
                 var positions = world.getVonNeumannNeighbourhood(10, 10);
@@ -97,6 +125,94 @@ describe("world-related classes", function() {
                 expect(allResources.length).toEqual(1);
                 expect(allResources[0]).toEqual(resource);
             });
+
+
+            describe("adding and removing resources", function() {
+                var x = 9, y = 10;
+                it("should be possible to add another resource", function() {
+                    var resourceCount = world.resources.length;
+                    var newResource = new Resource(ModuleManager.currentModule.resourceSet.types[1], x, y);
+                    world.addResource(newResource)
+                    expect(world.resources.length).toEqual(resourceCount + 1)
+                    expect(world.isPositionOccupiedByResource(x, y)).toBeTruthy()
+                })
+
+                it("should be possible to add another resource randomly", function() {
+                    var resourceType = ModuleManager.currentModule.resourceSet.types[5];
+                    var counts  = world.resourceCategoryCounts
+                    expect(counts[resourceType.category.code]).toEqual(0)
+                    world.addResourceRandomly(resourceType)
+                    expect(counts[resourceType.category.code]).toEqual(1)
+                })
+
+                it("should be possible to remove a resource", function() {
+                    var resourceCount = world.resources.length;
+                    var newResource = new Resource(ModuleManager.currentModule.resourceSet.types[1], x, y);
+                    world.addResource(newResource)
+                    expect(world.resources.length).toEqual(resourceCount + 1)
+                    world.removeResource(newResource);
+                    expect(world.resources.length).toEqual(resourceCount)
+                    expect(world.isPositionOccupiedByResource(x, y)).toBeFalsy()
+                    expect(world.getResourcesAtCell(x, y)[0]).not.toBeDefined()
+                });
+
+                it("should be possible to remove resource by position", function() {
+                    var resourceCount = world.resources.length;
+                    var newResource = new Resource(ModuleManager.currentModule.resourceSet.types[1], x, y);
+                    world.addResource(newResource)
+                    expect(world.resources.length).toEqual(resourceCount + 1)
+                    world.removeResourceByPosition(x, y)
+                    expect(world.resources.length).toEqual(resourceCount)
+                    expect(world.isPositionOccupiedByResource(x, y)).toBeFalsy()
+                    expect(world.getResourcesAtCell(x, y)[0]).not.toBeDefined()
+                })
+            })
+
+
+            describe("world-level resources", function() {
+                beforeEach(function() {
+                    world.initialResourceNumber = 20;
+                    world.randomiseResources = true;
+                })
+
+                it("should generate world-level resources", function() {
+                    world.generateWorldResources();
+                    expect(world.resources.length).toEqual(20)
+                })
+
+                it("should remove all generated world-level resources", function() {
+                    world.generateWorldResources();
+                    expect(world.resources.length).toEqual(20)
+                    world.removeWorldResources();
+                    expect(world.resources.length).toEqual(0)
+                })
+
+                afterEach(function() {
+                    world.removeWorldResources();
+                    world.initialResourceNumber = 0;
+                    world.randomiseResources = false;
+                })
+            })
+
+
+            describe("resource counts", function() {
+                beforeEach(function() {
+                })
+
+                it("should generate the correct resource counts", function() {
+                    //world.resetResourceCategoryCounts()
+                    var categories = ModuleManager.currentModule.resourceSet.categories;
+                    expect(world.resourceCategoryCounts[categories[0].code]).toEqual(1)
+                    expect(world.resourceCategoryCounts[categories[1].code]).toEqual(0)
+                    expect(world.resourceCategoryCounts[categories[2].code]).toEqual(0)
+                    // Add an environmental type
+                    world.resources.push(new Resource(ModuleManager.currentModule.resourceSet.types[5], 0, 0));
+                    expect(world.resourceCategoryCounts[categories[1].code]).toEqual(0)
+                    world.resetResourceCategoryCounts()
+                    expect(world.resourceCategoryCounts[categories[1].code]).toEqual(1)
+                })
+
+            })
         });
 
         describe("get agents in the environment", function() {
@@ -313,15 +429,16 @@ describe("world-related classes", function() {
                 expect(positions).toContain({x: 10, y: 11});
                 expect(positions).toContain({x: 11, y: 11});
             });
-//            it("should retrieve cells within a radius", function() {
-//                var cells = world.getCellsAtDistance(10, 10, 1, Distance.MINKOWSKI_DISTANCE),
-//                    positions = _.map(cells, function(cell){ return { x: cell.x, y: cell.y} })
-//                expect(cells.length).toEqual(4);
-//                expect(positions).toContain({x: 10, y: 9});
-//                expect(positions).toContain({x: 9, y: 10});
-//                expect(positions).toContain({x: 11, y: 10});
-//                expect(positions).toContain({x: 10, y: 11});
-//            });
+
+            xit("should retrieve cells within a radius", function() {
+                var cells = world.getCellsAtDistance(10, 10, 1, Distance.MINKOWSKI_DISTANCE),
+                    positions = _.map(cells, function(cell){ return { x: cell.x, y: cell.y} })
+                expect(cells.length).toEqual(4);
+                expect(positions).toContain({x: 10, y: 9});
+                expect(positions).toContain({x: 9, y: 10});
+                expect(positions).toContain({x: 11, y: 10});
+                expect(positions).toContain({x: 10, y: 11});
+            });
 
             it("should retrieve cells within a diagonal distance", function() {
                 var cells = world.getCellsAtDistance(0, 0, 1, Distance.TAXICAB_DISTANCE),
@@ -345,5 +462,7 @@ describe("world-related classes", function() {
             });
         });
     });
+
+
 
 });
