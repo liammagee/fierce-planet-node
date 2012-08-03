@@ -25,6 +25,21 @@ var RMITResources = RMITResources || {};
 
     this.initRMITWorlds = function () {
 
+		this.maze = Basic.world5;
+		_.extend(this.maze, 
+			{
+				
+				handleParameters: function() {
+                    this.cultures = [DefaultCultures.MovingStickman];
+                    this.waves = undefined;
+                    this.initialiseWaves(1);
+                    FiercePlanet.Drawing.drawPath();
+					
+				},
+				interval: 10
+				
+			});
+			
         this.fishermansBend  = new World();
         _.extend(this.fishermansBend,
             {
@@ -484,7 +499,7 @@ var RMITResources = RMITResources || {};
         this.id = "RMIT";
         this.name = "RMIT";
         this.position = 1;
-        this.worlds = [ this.fishermansBend ];
+        this.worlds = [ this.maze, this.fishermansBend  ];
     }
 
     this.initRMITWorlds();
@@ -498,8 +513,8 @@ var RMITResources = RMITResources || {};
         module.registerSelf();
         module.registerCampaign(RMITWorlds);
         module.currentCampaignID = 'RMIT';
-//        module.registerResourceSet(TBL);
-        module.registerResourceSet(CoS);
+        module.registerResourceSet(TBL);
+        //module.registerResourceSet(CoS);
         FiercePlanet.Game.currentProfile.capabilities = ['farm', 'shop', 'bank', 'factory', 'stockmarket', 'water', 'park', 'air', 'energy', 'biodiversity', 'legal', 'democracy', 'clinic', 'school', 'festival'];
         Lifecycle.waveDelay = 3000;
 
@@ -525,7 +540,7 @@ var RMITResources = RMITResources || {};
             worldHeight: 600
         })
 
-        FiercePlanet.ModuleEditor.buildEditorFromUrl('/javascripts/fp/modules/trials/rmit/rmit-module.js', 'RMITModule.init(); FiercePlanet.Game.loadGame();');
+        FiercePlanet.ModuleEditor.buildEditorFromUrl('/javascripts/fp-modules/trials/rmit/rmit-module.js', 'RMITModule.init(); FiercePlanet.Game.loadGame();');
     };
 }).apply(RMITModule);
 
