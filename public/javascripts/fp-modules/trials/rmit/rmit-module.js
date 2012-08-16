@@ -71,8 +71,8 @@ var RMITResources = RMITResources || {};
 
                 isPresetWorld: true,
                 interval: 100,
-                cellsAcross: 40,
-                cellsDown: 40,
+                cellsAcross: 20,
+                cellsDown: 20,
                 dontClearCanvas: true,
                 scrollingImageVisible: false,
                 initialResourceStore: 1000,
@@ -83,6 +83,8 @@ var RMITResources = RMITResources || {};
                 incrementAgentsEachWave: false,
                 initialAgentNumber: 0,
                 drawAllCells: true,
+				ignoreResourceLevels: true, 
+				
                 //Arica
                 mapOptions: ({
                     mapTypeId: google.maps.MapTypeId.HYBRID,
@@ -129,7 +131,7 @@ var RMITResources = RMITResources || {};
                     FiercePlanet.GeneralUI.refreshSwatch();
                 },
                 setupParameters: function() {
-                    FiercePlanet.Slider.createSlider("initialAgents", 0, 200, 5, 100);
+                    FiercePlanet.Slider.createSlider("initialAgents", 0, 300, 10, 150);
                     FiercePlanet.Slider.createSlider("initialWorkers", 0, 100, 5, 0);
                     FiercePlanet.Slider.createSlider("developmentBlocks", 0, 400, 10, 100);
                     FiercePlanet.Slider.createSlider("aveHousingQuality", 0, 100, 1, 50);
@@ -140,8 +142,9 @@ var RMITResources = RMITResources || {};
                     FiercePlanet.Slider.createSlider("importanceOfMovingToBetterHousing", 0, 10, 1, 1);
 
                     FiercePlanet.Graph.setupData(
-                        {label: 'Social Wellbeing', color: '#0f0', maxValue: 100}
-                        , {label: 'Housing Quality', color: '#f00', maxValue: 100}
+                        {label: 'Affordability', color: '#0f0', maxValue: 100}
+                        , {label: 'Sustainability', color: '#f00', maxValue: 100}
+                        , {label: 'Mixed Use', color: '#00f', maxValue: 100}
                     );
                 },
                 handleParameters: function () {
@@ -158,10 +161,12 @@ var RMITResources = RMITResources || {};
                         , residentsDieOut = ((FiercePlanet.Parameters.ResidentsDieOut))
 
                     Universe.settings.godMode = !residentsDieOut;
+					world.allowResourcesOnPath = true;
 
                     /// Set up agents
                     var len = world.cells.length,
                         removedCells = [];
+						/*
                     for (var i = 0; i < developmentBlocks; i++) {
                         var cellNo = Math.floor(Math.random() * len);
                         var cell = world.cells[cellNo];
@@ -175,6 +180,7 @@ var RMITResources = RMITResources || {};
                         }
                     }
                     world.generatePath();
+					*/
 
                     var residentCulture = _.clone(DefaultCultures.Stickman);
                     residentCulture.name = "Residents";
@@ -249,30 +255,7 @@ var RMITResources = RMITResources || {};
 
                     Universe.settings.godMode = !residentsDieOut;
 
-                    var moveCapability = Capabilities.MoveRandomlyCapability, nullifiedAgents = [];
-                    var moveToBetterHousing = new Capability();
-                    (function() {
-                        this.name = 'MoveToBetterHousing';
-                        this.cost = 0;
-                        this.exercise = function(agent, world) {
-                            var currentCell = world.getCell(agent.x, agent.y),
-                                currentCellQuality = currentCell.quality,
-                                positions = world.getCellsAtDistance(agent.x, agent.y, 1, Distance.CHEBYSHEV_DISTANCE, false),
-                                moveablePositions = _.chain(positions).map(function(cell) {if (cell.agentsAllowed) return cell; }).compact().shuffle().value();
 
-                            var candidateCell = currentCell;
-                            for (var i = 0; i < moveablePositions.length; i++) {
-                                var testPosition = moveablePositions[i];
-                                if (testPosition.quality - currentCellQuality > importanceOfMovingToBetterHousing) {
-                                    candidateCell = testPosition;
-                                    break;
-                                }
-                            }
-
-                            if (!_.isUndefined(candidateCell))
-                                agent.moveTo(candidateCell.x, candidateCell.y);
-                        };
-                    }).apply(moveToBetterHousing);
 
                     var died = 0;
 
@@ -435,10 +418,35 @@ var RMITResources = RMITResources || {};
                     })
 
                     // Move agents
+                    var moveCapability = Capabilities.MoveRandomlyCapability, nullifiedAgents = [];
+                    var moveToBetterHousing = new Capability();
+                    (function() {
+                        this.name = 'MoveToBetterHousing';
+                        this.cost = 0;
+                        this.exercise = function(agent, world) {
+                            var currentCell = world.getCell(agent.x, agent.y),
+                                currentCellQuality = currentCell.quality,
+                                positions = world.getCellsAtDistance(agent.x, agent.y, 1, Distance.CHEBYSHEV_DISTANCE, false),
+                                moveablePositions = _.chain(positions).map(function(cell) {if (cell.agentsAllowed) return cell; }).compact().shuffle().value();
+
+                            var candidateCell = currentCell;
+                            for (var i = 0; i < moveablePositions.length; i++) {
+                                var testPosition = moveablePositions[i];
+                                if (testPosition.quality - currentCellQuality > importanceOfMovingToBetterHousing) {
+                                    candidateCell = testPosition;
+                                    break;
+                                }
+                            }
+
+                            if (!_.isUndefined(candidateCell))
+                                agent.moveTo(candidateCell.x, candidateCell.y);
+                        };
+                    }).apply(moveToBetterHousing);
                     world.currentAgents.forEach(function(agent) {
                         if (Lifecycle.waveCounter >= agent.delay && agent.countdownToMove % agent.speed == 0) {
                             if (agent.culture.name == 'Residents')
-                                moveToBetterHousing.exercise(agent, world);
+//                                moveToBetterHousing.exercise(agent, world);
+								moveCapability.exercise(agent, world);
                             else if (agent.culture.name == 'Workers')
                                 agent.update(world);
                         }
@@ -477,6 +485,31 @@ var RMITResources = RMITResources || {};
                     FiercePlanet.Drawing.clearCanvas('#resourceCanvas');
                     FiercePlanet.Drawing.drawPath();
 
+					var affordability = 0
+						, sustainability = 0
+						, mixedUse = 0;
+
+						// Calculate housing density
+	                    var housing = 0, land = world.cells.length;
+						world.resources.forEach(function(resource) {
+							var code = resource.kind.code;
+							if (code == 'low') {
+								housing += 12;
+							}
+							else if (code == 'medium') {
+								housing += 25;
+							}
+							else if (code == 'high') {
+								housing += 40;
+							}
+						});
+						
+						var pop = world.currentAgents.length * 100;
+						affordability = (housing / pop) * 100;
+						affordability = (affordability > 1 ? 1 : affordability);
+						console.log(affordability)
+						
+						
                     var totalHealth =
                             _.chain(world.currentAgents)
                                 .map(function(agent) { if (agent.culture.name == "Residents") return agent; })
@@ -490,8 +523,8 @@ var RMITResources = RMITResources || {};
                         aveHousingQuality = totalHousingQuality / world.pathway.length;
 //                    var ageAtDeath = _.map(this.expiredAgents, function(agent) { return agent.diedAt - agent.bornAt; }),
 //                        totalAgeAtDeath = _.reduce(health, function(memo, num){ return memo + num; }, 0);
-                    console.log(aveHealth, aveHousingQuality)
-                    FiercePlanet.Graph.plotData(aveHealth, aveHousingQuality);
+                    console.log(affordability, sustainability, mixedUse)
+                    FiercePlanet.Graph.plotData(affordability, sustainability, mixedUse);
                 }
             })
 
@@ -506,6 +539,72 @@ var RMITResources = RMITResources || {};
 }).apply(RMITWorlds);
 
 
+/**
+ * Declare the ResourceTypes namespace
+ */
+var FB = FB || {};
+
+(function() {
+	this.id = 'FB';
+	
+	// Resource categories
+	this.ECO_CATEGORY = new ResourceCategory("Economic", "eco", "#44ABE0");
+	this.ENV_CATEGORY = new ResourceCategory("Environmental", "env", "#ABBB2A");
+	this.SOC_CATEGORY = new ResourceCategory("Social", "soc", "#DE1F2A");
+
+
+	/**
+	 * Do setup of this resource set
+	 */
+	this.doSetup = function() {
+ 
+
+	    // Clear types
+	    this.ECO_CATEGORY.clearTypes();
+	    this.ENV_CATEGORY.clearTypes();
+	    this.SOC_CATEGORY.clearTypes();
+
+	// Economic resources
+	    this.ECO_CATEGORY.addType(ResourceTypes.FARM_RESOURCE_TYPE);
+	    this.ECO_CATEGORY.addType(ResourceTypes.SHOP_RESOURCE_TYPE);
+	    this.ECO_CATEGORY.addType(ResourceTypes.BANK_RESOURCE_TYPE);
+	    this.ECO_CATEGORY.addType(ResourceTypes.FACTORY_RESOURCE_TYPE);
+	    this.ECO_CATEGORY.addType(ResourceTypes.STOCKMARKET_RESOURCE_TYPE);
+
+
+	// Environmental resources
+	    this.ENV_CATEGORY.addType(ResourceTypes.FRESH_WATER_RESOURCE_TYPE);
+	    this.ENV_CATEGORY.addType(ResourceTypes.WILDLIFE_PARK_RESOURCE_TYPE);
+	    this.ENV_CATEGORY.addType(ResourceTypes.CLEAN_AIR_RESOURCE_TYPE);
+	    this.ENV_CATEGORY.addType(ResourceTypes.GREEN_ENERGY_RESOURCE_TYPE);
+	    this.ENV_CATEGORY.addType(ResourceTypes.BIODIVERSITY_RESOURCE_TYPE);
+
+
+	// Social resources
+	var lowDensity = new ResourceType("High Density Housing", "low", "/images/icons/house-2.png", 10, 20, 100, 20);
+	var mediumDensity = new ResourceType("Farm", "high", "/images/icons/buildings.png", 10, 20, 100, 20);
+	var highDensity = new ResourceType("High Density Housing", "high", "/images/icons/buildings.png", 10, 20, 100, 20);
+	    this.SOC_CATEGORY.addType(lowDensity);
+	    this.SOC_CATEGORY.addType(highDensity);
+//		this.SOC_CATEGORY.addType(ResourceTypes.CLINIC_RESOURCE_TYPE);
+//	    this.SOC_CATEGORY.addType(ResourceTypes.SCHOOL_RESOURCE_TYPE);
+	    this.SOC_CATEGORY.addType(ResourceTypes.LEGAL_SYSTEM_RESOURCE_TYPE);
+	    this.SOC_CATEGORY.addType(ResourceTypes.DEMOCRACY_RESOURCE_TYPE);
+	    this.SOC_CATEGORY.addType(ResourceTypes.FESTIVAL_RESOURCE_TYPE);
+
+	    // Arrays of resource kinds
+	    this.ECONOMIC_RESOURCE_TYPES = [ResourceTypes.FARM_RESOURCE_TYPE, ResourceTypes.SHOP_RESOURCE_TYPE, ResourceTypes.BANK_RESOURCE_TYPE, ResourceTypes.FACTORY_RESOURCE_TYPE, ResourceTypes.STOCKMARKET_RESOURCE_TYPE];
+	    this.ENVIRONMENTAL_RESOURCE_TYPES = [ResourceTypes.FRESH_WATER_RESOURCE_TYPE, ResourceTypes.WILDLIFE_PARK_RESOURCE_TYPE, ResourceTypes.CLEAN_AIR_RESOURCE_TYPE, ResourceTypes.GREEN_ENERGY_RESOURCE_TYPE, ResourceTypes.BIODIVERSITY_RESOURCE_TYPE];
+	    this.SOCIAL_RESOURCE_TYPES = [lowDensity, highDensity, ResourceTypes.LEGAL_SYSTEM_RESOURCE_TYPE, ResourceTypes.DEMOCRACY_RESOURCE_TYPE, ResourceTypes.FESTIVAL_RESOURCE_TYPE];
+
+		this.categories = [this.ECO_CATEGORY, this.ENV_CATEGORY, this.SOC_CATEGORY];
+		this.types = this.ECONOMIC_RESOURCE_TYPES.concat(this.ENVIRONMENTAL_RESOURCE_TYPES.concat(this.SOCIAL_RESOURCE_TYPES));
+	};
+	
+}).apply(FB);
+
+
+
 (function() {
     this.init = function() {
         var module = new Module();
@@ -513,9 +612,14 @@ var RMITResources = RMITResources || {};
         module.registerSelf();
         module.registerCampaign(RMITWorlds);
         module.currentCampaignID = 'RMIT';
-        module.registerResourceSet(TBL);
+        module.registerResourceSet(FB);
         //module.registerResourceSet(CoS);
-        FiercePlanet.Game.currentProfile.capabilities = ['farm', 'shop', 'bank', 'factory', 'stockmarket', 'water', 'park', 'air', 'energy', 'biodiversity', 'legal', 'democracy', 'clinic', 'school', 'festival'];
+        FiercePlanet.Game.currentProfile.capabilities = [
+			'farm', 'shop', 'bank', 'factory', 'stockmarket'
+			, 'water', 'park', 'air', 'energy', 'biodiversity'
+			, 'low', 'high', 'clinic', 'school', 'festival'
+//			, 'legal', 'democracy', 'clinic', 'school', 'festival'
+			];
         Lifecycle.waveDelay = 3000;
 
         _.extend(Universe.settings, {
@@ -543,6 +647,8 @@ var RMITResources = RMITResources || {};
         FiercePlanet.ModuleEditor.buildEditorFromUrl('/javascripts/fp-modules/trials/rmit/rmit-module.js', 'RMITModule.init(); FiercePlanet.Game.loadGame();');
     };
 }).apply(RMITModule);
+
+
 
 if (typeof exports !== "undefined") {
     exports.RMITWorlds = RMITWorlds;

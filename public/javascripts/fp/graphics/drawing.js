@@ -764,7 +764,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         // Variables
         var x = resource.x * FiercePlanet.Orientation.cellWidth;
         var y = resource.y * FiercePlanet.Orientation.cellHeight;
-        var s = (resource.totalYield / resource.initialTotalYield) * 100;
+        var s =  (resource.totalYield / resource.initialTotalYield) * 100;
         var c = resource.color;
         // Determine drawing colours and offsets
         var newColor = this.diluteColour(s, s, s, c);
@@ -866,10 +866,11 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
      */
     this.drawJustResource = function(ctx, resource) {
 
+		var world = Lifecycle.currentWorld;
         // Variables
         var x = resource.x * FiercePlanet.Orientation.cellWidth;
         var y = resource.y * FiercePlanet.Orientation.cellHeight;
-        var s = (resource.totalYield / resource.initialTotalYield) * 100;
+        var s = (world.ignoreResourceLevels ?  100 : (resource.totalYield / resource.initialTotalYield) * 100);
         var c = resource.color;
         // Determine drawing colours and offsets
         var newColor = this.diluteColour(s, s, s, c);
