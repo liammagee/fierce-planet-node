@@ -812,6 +812,48 @@ function World() {
         return recoveredResources;
     };
 
+	/**
+	 * Generates a structure contains stats about the current resources
+	 */
+	this.resourceStats = function() {
+        var resourceBalance = 0, resourceCounters = [];
+        ModuleManager.currentModule.resourceSet.categories.forEach(function(category) {
+            resourceCounters.push(0);
+        });
+        this.resources.forEach(function(resource) {
+            for (var i = 0; i < ModuleManager.currentModule.resourceSet.categories.length; i++) {
+                var category = ModuleManager.currentModule.resourceSet.categories[i];
+                if (resource.category == (category))
+                    resourceCounters[i] = resourceCounters[i] + 1;
+            }
+        });
+        // Computes a rough estimate of the degree of distribution of resources relative to the number of resources outlayed.
+        // Kurtosis overkill for this purpose?
+        var len = resourceCounters.length
+			, min = jStat.min(resourceCounters)
+            , max = jStat.max(resourceCounters)
+            , sum = jStat.sum(resourceCounters)
+            , stdev = jStat.stdev(resourceCounters)
+			, coeffvar = jStat.coeffvar(resourceCounters)
+			, mod = sum % len
+            , range = (max - min)
+            , normalisedDiff = range - mod
+            , relativeRange = range / sum
+            , normalisedSpread = normalisedDiff / sum;
+		return {
+			array: resourceCounters
+			, len: len
+			, min: min
+			, max: max
+			, sum: sum
+			, stdev: stdev
+			, coeffvar: coeffvar
+			, mod: mod
+			, range: range
+			, relativeRange: relativeRange
+			, normalisedSpread: normalisedSpread
+		}
+	};
 
     // WAVES
 
