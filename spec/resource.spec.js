@@ -57,6 +57,7 @@ describe("a resource", function() {
                 expect(agent.getHealthForResource(resource)).toEqual(40);
             });
         });
+
     });
 
 })

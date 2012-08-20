@@ -494,20 +494,28 @@ var RMITResources = RMITResources || {};
 						world.resources.forEach(function(resource) {
 							var code = resource.kind.code;
 							if (code == 'low') {
-								housing += 12;
+								housing += 15;
 							}
 							else if (code == 'medium') {
-								housing += 25;
+								housing += 30;
 							}
 							else if (code == 'high') {
-								housing += 40;
+								housing += 50;
 							}
 						});
 						
 						var pop = world.currentAgents.length * 100;
-						affordability = (housing / pop) * 100;
+						
+						affordability = housing / pop
 						affordability = (affordability > 1 ? 1 : affordability);
-						console.log(affordability)
+						
+						// Make affordability L-shaped rather than linear
+						affordability = Math.pow(affordability, 1 / 3)
+						
+						// Normalise
+						affordability = affordability * 100;
+						
+						Log.info(affordability)
 						
 						
                     var totalHealth =
@@ -523,7 +531,7 @@ var RMITResources = RMITResources || {};
                         aveHousingQuality = totalHousingQuality / world.pathway.length;
 //                    var ageAtDeath = _.map(this.expiredAgents, function(agent) { return agent.diedAt - agent.bornAt; }),
 //                        totalAgeAtDeath = _.reduce(health, function(memo, num){ return memo + num; }, 0);
-                    console.log(affordability, sustainability, mixedUse)
+                    //console.log(affordability, sustainability, mixedUse)
                     FiercePlanet.Graph.plotData(affordability, sustainability, mixedUse);
                 }
             })
@@ -581,21 +589,22 @@ var FB = FB || {};
 
 
 	// Social resources
-	var lowDensity = new ResourceType("High Density Housing", "low", "/images/icons/house-2.png", 10, 20, 100, 20);
-	var mediumDensity = new ResourceType("Farm", "high", "/images/icons/buildings.png", 10, 20, 100, 20);
-	var highDensity = new ResourceType("High Density Housing", "high", "/images/icons/buildings.png", 10, 20, 100, 20);
+	var lowDensity = new ResourceType("Low Density Housing", "low", "/images/icons/house-2.png", 10, 20, 100, 20);
+	var mediumDensity = new ResourceType("Medium Density Housing", "medium", "/images/icons/buildings.png", 10, 20, 100, 20);
+	var highDensity = new ResourceType("High Density Housing", "high", "/images/icons/factories.png", 10, 20, 100, 20);
 	    this.SOC_CATEGORY.addType(lowDensity);
+	    this.SOC_CATEGORY.addType(mediumDensity);
 	    this.SOC_CATEGORY.addType(highDensity);
 //		this.SOC_CATEGORY.addType(ResourceTypes.CLINIC_RESOURCE_TYPE);
 //	    this.SOC_CATEGORY.addType(ResourceTypes.SCHOOL_RESOURCE_TYPE);
-	    this.SOC_CATEGORY.addType(ResourceTypes.LEGAL_SYSTEM_RESOURCE_TYPE);
+//	    this.SOC_CATEGORY.addType(ResourceTypes.LEGAL_SYSTEM_RESOURCE_TYPE);
 	    this.SOC_CATEGORY.addType(ResourceTypes.DEMOCRACY_RESOURCE_TYPE);
 	    this.SOC_CATEGORY.addType(ResourceTypes.FESTIVAL_RESOURCE_TYPE);
 
 	    // Arrays of resource kinds
 	    this.ECONOMIC_RESOURCE_TYPES = [ResourceTypes.FARM_RESOURCE_TYPE, ResourceTypes.SHOP_RESOURCE_TYPE, ResourceTypes.BANK_RESOURCE_TYPE, ResourceTypes.FACTORY_RESOURCE_TYPE, ResourceTypes.STOCKMARKET_RESOURCE_TYPE];
 	    this.ENVIRONMENTAL_RESOURCE_TYPES = [ResourceTypes.FRESH_WATER_RESOURCE_TYPE, ResourceTypes.WILDLIFE_PARK_RESOURCE_TYPE, ResourceTypes.CLEAN_AIR_RESOURCE_TYPE, ResourceTypes.GREEN_ENERGY_RESOURCE_TYPE, ResourceTypes.BIODIVERSITY_RESOURCE_TYPE];
-	    this.SOCIAL_RESOURCE_TYPES = [lowDensity, highDensity, ResourceTypes.LEGAL_SYSTEM_RESOURCE_TYPE, ResourceTypes.DEMOCRACY_RESOURCE_TYPE, ResourceTypes.FESTIVAL_RESOURCE_TYPE];
+	    this.SOCIAL_RESOURCE_TYPES = [lowDensity, mediumDensity, highDensity, ResourceTypes.DEMOCRACY_RESOURCE_TYPE, ResourceTypes.FESTIVAL_RESOURCE_TYPE];
 
 		this.categories = [this.ECO_CATEGORY, this.ENV_CATEGORY, this.SOC_CATEGORY];
 		this.types = this.ECONOMIC_RESOURCE_TYPES.concat(this.ENVIRONMENTAL_RESOURCE_TYPES.concat(this.SOCIAL_RESOURCE_TYPES));
@@ -617,7 +626,7 @@ var FB = FB || {};
         FiercePlanet.Game.currentProfile.capabilities = [
 			'farm', 'shop', 'bank', 'factory', 'stockmarket'
 			, 'water', 'park', 'air', 'energy', 'biodiversity'
-			, 'low', 'high', 'clinic', 'school', 'festival'
+			, 'low', 'medium', 'high', 'school', 'festival'
 //			, 'legal', 'democracy', 'clinic', 'school', 'festival'
 			];
         Lifecycle.waveDelay = 3000;

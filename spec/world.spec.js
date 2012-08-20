@@ -213,6 +213,27 @@ describe("world-related classes", function() {
                 })
 
             })
+
+			describe("determining resource mix", function() {
+				var stats;
+				
+				beforeEach(function() {
+					stats = world.resourceStats()
+					console.log(stats)
+				});
+				
+				it("should have an uneven mix", function() {
+					expect(stats.min).toEqual(0)
+					expect(stats.max).toEqual(1)
+					expect(stats.len).toEqual(3)
+					expect(stats.sum).toEqual(1)
+					expect(stats.mod).toEqual(1)
+					expect(stats.range).toEqual(1)
+					expect(stats.relativeRange).toEqual(1)
+					expect(stats.normalisedSpread).toEqual(0)
+				})
+			})
+
         });
 
         describe("get agents in the environment", function() {
