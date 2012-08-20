@@ -28,7 +28,6 @@ var RMITResources = RMITResources || {};
 		this.maze = Basic.world5;
 		_.extend(this.maze, 
 			{
-				
 				handleParameters: function() {
                     this.cultures = [DefaultCultures.MovingStickman];
                     this.waves = undefined;
@@ -271,50 +270,18 @@ var RMITResources = RMITResources || {};
                         }
                     });
 
-                    /*
-                     var n = 0,
-                     mean = 0,
-                     M2 = 0,
-                     M3 = 0,
-                     M4 = 0;
-                     var l = resourceCounters.length
-                     , mean = jStat.mean(resourceCounters)
-                     , stdev = jStat.stdev(resourceCounters)
-                     , secondMoment = jStat.sum(_.map(resourceCounters, function(val) { return Math.pow(val - mean, 2)}))
-                     , fourthMoment = jStat.sum(_.map(resourceCounters, function(val) { return Math.pow(val - mean, 4)}))
-                     , m2 = (secondMoment / n)
-                     , m4 = (fourthMoment / n)
-                     , kurtosis = (m4 / Math.pow(m2, 2)) - 3;
-                     // http://en.wikipedia.org/wiki/Algorithms_for_calculating_variance#On-line_algorithm
-                     for (var i = 0; i < resourceCounters.length; i ++) {
-                     var x = resourceCounters[i];
-                     var n1 = n;
-                     n = n + 1
-                     var delta = x - mean;
-                     var delta_n = delta / n;
-                     var delta_n2 = delta_n * delta_n;
-                     var term1 = delta * delta_n * n1;
-                     mean = mean + delta_n;
-                     M4 = M4 + term1 * delta_n2 * (n * n - 3*n + 3) + (6 * delta_n2 * M2) - (4 * delta_n * M3)
-                     console.log(term1, mean, M4, n, delta, delta_n, delta_n2, (n * n - 3*n + 3), M2, M3)
-                     M3 = M3 + (term1 * delta_n * (n - 2)) - (3 * delta_n * M2)
-                     M2 = M2 + term1
-                     }
-                     var kurtosis = ((n*M4) / (M2*M2)) - 3;
-                     console.log(resourceCounters, kurtosis, n, M4, M3, M2, mean)
-                     */
                     // Computes a rough estimate of the degree of distribution of resources relative to the number of resources outlayed.
                     // Kurtosis overkill for this purpose?
-                    var min = _.min(resourceCounters)
-                        , max = _.max(resourceCounters)
-                        , len = resourceCounters.length
-                        , sum = jStat.sum(resourceCounters)
+                    var stats = this.resourceStats();
+                    var min = stats.min
+                        , max = stats.max
+                        , len = stats.len
+                        , sum = stats.sum
+                        , range = stats.range
                         , modLength = sum % len
-                        , diff = (max - min)
-                        , normalisedDiff = diff - modLength
-                        , relativeRange = diff / sum
+                        , normalisedDiff = range - modLength
+                        , relativeRange = range / sum
                         , adjustedRelativeRange = Math.pow(relativeRange, 1 / importanceOfEqualResourceTypes)
-                        , normalisedSpread = normalisedDiff / sum;
 
                     _.shuffle(world.cells).forEach(function(cell) {
                         var x = cell.x, y = cell.y;
@@ -460,6 +427,7 @@ var RMITResources = RMITResources || {};
 //                        });
 //                    }
 
+
                     // Reproduce
                     /*
                      if (world.currentAgents.length < 400) {
@@ -485,38 +453,52 @@ var RMITResources = RMITResources || {};
                     FiercePlanet.Drawing.clearCanvas('#resourceCanvas');
                     FiercePlanet.Drawing.drawPath();
 
+
+                    // Calculate affordability
 					var affordability = 0
 						, sustainability = 0
 						, mixedUse = 0;
 
-						// Calculate housing density
-	                    var housing = 0, land = world.cells.length;
-						world.resources.forEach(function(resource) {
-							var code = resource.kind.code;
-							if (code == 'low') {
-								housing += 15;
-							}
-							else if (code == 'medium') {
-								housing += 30;
-							}
-							else if (code == 'high') {
-								housing += 50;
-							}
-						});
-						
-						var pop = world.currentAgents.length * 100;
-						
-						affordability = housing / pop
-						affordability = (affordability > 1 ? 1 : affordability);
-						
-						// Make affordability L-shaped rather than linear
-						affordability = Math.pow(affordability, 1 / 3)
-						
-						// Normalise
-						affordability = affordability * 100;
-						
-						Log.info(affordability)
-						
+                    // Calculate housing density
+                    var housing = 0, land = world.cells.length;
+                    world.resources.forEach(function(resource) {
+                        var code = resource.kind.code;
+                        if (code == 'low') {
+                            housing += 15;
+                        }
+                        else if (code == 'medium') {
+                            housing += 30;
+                        }
+                        else if (code == 'high') {
+                            housing += 50;
+                        }
+                        else {
+                            housing -= 25;
+                        }
+                    });
+
+                    var pop = world.currentAgents.length * 100;
+
+                    affordability = housing / pop
+                    affordability = (affordability > 1 ? 1 : affordability);
+
+                    // Make affordability L-shaped rather than linear
+                    affordability = Math.pow(affordability, 1 / 3)
+
+                    // Normalise
+                    affordability = affordability * 100;
+
+
+                    // Calculate sustainability
+                    var ecoW = stats.array[0] * 2
+                        , envW = stats.array[1] * 3
+                        , socW = stats.array[2] * 1
+
+                    sustainability = ((ecoW + envW + socW) * 10000) / pop
+
+                    // Calculate mixed use
+                    mixedUse = (1 - stats.cappedCoeffvar) * 100
+
 						
                     var totalHealth =
                             _.chain(world.currentAgents)
@@ -531,7 +513,8 @@ var RMITResources = RMITResources || {};
                         aveHousingQuality = totalHousingQuality / world.pathway.length;
 //                    var ageAtDeath = _.map(this.expiredAgents, function(agent) { return agent.diedAt - agent.bornAt; }),
 //                        totalAgeAtDeath = _.reduce(health, function(memo, num){ return memo + num; }, 0);
-                    //console.log(affordability, sustainability, mixedUse)
+
+                    console.log(affordability, sustainability, mixedUse);
                     FiercePlanet.Graph.plotData(affordability, sustainability, mixedUse);
                 }
             })

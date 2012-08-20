@@ -833,25 +833,20 @@ function World() {
 			, min = jStat.min(resourceCounters)
             , max = jStat.max(resourceCounters)
             , sum = jStat.sum(resourceCounters)
+            , range = jStat.range(resourceCounters)
             , stdev = jStat.stdev(resourceCounters)
 			, coeffvar = jStat.coeffvar(resourceCounters)
-			, mod = sum % len
-            , range = (max - min)
-            , normalisedDiff = range - mod
-            , relativeRange = range / sum
-            , normalisedSpread = normalisedDiff / sum;
+			, cappedCoeffvar = (coeffvar > 1 ? 1 : coeffvar)
 		return {
 			array: resourceCounters
 			, len: len
 			, min: min
 			, max: max
 			, sum: sum
-			, stdev: stdev
+            , range: range
+            , stdev: stdev
 			, coeffvar: coeffvar
-			, mod: mod
-			, range: range
-			, relativeRange: relativeRange
-			, normalisedSpread: normalisedSpread
+			, cappedCoeffvar: cappedCoeffvar
 		}
 	};
 

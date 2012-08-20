@@ -218,7 +218,6 @@ describe("world-related classes", function() {
 				
 				beforeEach(function() {
 					stats = world.resourceStats()
-					console.log(stats)
 				});
 				
 				it("should have an uneven mix", function() {
@@ -226,10 +225,35 @@ describe("world-related classes", function() {
 					expect(stats.max).toEqual(1)
 					expect(stats.len).toEqual(3)
 					expect(stats.sum).toEqual(1)
-					expect(stats.mod).toEqual(1)
 					expect(stats.range).toEqual(1)
-					expect(stats.relativeRange).toEqual(1)
-					expect(stats.normalisedSpread).toEqual(0)
+					expect(stats.stdev).toEqual(0.4714045207910317)
+					expect(stats.coeffvar).toEqual(1.4142135623730951)
+					expect(stats.cappedCoeffvar).toEqual(1)
+				})
+			})
+
+			describe("determining a resource mix with equal resources", function() {
+				var stats;
+
+				beforeEach(function() {
+                    world.removeWorldResources();
+                    for (var i = 0; i < 10; i ++) {
+                        world.addResource(new Resource(ModuleManager.currentModule.resourceSet.types[0], i, i))
+                        world.addResource(new Resource(ModuleManager.currentModule.resourceSet.types[5], i + 1, i))
+                        world.addResource(new Resource(ModuleManager.currentModule.resourceSet.types[10], i + 2, i))
+                    }
+					stats = world.resourceStats()
+				});
+
+				it("should have an uneven mix", function() {
+					expect(stats.min).toEqual(10)
+					expect(stats.max).toEqual(10)
+					expect(stats.len).toEqual(3)
+					expect(stats.sum).toEqual(30)
+					expect(stats.range).toEqual(0)
+					expect(stats.stdev).toEqual(0)
+					expect(stats.coeffvar).toEqual(0)
+					expect(stats.cappedCoeffvar).toEqual(0)
 				})
 			})
 
