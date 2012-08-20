@@ -16,7 +16,6 @@ Distance = {
  * World class definition
  *
  * @constructor
- * @param id
  */
 function World() {
 
@@ -177,31 +176,36 @@ function World() {
         }
         this.updateCells();
     };
+
     this.addCellAtPoint = function(x, y) {
         this.cells[this.indexify(x, y)] = new Cell(x, y);
     }
+
     this.updateCells = function() {
-        for (var i = 0; i < this.resources.length; i++) {
+        var i, x, y, cell;
+        for (i = 0; i < this.resources.length; i++) {
             var resource = this.resources[i];
-            var x = resource.x, y = resource.y;
-            var cell = this.cells[this.indexify(x, y)];
+            x = resource.x, y = resource.y;
+            cell = this.cells[this.indexify(x, y)];
             if (!_.isUndefined(cell))
                 cell.resources.push(resource);
         }
         for (var i = 0; i < this.currentAgents.length; i++) {
             var agent = this.currentAgents[i];
-            var x = agent.x, y = agent.y;
-            var cell = this.cells[this.indexify(x, y)];
+            x = agent.x, y = agent.y;
+            cell = this.cells[this.indexify(x, y)];
             if (!_.isUndefined(cell))
                 cell.agents.push(agent);
         }
     };
+
     this.addAgentToCell = function(agent) {
         var x = agent.x, y = agent.y;
         var cell = this.cells[this.indexify(x, y)];
         if (!_.isUndefined(cell))
             cell.agents.push(agent);
     };
+
     this.removeAgentFromCell = function(agent) {
         var x = agent.x, y = agent.y;
         var cell = this.getCell(x, y);
@@ -415,9 +419,14 @@ function World() {
         return agents;
     };
 
+
     /**
      * Generate agents at a point
-     * @param numAgents
+     * @param culture
+     * @param x
+     * @param y
+     * @param j
+     * @return {Agent}
      */
     this.generateAgentAtPoint = function(culture, x, y, j) {
         var agent = new Agent(culture, x, y);
@@ -443,7 +452,7 @@ function World() {
             agent.adjustHealthForResourceCategory(amountToReduce, categoryToReduce);
         }
         return agent;
-    }
+    };
 
     /**
      * Indicates total number of agents saveable on this world
@@ -546,7 +555,7 @@ function World() {
         var that = this;
         resources.forEach(function(resource) {
             that.addResource(resource)
-        })
+        });
         this.resourceCategoryCounts = this.resetResourceCategoryCounts();
     };
 
@@ -558,7 +567,7 @@ function World() {
      */
     this.isPositionOccupiedByResource = function(x, y) {
         return this.getCell(x, y).resources.length > 0;
-    }
+    };
 
 
     /**
@@ -680,20 +689,15 @@ function World() {
         return rcc;
     };
 
-    /**
-     * Counts the resources of a given resource category
-     * @param code
-     */
-    this.getResourceCategoryCount = function(code) {
-        return this.resourceCategoryCounts[code];
-    };
 
     /**
      * Gets the proportion of resources with the given resource category code
      * @param code
      */
     this.getResourceCategoryProportion = function(code) {
-        return this.getResourceCategoryCount(code) / this.resources.length;
+        var categoryCount = this.resourceCategoryCounts,
+            totalResources = this.resources.length;
+        return categoryCount / totalResources;
     };
 
     /**
@@ -739,7 +743,8 @@ function World() {
 
         var code = resource.category.code;
         var totalResources = this.resources.length;
-        var resourceCategoryCount = this.getResourceCategoryCount(code);
+        var resourceCategoryCount = this.resourceCategoryCounts[code];
+//        var resourceCategoryCount = this.getResourceCategoryCount(code);
         var resourceTypeProportion = (resourceCategoryCount / totalResources) * totalResources;
         var proportionOfIdeal = (resourceTypeProportion <= 1) ? resourceTypeProportion : ((totalResources - resourceTypeProportion) / (totalResources - 1));
         var effect = proportionOfIdeal * proportionOfIdeal;
@@ -839,7 +844,7 @@ function World() {
                 this.waves.push(wave);
             }
         }
-    }
+    };
 
     /**
      * Find the critical path to the nearest exit point
@@ -857,7 +862,7 @@ function World() {
     };
     this.isInHistory = function (cell, history){
         for (var i = 0, l = history.length; i < l; i++) {
-            var testCell = history[i]
+            var testCell = history[i];
             if (this.isSameCell(cell, testCell))
                 return true;
         }
@@ -1123,7 +1128,7 @@ function World() {
     // User interface elements
     this.tip = null, this.catastrophe = null;
     this.introduction = "Welcome to world " + this.id + ".";
-    this.information;
+    this.information = '';
     this.conclusion = "Congratulations! You have completed world " + this.id + ".";
 
     // Google map, image and sound options

@@ -17,7 +17,7 @@ var FiercePlanet = FiercePlanet || {};
  * @constructor
  * @param id
  */
-FiercePlanet.StickFigure = function(x, _y, _figureWidth, _figureHeight, _exaggerated) {
+FiercePlanet.StickFigure = function(_x, _y, _figureWidth, _figureHeight, _exaggerated) {
 
     this.drawFigure = function(context) {
         context.beginPath();
@@ -76,56 +76,6 @@ FiercePlanet.StickFigure = function(x, _y, _figureWidth, _figureHeight, _exagger
         context.closePath();
     };
 
-    this.drawFigureOld = function(context) {
-        context.beginPath();
-
-        // Head
-        context.arc(this.headX, this.headY, this.headRadius, 0, Math.PI * 2, false);
-
-        // Eyes
-
-        // Mouth
-//        context.moveTo(this.headX + 2, this.headY + 5);
-//        context.lineTo(this.headX + 10, this.headY + 5);
-
-        // Body
-        context.moveTo(this.x, this.startOfBodyY);
-        context.lineTo(this.x, this.startOfBodyY + this.torsoLength);
-
-        // Front arm
-        context.moveTo(this.x, this.startOfShoulderY);
-        context.lineTo(this.fElbowX, this.fElbowY);
-        context.moveTo(this.fElbowX, this.fElbowY);
-        context.lineTo(this.fHandX, this.fHandY);
-        context.moveTo(this.fHandX, this.fHandY);
-        context.lineTo(this.fFingerX, this.fFingerY);
-
-        // Back arm
-        context.moveTo(this.x, this.startOfShoulderY);
-        context.lineTo(this.bElbowX, this.bElbowY);
-        context.moveTo(this.bElbowX, this.bElbowY);
-        context.lineTo(this.bHandX, this.bHandY);
-        context.moveTo(this.bHandX, this.bHandY);
-        context.lineTo(this.bFingerX, this.bFingerY);
-
-        // Front leg
-        context.moveTo(this.x, this.startOfHipY);
-        context.lineTo(this.fKneeX, this.fKneeY);
-        context.moveTo(this.fKneeX, this.fKneeY);
-        context.lineTo(this.fFootX, this.fFootY);
-        context.moveTo(this.fFootX, this.fFootY);
-        context.lineTo(this.fToeX, this.fToeY);
-
-        // Back leg
-        context.moveTo(this.x, this.startOfHipY);
-        context.lineTo(this.bKneeX, this.bKneeY);
-        context.moveTo(this.bKneeX, this.bKneeY);
-        context.lineTo(this.bFootX, this.bFootY);
-        context.moveTo(this.bFootX, this.bFootY);
-        context.lineTo(this.bToeX, this.bToeY);
-
-        context.closePath();
-    };
 
     // Stick figure actions
 
@@ -617,8 +567,8 @@ FiercePlanet.StickFigure = function(x, _y, _figureWidth, _figureHeight, _exagger
         this.hipX = this.x + (this.figureWidth / 2) ,
             this.hipY = this.y + (this.figureHeight * 12 / 24);
 
-        // 1/8 = 3 / 24
-        this.headRadius = this.proportionOfBody(5 / (24 * 2));
+        // 1/4 = 6 / 24
+        this.headRadius = this.proportionOfBody(6 / (24 * 2));
 
         // 1/24
         this.neckLength = this.proportionOfBody(1 / 24);
@@ -703,11 +653,11 @@ FiercePlanet.StickFigure = function(x, _y, _figureWidth, _figureHeight, _exagger
 
 
 
-    this.x = x
+    this.x = _x
         , this.y = _y
         , this.figureWidth = _figureWidth
         , this.figureHeight = _figureHeight
-        , this.exaggerated = _exaggerated;;
+        , this.exaggerated = _exaggerated;
     this.generateDimensions();
 
 };

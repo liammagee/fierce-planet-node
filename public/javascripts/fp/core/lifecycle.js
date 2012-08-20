@@ -457,15 +457,25 @@ var Lifecycle = Lifecycle || {};
             console.log("Starting agents at " + (Lifecycle.startTime));
 
         clearInterval(Lifecycle.agentTimerId);
-        if (! _.isUndefined(Lifecycle.currentWorld.interval) && Lifecycle.currentWorld.interval > 0)
-            Lifecycle.agentTimerId = setInterval(Lifecycle.processAgents, Lifecycle.currentWorld.interval);
-        else
-            Lifecycle.agentTimerId = setInterval(Lifecycle.processAgents, Lifecycle.interval);
         Lifecycle.inPlay = true;
+        var interval = (! _.isUndefined(Lifecycle.currentWorld.interval) && Lifecycle.currentWorld.interval > 0 ?
+            Lifecycle.currentWorld.interval : Lifecycle.interval)
+
+        // Uses requestAnimationFrame() - Introduces browser dependency here
+        this.processAgentsInBrowser();
+//        Lifecycle.agentTimerId = setInterval(Lifecycle.processAgents, interval);
 
 		if (this.postStartAgentsCallback)
 			this.postStartAgentsCallback();
     };
+
+    this.processAgentsInBrowser = function() {
+
+        if (Lifecycle.inPlay && window) {
+            window.requestAnimationFrame(Lifecycle.processAgentsInBrowser);
+            Lifecycle.processAgents();
+        }
+    }
 
     /**
      * Stops the processing of agents

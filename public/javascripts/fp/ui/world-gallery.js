@@ -124,7 +124,7 @@ FiercePlanet.WorldGallery = FiercePlanet.WorldGallery || {};
      * Changes the difficulty
      */
     this.changeDifficulty = function() {
-        var difficulty = $("input[@name=difficultyInput]:checked").val();
+        var difficulty = $('input[name=difficultyInput]:checked').val();
         FiercePlanet.Game.levelOfDifficulty = FiercePlanet.Utils.checkInteger(difficulty);
     };
 

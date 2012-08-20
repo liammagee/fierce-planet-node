@@ -200,7 +200,6 @@ describe("world-related classes", function() {
                 })
 
                 it("should generate the correct resource counts", function() {
-                    //world.resetResourceCategoryCounts()
                     var categories = ModuleManager.currentModule.resourceSet.categories;
                     expect(world.resourceCategoryCounts[categories[0].code]).toEqual(1)
                     expect(world.resourceCategoryCounts[categories[1].code]).toEqual(0)

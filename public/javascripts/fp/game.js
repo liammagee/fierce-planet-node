@@ -8,6 +8,38 @@
  */
 
 
+// http://paulirish.com/2011/requestanimationframe-for-smart-animating/
+// http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
+
+// requestAnimationFrame polyfill by Erik Möller
+// fixes from Paul Irish and Tino Zijdel
+
+(function() {
+    var lastTime = 0;
+    var vendors = ['ms', 'moz', 'webkit', 'o'];
+    for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+        window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
+        window.cancelAnimationFrame = window[vendors[x]+'CancelAnimationFrame']
+            || window[vendors[x]+'CancelRequestAnimationFrame'];
+    }
+
+    if (!window.requestAnimationFrame)
+        window.requestAnimationFrame = function(callback, element) {
+            var currTime = new Date().getTime();
+            var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+            var id = window.setTimeout(function() { callback(currTime + timeToCall); },
+                timeToCall);
+            lastTime = currTime + timeToCall;
+            return id;
+        };
+
+    if (!window.cancelAnimationFrame)
+        window.cancelAnimationFrame = function(id) {
+            clearTimeout(id);
+        };
+}());
+
+
 /**
  * @namespace Holds functionality related to FiercePlanet
  */
@@ -456,7 +488,7 @@ FiercePlanet.Game = FiercePlanet.Game || {};
                 agent.countdownToMove = Math.floor(agent.countdownToMove * 2);
                 agent.speed = Math.floor(agent.speed * 2);
             }
-        })
+        });
         /*
         if (Lifecycle.interval < 10)
             Lifecycle.interval += 1;
@@ -476,17 +508,17 @@ FiercePlanet.Game = FiercePlanet.Game || {};
         var cultures = this.cultures || ModuleManager.currentModule.allCultures();
         for (var j = 0, len = cultures.length; j < len; j++) {
             var culture = cultures[j];
-            if (culture.initialSpeed > 0)
+            if (culture.initialSpeed > 1)
                 culture.initialSpeed = Math.floor(culture.initialSpeed / 2);
         }
         var agents = Lifecycle.currentWorld.currentAgents;
         agents.forEach(function(agent) {
-            if (agent.speed > 0) {
+            if (agent.speed > 1) {
 //                agent.culture.speed = Math.floor(agent.culture.speed / 2);
                 agent.countdownToMove = Math.floor(agent.countdownToMove / 2);
                 agent.speed = Math.floor(agent.speed / 2);
             }
-        })
+        });
         /*
         if (Lifecycle.interval > 10)
             Lifecycle.interval -= 10;

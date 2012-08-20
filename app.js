@@ -21,6 +21,8 @@ var app = module.exports = express.createServer();
 var FPProvider = require('./db/FPProviderDB').FPProvider;
 var fpProvider;
 
+
+
 app.configure('development', function() {
     conf = require('./conf-local')
     fpProvider = new FPProvider('test', '127.0.0.1', '27017', function(error, res) {
@@ -388,7 +390,6 @@ app.listen(port);
 
 
 // Socket IO stuff
-
 var sio = require('socket.io');
 var io = sio.listen(app);
 var nicknames = {};

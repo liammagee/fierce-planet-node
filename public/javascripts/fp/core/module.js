@@ -121,7 +121,7 @@ function Module() {
     this.campaigns = {};
     this.resourceSet;
     this.cultures = [];
-};
+}
 
 
 

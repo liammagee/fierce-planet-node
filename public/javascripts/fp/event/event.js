@@ -134,7 +134,7 @@ FiercePlanet.Event = FiercePlanet.Event || {};
                 var resourceCategoryName = resourceCategory.name;
                 var resourceCategoryColor = resourceCategory.color;
                 var resourceCategoryCode = resourceCategory.code;
-                var categoryCount = Lifecycle.currentWorld.getResourceCategoryCount(resourceCategoryCode);
+                var categoryCount = Lifecycle.currentWorld.resourceCategoryCounts[resourceCategoryCode];
                 if (categoryCount == 1) {
                     Log.info("Well done! You've added your first " + resourceCategoryName + " resource!");
                     /*

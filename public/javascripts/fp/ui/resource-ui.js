@@ -162,8 +162,8 @@ FiercePlanet.ResourceUI = FiercePlanet.ResourceUI || {};
                 position: [posX, posY],
                 width: width,
                 height: height,
-                autoOpen: false,
-//                modal: true
+                autoOpen: false
+//              , modal: true
             });
         $('#inline-swatch div[class="title"]').remove();
         var links = $('#inline-swatch .swatch-draggable'), el = null;

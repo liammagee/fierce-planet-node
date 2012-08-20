@@ -551,7 +551,7 @@ function Agent(culture, x, y) {
         childAgent.parents = [this];
         childAgent.registerHealthStats();
         if (otherParent)
-            childAgent.parents.push(otherParent)
+            childAgent.parents.push(otherParent);
         Lifecycle.currentWorld.currentAgents.push(childAgent);
         Lifecycle.currentWorld.addAgentToCell(childAgent);
         return childAgent;

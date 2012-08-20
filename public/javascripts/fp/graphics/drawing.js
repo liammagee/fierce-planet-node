@@ -603,7 +603,7 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         else {
             resources.forEach(function(resource) {
                 FiercePlanet.Drawing.drawJustResource(ctx, resource);
-            })
+            });
             agents.forEach(function(agent) {
                 var x = agent.x, y = agent.y;
                 var neighbouringResources = world.getNeighbouringResources(x, y);
@@ -1269,7 +1269,6 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
         try {
             eval(agent.culture.drawFunction)(ctx, agent, x, y, FiercePlanet.Orientation.pieceWidth * FiercePlanet.Orientation.zoomWorld, FiercePlanet.Orientation.pieceHeight * FiercePlanet.Orientation.zoomWorld, newColor, Lifecycle.waveCounter, direction);
         } catch(e) {
-            console.log(e)
             eval(DefaultCultures.CITIZEN_AGENT_TYPE.drawFunction)(ctx, agent, x, y, FiercePlanet.Orientation.pieceWidth * FiercePlanet.Orientation.zoomWorld, FiercePlanet.Orientation.pieceHeight * FiercePlanet.Orientation.zoomWorld, newColor, Lifecycle.waveCounter, direction);
         }
     };
@@ -1526,7 +1525,6 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
                     var h = FiercePlanet.Orientation.worldHeight;
                     ctx.fillStyle = this.insertAlpha(catastrophe.kind.color, 0.5);
                     ctx.fillRect(x, y, w, h);
-                    return;
                 }
             }
         }
@@ -1736,8 +1734,8 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.translate(offsetX, offsetY);
         }
-        FiercePlanet.Orientation.offsetY += offsetY //* FiercePlanet.Orientation.zoomWorld;
-        FiercePlanet.Orientation.offsetX += offsetX //* FiercePlanet.Orientation.zoomWorld;
+        FiercePlanet.Orientation.offsetY += offsetY; //* FiercePlanet.Orientation.zoomWorld;
+        FiercePlanet.Orientation.offsetX += offsetX; //* FiercePlanet.Orientation.zoomWorld;
         if (FiercePlanet.Game.googleMap) {
 //            FiercePlanet.Game.googleMap.panBy(- offsetX * FiercePlanet.Orientation.zoomWorld, - offsetY * FiercePlanet.Orientation.zoomWorld);
             FiercePlanet.Game.googleMap.panBy(- offsetX, - offsetY);
@@ -1829,7 +1827,6 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
             var newGZoom = ((gZoom + gZoomChange) < 1 ? gZoom : ((gZoom + gZoomChange) > 21 ? gZoom : gZoom + gZoomChange));
 
             // If we can't change the google map, don't change the underlying zoom level
-            console.log(newGZoom, gZoom)
             if (newGZoom == gZoom)
                 tmpZoom = FiercePlanet.Orientation.zoomWorld;
 

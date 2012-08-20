@@ -75,6 +75,7 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
      * Sets up Fierce Planet dialogs
      */
     this.setupDialogs = function() {
+        var self = this;
         var dialogX = this.calculateWorldLeft();
         var dialogY = this.calculateWorldTop();
         var dfWidth = FiercePlanet.Orientation.worldWidth * 3 / 5;
@@ -100,7 +101,7 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
 //                }
 //            }
             Lifecycle._initialiseGame();
-            this.newWorldDialog.dialog( "close" );
+            self.newWorldDialog.dialog( "close" );
             Lifecycle.startWorld();
         }
         /*
@@ -550,12 +551,13 @@ FiercePlanet.Dialogs = FiercePlanet.Dialogs || {};
      *
      */
     this.showGameOverDialog = function () {
+        var self = this;
 //    FiercePlanet.Game.currentProfile.updateStats(FiercePlanet.Game.currentProfile.resources_in_store, FiercePlanet.Game.currentProfile.saved_agent_count);
         // Try to save results to the server
         if (FiercePlanet.Game.currentProfile.saved) {
             FiercePlanet.ProfileUI.saveProfile(function(data) {
-                   this.openGameOverDialog();
-               });
+                self.openGameOverDialog();
+           });
         }
         else {
             this.openGameOverDialog();

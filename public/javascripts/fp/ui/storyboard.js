@@ -38,7 +38,7 @@ FiercePlanet.Storyboard = FiercePlanet.Storyboard || {};
 
         var storyboardWindow =  window.open('','RecipeWindow','width=600,height=600');
         var html = '<html><head><title>FiercePlanet Storyboard</title></head><body><div id="storyboard">' +
-                $('<div />').append($(storyboard).clone()).html() +
+                $('<div></div>').append($(storyboard).clone()).html() +
                 '</div></body></html>';
         storyboardWindow.document.open();
         storyboardWindow.document.write(html);

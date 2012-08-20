@@ -119,7 +119,7 @@ Capabilities.PreyOnOtherAgentsCapability = new Capability();
     this.name = 'PreyOnOtherAgentsCapability';
     this.exercise = function(agent, world) {
         var x = agent.x, y = agent.y,
-            candidateAgents = world.getNeighbouringAgents(x, y)
+            candidateAgents = world.getNeighbouringAgents(x, y),
             foundPrey = false;
         for (var j = 0; j < candidateAgents.length; j++) {
             var candidateAgent = candidateAgents[j];

@@ -19,7 +19,6 @@ FiercePlanet.Comms = FiercePlanet.Comms || {};
 
     this.receiveServerEvent = function(nickname, eventType, obj){
         if (eventType == 'world') {
-            var worldNumber = obj;
             if (Universe.settings.spectate) {
                 Lifecycle.currentWorldNumber = worldNumber;
                 Lifecycle.currentWorldPreset = true;

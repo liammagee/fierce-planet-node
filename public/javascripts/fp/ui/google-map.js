@@ -236,8 +236,9 @@ FiercePlanet.GoogleMapUtils = FiercePlanet.GoogleMapUtils || {};
     }
 
     this.initializePlanetaryTypes = function() {
+        var key;
       // push all mapType keys in to a mapTypeId array to set in the mapTypeControlOptions
-      for (var key in mapTypes) {
+      for (key in mapTypes) {
         mapTypeIds.push(key);
       }
 
@@ -326,7 +327,7 @@ FiercePlanet.GoogleMapUtils = FiercePlanet.GoogleMapUtils || {};
         map.controls[google.maps.ControlPosition.BOTTOM_RIGHT].push(creditNode);
 
         // add the new map types to map.mapTypes
-        for (key in mapTypes) {
+        for (var key in mapTypes) {
           map.mapTypes.set(key, new google.maps.ImageMapType(mapTypes[key]));
         }
 
@@ -445,7 +446,7 @@ FiercePlanet.GoogleMapUtils = FiercePlanet.GoogleMapUtils || {};
 		var mapOptions = this.defaultOptions();
 		mapOptions['disableDefaultUI'] = false;
 		return mapOptions;
-	}
+	};
 
 
 	/**
@@ -490,7 +491,7 @@ FiercePlanet.GoogleMapUtils = FiercePlanet.GoogleMapUtils || {};
             }
           }
         return initialLocation;
-    }
+    };
 
 
 
@@ -510,7 +511,6 @@ FiercePlanet.GoogleMapUtils = FiercePlanet.GoogleMapUtils || {};
             geoencoder.geocode({'latLng': latlng}, callback);
         }
 
-        console.log(locationInfo)
         return locationInfo;
     };
 

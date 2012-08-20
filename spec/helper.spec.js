@@ -49,7 +49,7 @@ if (typeof(global) != "undefined") {
 //NormalDistribution = require('./../public/javascripts/jstat-1.0.0/js/jstat-1.0.0.js').NormalDistribution;
     jStat = require('./../public/javascripts/jstat-1.0.0/js/jstat.js').jStat;
 
-    // NEEDS XCode to install on the Mac
+    // NEEDS cpp compiler to build contextify - not working with node 0.6.19, Win7 x64
     /*
     var jsdom = require('jsdom').jsdom,
         myWindow = jsdom().createWindow(),

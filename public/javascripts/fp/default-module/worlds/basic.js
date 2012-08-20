@@ -109,12 +109,14 @@ var Basic = Basic || new Campaign();
             if (FiercePlanet.Game.tutorialMode) {
                 FiercePlanet.Game.pauseGame();
 
-                var firstResource = $('#farm'), firstBorder = firstResource.css('border');;
-                var topMostCanvas = FiercePlanet.GeneralUI.getTopMostCanvas(), topBorder = topMostCanvas.css('border');;
-                var score = $('#score'), scoreBorder = score.css('border');;
-                var notifications = $('#notifications'), notificationsBorder = notifications.css('border');;
-                var controls = $('#controls'), controlsBorder = controls.css('border');;
-                var play = $('#playAgents');
+                var firstResource = $('#farm'), firstBorder = firstResource.css('border');
+                var topMostCanvas = FiercePlanet.GeneralUI.getTopMostCanvas(), topBorder = topMostCanvas.css('border');
+                var score = $('#score'), scoreBorder = score.css('border');
+                var notifications = $('#notifications'), notificationsBorder = notifications.css('border');
+                var controls = $('#controls'), controlsBorder = controls.css('border');
+                var play = $('#playAgents'), playBorder = play.css('border');
+                var balloonableElements = [ firstResource, topMostCanvas, score, notifications, controls, play ];
+                var balloonableElementBorders = [ firstBorder, topBorder, scoreBorder, notificationsBorder, controlsBorder, playBorder ];
                 var highlight = {border: 'solid 4px red'};
                 var tipSize = 24;
                 var balloonCss = {
@@ -128,9 +130,104 @@ var Basic = Basic || new Campaign();
                 };
                 var autoTimeout = 4000;
 
+                var step1 = function() {
+                    firstResource.showBalloon({
+                        contents: '<div>Your goal is to save the citizens of Fierce-Planet by placing resources along their path. </div><div>Start by clicking on a resource.</div><div class="closeBalloon">Close</div>',
+                        tipSize: tipSize,
+                        css: balloonCss,
+                        position: "left"
+                    });
+                    firstResource.css(highlight);
+                    firstResource.one('click', function(e) {
+                        firstResource.css('border', firstBorder);
+                        firstResource.hideBalloon();
 
+                        topMostCanvas.showBalloon({
+                            contents: 'Now click on a free cell on the map.',
+                            tipSize: tipSize,
+                            css: balloonCss,
+                            position: "top"
+                        });
+                        topMostCanvas.css(highlight);
+
+                        step2();
+                    });
+                };
+                var step2 = function() {
+                    topMostCanvas.one('click', function(e) {
+                        topMostCanvas.css('border', topBorder);
+                        topMostCanvas.hideBalloon();
+
+                        score.css(highlight);
+                        score.showBalloon({
+                            contents: '<div>Your score and other information can be found here.</div>',
+                            tipSize: tipSize,
+                            css: balloonCss,
+                            position: "left"
+                        });
+                        setTimeout(function() {
+                            step3();
+
+
+                        }, autoTimeout);
+
+                    });
+
+                };
+                var step3 = function() {
+                    notifications.css(highlight);
+                    notifications.showBalloon({
+                        contents: '<div>Advanced features, like commands, graphs and custom parameters, can be viewed and edited here.</div>',
+                        tipSize: tipSize,
+                        css: balloonCss,
+                        position: "top"
+                    })
+
+                    score.hideBalloon();
+                    score.css('border', scoreBorder);
+                    setTimeout(function() {
+                        step4();
+                    }, autoTimeout);
+
+                };
+                var step4 = function() {
+                    controls.css(highlight);
+                    controls.showBalloon({
+                        contents: '<div>You can play, change the speed, change levels, and zoom in and out using the controls here.</div>',
+                        tipSize: tipSize,
+                        css: balloonCss,
+                        position: "right"
+                    })
+
+                    notifications.hideBalloon();
+                    notifications.css('border', notificationsBorder);
+
+                    setTimeout(function() {
+                        step5();
+                    }, autoTimeout);
+
+                };
+                var step5 = function() {
+                    controls.hideBalloon();
+                    controls.css('border', controlsBorder);
+
+                    play.showBalloon({
+                        contents: '<div>Click "Play" to continue the game!</div>',
+                        tipSize: tipSize,
+                        css: balloonCss,
+                        position: "right"
+                    })
+                    play.one('click', function(e) {
+                        play.hideBalloon();
+                    });
+
+                };
+
+                step1();
+
+                /*
                 firstResource.showBalloon({
-                    contents: '<div>Your goal is to save the citizens of Fierce-Planet by placing resources along their path. </div><div>Start by clicking on a resource.</div>',
+                    contents: '<div>Your goal is to save the citizens of Fierce-Planet by placing resources along their path. </div><div>Start by clicking on a resource.</div><div class="closeBalloon">Close</div>',
                     tipSize: tipSize,
                     css: balloonCss,
                     position: "left"
@@ -155,7 +252,7 @@ var Basic = Basic || new Campaign();
 
                     score.css(highlight);
                     score.showBalloon({
-                        contents: 'Your score and other information can be found here.',
+                        contents: '<div>Your score and other information can be found here.</div>',
                         tipSize: tipSize,
                         css: balloonCss,
                         position: "left"
@@ -163,7 +260,7 @@ var Basic = Basic || new Campaign();
                     setTimeout(function() {
                         notifications.css(highlight);
                         notifications.showBalloon({
-                            contents: 'Advanced features, like commands, graphs and custom parameters, can be viewed and edited here.',
+                            contents: '<div>Advanced features, like commands, graphs and custom parameters, can be viewed and edited here.</div>',
                             tipSize: tipSize,
                             css: balloonCss,
                             position: "top"
@@ -175,7 +272,7 @@ var Basic = Basic || new Campaign();
                         setTimeout(function() {
                             controls.css(highlight);
                             controls.showBalloon({
-                                contents: 'You can play, change the speed, change levels, and zoom in and out using the controls here.',
+                                contents: '<div>You can play, change the speed, change levels, and zoom in and out using the controls here.</div>',
                                 tipSize: tipSize,
                                 css: balloonCss,
                                 position: "right"
@@ -188,7 +285,7 @@ var Basic = Basic || new Campaign();
                                 controls.css('border', controlsBorder);
 
                                 play.showBalloon({
-                                    contents: 'Click "Play" to continue the game!',
+                                    contents: '<div>Click "Play" to continue the game!</div>',
                                     tipSize: tipSize,
                                     css: balloonCss,
                                     position: "right"
@@ -202,7 +299,17 @@ var Basic = Basic || new Campaign();
                     }, autoTimeout);
 
                 });
+                */
 
+                var closeBalloon = $('.closeBalloon').one('click', function() {
+                    for (var i = 0 ; i < balloonableElements; i++) {
+                        var balloonable = balloonableElements[i];
+                        var balloonableBorder = balloonableElementBorders[i];
+                        balloonable.hideBalloon();
+                        balloonable.css('border', balloonableBorder);
+                    }
+                    FiercePlanet.Game.tutorialMode = false;
+                });
                 FiercePlanet.Game.tutorialMode = false;
             }
 
