@@ -22,7 +22,7 @@ var FPProvider = require('./db/FPProviderDB').FPProvider;
 var fpProvider;
 
 
-
+/*
 app.configure('development', function() {
     conf = require('./conf-local')
     fpProvider = new FPProvider('test', '127.0.0.1', '27017', function(error, res) {
@@ -31,6 +31,7 @@ app.configure('development', function() {
 	    }
 	});
 });
+*/
 
 app.configure('production', function() {
 //    fpProvider = new FPProvider('mongodb://heroku:password@staff.mongohq.com:10089/app708577?auto_reconnect=true', function(error, res) {
@@ -40,6 +41,7 @@ app.configure('production', function() {
 	    }
 	}, 'heroku', 'password');
 });
+
 
 // Everyauth config
 everyauth.debug = true;
@@ -218,7 +220,7 @@ app.configure(function(){
     app.use(express.cookieParser());
     app.use(express.session({
         secret: "very fierce planet"
-        , store: new MongoStore({ db: fpProvider.db })
+        //, store: new MongoStore({ db: fpProvider.db })
     }));
 //    , maxAge : new Date(Date.now() + 3600000) //1 Hour
 
