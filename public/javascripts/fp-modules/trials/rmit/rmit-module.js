@@ -258,6 +258,7 @@ var RMITResources = RMITResources || {};
 
                     var died = 0;
 
+					/*
                     var resourceBalance = 0, resourceCounters = [];
                     ModuleManager.currentModule.resourceSet.categories.forEach(function(category) {
                         resourceCounters.push(0);
@@ -269,11 +270,13 @@ var RMITResources = RMITResources || {};
                                 resourceCounters[i] = resourceCounters[i] + 1;
                         }
                     });
+					*/
 
                     // Computes a rough estimate of the degree of distribution of resources relative to the number of resources outlayed.
                     // Kurtosis overkill for this purpose?
                     var stats = this.resourceStats();
-                    var min = stats.min
+                    var resourceCounters = stats.array
+						, min = stats.min
                         , max = stats.max
                         , len = stats.len
                         , sum = stats.sum

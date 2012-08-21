@@ -145,7 +145,10 @@ FiercePlanet.Graph = FiercePlanet.Graph || {};
             clearTimeout(plotIntervalId);
         var options = {
             series: { shadowSize: 0 }, // drawing is faster without shadows
-            yaxis: { min: 0, max: 100 }
+            yaxis: { min: 0, max: 100 },
+			legend: {
+				position: "sw"
+			}
         };
         var seedData = [];
         var arguments = FiercePlanet.Graph.setupData.arguments;
