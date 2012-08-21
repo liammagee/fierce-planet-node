@@ -269,10 +269,7 @@ everyauth.helpExpress(app);
 
 // Routes
 app.get('/', function(req, res){
-    res.render('index', {
-        title: 'Fierce Planet',
-        locals: {}
-    });
+	res.send('hello world')
 });
 
 app.get('/worlds/gallery', function(req, res){
