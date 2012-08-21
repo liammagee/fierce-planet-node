@@ -28,11 +28,11 @@
       a#openWorldGallery(href='#') Levels
     div(title='Settings')
       a#settings(href='#') Settings
-    - if (everyauth && everyauth.user)
-      div
-        a#editor(href='#') Editor
+    //- if (everyauth && everyauth.user)
+    //  div
+    //    a#editor(href='#') Editor
     //- div
-        a#debug(href='#',style="display:none") Step
+    //    a#debug(href='#',style="display:none") Step
     div.divide
 
     div.control-link(title='View 3D/2D')
@@ -50,12 +50,12 @@
           a#rotateRight(href='#') Rotate Right
     div.divide
     div.control-link#user-links
-      - if (everyauth && !everyauth.user)
-        a#login(href='#') Login
-      - else if (typeof(everyauth) != 'undefined')
-        a#welcome-link(href='#')= 'Welcome ' + everyauth.user.profile.nickname
-        span= ' | '
-        a#logout(href='/logout') Logout
+    //  - if (everyauth && !everyauth.user)
+    //    a#login(href='#') Login
+    //  - else if (typeof(everyauth) != 'undefined')
+    //    a#welcome-link(href='#')= 'Welcome ' + everyauth.user.profile.nickname
+    //    span= ' | '
+    //    a#logout(href='/logout') Logout
 
   //#admin-controls
   //  button#debug Debug
