@@ -269,7 +269,11 @@ everyauth.helpExpress(app);
 
 // Routes
 app.get('/', function(req, res){
-	res.send('hello world')
+	res.render('index', {
+        title: 'Fierce Planet',
+		layout: false,
+        locals: {}
+    });
 });
 
 app.get('/worlds/gallery', function(req, res){
