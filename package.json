@@ -1,7 +1,7 @@
 {
   "name": "FiercePlanet",
   "description": "Fierce Planet is a simple game for learning about sustainability",
-  "version": "0.1.8-13",
+  "version": "0.1.8-14",
   "repository": {
     "type": "git",
     "url": "git://github.com/doclm/fierce-planet.git"
