@@ -271,7 +271,6 @@ everyauth.helpExpress(app);
 app.get('/', function(req, res){
 	res.render('index', {
         title: 'Fierce Planet',
-		layout: false,
         locals: {}
     });
 });
