@@ -218,7 +218,7 @@ app.configure(function(){
     app.use(express.cookieParser());
     app.use(express.session({
         secret: "very fierce planet"
-        //, store: new MongoStore({ db: fpProvider.db })
+        , store: new MongoStore({ db: fpProvider.db })
     }));
 //    , maxAge : new Date(Date.now() + 3600000) //1 Hour
 
