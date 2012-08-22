@@ -22,13 +22,22 @@ var FPProvider = require('./db/FPProviderDB').FPProvider;
 var fpProvider;
 
 
+//app.configure('development', function() {
+//    conf = require('./conf-local')
+//    fpProvider = new FPProvider('test', '127.0.0.1', '27017', function(error, res) {
+//	    if( error ) console.log(error);
+//	    else if (res) {
+//	    }
+//	});
+//});
+
 app.configure('development', function() {
-    conf = require('./conf-local')
-    fpProvider = new FPProvider('test', '127.0.0.1', '27017', function(error, res) {
+//    fpProvider = new FPProvider('mongodb://heroku:password@staff.mongohq.com:10089/app708577?auto_reconnect=true', function(error, res) {
+	fpProvider = new FPProvider('app708577', 'staff.mongohq.com', '10089', function(error, res) {
 	    if( error ) console.log(error);
 	    else if (res) {
 	    }
-	});
+	}, 'heroku', 'password');
 });
 
 app.configure('production', function() {
@@ -261,9 +270,6 @@ app.configure('production', function(){
 
 // Now.js stuff - fails on Windows, Node 0.5.4
 //var everyone = require("now").initialize(app);
-
-// Everyauth stuff
-everyauth.helpExpress(app);
 
 // Routes
 app.get('/', function(req, res){
