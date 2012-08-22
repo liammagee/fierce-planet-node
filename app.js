@@ -22,7 +22,6 @@ var FPProvider = require('./db/FPProviderDB').FPProvider;
 var fpProvider;
 
 
-/*
 app.configure('development', function() {
     conf = require('./conf-local')
     fpProvider = new FPProvider('test', '127.0.0.1', '27017', function(error, res) {
@@ -31,7 +30,6 @@ app.configure('development', function() {
 	    }
 	});
 });
-*/
 
 app.configure('production', function() {
 //    fpProvider = new FPProvider('mongodb://heroku:password@staff.mongohq.com:10089/app708577?auto_reconnect=true', function(error, res) {
