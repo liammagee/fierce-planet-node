@@ -77,7 +77,7 @@ FiercePlanet.Controls = FiercePlanet.Controls || {};
         $('#high-scores').click(FiercePlanet.ProfileUI.showHighScores);
 
         $('#world-information-link').click(function() {
-            var info = (_.isUndefined(Lifecycle.currentWorld.information) ? Lifecycle.currentWorld.introduction : Lifecycle.currentWorld.information),
+            var info = (_.isUndefined(Lifecycle.currentWorld.information) || Lifecycle.currentWorld.information == '' ? Lifecycle.currentWorld.introduction : Lifecycle.currentWorld.information),
                 worldInformation = '';
             if (!_.isUndefined(Lifecycle.currentWorld.location))
                 worldInformation += '<h3>Location</h3><div>' + Lifecycle.currentWorld.location + '</div>';

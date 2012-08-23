@@ -220,7 +220,7 @@ FiercePlanet.GeneralUI = FiercePlanet.GeneralUI || {};
         }
         $('#world-introduction').html(worldIntroduction);
 
-        if (! _.isUndefined(world.information)) {
+        if (! _.isUndefined(world.information) && world.information != "" ) {
             $('#world-information').html(world.information);
         }
         else if (! _.isUndefined(world.introduction)) {

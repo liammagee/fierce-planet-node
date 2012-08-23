@@ -45,29 +45,29 @@ var RMITResources = RMITResources || {};
                 id: 1,
                 name: "Fishermen's Bend",
                 introduction:
-                    "<p>This demonstration model showcases a number of features relating to housing development.</p>" +
-                        "<p>Using the default settings, housing quality varies across the area." +
-                        "Poor housing quality impacts on residential wellbeing and quality of life." +
-                        "By placing resources on the map, housing quality can be improved, which in turn improves the wellbeing of residents.</p>" +
-                        "<p>The aim of the simulation is to place resources in a way that creates a sustainable level of housing quality for residents.</p>" +
+                    "<p>This model showcases a number of features relating to sustainable development.</p>" +
+                    "<p>There are three output variables, modelling desirable features of the site: <em>Affordability</em>, <em>Sustainability</em> and <em>Mixed Use</em>.</p>" +
+                        "<p>" +
+                        "Using the default settings, residents populate the Fisherman's Bend area. " +
+                        "Without intervention, <em>Affordability</em> and <em>Sustainability</em> variables stay at 0, while <em>Sustainability</em> declines over time.</p>" +
+
+                        "<p>Placing resources in the area allows you to increase the values of desired features (though not necessarily all at once!).</p>" +
 
                         "<p>There are a number of parameters that control how this simulation works:" +
                         "<ul>" +
                         "<li><em>Transparency of overlay: </em> How much of the underlying map shows through</li>" +
                         "<li><em>Number of residents in the area</em> </li>" +
-                        "<li><em>Number of workers in the area</em> </li>" +
-                        "<li><em>Number of development blocks: </em> Increasing this parameter allows more cells to be developed</li>" +
-                        "<li><em>Average housing quality: </em> What is the average starting housing quality for all cells in the world?</li>" +
-                        "<li><em>Standard deviation of housing quality: </em> How much variation exists in housing quality?</li>" +
+                        "<li><em>Average sustainability: </em> What is the average starting sustainability for all cells in the world?</li>" +
+                        "<li><em>Standard deviation of sustainability: </em> How much variation exists in sustainability?</li>" +
                         "<li><em>Threshold of improvement for neighbours: </em> How much better do neighbouring resources need to be for a cell’s housing quality to improve?</li>" +
                         "<li><em>Importance of equal resource types: </em> How important is it to maintain a balance of different resources across the world?</li>" +
                         "<li><em>Importance of moving to better housing: </em> How important is it for residents to move to better housing?</li>" +
-                        "<li><em>Residents die out: </em> When residents’ health gets to zero, do they die out?</li>" +
+                        "<li><em>Residents don't follow resources: </em> Do residents try to move towards resources?</li>" +
                         "</ul>" +
                         "</p>" +
                         ""
                 ,
-
+                information: this.introduction,
                 isPresetWorld: true,
                 interval: 100,
                 cellsAcross: 20,
@@ -101,17 +101,11 @@ var RMITResources = RMITResources || {};
                         "<p>Number of Citizens</p>" +
                         "<input type='hidden' id='initialAgents' class='world-parameters' name='InitialAgents' value='100'/>" +
 
-                        "<p>Number of Workers</p>" +
-                        "<input type='hidden' id='initialWorkers' class='world-parameters' name='InitialWorkers' value='0'/>" +
+                        "<p>Average sustainability</p>" +
+                        "<input type='hidden' id='aveSustainability' class='world-parameters' name='AveSustainability' value='50'/>" +
 
-                        "<p>Development blocks</p>" +
-                        "<input type='hidden' id='developmentBlocks' class='world-parameters' name='DevelopmentBlocks' value='100'/>" +
-
-                        "<p>Average housing quality (<em>more is better</em> - see <a href='http://en.wikipedia.org/wiki/Housing_quality_and_health_outcomes_in_the_United_States' target='_blank'>Wikipedia</a> for more)</p>" +
-                        "<input type='hidden' id='aveHousingQuality' class='world-parameters' name='AveHousingQuality' value='50'/>" +
-
-                        "<p>Standard deviation of housing quality (more means <em>less</em> equality)</p>" +
-                        "<input type='hidden' id='stdDevHousingQuality' class='world-parameters' name='StdDevHousingQuality' value='15'/>" +
+                        "<p>Standard deviation of sustainability</p>" +
+                        "<input type='hidden' id='stdDevSustainability' class='world-parameters' name='StdDevSustainability' value='15'/>" +
 
                         "<p>Threshold for improvement of neighbours</p>" +
                         "<input type='hidden' id='thresholdToImproveNeighbours' class='world-parameters' name='ThresholdToImproveNeighbours' value='10'/>" +
@@ -122,20 +116,19 @@ var RMITResources = RMITResources || {};
                         "<p>Importance of moving to better housing</p>" +
                         "<input type='hidden' id='importanceOfMovingToBetterHousing' class='world-parameters' name='ImportanceOfMovingToBetterHousing' value='1'/>" +
 
-                        "<p>Should residents die out when health reaches zero?</p>" +
-                        "<input type='checkbox' id='residentsDieOut' class='world-parameters' name='ResidentsDieOut' />" +
+                        "<p>Should residents ignore resources?</p>" +
+                        "<input type='checkbox' id='residentsDontFollowResources' class='world-parameters' name='ResidentsDontFollowResources' />" +
+
                         "",
                 conclusion: "Well done.",
                 setup: function() {
                     FiercePlanet.GeneralUI.refreshSwatch();
                 },
                 setupParameters: function() {
-                    FiercePlanet.Slider.createSlider("initialAgents", 0, 300, 10, 150);
-                    FiercePlanet.Slider.createSlider("initialWorkers", 0, 100, 5, 0);
-                    FiercePlanet.Slider.createSlider("developmentBlocks", 0, 400, 10, 100);
-                    FiercePlanet.Slider.createSlider("aveHousingQuality", 0, 100, 1, 50);
-                    FiercePlanet.Slider.createSlider("stdDevHousingQuality", 0, 40, 1, 15);
                     FiercePlanet.Slider.createSlider("transparency", 0, 10, 1, 7);
+                    FiercePlanet.Slider.createSlider("initialAgents", 10, 300, 10, 150);
+                    FiercePlanet.Slider.createSlider("aveSustainability", 0, 100, 1, 50);
+                    FiercePlanet.Slider.createSlider("stdDevSustainability", 0, 40, 1, 15);
                     FiercePlanet.Slider.createSlider("thresholdToImproveNeighbours", 0, 20, 1, 10);
                     FiercePlanet.Slider.createSlider("importanceOfEqualResourceTypes", 0, 10, 1, 1);
                     FiercePlanet.Slider.createSlider("importanceOfMovingToBetterHousing", 0, 10, 1, 1);
@@ -149,71 +142,27 @@ var RMITResources = RMITResources || {};
                 handleParameters: function () {
                     var world = this;
                     var initialAgents = parseInt(FiercePlanet.Parameters.InitialAgents)
-                        , initialWorkers = parseInt(FiercePlanet.Parameters.InitialWorkers)
-                        , aveHousingQuality = parseInt(FiercePlanet.Parameters.AveHousingQuality)
-                        , stdDevHousingQuality = parseInt(FiercePlanet.Parameters.StdDevHousingQuality)
+                        , aveSustainability = parseInt(FiercePlanet.Parameters.AveSustainability)
+                        , stdDevSustainability = parseInt(FiercePlanet.Parameters.StdDevSustainability)
                         , transparency = (parseInt(FiercePlanet.Parameters.Transparency)  / 10)
-                        , developmentBlocks = (parseInt(FiercePlanet.Parameters.DevelopmentBlocks))
                         , thresholdToImproveNeighbours = (parseInt(FiercePlanet.Parameters.ThresholdToImproveNeighbours))
                         , importanceOfEqualResourceTypes = (parseInt(FiercePlanet.Parameters.ImportanceOfEqualResourceTypes))
                         , importanceOfMovingToBetterHousing = (parseInt(FiercePlanet.Parameters.ImportanceOfMovingToBetterHousing))
-                        , residentsDieOut = ((FiercePlanet.Parameters.ResidentsDieOut))
 
-                    Universe.settings.godMode = !residentsDieOut;
+                    //Universe.settings.godMode = !residentsDieOut;
 					world.allowResourcesOnPath = true;
 
                     /// Set up agents
                     var len = world.cells.length,
                         removedCells = [];
-						/*
-                    for (var i = 0; i < developmentBlocks; i++) {
-                        var cellNo = Math.floor(Math.random() * len);
-                        var cell = world.cells[cellNo];
-                        if (!cell.agentsAllowed) {
-                            i--;
-                            continue;
-                        }
-                        else {
-                            cell.agentsAllowed = false;
-                            cell.terrain = new Terrain(one.color('#000').alpha(1));
-                        }
-                    }
-                    world.generatePath();
-					*/
+
 
                     var residentCulture = _.clone(DefaultCultures.Stickman);
                     residentCulture.name = "Residents";
                     residentCulture.waveNumber = initialAgents;
                     residentCulture.initialSpeed = 5;
                     residentCulture.moveCost = 0;
-                    residentCulture.healthCategories = ModuleManager.currentModule.resourceSet.categories;
-                    /*
-                     _.extend(residentCulture, {
-                     capabilities: [
-                     Capabilities.ConsumeResourcesCapability
-                     ]
-                     });
-                     */
-
-                    var workerCulture = _.clone(DefaultCultures.Stickman);
-                    workerCulture.name = "Workers";
-                    workerCulture.waveNumber = initialWorkers;
-                    workerCulture.initialSpeed = 5;
-                    workerCulture.moveCost = 0;
-                    workerCulture.color = one.color('#0f0');
-                    _.extend(workerCulture, {
-                        beliefs: [
-                            Beliefs.BeliefsAboutPaths
-                            , Beliefs.BeliefsAboutResources
-                        ]
-                        , desires: [
-                            Desires.ExploreSpace
-                            , Desires.ImproveHealth
-                        ]
-                        , capabilities: [
-                            Capabilities.ConsumeResourcesCapability
-                        ]
-                    });
+                    //residentCulture.healthCategories = ModuleManager.currentModule.resourceSet.categories;
 
 //                    residentCulture.healthCategories = ModuleManager.currentModule.resourceSet.categories;
 
@@ -221,18 +170,18 @@ var RMITResources = RMITResources || {};
                     var poorCondition = one.color('#7F3300').alpha(1 - transparency);
                     world.cells.forEach(function(cell) {
                         if (cell.agentsAllowed) {
-                            var quality = jStat.normal.sample(aveHousingQuality, stdDevHousingQuality);
-                            cell.quality = quality;
-                            cell.terrain = new Terrain(poorCondition.lightness(cell.quality / 100, true));
+                            var sustainability = jStat.normal.sample(aveSustainability, stdDevSustainability);
+                            cell.sustainability = sustainability;
+                            cell.terrain = new Terrain(poorCondition.lightness(cell.sustainability / 100, true));
                         }
                     })
 
 
                     this.randomiseAgents = true;
-                    this.cultures = [residentCulture, workerCulture];
+                    this.cultures = [residentCulture];
                     this.waves = undefined;
                     this.initialiseWaves(1);
-                    FiercePlanet.Drawing.drawPath();
+                    FiercePlanet.Drawing.drawPath()
                 },
 
 
@@ -242,35 +191,37 @@ var RMITResources = RMITResources || {};
                     var counter = 0;
 
                     var initialAgents = parseInt(FiercePlanet.Parameters.InitialAgents)
-                        , initialWorkers = parseInt(FiercePlanet.Parameters.Workers)
-                        , aveHousingQuality = parseInt(FiercePlanet.Parameters.AveHousingQuality)
-                        , stdDevHousingQuality = parseInt(FiercePlanet.Parameters.StdDevHousingQuality)
+                        , aveSustainability = parseInt(FiercePlanet.Parameters.AveSustainability)
+                        , stdDefSustainability = parseInt(FiercePlanet.Parameters.StdDevSustainability)
                         , transparency = (parseInt(FiercePlanet.Parameters.Transparency)  / 10)
-                        , developmentBlocks = (parseInt(FiercePlanet.Parameters.DevelopmentBlocks))
                         , thresholdToImproveNeighbours = (parseInt(FiercePlanet.Parameters.ThresholdToImproveNeighbours))
                         , importanceOfEqualResourceTypes = (parseInt(FiercePlanet.Parameters.ImportanceOfEqualResourceTypes))
                         , importanceOfMovingToBetterHousing = (parseInt(FiercePlanet.Parameters.ImportanceOfMovingToBetterHousing))
-                        , residentsDieOut = ((FiercePlanet.Parameters.ResidentsDieOut))
+                        , residentsDontFollowResources = ((FiercePlanet.Parameters.ResidentsDontFollowResources))
 
-                    Universe.settings.godMode = !residentsDieOut;
+                    var len = world.currentAgents.length
+                    if (initialAgents != len) {
+                        if (initialAgents < len) {
+                            for (var i = initialAgents; i < len; i++) {
+                                world.currentAgents[i].die(world)
+                            }
+                        }
+                        else if (initialAgents > len) {
+
+                            for (var i = len; i < initialAgents; i++) {
+                                var agent = world.currentAgents[Math.floor(len * Math.random())]
+                                var child = agent.spawn();
+                            }
+                        }
+                    }
+
+
+                    //Universe.settings.godMode = !residentsDieOut;
 
 
 
                     var died = 0;
 
-					/*
-                    var resourceBalance = 0, resourceCounters = [];
-                    ModuleManager.currentModule.resourceSet.categories.forEach(function(category) {
-                        resourceCounters.push(0);
-                    });
-                    world.resources.forEach(function(resource) {
-                        for (var i = 0; i < ModuleManager.currentModule.resourceSet.categories.length; i++) {
-                            var category = ModuleManager.currentModule.resourceSet.categories[i];
-                            if (resource.category == (category))
-                                resourceCounters[i] = resourceCounters[i] + 1;
-                        }
-                    });
-					*/
 
                     // Computes a rough estimate of the degree of distribution of resources relative to the number of resources outlayed.
                     // Kurtosis overkill for this purpose?
@@ -286,9 +237,49 @@ var RMITResources = RMITResources || {};
                         , relativeRange = range / sum
                         , adjustedRelativeRange = Math.pow(relativeRange, 1 / importanceOfEqualResourceTypes)
 
+
+
+                    // Adjust quality based on neighbouring values
+                    _.shuffle(world.cells).forEach(function(cell) {
+                        if (cell.agentsAllowed) {
+                            var x = cell.x, y = cell.y;
+                            cell.newSustinability = cell.sustainability;
+                            var sustainability = cell.sustainability;
+                            var neighbours = world.getNeighbouringCells(x, y),
+                                sustainabilities = _.chain(neighbours).map(function(neighbour) { if (neighbour.agentsAllowed) return neighbour.sustainability}).compact().sortBy(function(e) {return e}).value(),
+                                midPoint = Math.floor(sustainabilities.length / 2),
+                                topHalf = _.rest(sustainabilities, midPoint),
+                                topHalfMean = jStat.mean(topHalf),
+                                bottomHalf = _.first(sustainabilities, midPoint),
+                                bottomHalfMean = jStat.mean(bottomHalf),
+                                maxQuality = 0,
+                                cumQuality = 0,
+                                aveQuality;
+
+                            // Top half mean
+                            if ((topHalfMean - sustainability) > thresholdToImproveNeighbours ) {
+                                cell.newSustainability = cell.sustainability + 1;
+                            }
+
+                            // Bottom half mean
+//                            if (( sustainability - bottomHalfMean) < thresholdToImproveNeighbours) {
+//                                cell.newSustainability = cell.sustainability - 1;
+//                            }
+                        }
+                    })
+
+                    _.shuffle(world.cells).forEach(function(cell) {
+                        if (cell.agentsAllowed && cell.agents.length == 0) {
+                            if (!_.isUndefined(cell.newSustainability) && cell.newSustainability <= 100 && cell.sustainability != cell.newSustainability) {
+                                cell.sustainability = cell.newSustainability;
+                                cell.newSustainability = cell.sustainability;
+                            }
+                        }
+                    })
                     _.shuffle(world.cells).forEach(function(cell) {
                         var x = cell.x, y = cell.y;
-                        var quality = cell.quality;
+                        var sustainability = cell.sustainability;
+                        var adjusted = false;
                         var neighbourResources = (world.getNeighbouringResources(x, y));
                         neighbourResources.forEach(function(neighbour) {
                             if (neighbour.totalYield > neighbour.perAgentYield) {
@@ -296,85 +287,16 @@ var RMITResources = RMITResources || {};
 //                                neighbour.totalYield -= neighbour.perAgentYield;
 //                                neighbour.totalYield -= adjustedYield;
                                 neighbour.totalYield --;
-                                if (cell.quality + adjustedYield < 100)
-                                    cell.quality += adjustedYield;
+                                if (cell.sustainability + adjustedYield < 100)
+                                    cell.sustainability += adjustedYield;
                                 else
-                                    cell.quality = 100;
+                                    cell.sustainability = 100;
+                                adjusted = true;
                             }
                         });
-                    })
-
-                    // Adjust quality depending on agent type
-                    world.currentAgents.forEach(function(agent) {
-                        var cell = world.getCell(agent.x, agent.y);
-                        if (agent.culture.name == "Residents") {
-                            if (cell.quality > 0) {
-                                cell.quality--;
-                            }
-                            if (agent.health > 0) {
-                                var adjustChance = Math.random();
-                                if (adjustChance * 100 > cell.quality)
-                                    agent.adjustGeneralHealth(-1);
-                                // Allow some opportunity to recuperate
-                                else if (adjustChance < Math.pow(cell.quality / 100, 2))
-                                    agent.adjustGeneralHealth(1);
-                            }
-                        }
-                        else if (agent.culture.name == "Workers") {
-                            if (cell.quality < 100)
-                                cell.quality ++;
-                        }
-                    })
-
-                    // Adjust quality based on neighbouring values
-                    world.cells.forEach(function(cell) {
-                        if (cell.agentsAllowed) {
-                            var x = cell.x, y = cell.y;
-                            cell.newQuality = cell.quality;
-                            var quality = cell.quality;
-                            var neighbours = world.getNeighbouringCells(x, y),
-                                qualities = _.chain(neighbours).map(function(neighbour) { if (neighbour.agentsAllowed) return neighbour.quality}).compact().sortBy(function(e) {return e}).value(),
-                                midPoint = Math.floor(qualities.length / 2),
-                                topHalf = _.rest(qualities, midPoint),
-                                topHalfMean = jStat.mean(topHalf),
-                                maxQuality = 0,
-                                cumQuality = 0,
-                                aveQuality;
-
-
-//                            neighbours.forEach(function(neighbour) {
-//                                if (neighbour.agentsAllowed) {
-//                                    cumQuality += neighbour.quality;
-//                                    neighbourTotal++;
-//                                    if (maxQuality < neighbour.quality)
-//                                        maxQuality = neighbour.quality;
-//                                }
-//                            });
-//                            aveQuality = cumQuality / neighbourTotal;
-                            // Max
-//                            if ((maxQuality - quality) > thresholdToImproveNeighbours) {
-//                                cell.newQuality = cell.quality + 1;
-//                            }
-                            // Top half mean
-                            if ((topHalfMean - quality) > thresholdToImproveNeighbours) {
-                                cell.newQuality = cell.quality + 1;
-                            }
-                            // Average
-//                            if ((aveQuality - quality) > thresholdToImproveNeighbours) {
-//                                cell.newQuality = cell.quality + 1;
-//                            }
-                            // Percentage average over threshold?
-//                            if ((aveQuality - quality) > thresholdToImproveNeighbours) {
-//                                cell.newQuality = cell.quality + 1;
-//                            }
-                        }
-                    })
-                    world.cells.forEach(function(cell) {
-                        if (cell.agentsAllowed) {
-                            if (!_.isUndefined(cell.newQuality) && cell.newQuality <= 100 && cell.quality != cell.newQuality) {
-                                cell.quality = cell.newQuality;
-                                cell.newQuality = cell.quality;
-                            }
+                        // Adjust the sustainability for the number of agents on the cell
+                        if (! adjusted) {
+                            cell.sustainability -= (cell.agents.length);
                         }
                     })
 
@@ -382,7 +304,7 @@ var RMITResources = RMITResources || {};
                     var poorCondition = one.color('#7F3300').alpha(1 - transparency);
                     world.cells.forEach(function(cell) {
                         if (cell.agentsAllowed) {
-                            var quality = (cell.quality > 100 ) ? 100 : cell.quality;
+                            var quality = (cell.sustainability > 100 ) ? 100 : cell.sustainability;
                             cell.terrain = new Terrain(poorCondition.lightness(quality / 100, true));
                         }
                     })
@@ -395,14 +317,14 @@ var RMITResources = RMITResources || {};
                         this.cost = 0;
                         this.exercise = function(agent, world) {
                             var currentCell = world.getCell(agent.x, agent.y),
-                                currentCellQuality = currentCell.quality,
+                                currentCellQuality = currentCell.sustainability,
                                 positions = world.getCellsAtDistance(agent.x, agent.y, 1, Distance.CHEBYSHEV_DISTANCE, false),
                                 moveablePositions = _.chain(positions).map(function(cell) {if (cell.agentsAllowed) return cell; }).compact().shuffle().value();
 
                             var candidateCell = currentCell;
                             for (var i = 0; i < moveablePositions.length; i++) {
                                 var testPosition = moveablePositions[i];
-                                if (testPosition.quality - currentCellQuality > importanceOfMovingToBetterHousing) {
+                                if (testPosition.sustainability - currentCellQuality > importanceOfMovingToBetterHousing) {
                                     candidateCell = testPosition;
                                     break;
                                 }
@@ -414,11 +336,14 @@ var RMITResources = RMITResources || {};
                     }).apply(moveToBetterHousing);
                     world.currentAgents.forEach(function(agent) {
                         if (Lifecycle.waveCounter >= agent.delay && agent.countdownToMove % agent.speed == 0) {
-                            if (agent.culture.name == 'Residents')
-//                                moveToBetterHousing.exercise(agent, world);
-								moveCapability.exercise(agent, world);
-                            else if (agent.culture.name == 'Workers')
-                                agent.update(world);
+                            if (agent.culture.name == 'Residents') {
+                                if (residentsDontFollowResources) {
+                                    moveCapability.exercise(agent, world);
+                                }
+                                else {
+                                    moveToBetterHousing.exercise(agent, world);
+                                }
+                            }
                         }
                     });
 
@@ -492,33 +417,15 @@ var RMITResources = RMITResources || {};
                     affordability = affordability * 100;
 
 
-                    // Calculate sustainability
-                    var ecoW = stats.array[0] * 2
-                        , envW = stats.array[1] * 3
-                        , socW = stats.array[2] * 1
-
-                    sustainability = ((ecoW + envW + socW) * 10000) / pop
-
                     // Calculate mixed use
                     mixedUse = (1 - stats.cappedCoeffvar) * 100
 
-						
-                    var totalHealth =
-                            _.chain(world.currentAgents)
-                                .map(function(agent) { if (agent.culture.name == "Residents") return agent; })
-                                .compact()
-                                .map(function(agent) { return agent.health ; })
-                                .reduce(function(memo, num){ return memo + num; }, 0)
-                                .value()
-                        , aveHealth = totalHealth / initialAgents;
-                    var housingQuality = _.map(world.pathway, function(pathCell) { return (world.getCell(pathCell[0], pathCell[1]).quality); }),
-                        totalHousingQuality = _.reduce(housingQuality, function(memo, num){ return memo + num; }, 0),
-                        aveHousingQuality = totalHousingQuality / world.pathway.length;
-//                    var ageAtDeath = _.map(this.expiredAgents, function(agent) { return agent.diedAt - agent.bornAt; }),
-//                        totalAgeAtDeath = _.reduce(health, function(memo, num){ return memo + num; }, 0);
+                    // Calculate sustainability
+                    var sustainability = _.map(world.cells, function(cell) { return (cell.sustainability); }),
+                        totalSustainability = _.reduce(sustainability, function(memo, num){ return memo + num; }, 0),
+                        aveSustainability = totalSustainability / world.cells.length;
 
-                    console.log(affordability, sustainability, mixedUse);
-                    FiercePlanet.Graph.plotData(affordability, sustainability, mixedUse);
+                    FiercePlanet.Graph.plotData(affordability, aveSustainability, mixedUse);
                 }
             })
 
