@@ -35,6 +35,7 @@ _.extend(DefaultCultures.Square, {
     })
 });
 
+
 DefaultCultures.Stickman = new Culture("Stickman", one.color("#000"));
 _.extend(DefaultCultures.Stickman, {
     drawFunction: (function(ctx, agent, x, y, width, height, newColor, counter, direction) {
