@@ -391,7 +391,7 @@ app.get('/figure', function(req, res){
 
 
 // Run express
-var port = process.env.PORT || 3000;
+var port = process.env.PORT || 3003;
 app.listen(port);
 
 

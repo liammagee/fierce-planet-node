@@ -1572,7 +1572,8 @@ FiercePlanet.Drawing = FiercePlanet.Drawing || {};
      */
     this.drawResourcesInStore = function() {
         var e = $('#goodness-display')[0];
-        e.innerHTML = FiercePlanet.Game.currentProfile.currentWorldResourcesInStore.toString();
+        if (!_.isUndefined(e))
+            e.innerHTML = FiercePlanet.Game.currentProfile.currentWorldResourcesInStore.toString();
     };
     
     /**

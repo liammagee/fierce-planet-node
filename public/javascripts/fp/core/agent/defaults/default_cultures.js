@@ -19,9 +19,9 @@ _.extend(DefaultCultures.Circular, {
         ctx.beginPath();
         ctx.arc(x + radius, y + radius, radius, 0, Math.PI * 2, false);
         ctx.closePath();
-        ctx.strokeStyle = agent.color; //"#" + newColor;
+        ctx.strokeStyle = agent.color.hex();
         ctx.stroke();
-        ctx.fillStyle = agent.color; //"#" + newColor;
+        ctx.fillStyle = agent.color.hex();
         ctx.fill();
     })
 });
@@ -30,7 +30,7 @@ DefaultCultures.Square = new Culture("Square", one.color("#000"));
 _.extend(DefaultCultures.Square, {
     drawFunction: (function(ctx, agent, x, y, pieceWidth, pieceHeight, newColor, counter, direction) {
 
-        ctx.fillStyle = agent.color;
+        ctx.fillStyle = agent.color.hex();
         ctx.fillRect(x - FiercePlanet.Orientation.cellWidth / 2, y - FiercePlanet.Orientation.cellHeight / 2, FiercePlanet.Orientation.cellWidth, FiercePlanet.Orientation.cellHeight);
     })
 });
