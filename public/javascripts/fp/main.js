@@ -13,7 +13,8 @@ if (node_env == 'development') {
         , 'fp/core/agent/defaults/default_cultures.js'
 
         , 'fp/profile/profile.js', 'fp/profile/profile_class.js', 'fp/event/event.js'
-         , 'fp/graphics/drawing.js', 'fp/graphics/orientation.js', 'fp/graphics/isometric.js', 'fp/graphics/fullscreen.js', 'fp/graphics/stick-figure.js'
+         , 'fp/graphics/drawing.js', 'fp/graphics/orientation.js', 'fp/graphics/isometric.js', 'fp/graphics/fullscreen.js'
+        , 'fp/graphics/stick-figure.js'
 
          , 'fp/ui/dialogs/dialogs.js'
          , 'fp/ui/controls.js'
@@ -107,6 +108,11 @@ $LAB
     , 'sylvester/sylvester.js'
     , 'underscore/underscore-min.js'
     ])
+
+    // Load FiercePlanet specific submodules
+   .script(
+        'gofigure/test/go-figure.js'
+    )
 
         // Load FiercePlanet other plugins
    .script(

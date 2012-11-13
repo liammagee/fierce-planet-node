@@ -1,0 +1,3 @@
+[submodule "public\\javascripts\\gofigure"]
+	path = public\\javascripts\\gofigure
+	url = git://github.com/doclm/gofigure.git
