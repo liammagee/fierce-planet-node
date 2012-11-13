@@ -111,7 +111,7 @@ $LAB
 
     // Load FiercePlanet specific submodules
    .script(
-        'gofigure/test/go-figure.js'
+        'gofigure/src/gofigure.js'
     )
 
         // Load FiercePlanet other plugins
