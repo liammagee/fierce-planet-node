@@ -1,19 +1,19 @@
 {
  "COMMENT":"Folders must end with a /",
  "src_dir"  : [
-       "/public/javascripts/jquery/jquery-1.6.2.js"
-     , "/public/javascripts/jquery/jasmine-jquery-1.2.0.js"
-     , "/public/javascripts/jstat-1.0.0/js/jstat-0.1.0.min.js"
-     , "/public/javascripts/sylvester/sylvester.js"
-     , "/public/javascripts/fp/utils/log.js"
-     , "/public/javascripts/fp/core/Universe.js"
-     , "/public/javascripts/fp/core/resource.js"
-     , "/public/javascripts/fp/core/level.js"
-     , "/public/javascripts/fp/core/agent.js"
-     , "/public/javascripts/fp/core/maze-strategies.js"
-     , "/public/javascripts/fp/core/culture.js"
-     , "/public/javascripts/fp/core/tile.js"
-     , "/public/javascripts/fp/core/terrain.js"
+       "/public/javascripts/fp/libs/jquery/jquery-1.6.2.js"
+     , "/public/javascripts/fp/libs/jquery/jasmine-jquery-1.2.0.js"
+     , "/public/javascripts/fp/libs/jstat-1.0.0/js/jstat-0.1.0.min.js"
+     , "/public/javascripts/fp/libs/sylvester/sylvester.js"
+     , "/public/javascripts/fp/src/utils/log.js"
+     , "/public/javascripts/fp/src/models/Universe.js"
+     , "/public/javascripts/fp/src/models/resource.js"
+     , "/public/javascripts/fp/src/models/level.js"
+     , "/public/javascripts/fp/src/models/agent.js"
+     , "/public/javascripts/fp/src/models/maze-strategies.js"
+     , "/public/javascripts/fp/src/models/culture.js"
+     , "/public/javascripts/fp/src/models/tile.js"
+     , "/public/javascripts/fp/src/models/terrain.js"
  ],
  "spec_dir" : "/spec/",
 

@@ -6,48 +6,46 @@ if (typeof(global) != "undefined") {
     one = {}, one.color = require('onecolor');
 
     var FiercePlanet = {};
-//    ModuleManager = require('./public/javascripts/fp/core/module-manager.js').ModuleManager;
-    ModuleManager = require('./../public/javascripts/fp/core/module-manager.js').ModuleManager;
-    Lifecycle = require('./../public/javascripts/fp/core/lifecycle.js').Lifecycle;
-    Cell = require('./../public/javascripts/fp/core/cell.js').Cell;
-    World = require('./../public/javascripts/fp/core/world.js').World;
-    Resource = require('./../public/javascripts/fp/core/resource.js').Resource;
-    ResourceCategory = require('./../public/javascripts/fp/core/resource.js').ResourceCategory;
-    ResourceType = require('./../public/javascripts/fp/core/resource.js').ResourceType;
+//    ModuleManager = require('./public/javascripts/fp/src/models/module-manager.js').ModuleManager;
+    ModuleManager = require('./../public/javascripts/fp-core/src/models/module-manager.js').ModuleManager;
+    Lifecycle = require('./../public/javascripts/fp-core/src/models/lifecycle.js').Lifecycle;
+    Cell = require('./../public/javascripts/fp-core/src/models/cell.js').Cell;
+    World = require('./../public/javascripts/fp-core/src/models/world.js').World;
+    Resource = require('./../public/javascripts/fp-core/src/models/resource.js').Resource;
+    ResourceCategory = require('./../public/javascripts/fp-core/src/models/resource.js').ResourceCategory;
+    ResourceType = require('./../public/javascripts/fp-core/src/models/resource.js').ResourceType;
 
-//    CultureDefaults = require('../public/javascripts/fp/core/agent/defaults/default_cultures.js').CultureDefaults;
-    Agent = require('./../public/javascripts/fp/core/agent/agent.js').Agent;
-    Memory = require('./../public/javascripts/fp/core/agent/agent.js').Memory;
-    MemoryOfAgent = require('./../public/javascripts/fp/core/agent/agent.js').MemoryOfAgent;
-    CultureDefaults = require('./../public/javascripts/fp/core/agent/culture.js').CultureDefaults;
-    Culture = require('./../public/javascripts/fp/core/agent/culture.js').Culture;
-    Chacteristics = require('./../public/javascripts/fp/core/agent/characteristics.js').Chacteristics;
-    Beliefs = require('./../public/javascripts/fp/core/agent/beliefs.js').Beliefs;
-    Capabilities = require('./../public/javascripts/fp/core/agent/capabilities.js').Capabilities;
-    Desires = require('./../public/javascripts/fp/core/agent/desires.js').Desires;
-    Plans = require('./../public/javascripts/fp/core/agent/plans.js').Plans;
+//    CultureDefaults = require('../public/javascripts/fp/src/models/agent/defaults/default_cultures.js').CultureDefaults;
+    Agent = require('./../public/javascripts/fp-core/src/models/agent/agent.js').Agent;
+    Memory = require('./../public/javascripts/fp-core/src/models/agent/agent.js').Memory;
+    MemoryOfAgent = require('./../public/javascripts/fp-core/src/models/agent/agent.js').MemoryOfAgent;
+    CultureDefaults = require('./../public/javascripts/fp-core/src/models/agent/culture.js').CultureDefaults;
+    Culture = require('./../public/javascripts/fp-core/src/models/agent/culture.js').Culture;
+    Chacteristics = require('./../public/javascripts/fp-core/src/models/agent/characteristics.js').Chacteristics;
+    Beliefs = require('./../public/javascripts/fp-core/src/models/agent/beliefs.js').Beliefs;
+    Capabilities = require('./../public/javascripts/fp-core/src/models/agent/capabilities.js').Capabilities;
+    Desires = require('./../public/javascripts/fp-core/src/models/agent/desires.js').Desires;
+    Plans = require('./../public/javascripts/fp-core/src/models/agent/plans.js').Plans;
 
     var DefaultModule = DefaultModule || {};
-    DefaultCultures = require('../public/javascripts/fp/core/agent/defaults/default_cultures.js').DefaultCultures;
-    Campaign = require('./../public/javascripts/fp/core/campaign.js').Campaign;
-    Tile = require('./../public/javascripts/fp/core/tile.js').Tile;
-    DEFAULT_TILE_COLOR = require('./../public/javascripts/fp/core/tile.js').DEFAULT_TILE_COLOR;
-    Terrain = require('./../public/javascripts/fp/core/terrain.js').Terrain;
-    Universe = require('./../public/javascripts/fp/core/universe.js').Universe;
-    Module = require('./../public/javascripts/fp/core/module.js').Module;
-    Catastrophe = require('./../public/javascripts/fp/core/catastrophe.js').Catastrophe;
-    Notice = require('./../public/javascripts/fp/ui/notice.js').Notice;
-    Wave = require('./../public/javascripts/fp/core/wave.js').Wave;
-    Statistics = require('./../public/javascripts/fp/core/statistics.js').Statistics;
+    DefaultCultures = require('../public/javascripts/fp-core/src/models/agent/defaults/default_cultures.js').DefaultCultures;
+    Campaign = require('./../public/javascripts/fp-core/src/models/campaign.js').Campaign;
+    Tile = require('./../public/javascripts/fp-core/src/models/tile.js').Tile;
+    DEFAULT_TILE_COLOR = require('./../public/javascripts/fp-core/src/models/tile.js').DEFAULT_TILE_COLOR;
+    Terrain = require('./../public/javascripts/fp-core/src/models/terrain.js').Terrain;
+    Universe = require('./../public/javascripts/fp-core/src/models/universe.js').Universe;
+    Module = require('./../public/javascripts/fp-core/src/models/module.js').Module;
+    Catastrophe = require('./../public/javascripts/fp-core/src/models/catastrophe.js').Catastrophe;
+    Notice = require('./../public/javascripts/fp-core/src/ui/notice.js').Notice;
+    Wave = require('./../public/javascripts/fp-core/src/models/wave.js').Wave;
+    Statistics = require('./../public/javascripts/fp-core/src/models/statistics.js').Statistics;
 
-    ResourceTypes = require('./../public/javascripts/fp/default-module/resources/resource_types.js').ResourceTypes;
-    TBL = require('./../public/javascripts/fp/default-module/resources/tbl.js').TBL;
+    ResourceTypes = require('./../public/javascripts/fp-core/src/default-module/resources/resource_types.js').ResourceTypes;
+    TBL = require('./../public/javascripts/fp-core/src/default-module/resources/tbl.js').TBL;
 
     TestWorlds = require('./test-module.js').TestWorlds;
     TestModule = require('./test-module.js').TestModule;
-//jstat = require('./../public/javascripts/jstat-1.0.0/js/jstat-1.0.0.js').jstat;
-//NormalDistribution = require('./../public/javascripts/jstat-1.0.0/js/jstat-1.0.0.js').NormalDistribution;
-    jStat = require('./../public/javascripts/jstat-2.0/jstat.js').jStat;
+    jStat = require('./../public/javascripts/fp-core/libs/jstat-2.0/jstat.js').jStat;
 
     // NEEDS cpp compiler to build contextify - not working with node 0.6.19, Win7 x64
     /*

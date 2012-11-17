@@ -1,23 +1,23 @@
 
 // Running in Node?
 if (typeof(global) != "undefined") {
-    global.Log = require('../public/javascripts/fp/utils/log').Log;
-    global.ResourceCategory = require('../public/javascripts/fp/core/resource').ResourceCategory;
-    global.ResourceType = require('../public/javascripts/fp/core/resource').ResourceType;
-    global.Resource = require('../public/javascripts/fp/core/resource').Resource;
-    global.World = require('../public/javascripts/fp/core/world').World;
-    global.Level = require('../public/javascripts/fp/core/level').Level;
+    global.Log = require('../public/javascripts/fp-core/utils/log').Log;
+    global.ResourceCategory = require('../public/javascripts/fp-core/core/resource').ResourceCategory;
+    global.ResourceType = require('../public/javascripts/fp-core/core/resource').ResourceType;
+    global.Resource = require('../public/javascripts/fp-core/core/resource').Resource;
+    global.World = require('../public/javascripts/fp-core/core/world').World;
+    global.Level = require('../public/javascripts/fp-core/core/level').Level;
 //    global.FiercePlanet = require('../public/javascripts/fp/core/maze-strategies').FiercePlanet;
 //    global.FiercePlanet.Framework = require('../public/javascripts/fp/core/maze-strategies').FiercePlanet.Framework;
 //    global.FiercePlanet.Framework.MazeStrategies = require('../public/javascripts/fp/core/maze-strategies').FiercePlanet.Framework.MazeStrategies;
-    global.AgentType = require('../public/javascripts/fp/core/agent').AgentType;
-    global.Agent = require('../public/javascripts/fp/core/agent').Agent;
-    global.DEFAULT_INITIAL_SPEED = require('../public/javascripts/fp/core/culture').DEFAULT_INITIAL_SPEED;
-    global.DEFAULT_INITIAL_HEALTH = require('../public/javascripts/fp/core/agent').DEFAULT_INITIAL_HEALTH;
-    global.Culture = require('../public/javascripts/fp/core/agent/culture.js').Culture;
-    global.Tile = require('../public/javascripts/fp/core/tile').Tile;
-    global.DEFAULT_TILE_COLOR = require('../public/javascripts/fp/core/terrain').DEFAULT_TILE_COLOR;
-    global.Terrain = require('../public/javascripts/fp/core/terrain').Terrain;
+    global.AgentType = require('../public/javascripts/fp-core/core/agent').AgentType;
+    global.Agent = require('../public/javascripts/fp-core/core/agent').Agent;
+    global.DEFAULT_INITIAL_SPEED = require('../public/javascripts/fp-core/core/culture').DEFAULT_INITIAL_SPEED;
+    global.DEFAULT_INITIAL_HEALTH = require('../public/javascripts/fp-core/core/agent').DEFAULT_INITIAL_HEALTH;
+    global.Culture = require('../public/javascripts/fp-core/core/agent/culture.js').Culture;
+    global.Tile = require('../public/javascripts/fp-core/core/tile').Tile;
+    global.DEFAULT_TILE_COLOR = require('../public/javascripts/fp-core/core/terrain').DEFAULT_TILE_COLOR;
+    global.Terrain = require('../public/javascripts/fp-core/core/terrain').Terrain;
 
     var jsdom = require('jsdom').jsdom,
         myWindow = jsdom().createWindow(),
@@ -25,8 +25,6 @@ if (typeof(global) != "undefined") {
         jq = require('jquery/dist/node-jquery').create(),
         jQuery = require('jquery/dist/node-jquery').create(myWindow);
 
-    require('../public/javascripts/jstat-1.0.0/js/jstat-1.0.0')
-    require('../public/javascripts/sylvester/sylvester')
 
 // Add these variables to global namespace
     global.$ = $;

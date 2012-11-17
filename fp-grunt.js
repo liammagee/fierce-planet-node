@@ -40,7 +40,7 @@ module.exports = function(grunt) {
                     , 'public/javascripts/fp/ui/storyboard.js'
                     , 'public/javascripts/fp/ui/google-map.js'
                     , 'public/javascripts/fp/utils/fp-utils.js', 'public/javascripts/fp/utils/log.js', 'public/javascripts/fp/utils/recording.js', 'public/javascripts/fp/utils/url-params.js'
-                    , 'public/javascripts/fp/game.js'
+                    , 'public/javascripts/game.js'
                     , 'public/javascripts/fp/utils/comms.js'
                 ],
                 dest: 'public/javascripts/fp/fp.concat.js'
@@ -54,9 +54,9 @@ module.exports = function(grunt) {
         min: {
             dist: {
                 src: [
-                    'public/javascripts/fp/fp.concat.js'
+                    'public/javascripts/fp.concat.js'
                 ],
-                dest: 'public/javascripts/fp/fp.min.js'
+                dest: 'public/javascripts/fp.min.js'
             }
         },
         // Lists of files or URLs to be unit tested with QUnit, used by the "qunit" task.
