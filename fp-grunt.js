@@ -10,13 +10,13 @@ module.exports = function(grunt) {
             dist: {
 //                'public/javascripts/fp/**/*.js'
                 src: [
-                    'public/javascripts/fp/core/universe.js'
-                    , 'public/javascripts/fp/core/catastrophe.js'
-                    , 'public/javascripts/fp/core/agent/agent.js' , 'public/javascripts/fp/core/agent/culture.js' , 'public/javascripts/fp/core/agent/beliefs.js' , 'public/javascripts/fp/core/agent/desires.js' , 'public/javascripts/fp/core/agent/capabilities.js' , 'public/javascripts/fp/core/agent/characteristics.js' , 'public/javascripts/fp/core/agent/plans.js'
-                    , 'public/javascripts/fp/core/campaign.js', 'public/javascripts/fp/core/cell.js', 'public/javascripts/fp/core/world.js', 'public/javascripts/fp/core/wave.js', 'public/javascripts/fp/core/resource.js', 'public/javascripts/fp/core/species.js', 'public/javascripts/fp/core/terrain.js', 'public/javascripts/fp/core/tile.js'
-                    , 'public/javascripts/fp/core/module-manager.js' , 'public/javascripts/fp/core/module.js', 'public/javascripts/fp/core/lifecycle.js', 'public/javascripts/fp/core/statistics.js'
+                    'public/javascripts/fp-core/universe.js'
+                    , 'public/javascripts/fp-core/catastrophe.js'
+                    , 'public/javascripts/fp-core/agent/agent.js' , 'public/javascripts/fp-core/agent/culture.js' , 'public/javascripts/fp-core/agent/beliefs.js' , 'public/javascripts/fp-core/agent/desires.js' , 'public/javascripts/fp-core/agent/capabilities.js' , 'public/javascripts/fp-core/agent/characteristics.js' , 'public/javascripts/fp-core/agent/plans.js'
+                    , 'public/javascripts/fp-core/campaign.js', 'public/javascripts/fp-core/cell.js', 'public/javascripts/fp-core/world.js', 'public/javascripts/fp-core/wave.js', 'public/javascripts/fp-core/resource.js', 'public/javascripts/fp-core/species.js', 'public/javascripts/fp-core/terrain.js', 'public/javascripts/fp-core/tile.js'
+                    , 'public/javascripts/fp-core/module-manager.js' , 'public/javascripts/fp-core/module.js', 'public/javascripts/fp-core/lifecycle.js', 'public/javascripts/fp-core/statistics.js'
 
-                    , 'public/javascripts/fp/core/agent/defaults/default_cultures.js'
+                    , 'public/javascripts/fp-core/default-module/defaults/default_cultures.js'
 
                     , 'public/javascripts/fp/profile/profile.js', 'public/javascripts/fp/profile/profile_class.js', 'public/javascripts/fp/event/event.js'
                     , 'public/javascripts/fp/graphics/drawing.js', 'public/javascripts/fp/graphics/orientation.js', 'public/javascripts/fp/graphics/isometric.js', 'public/javascripts/fp/graphics/fullscreen.js', 'public/javascripts/fp/graphics/stick-figure.js'

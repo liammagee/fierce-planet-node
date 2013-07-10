@@ -10,7 +10,7 @@ if (node_env == 'development') {
          , 'fp-core/src/models/campaign.js', 'fp-core/src/models/cell.js', 'fp-core/src/models/world.js', 'fp-core/src/models/wave.js', 'fp-core/src/models/resource.js', 'fp-core/src/models/species.js', 'fp-core/src/models/terrain.js', 'fp-core/src/models/tile.js'
          , 'fp-core/src/models/module-manager.js' , 'fp-core/src/models/module.js', 'fp-core/src/models/lifecycle.js', 'fp-core/src/models/statistics.js'
 
-        , 'fp-core/src/models/agent/defaults/default_cultures.js'
+        , 'fp-core/src/default-module/cultures/default_cultures.js'
 
         , 'fp-core/src/profile/profile.js', 'fp-core/src/profile/profile_class.js', 'fp-core/src/event/event.js'
          , 'fp-core/src/graphics/drawing.js', 'fp-core/src/graphics/orientation.js', 'fp-core/src/graphics/isometric.js', 'fp-core/src/graphics/fullscreen.js'
