@@ -2,7 +2,7 @@ module.exports = function(grunt) {
 
     // Project configuration.
     grunt.initConfig({
-        pkg: '<json:package.json>',
+        pkg: grunt.file.readJSON('package.json'),
         // Project metadata, used by some directives, helpers and tasks.
         meta: {},
         // Lists of files to be concatenated, used by the "concat" task.
@@ -124,12 +124,13 @@ module.exports = function(grunt) {
         }
     });
 
-    grunt.loadNpmTasks('grunt-less');
-    grunt.loadNpmTasks('grunt-jasmine-node-task');
+//    grunt.loadNpmTasks('grunt-less');
+//    grunt.loadNpmTasks('grunt-jasmine-node-task');
 
     // Default task.
 //    grunt.registerTask('default', 'lint test config min');
-    grunt.registerTask('default', 'jasmine_node concat less min');
+//    grunt.registerTask('default', 'jasmine_node concat less min');
+    grunt.registerTask('default', ['min']);
 
 
     // TODO: add support for Jasmine-node

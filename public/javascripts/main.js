@@ -2,7 +2,8 @@
 //$LAB.script('http://maps.googleapis.com/maps/api/js?sensor=true').wait()
 
 var fpSrc = [ 'fp-core/fp.min.js' ];
-if (node_env == 'development') {
+//if (node_env == 'development') {
+if (true) {
     fpSrc = [
          'fp-core/src/models/universe.js'
          , 'fp-core/src/models/catastrophe.js'
