@@ -13,7 +13,7 @@
       "npm": "1.1.x"
   },
   "dependencies": {
-    "express": "= 2.5.10",
+    "express": "= 4.17.1",
     "stylus": ">= 0.27.1",
     "jade": ">= 0.26.1",
     "socket.io": ">= 0.9.6",
